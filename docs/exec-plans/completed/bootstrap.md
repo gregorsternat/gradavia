@@ -21,13 +21,14 @@ hosting deployment.
 - [x] Add architecture/documentation checks, tests, and CI artifacts.
 - [x] Run the complete local verification loop and live Neon diagnostics.
 - [x] Inspect the browser and prove failure artifacts are retained.
-- [ ] Review the diff, commit, open the dedicated PR, and inspect CI.
+- [x] Review the diff, commit, open the dedicated PR, and inspect CI.
 
 ## Evidence
 
-Record final results in [quality status](../../quality.md). Local and remote
-verification are separate. Move this plan to completed when the PR is delivered
-and remaining limits are documented.
+Delivered in [PR #1](https://github.com/gregorsternat/orvio/pull/1).
+Local verification and Linux CI passed; the workflow uploaded its diagnostics.
+See [quality status](../../quality.md) for evidence and limits. The PR remains
+open for review; deployment is a later milestone.
 
 ## Deferred
 

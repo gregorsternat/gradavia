@@ -6,12 +6,12 @@ Keep brief work brief; use a plan when several boundaries change together.
 
 ## Active
 
-- [Bootstrap](active/bootstrap.md): repository foundation.
+No active implementation plan. Add one here when starting a feature that spans
+multiple boundaries.
 
 ## Completed
 
-No completed plans yet. Move plans here after implementation and verification,
-then update the links in this index.
+- [Bootstrap](completed/bootstrap.md): repository foundation, delivered in PR #1.
 
 ## Follow-up work
 
