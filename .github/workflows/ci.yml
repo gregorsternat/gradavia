@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify foundation
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      CI: true
+      NEXT_TELEMETRY_DISABLED: 1
+      TEST_DATABASE_URL: postgresql://orvio:orvio@127.0.0.1:5432/orvio_test
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: orvio
+          POSTGRES_PASSWORD: orvio
+          POSTGRES_DB: orvio_test
+        ports: [5432:5432]
+        options: >-
+          --health-cmd "pg_isready -h 127.0.0.1 -U orvio -d orvio_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
+      - name: Install pinned Rust toolchain
+        run: rustup show active-toolchain
+      - name: Install locked dependencies
+        run: just setup
+      - name: Install browser system dependencies
+        run: pnpm exec playwright install-deps chromium
+      - name: Check, build and test
+        run: just verify
+      - name: Preserve diagnostics
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: verification-${{ github.run_attempt }}
+          path: .artifacts/
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 7

@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+  --background: #fafaf9;
+  --foreground: #181818;
+  --surface: #ffffff;
+  --muted: #626262;
+  --border: #dfdfdc;
+  --subtle: #f1f1ef;
+  --chart-primary: #202020;
+  --chart-secondary: #767676;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #111111;
+  --foreground: #ededeb;
+  --surface: #191919;
+  --muted: #aaa9a5;
+  --border: #30302f;
+  --subtle: #202020;
+  --chart-primary: #ededeb;
+  --chart-secondary: #aaa9a5;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-muted: var(--subtle);
+  --color-border: var(--border);
+  --color-subtle: var(--subtle);
+  --color-primary: var(--foreground);
+  --color-primary-foreground: var(--background);
+  --color-card: var(--surface);
+  --color-muted-foreground: var(--muted);
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  min-width: 320px;
+}
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+}
+::selection {
+  background: var(--foreground);
+  color: var(--background);
+}
+:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 5px;
+}
+
+/* A shared visual treatment for source components; no separate library theme. */
+.orvio-chart {
+  --color-gray-500: var(--chart-secondary);
+  --color-gray-900: var(--chart-primary);
+  --color-gray-200: var(--border);
+  --color-gray-800: var(--border);
+}
+
+/* Recharts 3 renders tick text outside the axis group's fill utilities. */
+.orvio-chart .recharts-cartesian-axis-tick-value {
+  fill: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
