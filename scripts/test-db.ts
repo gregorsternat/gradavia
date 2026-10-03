@@ -16,10 +16,13 @@ const id = randomUUID().replaceAll("-", "");
 const container = `orvio-test-${id}`;
 const schema = `probe_${id}`;
 const journalSchema = `journal_${id}`;
+const database = `orvio_ingest_${id}`;
 const folder = await mkdtemp(path.join(tmpdir(), "orvio-migrations-"));
 let ownsContainer = false;
 let client: ReturnType<typeof createNodeClient>["client"] | undefined;
 let connected = false;
+let administrator: ReturnType<typeof createNodeClient>["client"] | undefined;
+let ownsDatabase = false;
 let phase = "start-postgres";
 
 function docker(...args: string[]) {
@@ -86,6 +89,15 @@ try {
     "/orvio_test",
     "Tests require the disposable orvio_test database",
   );
+  // Generated migrations reference public explicitly. Give every invocation its
+  // own database instead of rewriting SQL or touching another test's tables.
+  phase = "create-isolated-database";
+  administrator = createNodeClient(url).client;
+  await administrator.connect();
+  await administrator.query(`CREATE DATABASE "${database}"`);
+  ownsDatabase = true;
+  target.pathname = `/${database}`;
+  url = target.toString();
   ({ client } = createNodeClient(url));
   phase = "node-connectivity";
   await client.connect();
@@ -97,10 +109,50 @@ try {
     version >= 180000 && version < 190000,
     "Tests must use PostgreSQL 18, matching Neon",
   );
-  phase = "empty-migration-journal";
+  phase = "real-migrations";
   await migrateDatabase(url, "packages/db/migrations");
+  await migrateDatabase(url, "packages/db/migrations");
+  assert.equal(
+    (
+      await client.query(
+        "SELECT count(*)::int AS count FROM pg_tables WHERE schemaname='public' AND tablename IN ('source_datasets','source_releases','raw_records','ingestion_runs')",
+      )
+    ).rows[0].count,
+    4,
+  );
 
-  // Synthetic migration fixtures exercise the real runner without business tables.
+  phase = "raw-ingestion-contract";
+  const ingestion = spawnSync(
+    "cargo",
+    [
+      "test",
+      "--locked",
+      "-p",
+      "orvio-aggregator",
+      "--test",
+      "ingestion_db",
+      "--",
+      "--ignored",
+      "--nocapture",
+    ],
+    {
+      env: { ...process.env, ORVIO_TEST_DATABASE_URL: url },
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+      timeout: 600_000,
+    },
+  );
+  await writeFile(
+    path.join(artifacts, "ingestion.log"),
+    `${ingestion.stdout ?? ""}${ingestion.stderr ?? ""}`,
+  );
+  assert.equal(
+    ingestion.status,
+    0,
+    "Raw ingestion integration failed; inspect ingestion.log",
+  );
+
+  // Synthetic migrations separately prove the runner's transaction behavior.
   await mkdir(path.join(folder, "meta"));
   const first = {
     idx: 0,
@@ -199,6 +251,8 @@ try {
     postgresMajor: 18,
     checks: [
       "node-connectivity",
+      "real-migrations",
+      "raw-ingestion-contract",
       "migration-apply",
       "migration-idempotency",
       "migration-rollback",
@@ -239,6 +293,17 @@ try {
     await client?.end().catch(() => {
       process.exitCode = 1;
     });
+    if (administrator) {
+      if (ownsDatabase) {
+        try {
+          await administrator.query(`DROP DATABASE "${database}"`);
+        } catch {
+          console.error("Isolated test database cleanup failed.");
+          process.exitCode = 1;
+        }
+      }
+      await administrator.end();
+    }
     if (ownsContainer) {
       const logs = spawnSync("docker", ["logs", container], {
         encoding: "utf8",

@@ -1,0 +1,5243 @@
+[
+  {
+    "id": "fr-esr-apb_voeux-et-admissions",
+    "family": "apb",
+    "provider": "MESR/SIES",
+    "contract_version": 1,
+    "campaign_field": "session",
+    "fixed_campaign": null,
+    "establishment_field": "cod_uai",
+    "formation_field": null,
+    "reviewed_campaigns": [2016, 2017],
+    "archived": false,
+    "fields": [
+      {
+        "name": "acad_mies",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_academies",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_assez_bien",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bien",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_boursier",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_passable",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term_f",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot_f",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tres_bien",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_voe1",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_voe1_f",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "capa_fin",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "cod_uai",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fil_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fili",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "form_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_ea_lib_vx",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_dep",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_reg",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "p_acc_academies",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "p_acc_assez_bien",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "p_acc_bien",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "p_acc_boursier",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "p_acc_passable",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "p_acc_term",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "p_acc_tres_bien",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_f",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "rang_der_max",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "session",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "voe1",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "voe1_f",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot_f",
+        "kind": "text",
+        "multivalued": null
+      }
+    ]
+  },
+  {
+    "id": "fr-esr-parcoursup-2018",
+    "family": "parcoursup",
+    "provider": "MESR/SIES",
+    "contract_version": 1,
+    "campaign_field": "session",
+    "fixed_campaign": null,
+    "establishment_field": "cod_uai",
+    "formation_field": null,
+    "reviewed_campaigns": [2018],
+    "archived": false,
+    "fields": [
+      {
+        "name": "acad_mies",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_ab",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig_idf",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_b",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_mention_nonrenseignee",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_neobac",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_sansmention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tb",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "capa_fin",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "cod_uai",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep_lib",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "detail_forma",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fil_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fili",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "form_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_ea_lib_vx",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_olocalisation_des_formations",
+        "kind": "geo_point_2d",
+        "multivalued": null
+      },
+      {
+        "name": "lien_form_psup",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_pasinternat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "pct_ab",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig_idf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_b",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bours",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_etab_orig",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_f",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_mention_nonrenseignee",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_neobac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_sansmention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_tb",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "rang_der_max",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "region_etab_aff",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "regr_forma",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "session",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "tri",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot_f",
+        "kind": "int",
+        "multivalued": null
+      }
+    ]
+  },
+  {
+    "id": "fr-esr-parcoursup-2019",
+    "family": "parcoursup",
+    "provider": "MESR/SIES",
+    "contract_version": 1,
+    "campaign_field": "session",
+    "fixed_campaign": null,
+    "establishment_field": "cod_uai",
+    "formation_field": null,
+    "reviewed_campaigns": [2019],
+    "archived": false,
+    "fields": [
+      {
+        "name": "acad_mies",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_ab",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig_idf",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_b",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_datebac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_debutpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_finpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_mention_nonrenseignee",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_neobac",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_sansmention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tb",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "capa_fin",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "cod_uai",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "contrat_etab",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep_lib",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "detail_forma",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fil_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fili",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "form_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_ea_lib_vx",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_olocalisation_des_formations",
+        "kind": "geo_point_2d",
+        "multivalued": null
+      },
+      {
+        "name": "lien_form_psup",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_pasinternat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "pct_ab",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig_idf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_datebac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_debutpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_finpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_b",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bours",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_etab_orig",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "pct_f",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_mention_nonrenseignee",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_neobac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_sansmention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_tb",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "rang_der_max",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "region_etab_aff",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "regr_forma",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "session",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "tri",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot_f",
+        "kind": "int",
+        "multivalued": null
+      }
+    ]
+  },
+  {
+    "id": "fr-esr-parcoursup_2020",
+    "family": "parcoursup",
+    "provider": "MESR/SIES",
+    "contract_version": 1,
+    "campaign_field": "session",
+    "fixed_campaign": null,
+    "establishment_field": "cod_uai",
+    "formation_field": "cod_aff_form",
+    "reviewed_campaigns": [2020],
+    "archived": false,
+    "fields": [
+      {
+        "name": "acad_mies",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_ab",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig_idf",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_b",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_datebac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_debutpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_finpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_mention_nonrenseignee",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_neobac",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_sansmention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tb",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "capa_fin",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "cod_aff_form",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "cod_uai",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "contrat_etab",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep_lib",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "detail_forma",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fil_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fili",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "form_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_ea_lib_vx",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_olocalisation_des_formations",
+        "kind": "geo_point_2d",
+        "multivalued": null
+      },
+      {
+        "name": "lib_comp_voe_ins",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp1",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp3",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp4",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp5",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lien_form_psup",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_pasinternat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "pct_ab",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig_idf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_datebac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_debutpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_finpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_b",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bours",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_etab_orig",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "pct_f",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_mention_nonrenseignee",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_neobac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_sansmention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_tb",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_at",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bg",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bg_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bp_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bt",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bt_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp1",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp3",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp4",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp5",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "region_etab_aff",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "regr_forma",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "select_form",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "session",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "taux_adm_psup",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "taux_adm_psup_gen",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "taux_adm_psup_pro",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "taux_adm_psup_techno",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "tri",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot_f",
+        "kind": "int",
+        "multivalued": null
+      }
+    ]
+  },
+  {
+    "id": "fr-esr-parcoursup_2021",
+    "family": "parcoursup",
+    "provider": "MESR/SIES",
+    "contract_version": 1,
+    "campaign_field": "session",
+    "fixed_campaign": null,
+    "establishment_field": "cod_uai",
+    "formation_field": "cod_aff_form",
+    "reviewed_campaigns": [2021],
+    "archived": false,
+    "fields": [
+      {
+        "name": "acad_mies",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_ab",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig_idf",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_b",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_datebac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_debutpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_finpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_mention_nonrenseignee",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_neobac",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_sansmention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tb",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tbf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "capa_fin",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "cod_aff_form",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "cod_uai",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "composante_id_paysage",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "contrat_etab",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep_lib",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "detail_forma",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "detail_forma2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "etablissement_id_paysage",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fil_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fili",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "form_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_ea_lib_vx",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_olocalisation_des_formations",
+        "kind": "geo_point_2d",
+        "multivalued": null
+      },
+      {
+        "name": "lib_comp_voe_ins",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_for_voe_ins",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp1",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp3",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lien_form_psup",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "list_com",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_pasinternat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "pct_ab",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig_idf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_datebac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_debutpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_finpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_b",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bours",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_etab_orig",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "pct_f",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_mention_nonrenseignee",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_neobac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_sansmention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_tb",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_tbf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_at",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bg",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bg_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bp_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bt",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bt_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp1",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp3",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "region_etab_aff",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "select_form",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "session",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "taux_adm_psup",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "taux_adm_psup_gen",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "taux_adm_psup_pro",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "taux_adm_psup_techno",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "tri",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "ville_etab",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot_f",
+        "kind": "int",
+        "multivalued": null
+      }
+    ]
+  },
+  {
+    "id": "fr-esr-parcoursup_2022",
+    "family": "parcoursup",
+    "provider": "MESR/SIES",
+    "contract_version": 1,
+    "campaign_field": "session",
+    "fixed_campaign": null,
+    "establishment_field": "cod_uai",
+    "formation_field": "cod_aff_form",
+    "reviewed_campaigns": [2022],
+    "archived": false,
+    "fields": [
+      {
+        "name": "acad_mies",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_ab",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig_idf",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_b",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_datebac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_debutpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_finpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_mention_nonrenseignee",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_neobac",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_sansmention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tb",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tbf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "capa_fin",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "cod_aff_form",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "cod_uai",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "composante_id_paysage",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "contrat_etab",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep_lib",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "detail_forma",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "detail_forma2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "etablissement_id_paysage",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fil_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fili",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "form_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_ea_lib_vx",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_olocalisation_des_formations",
+        "kind": "geo_point_2d",
+        "multivalued": null
+      },
+      {
+        "name": "lib_comp_voe_ins",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_for_voe_ins",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp1",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp3",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lien_form_psup",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "list_com",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_pasinternat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "part_acces_gen",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "part_acces_pro",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "part_acces_tec",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_ab",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig_idf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_datebac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_debutpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_finpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_b",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bours",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_etab_orig",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "pct_f",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_mention_nonrenseignee",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_neobac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_sansmention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_tb",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_tbf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_at",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bg",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bg_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bp_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bt",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bt_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp1",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp3",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "region_etab_aff",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "select_form",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "session",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "taux_acces_ens",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "tri",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "ville_etab",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot_f",
+        "kind": "int",
+        "multivalued": null
+      }
+    ]
+  },
+  {
+    "id": "fr-esr-parcoursup_2023",
+    "family": "parcoursup",
+    "provider": "MESR/SIES",
+    "contract_version": 1,
+    "campaign_field": "session",
+    "fixed_campaign": null,
+    "establishment_field": "cod_uai",
+    "formation_field": "cod_aff_form",
+    "reviewed_campaigns": [2023],
+    "archived": false,
+    "fields": [
+      {
+        "name": "acad_mies",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_ab",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig_idf",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_b",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_datebac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_debutpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_finpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_mention_nonrenseignee",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_neobac",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_sansmention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tb",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tbf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "capa_fin",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "cod_aff_form",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "cod_uai",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "composante_id_paysage",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "contrat_etab",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep_lib",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "detail_forma",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "detail_forma2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "etablissement_id_paysage",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fil_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fili",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "form_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_ea_lib_vx",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_olocalisation_des_formations",
+        "kind": "geo_point_2d",
+        "multivalued": null
+      },
+      {
+        "name": "lib_comp_voe_ins",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_for_voe_ins",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp1",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp3",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lien_form_psup",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "list_com",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_pasinternat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "part_acces_gen",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "part_acces_pro",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "part_acces_tec",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_ab",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig_idf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_datebac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_debutpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_finpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_b",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bours",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_etab_orig",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_f",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_mention_nonrenseignee",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_neobac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_sansmention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_tb",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_tbf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_at",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bg",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bg_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bp_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bt",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bt_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp1",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp2",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp3",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "region_etab_aff",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "select_form",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "session",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "taux_acces_ens",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "tri",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "ville_etab",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot_f",
+        "kind": "int",
+        "multivalued": null
+      }
+    ]
+  },
+  {
+    "id": "fr-esr-parcoursup_2024",
+    "family": "parcoursup",
+    "provider": "MESR/SIES",
+    "contract_version": 1,
+    "campaign_field": "session",
+    "fixed_campaign": null,
+    "establishment_field": "cod_uai",
+    "formation_field": "cod_aff_form",
+    "reviewed_campaigns": [2024],
+    "archived": false,
+    "fields": [
+      {
+        "name": "acad_mies",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_ab",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig_idf",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_b",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_datebac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_debutpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_finpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_mention_nonrenseignee",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_neobac",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_sansmention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tb",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tbf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "capa_fin",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "cod_aff_form",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "cod_uai",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "composante_id_paysage",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "contrat_etab",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep_lib",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "detail_forma",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "detail_forma2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "etablissement_id_paysage",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fil_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fili",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "form_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_ea_lib_vx",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_olocalisation_des_formations",
+        "kind": "geo_point_2d",
+        "multivalued": null
+      },
+      {
+        "name": "lib_comp_voe_ins",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_for_voe_ins",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp1",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp3",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lien_form_psup",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "list_com",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_pasinternat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "part_acces_gen",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "part_acces_pro",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "part_acces_tec",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_ab",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig_idf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_datebac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_debutpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_finpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_b",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bours",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_etab_orig",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_f",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_mention_nonrenseignee",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_neobac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_sansmention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_tb",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_tbf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_at",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bg",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bg_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bp_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bt",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bt_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp1",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp3",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "region_etab_aff",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "select_form",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "session",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "taux_acces_ens",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "tri",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "ville_etab",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot_f",
+        "kind": "int",
+        "multivalued": null
+      }
+    ]
+  },
+  {
+    "id": "fr-esr-parcoursup",
+    "family": "parcoursup",
+    "provider": "MESR/SIES",
+    "contract_version": 1,
+    "campaign_field": "session",
+    "fixed_campaign": null,
+    "establishment_field": "cod_uai",
+    "formation_field": "cod_aff_form",
+    "reviewed_campaigns": [2025],
+    "archived": false,
+    "fields": [
+      {
+        "name": "acad_mies",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acc_ab",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_aca_orig_idf",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_b",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bg_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bp_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_bt_mention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_datebac",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_debutpp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_finpp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_mention_nonrenseignee",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_neobac",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_sansmention",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tb",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tbf",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_term_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "acc_tot_f",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "capa_fin",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "cod_aff_form",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "cod_uai",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "composante_id_paysage",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "contrat_etab",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep_lib",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "detail_forma",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "detail_forma2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "etablissement_id_paysage",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fil_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fili",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "form_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_ea_lib_vx",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_olocalisation_des_formations",
+        "kind": "geo_point_2d",
+        "multivalued": null
+      },
+      {
+        "name": "lib_comp_voe_ins",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_for_voe_ins",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp1",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp2",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_grp3",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lien_form_psup",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "list_com",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_cla_pp_pasinternat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pc_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_pp_internat",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "part_acces_gen",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "part_acces_pro",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "part_acces_tec",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "pct_ab",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_aca_orig_idf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_datebac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_debutpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_acc_finpp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_b",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bg_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bours",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bp_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_bt_mention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_etab_orig",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_f",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_mention_nonrenseignee",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_neobac",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_sansmention",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_tb",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "pct_tbf",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_at",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bg",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bg_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bp",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bp_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bt",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bt_brs",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp1",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp2",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "ran_grp3",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "region_etab_aff",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "select_form",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "session",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "taux_acces_ens",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "tri",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "ville_etab",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot_f",
+        "kind": "int",
+        "multivalued": null
+      }
+    ]
+  },
+  {
+    "id": "fr-esr-parcoursup-apprentissage",
+    "family": "apprenticeship",
+    "provider": "MESR/SIES",
+    "contract_version": 1,
+    "campaign_field": "session",
+    "fixed_campaign": null,
+    "establishment_field": "cod_uai",
+    "formation_field": "cod_aff_form",
+    "reviewed_campaigns": [2022, 2023, 2024, 2025],
+    "archived": false,
+    "fields": [
+      {
+        "name": "acad_mies",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "acad_mies_id",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "capa_fin",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "cod_aff_form",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "cod_uai",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "contrat_etab",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dep_lib",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "detail_forma",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fil_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fili",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "form_lib_voe_acc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_ea_lib_vx",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "g_olocalisation_des_formations",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "ges_can",
+        "kind": "boolean",
+        "multivalued": null
+      },
+      {
+        "name": "lib_comp_voe_ins",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lib_for_voe_ins",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "lien_form_psup",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "nb_rech_con",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_ref_classe",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_ref_place",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_ap_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_ap_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_ap_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_ap_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_ap_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_ap_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_ap_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "nb_voe_bp_app",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_at",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bg",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bg_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bp",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bp_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bt",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "prop_tot_bt_brs",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "region_etab_aff",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "region_etab_aff_id",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "select_form",
+        "kind": "boolean",
+        "multivalued": null
+      },
+      {
+        "name": "session",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "ville_etab",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "voe_tot_f",
+        "kind": "int",
+        "multivalued": null
+      }
+    ]
+  },
+  {
+    "id": "fr-esr-cartographie_formations_parcoursup",
+    "family": "formation_map",
+    "provider": "MESR/SIES",
+    "contract_version": 1,
+    "campaign_field": "annee",
+    "fixed_campaign": null,
+    "establishment_field": "etab_uai",
+    "formation_field": "gta",
+    "reviewed_campaigns": [2020, 2021, 2022, 2023, 2024, 2025, 2026],
+    "archived": false,
+    "fields": [
+      {
+        "name": "amg",
+        "kind": "text",
+        "multivalued": "|"
+      },
+      {
+        "name": "annee",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "app",
+        "kind": "text",
+        "multivalued": "|"
+      },
+      {
+        "name": "aut",
+        "kind": "text",
+        "multivalued": "|"
+      },
+      {
+        "name": "code_formation",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "commune",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "composante_id_paysage",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "dataviz",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "departement",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "etab_gps",
+        "kind": "geo_point_2d",
+        "multivalued": null
+      },
+      {
+        "name": "etab_nom",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "etab_uai",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "etab_url",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "etablissement_id_paysage",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fiche",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "fl",
+        "kind": "text",
+        "multivalued": "|"
+      },
+      {
+        "name": "gta",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "gti",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "int",
+        "kind": "text",
+        "multivalued": "|"
+      },
+      {
+        "name": "nm",
+        "kind": "text",
+        "multivalued": "|"
+      },
+      {
+        "name": "nmc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "region",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "rnd",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "tc",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "tf",
+        "kind": "text",
+        "multivalued": "|"
+      }
+    ]
+  },
+  {
+    "id": "fr-esr-parcoursup-enseignements-de-specialite-bacheliers-generaux",
+    "family": "specialties",
+    "provider": "MESR/SIES",
+    "contract_version": 1,
+    "campaign_field": null,
+    "fixed_campaign": 2021,
+    "establishment_field": null,
+    "formation_field": null,
+    "reviewed_campaigns": [2021],
+    "archived": true,
+    "fields": [
+      {
+        "name": "acceptations",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "doublette",
+        "kind": "text",
+        "multivalued": "&"
+      },
+      {
+        "name": "formation",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "propositions_d_admissions",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "voeux",
+        "kind": "int",
+        "multivalued": null
+      }
+    ]
+  },
+  {
+    "id": "fr-esr-parcoursup-enseignements-de-specialite-bacheliers-generaux-2",
+    "family": "specialties",
+    "provider": "MESR/SIES",
+    "contract_version": 1,
+    "campaign_field": "annee_du_bac",
+    "fixed_campaign": null,
+    "establishment_field": null,
+    "formation_field": null,
+    "reviewed_campaigns": [2021, 2022, 2023, 2024],
+    "archived": false,
+    "fields": [
+      {
+        "name": "acceptations",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "annee_du_bac",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "doublette",
+        "kind": "text",
+        "multivalued": "&"
+      },
+      {
+        "name": "formation",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "propositions_d_admissions",
+        "kind": "double",
+        "multivalued": null
+      },
+      {
+        "name": "voeux",
+        "kind": "int",
+        "multivalued": null
+      }
+    ]
+  },
+  {
+    "id": "fr-esr-parcoursup-enseignements-de-specialite-bacheliers-generaux-3",
+    "family": "specialties",
+    "provider": "MESR/SIES",
+    "contract_version": 1,
+    "campaign_field": "annee_du_bac",
+    "fixed_campaign": null,
+    "establishment_field": null,
+    "formation_field": null,
+    "reviewed_campaigns": [2025],
+    "archived": false,
+    "fields": [
+      {
+        "name": "acceptations",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "annee_du_bac",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "doublette",
+        "kind": "text",
+        "multivalued": "&"
+      },
+      {
+        "name": "formation",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "libelle_complet",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "niveau_d_agregation",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "propositions_d_admissions",
+        "kind": "int",
+        "multivalued": null
+      },
+      {
+        "name": "regroupement_de_formations",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "regroupement_de_formations_abrege",
+        "kind": "text",
+        "multivalued": null
+      },
+      {
+        "name": "voeux",
+        "kind": "int",
+        "multivalued": null
+      }
+    ]
+  }
+]

@@ -15,6 +15,25 @@ doctor:
     node scripts/doctor.mjs
     cargo run --locked -q -p orvio-aggregator -- doctor
 
+# Manual raw ingestion; run sources, sync, status, or replay --manifest <path>.
+[positional-arguments]
+ingest *args:
+    cargo run --release --locked -q -p orvio-aggregator -- "$@"
+
+# Refresh Rust resolution after an intentional dependency change.
+lock-rust:
+    cargo generate-lockfile
+
+# Focused Rust checks, including HTTP/archive tests without live services.
+check-ingest:
+    cargo fmt --all -- --check
+    cargo clippy --workspace --all-targets --locked -- -D warnings
+    cargo test --workspace --locked
+
+[positional-arguments]
+test-ingest *args:
+    cargo test --locked -p orvio-aggregator "$@"
+
 # Start one local web instance; PORT can be set per checkout.
 dev:
     pnpm dev

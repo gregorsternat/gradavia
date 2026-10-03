@@ -6,11 +6,11 @@ Keep brief work brief; use a plan when several boundaries change together.
 
 ## Active
 
-No active implementation plan. Add one here when starting a feature that spans
-multiple boundaries.
+None.
 
 ## Completed
 
+- [Raw ingestion](completed/raw-ingestion.md): collect and retain the 14 public source datasets.
 - [Bootstrap](completed/bootstrap.md): repository foundation, delivered in PR #1.
 
 ## Follow-up work
