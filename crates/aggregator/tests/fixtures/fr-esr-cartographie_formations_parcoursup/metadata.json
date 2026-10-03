@@ -1,0 +1,459 @@
+{
+  "visibility": "domain",
+  "fields": [
+    {
+      "name": "annee",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "sortable": true,
+        "facetsort": "-alphanum"
+      },
+      "label": "Session",
+      "type": "text",
+      "label_fr": "Session",
+      "label_en": "Session",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "etab_uai",
+      "description": "Code UAI de l'établissement",
+      "annotations": {
+        "facet": true
+      },
+      "label": "Identifiant de l'établissement",
+      "type": "text",
+      "label_fr": "Identifiant de l'établissement",
+      "label_en": "Identifiant de l'établissement",
+      "description_fr": "Code UAI de l'établissement",
+      "description_en": "Code UAI de l'établissement"
+    },
+    {
+      "name": "etab_nom",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Nom de l'établissement",
+      "type": "text",
+      "label_fr": "Nom de l'établissement",
+      "label_en": "Nom de l'établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "tc",
+      "description": "Secteur de l'établissement",
+      "annotations": {
+        "facet": true
+      },
+      "label": "Types d'établissement",
+      "type": "text",
+      "label_fr": "Types d'établissement",
+      "label_en": "Types d'établissement",
+      "description_fr": "Secteur de l'établissement",
+      "description_en": "Secteur de l'établissement"
+    },
+    {
+      "name": "tf",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "disjunctive": true,
+        "multivalued": "|"
+      },
+      "label": "Types de formation",
+      "type": "text",
+      "label_fr": "Types de formation",
+      "label_en": "Types de formation",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nm",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "disjunctive": true,
+        "multivalued": "|"
+      },
+      "label": "Nom long de la formation",
+      "type": "text",
+      "label_fr": "Nom long de la formation",
+      "label_en": "Nom long de la formation",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "fl",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "multivalued": "|",
+        "disjunctive": true
+      },
+      "label": "Mentions/Spécialités",
+      "type": "text",
+      "label_fr": "Mentions/Spécialités",
+      "label_en": "Mentions/Spécialités",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "app",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "multivalued": "|"
+      },
+      "label": "Formations en apprentissage",
+      "type": "text",
+      "label_fr": "Formations en apprentissage",
+      "label_en": "Formations en apprentissage",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "int",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "multivalued": "|"
+      },
+      "label": "Internat",
+      "type": "text",
+      "label_fr": "Internat",
+      "label_en": "Internat",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "amg",
+      "description": null,
+      "annotations": {
+        "multivalued": "|",
+        "facet": true,
+        "disjunctive": true
+      },
+      "label": "Aménagement",
+      "type": "text",
+      "label_fr": "Aménagement",
+      "label_en": "Aménagement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "aut",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "multivalued": "|"
+      },
+      "label": "Informations complémentaires",
+      "type": "text",
+      "label_fr": "Informations complémentaires",
+      "label_en": "Informations complémentaires",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "region",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "facetsort": "alphanum"
+      },
+      "label": "Région",
+      "type": "text",
+      "label_fr": "Région",
+      "label_en": "Région",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "departement",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "facetsort": "alphanum"
+      },
+      "label": "Département",
+      "type": "text",
+      "label_fr": "Département",
+      "label_en": "Département",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "commune",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "facetsort": "alphanum"
+      },
+      "label": "Commune",
+      "type": "text",
+      "label_fr": "Commune",
+      "label_en": "Commune",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "fiche",
+      "description": "Lien vers la fiche formation sur le site de Parcoursup",
+      "annotations": {},
+      "label": "Lien vers la fiche formation",
+      "type": "text",
+      "label_fr": "Lien vers la fiche formation",
+      "label_en": "Lien vers la fiche formation",
+      "description_fr": "Lien vers la fiche formation sur le site de Parcoursup",
+      "description_en": "Lien vers la fiche formation sur le site de Parcoursup"
+    },
+    {
+      "name": "dataviz",
+      "description": "Données statistiques sur les vœux de poursuite d’études et de réorientation pour l'année antérieure",
+      "annotations": {},
+      "label": "Lien vers les données statistiques pour l'année antérieure",
+      "type": "text",
+      "label_fr": "Lien vers les données statistiques pour l'année antérieure",
+      "label_en": "Lien vers les données statistiques pour l'année antérieure",
+      "description_fr": "Données statistiques sur les vœux de poursuite d’études et de réorientation pour l'année antérieure",
+      "description_en": "Données statistiques sur les vœux de poursuite d’études et de réorientation pour l'année antérieure"
+    },
+    {
+      "name": "etab_url",
+      "description": null,
+      "annotations": {},
+      "label": "Site internet de l'établissement",
+      "type": "text",
+      "label_fr": "Site internet de l'établissement",
+      "label_en": "Site internet de l'établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "etab_gps",
+      "description": "Localisation de la formation",
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Localisation",
+      "type": "geo_point_2d",
+      "label_fr": "Localisation",
+      "label_en": "Localisation",
+      "description_fr": "Localisation de la formation",
+      "description_en": "Localisation de la formation"
+    },
+    {
+      "name": "nmc",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "disjunctive": true,
+        "facetsort": "-count"
+      },
+      "label": "Nom court de la formation",
+      "type": "text",
+      "label_fr": "Nom court de la formation",
+      "label_en": "Nom court de la formation",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "gta",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "facetsort": "-count"
+      },
+      "label": "Code interne Parcoursup de la formation",
+      "type": "text",
+      "label_fr": "Code interne Parcoursup de la formation",
+      "label_en": "Code interne Parcoursup de la formation",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "gti",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "facetsort": "-count"
+      },
+      "label": "Code interne Parcoursup pour les portails",
+      "type": "text",
+      "label_fr": "Code interne Parcoursup pour les portails",
+      "label_en": "Code interne Parcoursup pour les portails",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "etablissement_id_paysage",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "etablissement_id_paysage",
+      "type": "text",
+      "label_fr": "etablissement_id_paysage",
+      "label_en": "etablissement_id_paysage",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "composante_id_paysage",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "composante_id_paysage",
+      "type": "text",
+      "label_fr": "composante_id_paysage",
+      "label_en": "composante_id_paysage",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "rnd",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "facetsort": "-count"
+      },
+      "label": "rnd",
+      "type": "text",
+      "label_fr": "rnd",
+      "label_en": "rnd",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "code_formation",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count",
+        "facet": true
+      },
+      "label": "code_formation",
+      "type": "text",
+      "label_fr": "code_formation",
+      "label_en": "code_formation",
+      "description_fr": null,
+      "description_en": null
+    }
+  ],
+  "dataset_id": "fr-esr-cartographie_formations_parcoursup",
+  "dataset_uid": "da_7fdj9u",
+  "has_records": true,
+  "features": ["geo", "analyze", "custom_view"],
+  "attachments": [],
+  "alternative_exports": [],
+  "data_visible": true,
+  "metas": {
+    "dcat": {
+      "created": "2020-10-21",
+      "issued": "2025-12-17",
+      "creator": "Service à compétence nationale Parcoursup",
+      "contributor": "LaBRI - Laboratoire Bordelais de Recherche en Informatique (UMR 5800)",
+      "contact_name": null,
+      "contact_email": null,
+      "accrualperiodicity": "continuous",
+      "spatial": "France entière et étranger",
+      "temporal": "Année",
+      "granularity": null,
+      "dataquality": null,
+      "publisher_type": "NationalAuthority",
+      "conforms_to": null,
+      "temporal_coverage_start": null,
+      "temporal_coverage_end": null,
+      "accessRights": null,
+      "relation": null
+    },
+    "default": {
+      "title": "Cartographie des formations Parcoursup",
+      "title_fr": "Cartographie des formations Parcoursup",
+      "title_en": "Cartographie des formations Parcoursup",
+      "description": "<p>Ce jeu de données présente les données sous-jacentes à la carte interactive de l’ensemble des formations accessibles via Parcoursup en 2020, 2021, 2022, 2023, 2024, 2025 et 2026<span style=\"font-size: 0.875rem;\"> </span><span style=\"font-size: 0.875rem;\">(</span><a href=\"https://dossierappel.parcoursup.fr/Candidat/carte\" target=\"_blank\">https://dossierappel.parcoursup.fr/Candidat/carte</a><font face=\"-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif\"><span style=\"font-size: 12.495px;\"></span></font><span style=\"font-size: 0.875rem;\">)</span><span style=\"font-family: inherit; font-size: 0.875rem;\">. Les données 2026 seront complétées au fur et à mesure jusqu'au 15 janvier. Ce jeu de données est mis à jour quotidiennement</span><span style=\"font-family: inherit; font-size: 0.875rem;\">.</span></p>",
+      "description_fr": "<p>Ce jeu de données présente les données sous-jacentes à la carte interactive de l’ensemble des formations accessibles via Parcoursup en 2020, 2021, 2022, 2023, 2024, 2025 et 2026<span style=\"font-size: 0.875rem;\"> </span><span style=\"font-size: 0.875rem;\">(</span><a href=\"https://dossierappel.parcoursup.fr/Candidat/carte\" target=\"_blank\">https://dossierappel.parcoursup.fr/Candidat/carte</a><font face=\"-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif\"><span style=\"font-size: 12.495px;\"></span></font><span style=\"font-size: 0.875rem;\">)</span><span style=\"font-family: inherit; font-size: 0.875rem;\">. Les données 2026 seront complétées au fur et à mesure jusqu'au 15 janvier. Ce jeu de données est mis à jour quotidiennement</span><span style=\"font-family: inherit; font-size: 0.875rem;\">.</span></p>",
+      "description_en": "<p>Ce jeu de données présente les données sous-jacentes à la carte interactive de l’ensemble des formations accessibles via Parcoursup en 2020, 2021, 2022, 2023, 2024, 2025 et 2026<span style=\"font-size: 0.875rem;\"> </span><span style=\"font-size: 0.875rem;\">(</span><a href=\"https://dossierappel.parcoursup.fr/Candidat/carte\" target=\"_blank\">https://dossierappel.parcoursup.fr/Candidat/carte</a><font face=\"-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif\"><span style=\"font-size: 12.495px;\"></span></font><span style=\"font-size: 0.875rem;\">)</span><span style=\"font-family: inherit; font-size: 0.875rem;\">. Les données 2026 seront complétées au fur et à mesure jusqu'au 15 janvier. Ce jeu de données est mis à jour quotidiennement</span><span style=\"font-family: inherit; font-size: 0.875rem;\">.</span></p>",
+      "theme": [
+        "Enseignement supérieur",
+        "Établissement d'enseignement supérieur",
+        "Formations et diplômes",
+        "Nomenclature, référentiel"
+      ],
+      "theme_fr": [
+        "Enseignement supérieur",
+        "Établissement d'enseignement supérieur",
+        "Formations et diplômes",
+        "Nomenclature, référentiel"
+      ],
+      "theme_en": [
+        "Higher education",
+        "Higher education institutions",
+        "Training and qualifications",
+        "Nomenclature, reference system"
+      ],
+      "keyword": ["parcoursup", "formations", "enseignement supérieur"],
+      "keyword_fr": ["parcoursup", "formations", "enseignement supérieur"],
+      "keyword_en": ["parcoursup", "formations", "enseignement supérieur"],
+      "license": "Licence Ouverte v2.0 (Etalab)",
+      "license_fr": "Licence Ouverte v2.0 (Etalab)",
+      "license_en": "Licence Ouverte v2.0 (Etalab)",
+      "license_url": "https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+      "license_url_fr": "https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+      "license_url_en": "https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+      "language": "fr",
+      "metadata_languages": ["fr"],
+      "timezone": null,
+      "modified": "2025-12-17T19:22:59+00:00",
+      "modified_updates_on_metadata_change": false,
+      "modified_updates_on_data_change": false,
+      "data_processed": "2026-10-03T05:42:46+00:00",
+      "metadata_processed": "2026-10-03T05:42:46.102000+00:00",
+      "geographic_reference": ["world"],
+      "geographic_reference_auto": true,
+      "territory": ["World"],
+      "geometry_types": ["Point"],
+      "bbox": {
+        "type": "Feature",
+        "geometry": {
+          "coordinates": [
+            [
+              [166.44799998030066, 53.35319997277111],
+              [-151.45500001497567, 53.35319997277111],
+              [-151.45500001497567, -22.271100031211972],
+              [166.44799998030066, -22.271100031211972],
+              [166.44799998030066, 53.35319997277111]
+            ]
+          ],
+          "type": "Polygon"
+        },
+        "properties": {}
+      },
+      "publisher": "Ministère de l'Enseignement supérieur, de la Recherche et de l'Espace",
+      "publisher_fr": "Ministère de l'Enseignement supérieur, de la Recherche et de l'Espace",
+      "publisher_en": "Ministère de l'Enseignement supérieur, de la Recherche et de l'Espace",
+      "references": "https://dossierappel.parcoursup.fr/Candidat/carte",
+      "records_count": 157509,
+      "attributions": [
+        "INSEE IGN NaturalEarth",
+        "INSEE IGN NaturalEarth DGGL",
+        "INSEE IGN NaturalEarth DGCL - BANATIC MEFR MAA"
+      ],
+      "source_domain": null,
+      "source_domain_title": null,
+      "source_domain_address": null,
+      "source_dataset": null,
+      "shared_catalog": null,
+      "federated": false,
+      "parent_domain": null,
+      "update_frequency": "CONT"
+    },
+    "custom": {
+      "temporal_coverage_from": "2019-12-31",
+      "temporal_coverage_to": "2026-12-31"
+    }
+  }
+}

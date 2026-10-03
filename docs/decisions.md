@@ -59,3 +59,28 @@ ESLint 9 is pinned because the React/import/accessibility plugins in the chosen
 Next.js configuration do not yet declare ESLint 10 compatibility. The v9
 deprecation is tracked in technical debt; upgrade when the complete toolchain
 supports the next major, with no peer-dependency overrides.
+
+## 008 — Raw snapshots before analytics
+
+Collect the 14 explicitly registered MESR datasets, including the superseded
+specialties archive, with separate source namespaces. JSONB retains all source
+values; a small set of indexed columns supports provenance and retrieval. Raw
+exports, catalog metadata and method attachments remain in local gzip archives.
+
+A release identifies a complete dataset, including every campaign it contains.
+Canonical row multisets preserve duplicate source rows while ignoring export
+order. Metadata definitions and method-file checksums participate in identity;
+volatile collection/processing timestamps do not. Retain all versions and imports.
+
+One direct PostgreSQL session holds a dataset lock. COPY and current-pointer
+publication share a transaction. Replay verifies local archives and cannot replace
+a different current release. Drizzle remains the only migration owner.
+
+Use SQLx 0.9 or newer: the previous 0.8.6 TLS transport can deadlock when a socket
+is blocked in both directions during a bulk transfer. This was observed during
+the first Neon load; the [upstream fix](https://github.com/transact-rs/sqlx/pull/4251)
+is included in 0.9. Local tests without TLS do not cover that transport behavior.
+
+No individual-level data, source harmonization, cross-campaign matching, frontend
+reads, business calculations or scheduled service is part of this milestone.
+See [ingestion](ingestion.md) for operating limits and backup obligations.

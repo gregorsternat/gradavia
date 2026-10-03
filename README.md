@@ -2,7 +2,7 @@
 
 A French platform for exploring and comparing public higher education admissions data, starting with Parcoursup.
 
-This repository currently contains the technical foundation: a Next.js shell, a development component gallery, a Rust CLI, database tooling, and an executable development harness. Data imports and product analytics come next.
+Orvio includes a Next.js shell, a development component gallery, and a Rust CLI that collects 14 public APB/Parcoursup datasets into PostgreSQL with immutable local source archives. Product analytics and data exploration in the frontend remain future work.
 
 ## Start locally
 
@@ -43,6 +43,16 @@ mise exec -- just db-check
 | `just db-migrate`  | Apply committed migrations using a direct connection       |
 | `just format`      | Format TypeScript, documentation, and Rust                 |
 
+Raw ingestion commands and archive recovery are documented in [ingestion](docs/ingestion.md).
+
+```sh
+mise exec -- just db-migrate
+mise exec -- just ingest sources
+mise exec -- just ingest sync
+mise exec -- just ingest status
+```
+
+`sync` writes to the explicitly configured database. Use an isolated development branch.
 Run commands through `mise exec --` if mise is not activated in your shell.
 
 ## Repository

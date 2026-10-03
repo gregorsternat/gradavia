@@ -1,0 +1,1739 @@
+{
+  "visibility": "domain",
+  "fields": [
+    {
+      "name": "session",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count",
+        "facet": true
+      },
+      "label": "Session",
+      "type": "text",
+      "label_fr": "Session",
+      "label_en": "Session",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "contrat_etab",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Statut de l’établissement de la filière de formation (public, privé…)",
+      "type": "text",
+      "label_fr": "Statut de l’établissement de la filière de formation (public, privé…)",
+      "label_en": "Statut de l’établissement de la filière de formation (public, privé…)",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "cod_uai",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Code UAI de l'établissement",
+      "type": "text",
+      "label_fr": "Code UAI de l'établissement",
+      "label_en": "Code UAI de l'établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "g_ea_lib_vx",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Établissement",
+      "type": "text",
+      "label_fr": "Établissement",
+      "label_en": "Établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "dep",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Code départemental de l’établissement",
+      "type": "text",
+      "label_fr": "Code départemental de l’établissement",
+      "label_en": "Code départemental de l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "dep_lib",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Département de l’établissement",
+      "type": "text",
+      "label_fr": "Département de l’établissement",
+      "label_en": "Département de l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "region_etab_aff",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Région de l’établissement",
+      "type": "text",
+      "label_fr": "Région de l’établissement",
+      "label_en": "Région de l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acad_mies",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Académie de l’établissement",
+      "type": "text",
+      "label_fr": "Académie de l’établissement",
+      "label_en": "Académie de l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "ville_etab",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Commune de l’établissement",
+      "type": "text",
+      "label_fr": "Commune de l’établissement",
+      "label_en": "Commune de l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "lib_for_voe_ins",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Filière de formation",
+      "type": "text",
+      "label_fr": "Filière de formation",
+      "label_en": "Filière de formation",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "select_form",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "facetsort": "-count"
+      },
+      "label": "Sélectivité",
+      "type": "text",
+      "label_fr": "Sélectivité",
+      "label_en": "Sélectivité",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "fili",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Filière de formation très agrégée",
+      "type": "text",
+      "label_fr": "Filière de formation très agrégée",
+      "label_en": "Filière de formation très agrégée",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "lib_comp_voe_ins",
+      "description": null,
+      "annotations": {},
+      "label": "Filière de formation détaillée",
+      "type": "text",
+      "label_fr": "Filière de formation détaillée",
+      "label_en": "Filière de formation détaillée",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "form_lib_voe_acc",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Filière de formation",
+      "type": "text",
+      "label_fr": "Filière de formation",
+      "label_en": "Filière de formation",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "fil_lib_voe_acc",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Filière de formation détaillée bis",
+      "type": "text",
+      "label_fr": "Filière de formation détaillée bis",
+      "label_en": "Filière de formation détaillée bis",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "detail_forma",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Filière de formation très détaillée",
+      "type": "text",
+      "label_fr": "Filière de formation très détaillée",
+      "label_en": "Filière de formation très détaillée",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "g_olocalisation_des_formations",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Coordonnées GPS de la formation",
+      "type": "geo_point_2d",
+      "label_fr": "Coordonnées GPS de la formation",
+      "label_en": "Coordonnées GPS de la formation",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "capa_fin",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Capacité de l’établissement par formation",
+      "type": "int",
+      "label_fr": "Capacité de l’établissement par formation",
+      "label_en": "Capacité de l’établissement par formation",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "voe_tot",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif total des candidats pour une formation",
+      "type": "int",
+      "label_fr": "Effectif total des candidats pour une formation",
+      "label_en": "Effectif total des candidats pour une formation",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "voe_tot_f",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des candidates pour une formation",
+      "type": "int",
+      "label_fr": "Dont effectif des candidates pour une formation",
+      "label_en": "Dont effectif des candidates pour une formation",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_voe_pp",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif total des candidats en phase principale",
+      "type": "int",
+      "label_fr": "Effectif total des candidats en phase principale",
+      "label_en": "Effectif total des candidats en phase principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_voe_pp_internat",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des candidats ayant postulé en internat",
+      "type": "int",
+      "label_fr": "Dont effectif des candidats ayant postulé en internat",
+      "label_en": "Dont effectif des candidats ayant postulé en internat",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_voe_pp_bg",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des candidats néo bacheliers généraux en phase principale",
+      "type": "int",
+      "label_fr": "Effectif des candidats néo bacheliers généraux en phase principale",
+      "label_en": "Effectif des candidats néo bacheliers généraux en phase principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_voe_pp_bg_brs",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des candidats boursiers néo bacheliers généraux en phase principale",
+      "type": "int",
+      "label_fr": "Dont effectif des candidats boursiers néo bacheliers généraux en phase principale",
+      "label_en": "Dont effectif des candidats boursiers néo bacheliers généraux en phase principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_voe_pp_bt",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des candidats néo bacheliers technologiques en phase principale",
+      "type": "int",
+      "label_fr": "Effectif des candidats néo bacheliers technologiques en phase principale",
+      "label_en": "Effectif des candidats néo bacheliers technologiques en phase principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_voe_pp_bt_brs",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des candidats boursiers néo bacheliers technologiques en phase principale",
+      "type": "int",
+      "label_fr": "Dont effectif des candidats boursiers néo bacheliers technologiques en phase principale",
+      "label_en": "Dont effectif des candidats boursiers néo bacheliers technologiques en phase principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_voe_pp_bp",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des candidats néo bacheliers professionnels en phase principale",
+      "type": "int",
+      "label_fr": "Effectif des candidats néo bacheliers professionnels en phase principale",
+      "label_en": "Effectif des candidats néo bacheliers professionnels en phase principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_voe_pp_bp_brs",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des candidats boursiers néo bacheliers professionnels en phase principale",
+      "type": "int",
+      "label_fr": "Dont effectif des candidats boursiers néo bacheliers professionnels en phase principale",
+      "label_en": "Dont effectif des candidats boursiers néo bacheliers professionnels en phase principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_voe_pp_at",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des autres candidats en phase principale",
+      "type": "int",
+      "label_fr": "Effectif des autres candidats en phase principale",
+      "label_en": "Effectif des autres candidats en phase principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_voe_pc",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif total des candidats en phase complémentaire",
+      "type": "int",
+      "label_fr": "Effectif total des candidats en phase complémentaire",
+      "label_en": "Effectif total des candidats en phase complémentaire",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_voe_pc_bg",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des candidats néo bacheliers généraux en phase complémentaire",
+      "type": "int",
+      "label_fr": "Effectif des candidats néo bacheliers généraux en phase complémentaire",
+      "label_en": "Effectif des candidats néo bacheliers généraux en phase complémentaire",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_voe_pc_bt",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des candidats néo bacheliers technologique en phase complémentaire",
+      "type": "int",
+      "label_fr": "Effectif des candidats néo bacheliers technologique en phase complémentaire",
+      "label_en": "Effectif des candidats néo bacheliers technologique en phase complémentaire",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_voe_pc_bp",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des candidats néo bacheliers professionnels en phase complémentaire",
+      "type": "int",
+      "label_fr": "Effectif des candidats néo bacheliers professionnels en phase complémentaire",
+      "label_en": "Effectif des candidats néo bacheliers professionnels en phase complémentaire",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_voe_pc_at",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectifs des autres candidats en phase complémentaire",
+      "type": "int",
+      "label_fr": "Effectifs des autres candidats en phase complémentaire",
+      "label_en": "Effectifs des autres candidats en phase complémentaire",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_cla_pp",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif total des candidats classés par l’établissement en phase principale",
+      "type": "int",
+      "label_fr": "Effectif total des candidats classés par l’établissement en phase principale",
+      "label_en": "Effectif total des candidats classés par l’établissement en phase principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_cla_pc",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des candidats classés par l’établissement en phase complémentaire",
+      "type": "int",
+      "label_fr": "Effectif des candidats classés par l’établissement en phase complémentaire",
+      "label_en": "Effectif des candidats classés par l’établissement en phase complémentaire",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_cla_pp_internat",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des candidats classés par l’établissement en internat (CPGE)",
+      "type": "int",
+      "label_fr": "Effectif des candidats classés par l’établissement en internat (CPGE)",
+      "label_en": "Effectif des candidats classés par l’établissement en internat (CPGE)",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_cla_pp_pasinternat",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des candidats classés par l’établissement hors internat (CPGE)",
+      "type": "int",
+      "label_fr": "Effectif des candidats classés par l’établissement hors internat (CPGE)",
+      "label_en": "Effectif des candidats classés par l’établissement hors internat (CPGE)",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_cla_pp_bg",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des candidats néo bacheliers généraux classés par l’établissement",
+      "type": "int",
+      "label_fr": "Effectif des candidats néo bacheliers généraux classés par l’établissement",
+      "label_en": "Effectif des candidats néo bacheliers généraux classés par l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_cla_pp_bg_brs",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des candidats boursiers néo bacheliers généraux classés par l’établissement",
+      "type": "int",
+      "label_fr": "Dont effectif des candidats boursiers néo bacheliers généraux classés par l’établissement",
+      "label_en": "Dont effectif des candidats boursiers néo bacheliers généraux classés par l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_cla_pp_bt",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des candidats néo bacheliers technologiques classés par l’établissement",
+      "type": "int",
+      "label_fr": "Effectif des candidats néo bacheliers technologiques classés par l’établissement",
+      "label_en": "Effectif des candidats néo bacheliers technologiques classés par l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_cla_pp_bt_brs",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des candidats boursiers néo bacheliers technologiques classés par l’établissement",
+      "type": "int",
+      "label_fr": "Dont effectif des candidats boursiers néo bacheliers technologiques classés par l’établissement",
+      "label_en": "Dont effectif des candidats boursiers néo bacheliers technologiques classés par l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_cla_pp_bp",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des candidats néo bacheliers professionnels classés par l’établissement",
+      "type": "int",
+      "label_fr": "Effectif des candidats néo bacheliers professionnels classés par l’établissement",
+      "label_en": "Effectif des candidats néo bacheliers professionnels classés par l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_cla_pp_bp_brs",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des candidats boursiers néo bacheliers professionnels classés par l’établissement",
+      "type": "int",
+      "label_fr": "Dont effectif des candidats boursiers néo bacheliers professionnels classés par l’établissement",
+      "label_en": "Dont effectif des candidats boursiers néo bacheliers professionnels classés par l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "nb_cla_pp_at",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des autres candidats classés par l’établissement",
+      "type": "int",
+      "label_fr": "Effectif des autres candidats classés par l’établissement",
+      "label_en": "Effectif des autres candidats classés par l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "prop_tot",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif total des candidats ayant reçu une proposition d’admission de la part de l’établissement",
+      "type": "int",
+      "label_fr": "Effectif total des candidats ayant reçu une proposition d’admission de la part de l’établissement",
+      "label_en": "Effectif total des candidats ayant reçu une proposition d’admission de la part de l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_tot",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif total des candidats ayant accepté la proposition de l’établissement (admis)",
+      "type": "int",
+      "label_fr": "Effectif total des candidats ayant accepté la proposition de l’établissement (admis)",
+      "label_en": "Effectif total des candidats ayant accepté la proposition de l’établissement (admis)",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_tot_f",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des candidates admises",
+      "type": "int",
+      "label_fr": "Dont effectif des candidates admises",
+      "label_en": "Dont effectif des candidates admises",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_pp",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des admis en phase principale",
+      "type": "int",
+      "label_fr": "Effectif des admis en phase principale",
+      "label_en": "Effectif des admis en phase principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_pc",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des admis en phase complémentaire",
+      "type": "int",
+      "label_fr": "Effectif des admis en phase complémentaire",
+      "label_en": "Effectif des admis en phase complémentaire",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_debutpp",
+      "description": null,
+      "annotations": {},
+      "label": "Dont effectif des admis ayant reçu leur proposition d’admission à l'ouverture de la procédure principale",
+      "type": "int",
+      "label_fr": "Dont effectif des admis ayant reçu leur proposition d’admission à l'ouverture de la procédure principale",
+      "label_en": "Dont effectif des admis ayant reçu leur proposition d’admission à l'ouverture de la procédure principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_datebac",
+      "description": null,
+      "annotations": {},
+      "label": "Dont effectif des admis ayant reçu leur proposition d’admission avant le baccalauréat",
+      "type": "int",
+      "label_fr": "Dont effectif des admis ayant reçu leur proposition d’admission avant le baccalauréat",
+      "label_en": "Dont effectif des admis ayant reçu leur proposition d’admission avant le baccalauréat",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_finpp",
+      "description": null,
+      "annotations": {},
+      "label": "Dont effectif des admis ayant reçu leur proposition d’admission avant la fin de la procédure principale",
+      "type": "int",
+      "label_fr": "Dont effectif des admis ayant reçu leur proposition d’admission avant la fin de la procédure principale",
+      "label_en": "Dont effectif des admis ayant reçu leur proposition d’admission avant la fin de la procédure principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_internat",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des admis en internat",
+      "type": "int",
+      "label_fr": "Dont effectif des admis en internat",
+      "label_en": "Dont effectif des admis en internat",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_brs",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des admis boursiers néo bacheliers",
+      "type": "int",
+      "label_fr": "Dont effectif des admis boursiers néo bacheliers",
+      "label_en": "Dont effectif des admis boursiers néo bacheliers",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_neobac",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des admis néo bacheliers",
+      "type": "int",
+      "label_fr": "Effectif des admis néo bacheliers",
+      "label_en": "Effectif des admis néo bacheliers",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_bg",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des admis néo bacheliers généraux",
+      "type": "int",
+      "label_fr": "Effectif des admis néo bacheliers généraux",
+      "label_en": "Effectif des admis néo bacheliers généraux",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_bt",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des admis néo bacheliers technologiques",
+      "type": "int",
+      "label_fr": "Effectif des admis néo bacheliers technologiques",
+      "label_en": "Effectif des admis néo bacheliers technologiques",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_bp",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des admis néo bacheliers professionnels",
+      "type": "int",
+      "label_fr": "Effectif des admis néo bacheliers professionnels",
+      "label_en": "Effectif des admis néo bacheliers professionnels",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_at",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des autres candidats admis",
+      "type": "int",
+      "label_fr": "Effectif des autres candidats admis",
+      "label_en": "Effectif des autres candidats admis",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_mention_nonrenseignee",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des admis néo bacheliers sans information sur la mention au bac",
+      "type": "int",
+      "label_fr": "Dont effectif des admis néo bacheliers sans information sur la mention au bac",
+      "label_en": "Dont effectif des admis néo bacheliers sans information sur la mention au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_sansmention",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des admis néo bacheliers sans mention au bac",
+      "type": "int",
+      "label_fr": "Dont effectif des admis néo bacheliers sans mention au bac",
+      "label_en": "Dont effectif des admis néo bacheliers sans mention au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_ab",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des admis néo bacheliers avec mention Assez Bien au bac",
+      "type": "int",
+      "label_fr": "Dont effectif des admis néo bacheliers avec mention Assez Bien au bac",
+      "label_en": "Dont effectif des admis néo bacheliers avec mention Assez Bien au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_b",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des admis néo bacheliers avec mention Bien au bac",
+      "type": "int",
+      "label_fr": "Dont effectif des admis néo bacheliers avec mention Bien au bac",
+      "label_en": "Dont effectif des admis néo bacheliers avec mention Bien au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_tb",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des admis néo bacheliers avec mention Très Bien au bac",
+      "type": "int",
+      "label_fr": "Dont effectif des admis néo bacheliers avec mention Très Bien au bac",
+      "label_en": "Dont effectif des admis néo bacheliers avec mention Très Bien au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_tbf",
+      "description": null,
+      "annotations": {},
+      "label": "Dont effectif des admis néo bacheliers avec mention Très Bien avec félicitations au bac",
+      "type": "int",
+      "label_fr": "Dont effectif des admis néo bacheliers avec mention Très Bien avec félicitations au bac",
+      "label_en": "Dont effectif des admis néo bacheliers avec mention Très Bien avec félicitations au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_bg_mention",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des admis néo bacheliers généraux ayant eu une mention au bac",
+      "type": "int",
+      "label_fr": "Effectif des admis néo bacheliers généraux ayant eu une mention au bac",
+      "label_en": "Effectif des admis néo bacheliers généraux ayant eu une mention au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_bt_mention",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des admis néo bacheliers technologiques ayant eu une mention au bac",
+      "type": "int",
+      "label_fr": "Effectif des admis néo bacheliers technologiques ayant eu une mention au bac",
+      "label_en": "Effectif des admis néo bacheliers technologiques ayant eu une mention au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_bp_mention",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des admis néo bacheliers professionnels ayant eu une mention au bac",
+      "type": "int",
+      "label_fr": "Effectif des admis néo bacheliers professionnels ayant eu une mention au bac",
+      "label_en": "Effectif des admis néo bacheliers professionnels ayant eu une mention au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_term",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des admis issus du même établissement (BTS/CPGE)",
+      "type": "int",
+      "label_fr": "Dont effectif des admis issus du même établissement (BTS/CPGE)",
+      "label_en": "Dont effectif des admis issus du même établissement (BTS/CPGE)",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_term_f",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des admises issues du même établissement (BTS/CPGE)",
+      "type": "int",
+      "label_fr": "Dont effectif des admises issues du même établissement (BTS/CPGE)",
+      "label_en": "Dont effectif des admises issues du même établissement (BTS/CPGE)",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_aca_orig",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des admis issus de la même académie",
+      "type": "int",
+      "label_fr": "Dont effectif des admis issus de la même académie",
+      "label_en": "Dont effectif des admis issus de la même académie",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_aca_orig_idf",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Dont effectif des admis issus de la même académie (Paris/Créteil/Versailles réunies)",
+      "type": "int",
+      "label_fr": "Dont effectif des admis issus de la même académie (Paris/Créteil/Versailles réunies)",
+      "label_en": "Dont effectif des admis issus de la même académie (Paris/Créteil/Versailles réunies)",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_acc_debutpp",
+      "description": null,
+      "annotations": {},
+      "label": "% d’admis ayant reçu leur proposition d’admission à l'ouverture de la procédure principale",
+      "type": "double",
+      "label_fr": "% d’admis ayant reçu leur proposition d’admission à l'ouverture de la procédure principale",
+      "label_en": "% d’admis ayant reçu leur proposition d’admission à l'ouverture de la procédure principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_acc_datebac",
+      "description": null,
+      "annotations": {},
+      "label": "% d’admis ayant reçu leur proposition d’admission avant le baccalauréat",
+      "type": "double",
+      "label_fr": "% d’admis ayant reçu leur proposition d’admission avant le baccalauréat",
+      "label_en": "% d’admis ayant reçu leur proposition d’admission avant le baccalauréat",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_acc_finpp",
+      "description": null,
+      "annotations": {},
+      "label": "% d’admis ayant reçu leur proposition d’admission avant la fin de la procédure principale",
+      "type": "double",
+      "label_fr": "% d’admis ayant reçu leur proposition d’admission avant la fin de la procédure principale",
+      "label_en": "% d’admis ayant reçu leur proposition d’admission avant la fin de la procédure principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_f",
+      "description": null,
+      "annotations": {
+        "unit": "%",
+        "decimals": 1
+      },
+      "label": "% d’admis dont filles",
+      "type": "double",
+      "label_fr": "% d’admis dont filles",
+      "label_en": "% d’admis dont filles",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_aca_orig",
+      "description": null,
+      "annotations": {
+        "unit": "%",
+        "decimals": 1
+      },
+      "label": "% d’admis néo bacheliers issus de la même académie",
+      "type": "double",
+      "label_fr": "% d’admis néo bacheliers issus de la même académie",
+      "label_en": "% d’admis néo bacheliers issus de la même académie",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_aca_orig_idf",
+      "description": null,
+      "annotations": {
+        "unit": "%",
+        "decimals": 1
+      },
+      "label": "% d’admis néo bacheliers issus de la même académie (Paris/Créteil/Versailles réunies)",
+      "type": "double",
+      "label_fr": "% d’admis néo bacheliers issus de la même académie (Paris/Créteil/Versailles réunies)",
+      "label_en": "% d’admis néo bacheliers issus de la même académie (Paris/Créteil/Versailles réunies)",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_etab_orig",
+      "description": null,
+      "annotations": {
+        "unit": "%",
+        "decimals": 1
+      },
+      "label": "% d’admis néo bacheliers issus du même établissement (BTS/CPGE)",
+      "type": "double",
+      "label_fr": "% d’admis néo bacheliers issus du même établissement (BTS/CPGE)",
+      "label_en": "% d’admis néo bacheliers issus du même établissement (BTS/CPGE)",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_bours",
+      "description": null,
+      "annotations": {
+        "decimals": 1,
+        "unit": "%"
+      },
+      "label": "% d’admis néo bacheliers boursiers",
+      "type": "double",
+      "label_fr": "% d’admis néo bacheliers boursiers",
+      "label_en": "% d’admis néo bacheliers boursiers",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_neobac",
+      "description": null,
+      "annotations": {
+        "unit": "%",
+        "decimals": 1
+      },
+      "label": "% d’admis néo bacheliers",
+      "type": "double",
+      "label_fr": "% d’admis néo bacheliers",
+      "label_en": "% d’admis néo bacheliers",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_mention_nonrenseignee",
+      "description": null,
+      "annotations": {
+        "decimals": 1,
+        "unit": "%"
+      },
+      "label": "% d’admis néo bacheliers sans information sur la mention au bac",
+      "type": "double",
+      "label_fr": "% d’admis néo bacheliers sans information sur la mention au bac",
+      "label_en": "% d’admis néo bacheliers sans information sur la mention au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_sansmention",
+      "description": null,
+      "annotations": {
+        "unit": "%",
+        "decimals": 1
+      },
+      "label": "% d’admis néo bacheliers sans mention au bac",
+      "type": "double",
+      "label_fr": "% d’admis néo bacheliers sans mention au bac",
+      "label_en": "% d’admis néo bacheliers sans mention au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_ab",
+      "description": null,
+      "annotations": {
+        "unit": "%",
+        "decimals": 1
+      },
+      "label": "% d’admis néo bacheliers avec mention Assez Bien au bac",
+      "type": "double",
+      "label_fr": "% d’admis néo bacheliers avec mention Assez Bien au bac",
+      "label_en": "% d’admis néo bacheliers avec mention Assez Bien au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_b",
+      "description": null,
+      "annotations": {
+        "decimals": 1,
+        "unit": "%"
+      },
+      "label": "% d’admis néo bacheliers avec mention Bien au bac",
+      "type": "double",
+      "label_fr": "% d’admis néo bacheliers avec mention Bien au bac",
+      "label_en": "% d’admis néo bacheliers avec mention Bien au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_tb",
+      "description": null,
+      "annotations": {
+        "decimals": 1,
+        "unit": "%"
+      },
+      "label": "% d’admis néo bacheliers avec mention Très Bien au bac",
+      "type": "double",
+      "label_fr": "% d’admis néo bacheliers avec mention Très Bien au bac",
+      "label_en": "% d’admis néo bacheliers avec mention Très Bien au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_tbf",
+      "description": null,
+      "annotations": {
+        "unit": "%",
+        "decimals": 1
+      },
+      "label": "% d’admis néo bacheliers avec mention Très Bien avec félicitations au bac",
+      "type": "double",
+      "label_fr": "% d’admis néo bacheliers avec mention Très Bien avec félicitations au bac",
+      "label_en": "% d’admis néo bacheliers avec mention Très Bien avec félicitations au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_bg",
+      "description": null,
+      "annotations": {
+        "unit": "%",
+        "decimals": 1
+      },
+      "label": "% d’admis néo bacheliers généraux",
+      "type": "double",
+      "label_fr": "% d’admis néo bacheliers généraux",
+      "label_en": "% d’admis néo bacheliers généraux",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_bg_mention",
+      "description": null,
+      "annotations": {
+        "decimals": 1,
+        "unit": "%"
+      },
+      "label": "Dont % d’admis avec mention (BG)",
+      "type": "double",
+      "label_fr": "Dont % d’admis avec mention (BG)",
+      "label_en": "Dont % d’admis avec mention (BG)",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_bt",
+      "description": null,
+      "annotations": {
+        "unit": "%",
+        "decimals": 1
+      },
+      "label": "% d’admis néo bacheliers technologiques",
+      "type": "double",
+      "label_fr": "% d’admis néo bacheliers technologiques",
+      "label_en": "% d’admis néo bacheliers technologiques",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_bt_mention",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count",
+        "unit": "%",
+        "decimals": 1
+      },
+      "label": "Dont % d’admis avec mention (BT)",
+      "type": "double",
+      "label_fr": "Dont % d’admis avec mention (BT)",
+      "label_en": "Dont % d’admis avec mention (BT)",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_bp",
+      "description": null,
+      "annotations": {
+        "decimals": 1,
+        "unit": "%"
+      },
+      "label": "% d’admis néo bacheliers professionnels",
+      "type": "double",
+      "label_fr": "% d’admis néo bacheliers professionnels",
+      "label_en": "% d’admis néo bacheliers professionnels",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "pct_bp_mention",
+      "description": null,
+      "annotations": {
+        "unit": "%",
+        "decimals": 1
+      },
+      "label": "Dont % d’admis avec mention (BP)",
+      "type": "double",
+      "label_fr": "Dont % d’admis avec mention (BP)",
+      "label_en": "Dont % d’admis avec mention (BP)",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "prop_tot_bg",
+      "description": null,
+      "annotations": {},
+      "label": "Effectif des candidats en terminale générale ayant reçu une proposition d’admission de la part de l’établissement",
+      "type": "double",
+      "label_fr": "Effectif des candidats en terminale générale ayant reçu une proposition d’admission de la part de l’établissement",
+      "label_en": "Effectif des candidats en terminale générale ayant reçu une proposition d’admission de la part de l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "prop_tot_bg_brs",
+      "description": null,
+      "annotations": {},
+      "label": "Dont effectif des candidats boursiers en terminale générale ayant reçu une proposition d’admission de la part de l’établissement",
+      "type": "double",
+      "label_fr": "Dont effectif des candidats boursiers en terminale générale ayant reçu une proposition d’admission de la part de l’établissement",
+      "label_en": "Dont effectif des candidats boursiers en terminale générale ayant reçu une proposition d’admission de la part de l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "prop_tot_bt",
+      "description": null,
+      "annotations": {},
+      "label": "Effectif des candidats en terminale technologique ayant reçu une proposition d’admission de la part de l’établissement",
+      "type": "double",
+      "label_fr": "Effectif des candidats en terminale technologique ayant reçu une proposition d’admission de la part de l’établissement",
+      "label_en": "Effectif des candidats en terminale technologique ayant reçu une proposition d’admission de la part de l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "prop_tot_bt_brs",
+      "description": null,
+      "annotations": {},
+      "label": "Dont effectif des candidats boursiers en terminale technologique ayant reçu une proposition d’admission de la part de l’établissement",
+      "type": "double",
+      "label_fr": "Dont effectif des candidats boursiers en terminale technologique ayant reçu une proposition d’admission de la part de l’établissement",
+      "label_en": "Dont effectif des candidats boursiers en terminale technologique ayant reçu une proposition d’admission de la part de l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "prop_tot_bp",
+      "description": null,
+      "annotations": {},
+      "label": "Effectif des candidats en terminale professionnelle ayant reçu une proposition d’admission de la part de l’établissement",
+      "type": "double",
+      "label_fr": "Effectif des candidats en terminale professionnelle ayant reçu une proposition d’admission de la part de l’établissement",
+      "label_en": "Effectif des candidats en terminale professionnelle ayant reçu une proposition d’admission de la part de l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "prop_tot_bp_brs",
+      "description": null,
+      "annotations": {},
+      "label": "Dont effectif des candidats boursiers en terminale générale professionnelle ayant reçu une proposition d’admission de la part de l’établissement",
+      "type": "double",
+      "label_fr": "Dont effectif des candidats boursiers en terminale générale professionnelle ayant reçu une proposition d’admission de la part de l’établissement",
+      "label_en": "Dont effectif des candidats boursiers en terminale générale professionnelle ayant reçu une proposition d’admission de la part de l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "prop_tot_at",
+      "description": null,
+      "annotations": {},
+      "label": "Effectif des autres candidats ayant reçu une proposition d’admission de la part de l’établissement",
+      "type": "double",
+      "label_fr": "Effectif des autres candidats ayant reçu une proposition d’admission de la part de l’établissement",
+      "label_en": "Effectif des autres candidats ayant reçu une proposition d’admission de la part de l’établissement",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "lib_grp1",
+      "description": null,
+      "annotations": {},
+      "label": "Regroupement 1 effectué par les formations pour les classements",
+      "type": "text",
+      "label_fr": "Regroupement 1 effectué par les formations pour les classements",
+      "label_en": "Regroupement 1 effectué par les formations pour les classements",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "ran_grp1",
+      "description": null,
+      "annotations": {},
+      "label": "Rang du dernier appelé du groupe 1",
+      "type": "int",
+      "label_fr": "Rang du dernier appelé du groupe 1",
+      "label_en": "Rang du dernier appelé du groupe 1",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "lib_grp2",
+      "description": null,
+      "annotations": {},
+      "label": "Regroupement 2 effectué par les formations pour les classements",
+      "type": "text",
+      "label_fr": "Regroupement 2 effectué par les formations pour les classements",
+      "label_en": "Regroupement 2 effectué par les formations pour les classements",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "ran_grp2",
+      "description": null,
+      "annotations": {},
+      "label": "Rang du dernier appelé du groupe 2",
+      "type": "int",
+      "label_fr": "Rang du dernier appelé du groupe 2",
+      "label_en": "Rang du dernier appelé du groupe 2",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "lib_grp3",
+      "description": null,
+      "annotations": {},
+      "label": "Regroupement 3 effectué par les formations pour les classements",
+      "type": "text",
+      "label_fr": "Regroupement 3 effectué par les formations pour les classements",
+      "label_en": "Regroupement 3 effectué par les formations pour les classements",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "ran_grp3",
+      "description": null,
+      "annotations": {},
+      "label": "Rang du dernier appelé du groupe 3",
+      "type": "int",
+      "label_fr": "Rang du dernier appelé du groupe 3",
+      "label_en": "Rang du dernier appelé du groupe 3",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "list_com",
+      "description": null,
+      "annotations": {},
+      "label": "list_com",
+      "type": "text",
+      "label_fr": "list_com",
+      "label_en": "list_com",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "tri",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "sortable": true
+      },
+      "label": "tri",
+      "type": "text",
+      "label_fr": "tri",
+      "label_en": "tri",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "cod_aff_form",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "facetsort": "-count"
+      },
+      "label": "cod_aff_form",
+      "type": "text",
+      "label_fr": "cod_aff_form",
+      "label_en": "cod_aff_form",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "detail_forma2",
+      "description": null,
+      "annotations": {},
+      "label": "Concours communs et banque d'épreuves",
+      "type": "text",
+      "label_fr": "Concours communs et banque d'épreuves",
+      "label_en": "Concours communs et banque d'épreuves",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "lien_form_psup",
+      "description": null,
+      "annotations": {},
+      "label": "Lien de la formation sur la plateforme Parcoursup",
+      "type": "text",
+      "label_fr": "Lien de la formation sur la plateforme Parcoursup",
+      "label_en": "Lien de la formation sur la plateforme Parcoursup",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "taux_acces_ens",
+      "description": "rapport entre le nombre de candidats dont le rang de classement est inférieur ou égal au rang du dernier appelé de son groupe et le nombre de candidats ayant validé un vœu pour la formation étudiée en phase principale",
+      "annotations": {},
+      "label": "Taux d’accès",
+      "type": "int",
+      "label_fr": "Taux d’accès",
+      "label_en": "Taux d’accès",
+      "description_fr": "rapport entre le nombre de candidats dont le rang de classement est inférieur ou égal au rang du dernier appelé de son groupe et le nombre de candidats ayant validé un vœu pour la formation étudiée en phase principale",
+      "description_en": "rapport entre le nombre de candidats dont le rang de classement est inférieur ou égal au rang du dernier appelé de son groupe et le nombre de candidats ayant validé un vœu pour la formation étudiée en phase principale"
+    },
+    {
+      "name": "part_acces_gen",
+      "description": null,
+      "annotations": {},
+      "label": "Part des terminales générales qui étaient en position de recevoir une proposition en phase principale",
+      "type": "int",
+      "label_fr": "Part des terminales générales qui étaient en position de recevoir une proposition en phase principale",
+      "label_en": "Part des terminales générales qui étaient en position de recevoir une proposition en phase principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "part_acces_tec",
+      "description": null,
+      "annotations": {},
+      "label": "Part des terminales technologiques qui étaient en position de recevoir une proposition en phase principale",
+      "type": "int",
+      "label_fr": "Part des terminales technologiques qui étaient en position de recevoir une proposition en phase principale",
+      "label_en": "Part des terminales technologiques qui étaient en position de recevoir une proposition en phase principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "part_acces_pro",
+      "description": null,
+      "annotations": {},
+      "label": "Part des terminales professionnelles qui étaient en position de recevoir une proposition en phase principale",
+      "type": "int",
+      "label_fr": "Part des terminales professionnelles qui étaient en position de recevoir une proposition en phase principale",
+      "label_en": "Part des terminales professionnelles qui étaient en position de recevoir une proposition en phase principale",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "etablissement_id_paysage",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "etablissement_id_paysage",
+      "type": "text",
+      "label_fr": "etablissement_id_paysage",
+      "label_en": "etablissement_id_paysage",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "composante_id_paysage",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "composante_id_paysage",
+      "type": "text",
+      "label_fr": "composante_id_paysage",
+      "label_en": "composante_id_paysage",
+      "description_fr": null,
+      "description_en": null
+    }
+  ],
+  "dataset_id": "fr-esr-parcoursup",
+  "dataset_uid": "da_kkncyw",
+  "has_records": true,
+  "features": ["geo", "analyze", "custom_view"],
+  "attachments": [
+    {
+      "id": "methodologie_opendata_2025pdf",
+      "title": "Methodologie_Opendata_2025.pdf",
+      "mimetype": "application/pdf",
+      "url": "https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-parcoursup/attachments/methodologie_opendata_2025pdf"
+    }
+  ],
+  "alternative_exports": [],
+  "data_visible": true,
+  "metas": {
+    "dcat": {
+      "created": "2026-01-19",
+      "issued": "2026-03-09",
+      "creator": "Département des études statistiques de l'enseignement supérieur",
+      "contributor": null,
+      "contact_name": null,
+      "contact_email": null,
+      "accrualperiodicity": "Annuel",
+      "spatial": "France et collectivités d'outre-mer (y. c. TOM, Nouvelle-Calédonie),  établissements AEFE à l’étranger et CNED",
+      "temporal": "Année",
+      "granularity": "Formation dans l'établissement d'accueil",
+      "dataquality": null,
+      "publisher_type": "NationalAuthority",
+      "conforms_to": null,
+      "temporal_coverage_start": null,
+      "temporal_coverage_end": null,
+      "accessRights": null,
+      "relation": null
+    },
+    "default": {
+      "title": "Parcoursup 2025 - vœux de poursuite d'études et de réorientation dans l'enseignement supérieur et réponses des établissements",
+      "title_fr": "Parcoursup 2025 - vœux de poursuite d'études et de réorientation dans l'enseignement supérieur et réponses des établissements",
+      "title_en": "Parcoursup 2025 – Wishes for continuing studies, reorientation in higher education, and institution responses",
+      "description": "<p>Ce jeu de données présente les vœux de poursuite d’études et de réorientation dans l’enseignement supérieur ainsi que les propositions des établissements pour chaque formation – hors apprentissage – à la fin du processus d’affectation de la plateforme Parcoursup pour la session 2024 (du 15 janvier au 10 septembre 2025).</p><p>Les données sont tirées de la plateforme Parcoursup 2025 et prennent en compte l’ensemble de la campagne jusqu’à la date du 10 septembre 2025. Elles sont disponibles sous forme de base de données à télécharger et sous forme de <a href=\"https://data.enseignementsup-recherche.gouv.fr/pages/parcoursupdata/?disjunctive.fili&amp;sort=tri\" style=\"\" target=\"_blank\">visualisation graphique « dataviz »</a>.</p><p>/!\\ Ce jeu de données a été actualisé le 9 mars 2026 pour ajouter le taux d'accès et le rang de certaines formations préalablement non disponibles.</p><p>Un nouveau jeu de données est désormais disponible pour suivre les formations en apprentissage <a href=\"https://data.enseignementsup-recherche.gouv.fr/explore/assets/fr-esr-parcoursup-apprentissage/\" target=\"_blank\">Parcoursup apprentissage - vœux de poursuite d'études et de réorientation dans l'enseignement supérieur et réponses des établissements</a></p><hr><p>Ce jeu de données est bâti à partir des données Parcoursup de la campagne 2025. L’application Parcoursup est la plateforme nationale de préinscription mise en place par le Ministère de l’Enseignement supérieur et de la recherche permettant aux élèves de candidater à l’entrée dans l’enseignement supérieur.</p><p>Il couvre l’ensemble des candidats ayant au moins un voeu d’orientation validé en phase principale (PP) et/ou complémentaire (PC), ce parmi les 14 252 formations proposées hors apprentissage. Il couvre ainsi 1 015 200 candidats. Un sous ensemble de données porte spécifiquement sur les 652 800 néo-bacheliers parmi ces candidats (y compris ceux inscrits à l’Agence pour l'enseignement français à l’étranger). Les néo-bacheliers sont les élèves inscrits en classe de terminale française pour l’année scolaire 2024-2025, dans les filières générales, professionnelles ou technologiques.  </p><hr><p><span style=\"font-family: inherit; font-size: 0.875rem;\"><a href=\"https://data.enseignementsup-recherche.gouv.fr/pages/parcoursupdata/?disjunctive.fili&amp;sort=tri\" target=\"_blank\">Ce jeu de données est complété par une « dataviz » proposant une visualisation des principaux indicateurs</a>. </span>Ainsi, sont représentés graphiquement pour chaque formation détaillée, la capacité d’accueil, le nombre de vœux faits par les candidats dans une formation, le nombre de propositions d’admission faites par l’établissement sur cette formation, le nombre de candidats qui ont accepté cette proposition dans l’ensemble des phases de la procédure, les rangs du dernier appelé en phase principal.</p><p><a href=\"https://data.enseignementsup-recherche.gouv.fr/pages/parcoursupdata/?disjunctive.fili&amp;sort=tri\" target=\"_blank\"><img src=\"https://dataesr.enseignementsup-recherche.pro/images/P811-PORTFOLIO_FR_PARCOURSUP_EXPLORER.png\" style=\"width: 532px;\"/></a><span style=\"font-family: inherit; font-size: 0.875rem;\"><br></span></p><p>Ces principaux indicateurs sont complétés par un graphique représentant le rythme auquel les candidats qui s’inscrivent dans une formation, ont vu cette formation leur être proposée. Enfin, un zoom est réalisé sur le profil des néo-bacheliers qui ont accepté la proposition d’admission de la formation : série de baccalauréat, mention au baccalauréat (dont la mention « Très bien » agrégée), bénéficiaire de bourse de l’enseignement secondaire ou non, origine géographique.</p><p><span style=\"font-family: inherit; font-size: 0.875rem;\">Cette <a href=\"https://data.enseignementsup-recherche.gouv.fr/pages/parcoursupdata/?disjunctive.fili&amp;sort=tri\" target=\"_blank\">dataviz </a></span><span style=\"font-family: inherit; font-size: 0.875rem;\">se veut un outil complémentaire d’aide aux lycéens candidatant sur Parcoursup, en leur permettant de repérer un certain nombre de caractéristiques synthétiques sur chaque formation, reflétant les profils des admis ainsi que le rythme auquel les admis se sont vus, au cours de la procédure, proposer la formation in fine choisie.</span></p><p>Les informations sont accessibles selon l’établissement d’accueil et la formation : </p><ul><li>Le nom de l’établissement et son n°UAI</li><li>La région, l’académie et le département de l’établissement</li><li>La formation demandée, agrégée et détaillée ainsi que sa nature sélective ou non</li><li>Le nombre de places (capacité d’accueil)</li><li>Le nombre de vœux reçus selon le sexe et la série du baccalauréat</li><li>Le nombre de vœux classés par l’établissement de la formation d’accueil selon la série du baccalauréat</li><li>Le nombre de propositions d’admission faites selon la série du baccalauréat </li><li>Le nombre de propositions d’admission faites aux différentes dates clés de la campagne Parcoursup et qui seront ensuite acceptées </li><li>Le nombre d’admis selon le sexe, la série du baccalauréat et la mention obtenue</li><li>Le rang du dernier appelé de son groupe parmi les candidatures en phase principale</li><li>Le nombre de boursiers de l’enseignement secondaire pour les lycéens de terminale et de l’enseignement supérieur pour les étudiants en réorientation</li><li>Le nombre de candidats admis en BTS ou en CPGE et issus de leur lycée (i.e. le lycée où ils étaient inscrits en terminale)</li></ul><p>Depuis 2021 la mention « Très bien » est détaillée par deux variables : la mention « Très Bien (hors félicitations) » (entre 16 et 18 de moyenne au baccalauréat) et la mention « Très bien avec félicitations du jury » (plus de 18 de moyenne au baccalauréat). Également, le nombre de groupes d’appelés a été réduit à trois ; il s’agit du rang affiché sur la cartographie Parcoursup et ce rang est susceptible d’être supérieur au nombre de classés pour certaines formations qui utilisent les listes communes d’appelés (elles sont identifiées par la variable « list_com »).</p><hr><p><span style=\"font-family: inherit; font-size: 0.875rem;\">Comme les années précédentes, les données issues de la </span><a href=\"https://dossier.parcoursup.fr/Candidat/carte\" style=\"font-size: 0.875rem; background-color: rgb(255, 255, 255);\" target=\"_blank\">cartographie du site parcoursup.fr</a><span style=\"font-family: inherit; font-size: 0.875rem;\"> ont été ajoutées. Deux indicateurs supplémentaires sont disponibles pour l’ensemble des candidats pour chaque formation en fin de fichier :</span><br></p><p>-<span style=\"white-space:pre\">\t</span> <b>Taux d’accès 2025</b> : rapport entre le nombre de candidats dont le rang de classement est inférieur ou égal au rang du dernier appelé de son groupe et le nombre de candidats ayant validé un vœu pour la formation étudiée en phase principale (hors GDD - phase permettant de redistribuer les places laissées vacantes à l’issue de la phase principale aux néo-bacheliers sans proposition). Ce taux prend en compte l’ensemble des candidats ayant confirmé au moins un vœu en PP (les élèves de terminale, les étudiants en réorientation et les reprises d’études). <span style=\"font-family: inherit; font-size: 0.875rem;\">Tous ces candidats n’ont pas intégré la formation, soit parce qu’ils ont eux-mêmes renoncé à cette formation avant de recevoir la proposition d’admission, soit parce qu’ils ont eu le choix entre plusieurs formations et ont au final accepté la proposition d’une autre formation. </span><span style=\"font-family: inherit; font-size: 0.875rem;\">Si le taux est de 100 %, cela signifie qu'aucun candidat n’était en attente de proposition dans cette formation à la fin de la PP (hors GDD).</span></p><p><span style=\"font-family: inherit; font-size: 0.875rem;\">-</span><span style=\"font-family: inherit; font-size: 0.875rem; white-space: pre;\">\t</span><b>Répartition par type de baccalauréat, des candidats qui étaient en position de recevoir une proposition en phase principale en 2025</b> : répartition par baccalauréat du nombre de candidats dont le rang de classement est inférieur ou égal au rang du dernier appelé de son groupe en phase principale (hors GDD)<br></p><p>Seuls les candidats scolarisés en France ou de nationalité européenne sont pris en compte dans le calcul de ces 2 indicateurs.<br></p><p><b>Seuls les candidats scolarisés en France ou de nationalité européenne sont pris en compte dans le calcul de ces deux indicateurs.</b></p><p><b>Le mode de calcul de ces indicateurs est identique à celui de l’année dernière.</b></p><p><span style=\"font-weight: bolder; font-size: 0.875rem;\">/!\\</span><span style=\"font-weight: bolder; font-size: 0.875rem;\"> </span><b>Ces deux indicateurs ne peuvent être recalculés à partir des données disponibles dans cet opendata.</b></p><hr><div><br></div><p>Le jeu de données permet ainsi d’observer pour chaque formation présente dans Parcoursup et pour chaque établissement d’accueil la demande et la satisfaction de celle-ci, le profil des candidats et celui des admis ainsi que d’autres résultats à la fin du processus d’affectation. </p><p>Parcoursup est le portail internet national de préinscription à l’enseignement supérieur. Parcoursup s’adresse à toute personne qui souhaite s’inscrire dans une première année de l’enseignement supérieur. On retrouve ainsi principalement les néo-bacheliers, les étudiants en réorientation et les étudiants étrangers. Ils doivent formuler et confirmer des vœux pour recevoir une affectation. Un candidat peut faire jusqu’à 10 vœux non hiérarchisés en phase principale. Attention, pour certaines formations, les vœux peuvent être multiples : chaque vœu multiple est composé de sous-vœux qui correspondent chacun à une formation dans un établissement donné. C’est le cas par exemple pour les écoles d’ingénieur ou de commerce s’inscrivant dans le cadre d’un concours national.</p>",
+      "description_fr": "<p>Ce jeu de données présente les vœux de poursuite d’études et de réorientation dans l’enseignement supérieur ainsi que les propositions des établissements pour chaque formation – hors apprentissage – à la fin du processus d’affectation de la plateforme Parcoursup pour la session 2024 (du 15 janvier au 10 septembre 2025).</p><p>Les données sont tirées de la plateforme Parcoursup 2025 et prennent en compte l’ensemble de la campagne jusqu’à la date du 10 septembre 2025. Elles sont disponibles sous forme de base de données à télécharger et sous forme de <a href=\"https://data.enseignementsup-recherche.gouv.fr/pages/parcoursupdata/?disjunctive.fili&amp;sort=tri\" style=\"\" target=\"_blank\">visualisation graphique « dataviz »</a>.</p><p>/!\\ Ce jeu de données a été actualisé le 9 mars 2026 pour ajouter le taux d'accès et le rang de certaines formations préalablement non disponibles.</p><p>Un nouveau jeu de données est désormais disponible pour suivre les formations en apprentissage <a href=\"https://data.enseignementsup-recherche.gouv.fr/explore/assets/fr-esr-parcoursup-apprentissage/\" target=\"_blank\">Parcoursup apprentissage - vœux de poursuite d'études et de réorientation dans l'enseignement supérieur et réponses des établissements</a></p><hr><p>Ce jeu de données est bâti à partir des données Parcoursup de la campagne 2025. L’application Parcoursup est la plateforme nationale de préinscription mise en place par le Ministère de l’Enseignement supérieur et de la recherche permettant aux élèves de candidater à l’entrée dans l’enseignement supérieur.</p><p>Il couvre l’ensemble des candidats ayant au moins un voeu d’orientation validé en phase principale (PP) et/ou complémentaire (PC), ce parmi les 14 252 formations proposées hors apprentissage. Il couvre ainsi 1 015 200 candidats. Un sous ensemble de données porte spécifiquement sur les 652 800 néo-bacheliers parmi ces candidats (y compris ceux inscrits à l’Agence pour l'enseignement français à l’étranger). Les néo-bacheliers sont les élèves inscrits en classe de terminale française pour l’année scolaire 2024-2025, dans les filières générales, professionnelles ou technologiques.  </p><hr><p><span style=\"font-family: inherit; font-size: 0.875rem;\"><a href=\"https://data.enseignementsup-recherche.gouv.fr/pages/parcoursupdata/?disjunctive.fili&amp;sort=tri\" target=\"_blank\">Ce jeu de données est complété par une « dataviz » proposant une visualisation des principaux indicateurs</a>. </span>Ainsi, sont représentés graphiquement pour chaque formation détaillée, la capacité d’accueil, le nombre de vœux faits par les candidats dans une formation, le nombre de propositions d’admission faites par l’établissement sur cette formation, le nombre de candidats qui ont accepté cette proposition dans l’ensemble des phases de la procédure, les rangs du dernier appelé en phase principal.</p><p><a href=\"https://data.enseignementsup-recherche.gouv.fr/pages/parcoursupdata/?disjunctive.fili&amp;sort=tri\" target=\"_blank\"><img src=\"https://dataesr.enseignementsup-recherche.pro/images/P811-PORTFOLIO_FR_PARCOURSUP_EXPLORER.png\" style=\"width: 532px;\"/></a><span style=\"font-family: inherit; font-size: 0.875rem;\"><br></span></p><p>Ces principaux indicateurs sont complétés par un graphique représentant le rythme auquel les candidats qui s’inscrivent dans une formation, ont vu cette formation leur être proposée. Enfin, un zoom est réalisé sur le profil des néo-bacheliers qui ont accepté la proposition d’admission de la formation : série de baccalauréat, mention au baccalauréat (dont la mention « Très bien » agrégée), bénéficiaire de bourse de l’enseignement secondaire ou non, origine géographique.</p><p><span style=\"font-family: inherit; font-size: 0.875rem;\">Cette <a href=\"https://data.enseignementsup-recherche.gouv.fr/pages/parcoursupdata/?disjunctive.fili&amp;sort=tri\" target=\"_blank\">dataviz </a></span><span style=\"font-family: inherit; font-size: 0.875rem;\">se veut un outil complémentaire d’aide aux lycéens candidatant sur Parcoursup, en leur permettant de repérer un certain nombre de caractéristiques synthétiques sur chaque formation, reflétant les profils des admis ainsi que le rythme auquel les admis se sont vus, au cours de la procédure, proposer la formation in fine choisie.</span></p><p>Les informations sont accessibles selon l’établissement d’accueil et la formation : </p><ul><li>Le nom de l’établissement et son n°UAI</li><li>La région, l’académie et le département de l’établissement</li><li>La formation demandée, agrégée et détaillée ainsi que sa nature sélective ou non</li><li>Le nombre de places (capacité d’accueil)</li><li>Le nombre de vœux reçus selon le sexe et la série du baccalauréat</li><li>Le nombre de vœux classés par l’établissement de la formation d’accueil selon la série du baccalauréat</li><li>Le nombre de propositions d’admission faites selon la série du baccalauréat </li><li>Le nombre de propositions d’admission faites aux différentes dates clés de la campagne Parcoursup et qui seront ensuite acceptées </li><li>Le nombre d’admis selon le sexe, la série du baccalauréat et la mention obtenue</li><li>Le rang du dernier appelé de son groupe parmi les candidatures en phase principale</li><li>Le nombre de boursiers de l’enseignement secondaire pour les lycéens de terminale et de l’enseignement supérieur pour les étudiants en réorientation</li><li>Le nombre de candidats admis en BTS ou en CPGE et issus de leur lycée (i.e. le lycée où ils étaient inscrits en terminale)</li></ul><p>Depuis 2021 la mention « Très bien » est détaillée par deux variables : la mention « Très Bien (hors félicitations) » (entre 16 et 18 de moyenne au baccalauréat) et la mention « Très bien avec félicitations du jury » (plus de 18 de moyenne au baccalauréat). Également, le nombre de groupes d’appelés a été réduit à trois ; il s’agit du rang affiché sur la cartographie Parcoursup et ce rang est susceptible d’être supérieur au nombre de classés pour certaines formations qui utilisent les listes communes d’appelés (elles sont identifiées par la variable « list_com »).</p><hr><p><span style=\"font-family: inherit; font-size: 0.875rem;\">Comme les années précédentes, les données issues de la </span><a href=\"https://dossier.parcoursup.fr/Candidat/carte\" style=\"font-size: 0.875rem; background-color: rgb(255, 255, 255);\" target=\"_blank\">cartographie du site parcoursup.fr</a><span style=\"font-family: inherit; font-size: 0.875rem;\"> ont été ajoutées. Deux indicateurs supplémentaires sont disponibles pour l’ensemble des candidats pour chaque formation en fin de fichier :</span><br></p><p>-<span style=\"white-space:pre\">\t</span> <b>Taux d’accès 2025</b> : rapport entre le nombre de candidats dont le rang de classement est inférieur ou égal au rang du dernier appelé de son groupe et le nombre de candidats ayant validé un vœu pour la formation étudiée en phase principale (hors GDD - phase permettant de redistribuer les places laissées vacantes à l’issue de la phase principale aux néo-bacheliers sans proposition). Ce taux prend en compte l’ensemble des candidats ayant confirmé au moins un vœu en PP (les élèves de terminale, les étudiants en réorientation et les reprises d’études). <span style=\"font-family: inherit; font-size: 0.875rem;\">Tous ces candidats n’ont pas intégré la formation, soit parce qu’ils ont eux-mêmes renoncé à cette formation avant de recevoir la proposition d’admission, soit parce qu’ils ont eu le choix entre plusieurs formations et ont au final accepté la proposition d’une autre formation. </span><span style=\"font-family: inherit; font-size: 0.875rem;\">Si le taux est de 100 %, cela signifie qu'aucun candidat n’était en attente de proposition dans cette formation à la fin de la PP (hors GDD).</span></p><p><span style=\"font-family: inherit; font-size: 0.875rem;\">-</span><span style=\"font-family: inherit; font-size: 0.875rem; white-space: pre;\">\t</span><b>Répartition par type de baccalauréat, des candidats qui étaient en position de recevoir une proposition en phase principale en 2025</b> : répartition par baccalauréat du nombre de candidats dont le rang de classement est inférieur ou égal au rang du dernier appelé de son groupe en phase principale (hors GDD)<br></p><p>Seuls les candidats scolarisés en France ou de nationalité européenne sont pris en compte dans le calcul de ces 2 indicateurs.<br></p><p><b>Seuls les candidats scolarisés en France ou de nationalité européenne sont pris en compte dans le calcul de ces deux indicateurs.</b></p><p><b>Le mode de calcul de ces indicateurs est identique à celui de l’année dernière.</b></p><p><span style=\"font-weight: bolder; font-size: 0.875rem;\">/!\\</span><span style=\"font-weight: bolder; font-size: 0.875rem;\"> </span><b>Ces deux indicateurs ne peuvent être recalculés à partir des données disponibles dans cet opendata.</b></p><hr><div><br></div><p>Le jeu de données permet ainsi d’observer pour chaque formation présente dans Parcoursup et pour chaque établissement d’accueil la demande et la satisfaction de celle-ci, le profil des candidats et celui des admis ainsi que d’autres résultats à la fin du processus d’affectation. </p><p>Parcoursup est le portail internet national de préinscription à l’enseignement supérieur. Parcoursup s’adresse à toute personne qui souhaite s’inscrire dans une première année de l’enseignement supérieur. On retrouve ainsi principalement les néo-bacheliers, les étudiants en réorientation et les étudiants étrangers. Ils doivent formuler et confirmer des vœux pour recevoir une affectation. Un candidat peut faire jusqu’à 10 vœux non hiérarchisés en phase principale. Attention, pour certaines formations, les vœux peuvent être multiples : chaque vœu multiple est composé de sous-vœux qui correspondent chacun à une formation dans un établissement donné. C’est le cas par exemple pour les écoles d’ingénieur ou de commerce s’inscrivant dans le cadre d’un concours national.</p>",
+      "description_en": "<p>This dataset presents the wishes expressed by candidates for continuing studies and reorientation in higher education, as well as the admission proposals made by institutions for each program—excluding apprenticeships—at the end of the assignment process on the Parcoursup platform for the 2025 session (from January 15 to September 10, 2025).</p>\n<p>The data is sourced from the Parcoursup 2025 platform and covers the entire campaign up to September 10, 2025. It is available as a downloadable database and as an <a href=\"https://data.enseignementsup-recherche.gouv.fr/pages/parcoursupdata/?disjunctive.fili&amp;sort=tri\" style=\"\" target=\"_blank\">interactive data visualization (\"dataviz\")</a>.</p>\n<p>Note: This dataset was updated on March 9, 2026, to include the admission rate and the rank of certain programs previously unavailable.</p>\n<p>A new dataset is now available to track apprenticeship programs: <a href=\"https://data.enseignementsup-recherche.gouv.fr/explore/assets/fr-esr-parcoursup-apprentissage/\" target=\"_blank\">Parcoursup Apprenticeship – Wishes for continuing studies, reorientation in higher education, and institution responses</a>.</p>\n<hr>\n<p>This dataset is built from Parcoursup 2025 campaign data. The Parcoursup platform is the national pre-registration system implemented by the French Ministry of Higher Education and Research, enabling students to apply for admission to higher education.</p>\n<p>It covers all candidates who submitted at least one validated wish during the main phase (PP) and/or the complementary phase (PC), across 14,252 non-apprenticeship programs. This includes 1,015,200 candidates in total. A subset of the data specifically focuses on the 652,800 new high school graduates among these candidates (including those registered with the Agency for French Education Abroad). New high school graduates are defined as students enrolled in the final year of French secondary education (terminale) for the 2024-2025 academic year, in general, vocational, or technological tracks.</p>\n<hr>\n<p><span style=\"font-family: inherit; font-size: 0.875rem;\"><a href=\"https://data.enseignementsup-recherche.gouv.fr/pages/parcoursupdata/?disjunctive.fili&amp;sort=tri\" target=\"_blank\">This dataset is complemented by a \"dataviz\" tool that visually represents key indicators</a>.</span>\nFor each program, the dataviz displays the admission capacity, the number of wishes expressed by candidates, the number of admission proposals made by the institution, the number of candidates who accepted the proposal across all phases of the process, and the rank of the last candidate called during the main phase.</p>\n<p><a href=\"https://data.enseignementsup-recherche.gouv.fr/pages/parcoursupdata/?disjunctive.fili&amp;sort=tri\" target=\"_blank\"><img src=\"https://dataesr.enseignementsup-recherche.pro/images/P811-PORTFOLIO_FR_PARCOURSUP_EXPLORER.png\" style=\"width: 532px;\"></a><span style=\"font-family: inherit; font-size: 0.875rem;\"><br></span></p>\n<p>These key indicators are supplemented by a graph showing the pace at which candidates who enrolled in a program received an admission proposal. A detailed focus is also provided on the profile of new high school graduates who accepted the admission proposal for the program, including their type of baccalaureate, baccalaureate honors (including the aggregated \"Très bien\" distinction), whether they are recipients of secondary education scholarships, and their geographic origin.</p>\n<p><span style=\"font-family: inherit; font-size: 0.875rem;\">This <a href=\"https://data.enseignementsup-recherche.gouv.fr/pages/parcoursupdata/?disjunctive.fili&amp;sort=tri\" target=\"_blank\">dataviz</a></span><span style=\"font-family: inherit; font-size: 0.875rem;\"> is designed as a complementary tool to help high school students applying through Parcoursup. It allows them to identify key characteristics of each program, including the profiles of admitted students and the pace at which admission proposals were made during the process.</span></p>\n<p>Information is accessible by institution and program:</p>\n<ul>\n  <li>Institution name and UAI number</li>\n  <li>Region, academy, and department of the institution</li>\n  <li>Program name (aggregated and detailed), and whether it is selective or non-selective</li>\n  <li>Number of available places (admission capacity)</li>\n  <li>Number of wishes received, broken down by gender and type of baccalaureate</li>\n  <li>Number of wishes ranked by the institution, by type of baccalaureate</li>\n  <li>Number of admission proposals made, by type of baccalaureate</li>\n  <li>Number of admission proposals made at key dates during the Parcoursup campaign, which were subsequently accepted</li>\n  <li>Number of admitted candidates, by gender, type of baccalaureate, and honors obtained</li>\n  <li>Rank of the last candidate called in their group during the main phase</li>\n  <li>Number of secondary education scholarship recipients for terminale students and higher education scholarship recipients for students reorienting</li>\n  <li>Number of admitted candidates in BTS or CPGE programs who came from their original high school (i.e., the high school where they were enrolled in terminale)</li>\n</ul>\n<p>Since 2021, the \"Très bien\" distinction has been detailed in two categories: \"Très Bien (sans félicitations)\" (average between 16 and 18) and \"Très bien avec félicitations du jury\" (average above 18). Additionally, the number of call groups has been reduced to three; the rank displayed on the Parcoursup map may exceed the number of ranked candidates for programs using shared call lists (identified by the \"list_com\" variable).</p>\n<hr>\n<p><span style=\"font-family: inherit; font-size: 0.875rem;\">As in previous years, data from the </span><a href=\"https://dossier.parcoursup.fr/Candidat/carte\" style=\"font-size: 0.875rem; background-color: rgb(255, 255, 255);\" target=\"_blank\">Parcoursup website mapping tool</a><span style=\"font-family: inherit; font-size: 0.875rem;\"> has been included. Two additional indicators are available for all candidates for each program at the end of the file:</span></p>\n<p><strong>2025 Admission rate:</strong> The ratio of candidates whose rank is equal to or better than the rank of the last candidate called in their group to the total number of candidates who validated a wish for the program during the main phase (excluding GDD—a phase for redistributing vacant spots to new high school graduates without proposals). This rate accounts for all candidates who confirmed at least one wish in the main phase (terminale students, students reorienting, and those resuming studies). Not all candidates enrolled in the program, either because they withdrew their wish before receiving an admission proposal or because they chose another program after receiving multiple offers. A 100% rate means no candidate was left without a proposal for this program at the end of the main phase (excluding GDD).</p>\n<p><span style=\"font-family: inherit; font-size: 0.875rem;\">-</span><span style=\"font-family: inherit; font-size: 0.875rem; white-space: pre;\">\t</span><strong>Distribution by type of baccalaureate of candidates who were in a position to receive a proposal during the main phase in 2025:</strong> Distribution by type of baccalaureate of candidates whose rank is equal to or better than the rank of the last candidate called in their group during the main phase (excluding GDD).</p>\n<p>Only candidates enrolled in France or of European nationality are included in the calculation of these two indicators.</p>\n<p><strong>Only candidates enrolled in France or of European nationality are included in the calculation of these two indicators.</strong></p>\n<p><strong>The calculation method for these indicators is identical to that of previous years.</strong></p>\n<p><span style=\"font-weight: bolder; font-size: 0.875rem;\">/!\\</span><span style=\"font-weight: bolder; font-size: 0.875rem;\">&nbsp;</span><strong>These two indicators cannot be recalculated from the data available in this open dataset.</strong></p>\n<hr>\n<p>The dataset allows users to observe, for each program and institution in Parcoursup, the demand and satisfaction of that demand, the profile of candidates and admitted students, and other outcomes at the end of the assignment process.</p>\n<p>Parcoursup is the national online portal for pre-registration in higher education. It is intended for anyone wishing to enroll in the first year of higher education, primarily new high school graduates, students reorienting, and international students. Candidates must submit and confirm wishes to receive an assignment. A candidate can make up to 10 non-prioritized wishes in the main phase. For some programs, wishes may be multiple: each multiple wish consists of sub-wishes, each corresponding to a program at a specific institution. This is the case, for example, for engineering or business schools participating in a national competition.</p>",
+      "theme": [
+        "Enseignement supérieur",
+        "Formations et diplômes",
+        "Orientation, parcours et réussite",
+        "Établissement d'enseignement supérieur",
+        "Statistiques"
+      ],
+      "theme_fr": [
+        "Enseignement supérieur",
+        "Formations et diplômes",
+        "Orientation, parcours et réussite",
+        "Établissement d'enseignement supérieur",
+        "Statistiques"
+      ],
+      "theme_en": [
+        "Higher education",
+        "Training and qualifications",
+        "Guidance, student pathways, and student success",
+        "Higher education institutions",
+        "Statistics"
+      ],
+      "keyword": [
+        "éducation",
+        "orientation",
+        "enseignement supérieur",
+        "étudiants",
+        "formations",
+        "formation",
+        "parcoursup",
+        "STS",
+        "CPGE",
+        "licence",
+        "UAI",
+        "boursiers",
+        "boursier",
+        "endo-recrutement",
+        "rang",
+        "admis",
+        "admissibles",
+        "places",
+        "voeux",
+        "demande",
+        "offre",
+        "établissement",
+        "établissements",
+        "capacité",
+        "propositions",
+        "proposition",
+        "vœu",
+        "vœux",
+        "voeu",
+        "BTS",
+        "école de commerce",
+        "CPGE intégrée à l'université",
+        "DEUST",
+        "DCG",
+        "BUT",
+        "L.AS",
+        "PASS"
+      ],
+      "keyword_fr": [
+        "éducation",
+        "orientation",
+        "enseignement supérieur",
+        "étudiants",
+        "formations",
+        "formation",
+        "parcoursup",
+        "STS",
+        "CPGE",
+        "licence",
+        "UAI",
+        "boursiers",
+        "boursier",
+        "endo-recrutement",
+        "rang",
+        "admis",
+        "admissibles",
+        "places",
+        "voeux",
+        "demande",
+        "offre",
+        "établissement",
+        "établissements",
+        "capacité",
+        "propositions",
+        "proposition",
+        "vœu",
+        "vœux",
+        "voeu",
+        "BTS",
+        "école de commerce",
+        "CPGE intégrée à l'université",
+        "DEUST",
+        "DCG",
+        "BUT",
+        "L.AS",
+        "PASS"
+      ],
+      "keyword_en": [
+        "éducation",
+        "orientation",
+        "enseignement supérieur",
+        "étudiants",
+        "formations",
+        "formation",
+        "parcoursup",
+        "STS",
+        "CPGE",
+        "licence",
+        "UAI",
+        "boursiers",
+        "boursier",
+        "endo-recrutement",
+        "rang",
+        "admis",
+        "admissibles",
+        "places",
+        "voeux",
+        "demande",
+        "offre",
+        "établissement",
+        "établissements",
+        "capacité",
+        "propositions",
+        "proposition",
+        "vœu",
+        "vœux",
+        "voeu",
+        "BTS",
+        "école de commerce",
+        "CPGE intégrée à l'université",
+        "DEUST",
+        "DCG",
+        "BUT",
+        "L.AS",
+        "PASS"
+      ],
+      "license": "Licence Ouverte v2.0 (Etalab)",
+      "license_fr": "Licence Ouverte v2.0 (Etalab)",
+      "license_en": "Licence Ouverte v2.0 (Etalab)",
+      "license_url": "https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+      "license_url_fr": "https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+      "license_url_en": "https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+      "language": "fr",
+      "metadata_languages": ["fr", "en"],
+      "timezone": null,
+      "modified": "2026-03-09T16:54:47+00:00",
+      "modified_updates_on_metadata_change": false,
+      "modified_updates_on_data_change": false,
+      "data_processed": "2026-03-09T16:54:03+00:00",
+      "metadata_processed": "2026-03-09T17:09:57.230000+00:00",
+      "geographic_reference": ["world"],
+      "geographic_reference_auto": true,
+      "territory": ["World"],
+      "geometry_types": ["Point"],
+      "bbox": {
+        "type": "Feature",
+        "geometry": {
+          "coordinates": [
+            [
+              [166.403349917382, 53.35179998539388],
+              [-151.45100000314415, 53.35179998539388],
+              [-151.45100000314415, -22.262700023129582],
+              [166.403349917382, -22.262700023129582],
+              [166.403349917382, 53.35179998539388]
+            ]
+          ],
+          "type": "Polygon"
+        },
+        "properties": {}
+      },
+      "publisher": "Ministère de l'Enseignement supérieur, de la Recherche et de l'Espace > Sous-Direction des systèmes d'information et des études statistiques (SIES) > Département des études statistiques sur l'enseignement supérieur",
+      "publisher_fr": "Ministère de l'Enseignement supérieur, de la Recherche et de l'Espace > Sous-Direction des systèmes d'information et des études statistiques (SIES) > Département des études statistiques sur l'enseignement supérieur",
+      "publisher_en": "Ministère de l'Enseignement supérieur, de la Recherche et de l'Espace > Sous-Direction des systèmes d'information et des études statistiques (SIES) > Département des études statistiques sur l'enseignement supérieur",
+      "references": "https://parcoursup.fr/",
+      "records_count": 14252,
+      "attributions": ["Parcoursup - Traitement SIES"],
+      "source_domain": null,
+      "source_domain_title": null,
+      "source_domain_address": null,
+      "source_dataset": null,
+      "shared_catalog": null,
+      "federated": false,
+      "parent_domain": null,
+      "update_frequency": "ANNUAL"
+    },
+    "custom": {
+      "temporal_coverage_from": "2025-01-14",
+      "temporal_coverage_to": "2025-09-09"
+    }
+  }
+}

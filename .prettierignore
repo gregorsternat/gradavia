@@ -3,6 +3,7 @@ Cargo.lock
 target/
 .next/
 .artifacts/
+.data/
 node_modules/
 **/next-env.d.ts
 *.tsbuildinfo

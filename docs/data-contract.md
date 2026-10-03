@@ -1,7 +1,8 @@
 # Data contract
 
-These are requirements for future data features, not a claim that ingestion
-exists today.
+The [raw ingestion implementation](ingestion.md) enforces collection, identity,
+representation and publication rules. Statistical harmonization, indicator
+calculations and comparisons remain future work.
 
 ## Source and coverage
 
@@ -23,7 +24,7 @@ Every imported record must retain:
 
 - source system and dataset/resource identifier;
 - admissions campaign;
-- source formation identifier as an opaque string, including leading zeros;
+- source formation identifier when published, as an opaque string with leading zeros;
 - collection time and source publication/update time when available;
 - source version or revision, download URL, content checksum, and importer version;
 - link to the retained immutable raw artifact and its license.
@@ -44,23 +45,26 @@ Retain the original marker and parsing context in the raw data. Do not impute
 suppressed values. Invalid values must fail validation or enter an explicit
 quarantine report; they must not silently disappear.
 
-Validate types, units, denominator compatibility, field coverage, and identities
-against a versioned source contract. Source schema drift must produce actionable
+Raw ingestion validates representations, field coverage, campaigns and identifiers
+against a versioned source contract. It retains field definitions for later
+review of units and denominator compatibility. Source schema drift produces
 diagnostics before new data is published.
 
 ## Replay and publication
 
 Retain raw artifacts outside Git; commit only small, clearly licensed fixtures.
-Choose storage and retention policy in the first ingestion feature.
+The collector retains gzip archives in `RAW_DATA_DIR`, with manifests and
+checksums, without automatic deletion. Back them up with the database.
 
-An import must be replayable without duplicates using source, campaign, stable
-record identity, and release/checksum metadata. Stage and validate a complete
+An import must be replayable without adding duplicates. Release fingerprints
+identify source snapshots; export position identifies rows within a snapshot.
+Source duplicates remain distinct rows. Stage and validate a complete
 release, then publish it atomically. Readers must not observe a partially loaded
 campaign. Preserve the previous valid release if processing fails.
 
 Record row counts, rejects, schema drift, checksums, run status, and timing.
-Do not log individual records by default. Define import concurrency and retry
-behavior before scheduling jobs.
+Do not log individual records by default. The collector locks each dataset, runs
+sources sequentially and bounds HTTP retries. Scheduling remains deferred.
 
 ## Indicators and comparisons
 
@@ -78,12 +82,14 @@ Do not compare different phases, cohorts, coverage, or changing definitions as
 if they were equivalent. Explain denominator and coverage changes beside a
 comparison, including establishment/formation restructuring.
 
-APB support requires a separate source adapter and an explicit methodology
-review before longitudinal comparison with Parcoursup.
+APB collection uses its own source contract and preserves its textual values.
+An explicit methodology review is still required before longitudinal comparison
+with Parcoursup.
 
 ## Acceptance criteria for the first import
 
 Use fixtures covering zero, absent, masked and malformed values; opaque IDs;
 schema drift; duplicate/replayed releases; failed runs; and atomic publication.
 Review results against the pinned source release and document any source
-limitations. These domain checks will accompany ingestion implementation.
+limitations. These checks run through offline fixtures and disposable PostgreSQL
+integration tests. See [quality](quality.md) for observed evidence.

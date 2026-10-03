@@ -1,19 +1,21 @@
 # Architecture
 
-## Intended data flow
+## Data flow
 
 ```mermaid
 flowchart LR
-  Source[Public source] --> Adapter[Rust source adapter]
-  Adapter --> Domain[Pure Rust domain]
-  Domain --> Store[Neon PostgreSQL]
-  Store --> Server[Next.js server reads]
-  Server --> UI[React presentation]
+  Source[Public source] --> Adapter[Rust collector]
+  Adapter --> Archive[Immutable local archives]
+  Archive --> Validation[Source contract validation]
+  Validation --> Store[PostgreSQL raw releases]
+  Store -. Future .-> Server[Next.js server reads]
+  Server -. Future .-> UI[React presentation]
 ```
 
-This diagram describes the intended product. Today the executable paths are the
-web shell, development gallery, health endpoint, and database diagnostics.
-There is no import job, business table, comparison API, or scheduled ingestion.
+The executable data path is now a manual Rust collector: official JSONL exports,
+immutable local archives, schema validation and atomic publication to PostgreSQL.
+The web shell, gallery and health endpoint remain independent of datasets.
+Frontend data reads, calculations, comparisons and scheduling are deferred.
 
 ## Ownership and boundaries
 
@@ -48,6 +50,10 @@ Static analysis does not replace review of side effects or data semantics.
 - `orvio-ingest doctor` validates the CLI runtime.
 - `orvio-ingest doctor --database` checks a direct PostgreSQL connection.
 - `just db-check` checks both Neon HTTP and Rust/SQLx.
+- `orvio-ingest sources` lists the versioned registry offline.
+- `orvio-ingest sync [--dataset <id>]` collects full datasets.
+- `orvio-ingest replay --manifest <path>` loads a verified local archive.
+- `orvio-ingest status` reports stored releases and latest run states.
 - `/dev/ui` uses clearly labeled synthetic values. It calls `notFound()`
   outside development, and the home page removes its link.
 
@@ -62,11 +68,13 @@ PostgreSQL schema. Rust migrations and ad hoc production DDL are not permitted.
 - `@orvio/db/neon`: lazy Neon HTTP client for server reads, per-request timeout.
 - `@orvio/db/node`: bounded `pg` connections for tooling and local tests.
 - `@orvio/db/migrate`: Drizzle SQL migration runner over a direct connection.
-- `@orvio/db/schema`: currently empty, with an empty migration journal.
+- `@orvio/db/schema`: datasets, immutable releases, raw records and ingestion runs.
 
-No database is initialized during module evaluation or a build. The empty
-migration journal is a no-op and creates no remote tables. Schema changes must
-include reviewed generated SQL and integration evidence.
+No database is initialized during module evaluation or a build. Apply generated
+Drizzle migrations explicitly before running ingestion. SQLx uses a dedicated
+direct session per dataset for the advisory lock and COPY transaction. Readers
+join through the current-release pointer, committed with the full release.
+See [ingestion](docs/ingestion.md) for schema, identity and archive contracts.
 
 ## Hosting boundary
 

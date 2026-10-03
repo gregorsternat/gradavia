@@ -22,6 +22,7 @@ reads run through `just dev`, which passes the root environment to the app.
 | `PORT`                  | Development server port, default 3000                                     |
 | `E2E_PORT`              | Dedicated browser-test server port; defaults 3100/3101 for dev/production |
 | `ARTIFACTS_DIR`         | Checkout-local diagnostics directory, default `.artifacts`                |
+| `RAW_DATA_DIR`          | Retained raw exports and manifests, default `.data/raw`                   |
 | `TEST_DATABASE_URL`     | Optional local PostgreSQL 18 database named `orvio_test`                  |
 
 Copy `.env.example` only when `.env.local` does not exist. Keep secrets ignored
@@ -54,18 +55,19 @@ Neon branch per feature/worktree and its own local connection strings.
 5. Apply with `just db-migrate` and a **direct** connection.
 
 Do not use `drizzle-kit push` or SQLx migrations. Do not rewrite previously
-applied migration files. Table definitions start with the first actual data
-feature; the current journal is empty. Migration rollback tests demonstrate
+applied migration files. The committed migrations define the raw ingestion tables. Migration rollback tests demonstrate
 transactional failure behavior, not a general production rollback strategy.
 
 ## Local tests and isolation
 
 `just test-db` starts a uniquely named PostgreSQL 18 container on a random
-loopback port, then removes only that container. It creates uniquely named test
-schemas, verifies migrations and SQLx, and drops only those schemas afterward.
+loopback port, then removes only that container. It creates a uniquely named `orvio_ingest_<uuid>` database so generated public-schema
+foreign keys are tested without rewriting migrations. It verifies real ingestion,
+SQLx and synthetic rollback migrations, then drops only that test database.
 
 Alternatively, set `TEST_DATABASE_URL` to a disposable loopback database named
-`orvio_test`. Remote hosts and other database names are rejected. CI supplies
+`orvio_test`. The connection must allow creating and dropping the isolated test database.
+Remote hosts and other initial database names are rejected. CI supplies
 this URL through its PostgreSQL service. Neon credentials are never needed in CI.
 
 Every worktree has its own `.env.local`, `node_modules`, `target`, `.next`,
@@ -83,6 +85,9 @@ development output directory even when ports differ. Separate worktrees can run
 their dev servers and checks independently.
 
 ## Diagnostics
+
+Raw source archives use `RAW_DATA_DIR` (default `.data/raw`) and have no automatic
+cleanup. See [ingestion](ingestion.md) for imports, backup and replay.
 
 Browser server logs, Playwright reports, failed-test screenshots, videos, and
 traces go under `.artifacts`. Database checks retain a result summary and

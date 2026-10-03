@@ -1,0 +1,689 @@
+{
+  "visibility": "domain",
+  "fields": [
+    {
+      "name": "session",
+      "description": null,
+      "annotations": {
+        "facet": true,
+        "facetsort": "-alphanum",
+        "sortable": true
+      },
+      "label": "Session",
+      "type": "text",
+      "label_fr": "Session",
+      "label_en": "Session",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "cod_uai",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Code UAI de l'établissement d'accueil",
+      "type": "text",
+      "label_fr": "Code UAI de l'établissement d'accueil",
+      "label_en": "Code UAI de l'établissement d'accueil",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "g_ea_lib_vx",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Libellé de l'établissement d'accueil",
+      "type": "text",
+      "label_fr": "Libellé de l'établissement d'accueil",
+      "label_en": "Libellé de l'établissement d'accueil",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "dep",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Code département",
+      "type": "text",
+      "label_fr": "Code département",
+      "label_en": "Code département",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "lib_dep",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Départements",
+      "type": "text",
+      "label_fr": "Départements",
+      "label_en": "Départements",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acad_mies",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Académies",
+      "type": "text",
+      "label_fr": "Académies",
+      "label_en": "Académies",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "lib_reg",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Régions",
+      "type": "text",
+      "label_fr": "Régions",
+      "label_en": "Régions",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "fili",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Filières très agrégées",
+      "type": "text",
+      "label_fr": "Filières très agrégées",
+      "label_en": "Filières très agrégées",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "form_lib_voe_acc",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Filières de formations",
+      "type": "text",
+      "label_fr": "Filières de formations",
+      "label_en": "Filières de formations",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "fil_lib_voe_acc",
+      "description": null,
+      "annotations": {
+        "facet": true
+      },
+      "label": "Filières de formations très détaillées",
+      "type": "text",
+      "label_fr": "Filières de formations très détaillées",
+      "label_en": "Filières de formations très détaillées",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "capa_fin",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Capacité de l'établissement par formation",
+      "type": "text",
+      "label_fr": "Capacité de l'établissement par formation",
+      "label_en": "Capacité de l'établissement par formation",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "rang_der_max",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Rang du dernier candidat appelé",
+      "type": "text",
+      "label_fr": "Rang du dernier candidat appelé",
+      "label_en": "Rang du dernier candidat appelé",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "voe_tot",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif total des candidats",
+      "type": "text",
+      "label_fr": "Effectif total des candidats",
+      "label_en": "Effectif total des candidats",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "voe_tot_f",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif total des candidats, dont filles",
+      "type": "text",
+      "label_fr": "Effectif total des candidats, dont filles",
+      "label_en": "Effectif total des candidats, dont filles",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "voe1",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Demandes en vœu 1",
+      "type": "text",
+      "label_fr": "Demandes en vœu 1",
+      "label_en": "Demandes en vœu 1",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "voe1_f",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Demandes en vœu 1, dont filles",
+      "type": "text",
+      "label_fr": "Demandes en vœu 1, dont filles",
+      "label_en": "Demandes en vœu 1, dont filles",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "prop_tot",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Candidats ayant reçu une proposition",
+      "type": "text",
+      "label_fr": "Candidats ayant reçu une proposition",
+      "label_en": "Candidats ayant reçu une proposition",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "prop_tot_f",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Candidats ayant reçu une proposition, dont filles",
+      "type": "text",
+      "label_fr": "Candidats ayant reçu une proposition, dont filles",
+      "label_en": "Candidats ayant reçu une proposition, dont filles",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_tot",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif total des candidats admis",
+      "type": "text",
+      "label_fr": "Effectif total des candidats admis",
+      "label_en": "Effectif total des candidats admis",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_tot_f",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif total des candidats admis, dont filles",
+      "type": "text",
+      "label_fr": "Effectif total des candidats admis, dont filles",
+      "label_en": "Effectif total des candidats admis, dont filles",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_voe1",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Admissions sur leur vœu 1",
+      "type": "text",
+      "label_fr": "Admissions sur leur vœu 1",
+      "label_en": "Admissions sur leur vœu 1",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_voe1_f",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Admissions sur leur vœu 1, dont filles",
+      "type": "text",
+      "label_fr": "Admissions sur leur vœu 1, dont filles",
+      "label_en": "Admissions sur leur vœu 1, dont filles",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_boursier",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Effectif des admis boursiers",
+      "type": "text",
+      "label_fr": "Effectif des admis boursiers",
+      "label_en": "Effectif des admis boursiers",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_passable",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Candidats admis  sans mention au bac",
+      "type": "text",
+      "label_fr": "Candidats admis  sans mention au bac",
+      "label_en": "Candidats admis  sans mention au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_assez_bien",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Candidats admis avec mention A.B au bac",
+      "type": "text",
+      "label_fr": "Candidats admis avec mention A.B au bac",
+      "label_en": "Candidats admis avec mention A.B au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_bien",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Candidats admis avec mention B au bac",
+      "type": "text",
+      "label_fr": "Candidats admis avec mention B au bac",
+      "label_en": "Candidats admis avec mention B au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_tres_bien",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Candidats admis avec mention T.B au bac",
+      "type": "text",
+      "label_fr": "Candidats admis avec mention T.B au bac",
+      "label_en": "Candidats admis avec mention T.B au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_term",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Candidats admis dans son établissement d'origine (BTS/CPGE)",
+      "type": "text",
+      "label_fr": "Candidats admis dans son établissement d'origine (BTS/CPGE)",
+      "label_en": "Candidats admis dans son établissement d'origine (BTS/CPGE)",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_term_f",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Candidats admis dans son établissement d'origine (BTS/CPGE), dont filles",
+      "type": "text",
+      "label_fr": "Candidats admis dans son établissement d'origine (BTS/CPGE), dont filles",
+      "label_en": "Candidats admis dans son établissement d'origine (BTS/CPGE), dont filles",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "acc_academies",
+      "description": null,
+      "annotations": {
+        "facetsort": "-count"
+      },
+      "label": "Candidats admis dans son académie d'origine",
+      "type": "text",
+      "label_fr": "Candidats admis dans son académie d'origine",
+      "label_en": "Candidats admis dans son académie d'origine",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "p_acc_academies",
+      "description": null,
+      "annotations": {},
+      "label": "% Candidats admis dans son académie d'origine",
+      "type": "text",
+      "label_fr": "% Candidats admis dans son académie d'origine",
+      "label_en": "% Candidats admis dans son académie d'origine",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "p_acc_term",
+      "description": null,
+      "annotations": {},
+      "label": "% Candidats admis dans son établissement d'origine (BTS/CPGE)",
+      "type": "text",
+      "label_fr": "% Candidats admis dans son établissement d'origine (BTS/CPGE)",
+      "label_en": "% Candidats admis dans son établissement d'origine (BTS/CPGE)",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "p_acc_boursier",
+      "description": null,
+      "annotations": {},
+      "label": "% admis boursiers",
+      "type": "text",
+      "label_fr": "% admis boursiers",
+      "label_en": "% admis boursiers",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "p_acc_passable",
+      "description": null,
+      "annotations": {},
+      "label": "% Candidats admis sans mention au bac",
+      "type": "text",
+      "label_fr": "% Candidats admis sans mention au bac",
+      "label_en": "% Candidats admis sans mention au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "p_acc_assez_bien",
+      "description": null,
+      "annotations": {},
+      "label": "% Candidats admis avec mention A.B au bac",
+      "type": "text",
+      "label_fr": "% Candidats admis avec mention A.B au bac",
+      "label_en": "% Candidats admis avec mention A.B au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "p_acc_bien",
+      "description": null,
+      "annotations": {},
+      "label": "% Candidats admis avec mention B au bac",
+      "type": "text",
+      "label_fr": "% Candidats admis avec mention B au bac",
+      "label_en": "% Candidats admis avec mention B au bac",
+      "description_fr": null,
+      "description_en": null
+    },
+    {
+      "name": "p_acc_tres_bien",
+      "description": null,
+      "annotations": {},
+      "label": "% Candidats admis avec mention T.B au bac",
+      "type": "text",
+      "label_fr": "% Candidats admis avec mention T.B au bac",
+      "label_en": "% Candidats admis avec mention T.B au bac",
+      "description_fr": null,
+      "description_en": null
+    }
+  ],
+  "dataset_id": "fr-esr-apb_voeux-et-admissions",
+  "dataset_uid": "da_3shpm1",
+  "has_records": true,
+  "features": ["analyze", "custom_view"],
+  "attachments": [
+    {
+      "id": "methodo_opendata_docx",
+      "title": "Methodo_opendata.docx",
+      "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "url": "https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-apb_voeux-et-admissions/attachments/methodo_opendata_docx"
+    }
+  ],
+  "alternative_exports": [],
+  "data_visible": true,
+  "metas": {
+    "dcat": {
+      "created": "2018-10-18",
+      "issued": "2018-10-18",
+      "creator": "Département des études statistiques de l'enseignement supérieur",
+      "contributor": null,
+      "contact_name": null,
+      "contact_email": null,
+      "accrualperiodicity": null,
+      "spatial": "France entière",
+      "temporal": "Année",
+      "granularity": "Etablissement d'accueil",
+      "dataquality": null,
+      "publisher_type": null,
+      "conforms_to": null,
+      "temporal_coverage_start": null,
+      "temporal_coverage_end": null,
+      "accessRights": null,
+      "relation": null
+    },
+    "default": {
+      "title": "APB Voeux de poursuite d'étude et admissions",
+      "title_fr": "APB Voeux de poursuite d'étude et admissions",
+      "title_en": "APB Voeux de poursuite d'étude et admissions",
+      "description": "<p>Ce jeu de données présente les vœux de poursuite d’études et de réorientation dans l’enseignement supérieur ainsi que les propositions des établissements pour chaque formation à la fin du processus d’affectation de la plateforme APB pour les session 2016 et 2017 (du 20 janvier au 30 septembre).</p><p>Ces données, par établissement de l’enseignement supérieur, sont tirées de la plateforme Admission Post Bac (APB) et sont figées à partir de la date du 30 septembre, date correspondant à la fin du processus d’affectation d’APB.</p><p><a href=\"https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-apb_voeux-et-admissions/data/\"><strong>Une datavisualisation vous permet d'explorer facilement ces données.</strong></a><strong><br></strong></p><p><strong>Pour en savoir plus sur les données du jeu de données, consultez la <a href=\"https://data.enseignementsup-recherche.gouv.fr/api/datasets/1.0/fr-esr-apb_voeux-et-admissions/attachments/methodo_opendata_docx/\" target=\"_blank\">documentation associée</a>.</strong></p><p><strong>Vous pouvez également consulter les publications statistiques sur <a href=\"https://publication.enseignementsup-recherche.gouv.fr/FR/recherche/apb/\" target=\"_blank\">APB</a></strong><strong>.</strong></p>",
+      "description_fr": "<p>Ce jeu de données présente les vœux de poursuite d’études et de réorientation dans l’enseignement supérieur ainsi que les propositions des établissements pour chaque formation à la fin du processus d’affectation de la plateforme APB pour les session 2016 et 2017 (du 20 janvier au 30 septembre).</p><p>Ces données, par établissement de l’enseignement supérieur, sont tirées de la plateforme Admission Post Bac (APB) et sont figées à partir de la date du 30 septembre, date correspondant à la fin du processus d’affectation d’APB.</p><p><a href=\"https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-apb_voeux-et-admissions/data/\"><strong>Une datavisualisation vous permet d'explorer facilement ces données.</strong></a><strong><br></strong></p><p><strong>Pour en savoir plus sur les données du jeu de données, consultez la <a href=\"https://data.enseignementsup-recherche.gouv.fr/api/datasets/1.0/fr-esr-apb_voeux-et-admissions/attachments/methodo_opendata_docx/\" target=\"_blank\">documentation associée</a>.</strong></p><p><strong>Vous pouvez également consulter les publications statistiques sur <a href=\"https://publication.enseignementsup-recherche.gouv.fr/FR/recherche/apb/\" target=\"_blank\">APB</a></strong><strong>.</strong></p>",
+      "description_en": "<p>Ce jeu de données présente les vœux de poursuite d’études et de réorientation dans l’enseignement supérieur ainsi que les propositions des établissements pour chaque formation à la fin du processus d’affectation de la plateforme APB pour les session 2016 et 2017 (du 20 janvier au 30 septembre).</p><p>Ces données, par établissement de l’enseignement supérieur, sont tirées de la plateforme Admission Post Bac (APB) et sont figées à partir de la date du 30 septembre, date correspondant à la fin du processus d’affectation d’APB.</p><p><a href=\"https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-apb_voeux-et-admissions/data/\"><strong>Une datavisualisation vous permet d'explorer facilement ces données.</strong></a><strong><br></strong></p><p><strong>Pour en savoir plus sur les données du jeu de données, consultez la <a href=\"https://data.enseignementsup-recherche.gouv.fr/api/datasets/1.0/fr-esr-apb_voeux-et-admissions/attachments/methodo_opendata_docx/\" target=\"_blank\">documentation associée</a>.</strong></p><p><strong>Vous pouvez également consulter les publications statistiques sur <a href=\"https://publication.enseignementsup-recherche.gouv.fr/FR/recherche/apb/\" target=\"_blank\">APB</a></strong><strong>.</strong></p>",
+      "theme": [
+        "Enseignement supérieur",
+        "Établissement d'enseignement supérieur",
+        "Orientation, parcours et réussite",
+        "Formations et diplômes",
+        "Statistiques"
+      ],
+      "theme_fr": [
+        "Enseignement supérieur",
+        "Établissement d'enseignement supérieur",
+        "Orientation, parcours et réussite",
+        "Formations et diplômes",
+        "Statistiques"
+      ],
+      "theme_en": [
+        "Higher education",
+        "Higher education institutions",
+        "Guidance, student pathways, and student success",
+        "Training and qualifications",
+        "Statistics"
+      ],
+      "keyword": [
+        "éducation",
+        "orientation",
+        "enseignement supérieur",
+        "étudiants",
+        "APB",
+        "formations",
+        "formation",
+        "STS",
+        "CPGE",
+        "DUT",
+        "licence",
+        "UAI",
+        "boursiers",
+        "boursier",
+        "endo-recrutement",
+        "rang",
+        "admis",
+        "admissibles",
+        "places",
+        "voeux",
+        "demande",
+        "offre",
+        "établissement",
+        "établissements",
+        "PACES",
+        "capacité",
+        "propositions",
+        "proposition",
+        "vœu",
+        "vœux",
+        "voeu",
+        "BTS",
+        "école de commerce",
+        "CPGE intégrée à l'université",
+        "DEUST",
+        "DCG"
+      ],
+      "keyword_fr": [
+        "éducation",
+        "orientation",
+        "enseignement supérieur",
+        "étudiants",
+        "APB",
+        "formations",
+        "formation",
+        "STS",
+        "CPGE",
+        "DUT",
+        "licence",
+        "UAI",
+        "boursiers",
+        "boursier",
+        "endo-recrutement",
+        "rang",
+        "admis",
+        "admissibles",
+        "places",
+        "voeux",
+        "demande",
+        "offre",
+        "établissement",
+        "établissements",
+        "PACES",
+        "capacité",
+        "propositions",
+        "proposition",
+        "vœu",
+        "vœux",
+        "voeu",
+        "BTS",
+        "école de commerce",
+        "CPGE intégrée à l'université",
+        "DEUST",
+        "DCG"
+      ],
+      "keyword_en": [
+        "éducation",
+        "orientation",
+        "enseignement supérieur",
+        "étudiants",
+        "APB",
+        "formations",
+        "formation",
+        "STS",
+        "CPGE",
+        "DUT",
+        "licence",
+        "UAI",
+        "boursiers",
+        "boursier",
+        "endo-recrutement",
+        "rang",
+        "admis",
+        "admissibles",
+        "places",
+        "voeux",
+        "demande",
+        "offre",
+        "établissement",
+        "établissements",
+        "PACES",
+        "capacité",
+        "propositions",
+        "proposition",
+        "vœu",
+        "vœux",
+        "voeu",
+        "BTS",
+        "école de commerce",
+        "CPGE intégrée à l'université",
+        "DEUST",
+        "DCG"
+      ],
+      "license": "Licence Ouverte v2.0 (Etalab)",
+      "license_fr": "Licence Ouverte v2.0 (Etalab)",
+      "license_en": "Licence Ouverte v2.0 (Etalab)",
+      "license_url": "https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+      "license_url_fr": "https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+      "license_url_en": "https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+      "language": "fr",
+      "metadata_languages": ["fr"],
+      "timezone": null,
+      "modified": "2018-10-18T13:13:13+00:00",
+      "modified_updates_on_metadata_change": false,
+      "modified_updates_on_data_change": false,
+      "data_processed": "2018-10-17T20:35:58+00:00",
+      "metadata_processed": "2026-02-23T22:14:41.522000+00:00",
+      "geographic_reference": ["world_fr"],
+      "geographic_reference_auto": true,
+      "territory": ["France"],
+      "geometry_types": null,
+      "bbox": null,
+      "publisher": "Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation > Sous-direction des Systèmes d'information et études statistiques",
+      "publisher_fr": "Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation > Sous-direction des Systèmes d'information et études statistiques",
+      "publisher_en": "Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation > Sous-direction des Systèmes d'information et études statistiques",
+      "references": null,
+      "records_count": 17753,
+      "attributions": null,
+      "source_domain": null,
+      "source_domain_title": null,
+      "source_domain_address": null,
+      "source_dataset": null,
+      "shared_catalog": null,
+      "federated": false,
+      "parent_domain": null,
+      "update_frequency": null
+    },
+    "custom": {
+      "temporal_coverage_from": "2016-01-20",
+      "temporal_coverage_to": "2017-09-30"
+    }
+  }
+}

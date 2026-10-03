@@ -10,20 +10,22 @@ does not require an account.
 
 ## Current milestone
 
-Ship an executable repository with a web shell, UI gallery, Rust CLI, database
-tooling, tests, CI, and navigable documentation. The gallery contains synthetic
-values for technical verification. It makes no claim about admissions.
+Collect and retain all 14 selected public APB/Parcoursup datasets through the
+manual Rust CLI, with complete raw records in PostgreSQL and local source
+archives. The web gallery still contains synthetic verification values.
+Frontend data browsing and all derived indicators are deferred.
 
 ## Suggested feature order
 
-1. Import one pinned Parcoursup release with provenance, raw retention,
-   validation, replay without duplicates, and atomic publication.
+1. Collect the selected public datasets with provenance, raw retention,
+   validation, replay without duplicates, and atomic publication. See [ingestion](ingestion.md).
 2. Browse formations within one campaign, with useful filters and source links.
 3. Show a formation detail page with indicator definitions and completeness.
 4. Compare formations within compatible populations and campaigns.
 5. Build editorial visualizations and longitudinal views after reviewing
    continuity, definitions, and source coverage.
-6. Evaluate APB as a separate source adapter and methodology project.
+6. Review APB methodology before longitudinal comparison; raw collection already
+   retains it in a separate source namespace.
 
 Each feature should include its data definition, user behavior, focused
 verification, and known limits. Hosting is its own milestone and can proceed

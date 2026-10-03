@@ -9,6 +9,7 @@ Use this index to find the source of truth for each concern.
 | [Development](development.md)          | Setup, environments, migration and test procedures |
 | [Design system](design-system.md)      | Visual and accessibility conventions               |
 | [Data contract](data-contract.md)      | Source provenance and statistical meaning          |
+| [Raw ingestion](ingestion.md)          | Sources, commands, archives and recovery           |
 | [Decisions](decisions.md)              | Technical choices and tradeoffs                    |
 | [Quality](quality.md)                  | Verification evidence and limitations              |
 | [Third-party sources](third-party.md)  | Vendored components, licenses and changes          |
