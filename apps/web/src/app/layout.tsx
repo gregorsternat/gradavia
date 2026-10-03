@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { Providers } from "@/components/providers";
 import { ThemeSelect } from "@/components/theme-select";
 import { Wordmark } from "@/components/wordmark";
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
     template: "%s · Orvio",
   },
   description:
-    "Un regard clair sur les données publiques de l’orientation. Orvio se construit, en commençant par Parcoursup.",
+    "Explorez les formations Parcoursup à partir des données publiques de l’orientation, avec leurs sources et leur contexte.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -28,7 +29,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <div className="mx-auto flex min-h-svh max-w-6xl flex-col px-6 sm:px-10">
             <header className="flex h-24 items-center justify-between border-b border-border">
               <Wordmark />
-              <ThemeSelect />
+              <div className="flex items-center gap-4 sm:gap-7">
+                <nav aria-label="Navigation principale">
+                  <Link
+                    href="/formations"
+                    className="text-sm underline-offset-4 hover:underline"
+                  >
+                    Formations
+                  </Link>
+                </nav>
+                <ThemeSelect />
+              </div>
             </header>
             {children}
             <footer className="mt-auto flex flex-wrap items-center justify-between gap-4 border-t border-border py-7 text-xs text-muted-foreground">

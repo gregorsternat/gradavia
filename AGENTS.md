@@ -19,8 +19,9 @@ This file is a map. Keep detailed rules and evidence in the linked documents.
 - Use the pinned pnpm and Cargo workspaces through `just`. Commit both lockfiles.
 - Keep UI under `features/<feature>/ui`, pure feature logic under `domain`,
   and data access under `server`. Create layers when they have real content.
-- Client components receive serializable data. Database imports stay in
-  server-only modules. The import checker follows aliases and re-exports.
+- Client components receive serializable data. Next.js calls the Rust API from
+  server-only modules and never imports database clients or schema. The import
+  checker follows aliases and re-exports.
 - `orvio-core` stays free of I/O. Adapters validate external input.
 - Drizzle alone owns schema and migrations; SQLx consumes that schema.
 - Follow the [data contract](docs/data-contract.md): preserve provenance,
@@ -50,7 +51,7 @@ Turn recurring review findings into a check when practical.
 - Keep credentials in the ignored root `.env.local`. Never log connection
   strings, environment dumps, credentials, or raw database driver errors.
 - `just db-check` explicitly reaches the configured Neon branch. Builds and
-  browser tests must work without credentials or dataset access.
+  browser tests must work without live credentials or external dataset access.
 - Each checkout has its own environment and artifacts. Set distinct `PORT`
   and `E2E_PORT` values when running concurrent instances.
 - Keep failure logs, screenshots, and traces under `.artifacts`.

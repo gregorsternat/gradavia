@@ -61,6 +61,17 @@ body {
   outline-offset: 5px;
 }
 
+/* Keep one semantic filter form across breakpoints. Native details stays usable
+   on mobile; desktop exposes its contents even when the disclosure is closed. */
+@media (min-width: 1024px) {
+  .formation-filters::details-content {
+    content-visibility: visible;
+  }
+  .formation-filters > div {
+    display: block;
+  }
+}
+
 /* A shared visual treatment for source components; no separate library theme. */
 .orvio-chart {
   --color-gray-500: var(--chart-secondary);

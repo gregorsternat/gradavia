@@ -34,9 +34,17 @@ check-ingest:
 test-ingest *args:
     cargo test --locked -p orvio-aggregator "$@"
 
-# Start one local web instance; PORT can be set per checkout.
+# Start the Rust API and website; only the API receives database credentials.
 dev:
-    pnpm dev
+    cargo build --locked -p orvio-api
+    pnpm exec tsx scripts/dev.ts
+
+# Run each service independently when needed.
+api:
+    cargo run --locked -p orvio-api
+
+dev-web:
+    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u TEST_DATABASE_URL -u ORVIO_TEST_DATABASE_URL pnpm dev
 
 # Fast checks; these are the same commands used in CI.
 check:
@@ -53,18 +61,22 @@ test-unit:
     cargo test --workspace --locked
 
 test-db:
+    cargo build --locked -p orvio-api
     pnpm test:db
 
 test-e2e: build
     pnpm test:e2e
     E2E_PRODUCTION=1 pnpm test:e2e
+    E2E_PRODUCTION=1 E2E_STATE=unconfigured pnpm test:e2e
+    E2E_PRODUCTION=1 E2E_STATE=empty pnpm test:e2e
+    E2E_PRODUCTION=1 E2E_STATE=unavailable pnpm test:e2e
 
 # Full test suite, including disposable PostgreSQL and browser tests.
 test: test-unit test-db test-e2e
 
 # Verify that build steps never need live database credentials.
 build:
-    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED pnpm build
+    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u ORVIO_API_URL pnpm build
     cargo build --workspace --locked
 
 # Read-only checks against the explicitly configured development database.

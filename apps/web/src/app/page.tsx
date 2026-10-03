@@ -11,7 +11,7 @@ export default function Home() {
           className="size-1.5 rounded-full bg-foreground"
           aria-hidden="true"
         />
-        En cours de création
+        Les campagnes Parcoursup à explorer
       </div>
       <p className="mb-5 font-mono text-[11px] tracking-[0.18em] text-muted-foreground uppercase">
         Les données de l’orientation, autrement
@@ -22,9 +22,16 @@ export default function Home() {
         <span className="text-muted-foreground">Plus de perspectives.</span>
       </h1>
       <p className="mt-8 max-w-lg text-base leading-7 text-muted-foreground sm:text-lg">
-        Les données publiques peuvent éclairer nos choix. Orvio se construit
-        pour les rendre plus lisibles, plus faciles à explorer et à comparer.
+        Les données publiques peuvent éclairer nos choix. Retrouvez les
+        formations Parcoursup, leurs établissements et leurs territoires,
+        campagne par campagne.
       </p>
+      <Link
+        href="/formations"
+        className="mt-8 inline-flex w-fit items-center gap-4 rounded-full bg-foreground px-6 py-3.5 text-sm font-medium text-background hover:opacity-85"
+      >
+        Explorer les formations <span aria-hidden="true">→</span>
+      </Link>
       <div className="mt-16 grid gap-6 border-t border-border pt-7 sm:mt-20 sm:grid-cols-[1fr_2fr]">
         <p className="font-mono text-[11px] tracking-[0.12em] text-muted-foreground uppercase">
           Premier terrain d’exploration

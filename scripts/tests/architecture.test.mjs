@@ -6,6 +6,7 @@ import { test } from "node:test";
 import {
   checkClientBoundaries,
   checkDomainDependencies,
+  checkWebDatabaseBoundary,
 } from "../check-architecture.mjs";
 
 function fixture(files, run) {
@@ -35,6 +36,25 @@ test("rejects database access hidden behind an alias and barrel", () => {
       "apps/web/src/server/db.ts": "export const query = () => 1;",
     },
     (root) => assert.equal(checkClientBoundaries(root).length, 1),
+  );
+});
+
+test("rejects server-side web database imports through aliases and barrels", () => {
+  fixture(
+    {
+      "apps/web/src/page.tsx": 'import { db } from "@/shared";',
+      "apps/web/src/shared.ts":
+        'export { db } from "../../../packages/db/query";',
+      "packages/db/query.ts": "export const db = {};",
+    },
+    (root) => assert(checkWebDatabaseBoundary(root).length > 0),
+  );
+  fixture(
+    {
+      "apps/web/src/server/load.ts":
+        'import "server-only"; export const load = () => fetch("http://api/v1/formations");',
+    },
+    (root) => assert.deepEqual(checkWebDatabaseBoundary(root), []),
   );
 });
 

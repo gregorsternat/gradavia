@@ -10,10 +10,30 @@ does not require an account.
 
 ## Current milestone
 
-Collect and retain all 14 selected public APB/Parcoursup datasets through the
-manual Rust CLI, with complete raw records in PostgreSQL and local source
-archives. The web gallery still contains synthetic verification values.
-Frontend data browsing and all derived indicators are deferred.
+Browse formations in the published Parcoursup admissions campaigns through
+`/formations`, using the 14-dataset raw collection already retained by the manual
+Rust CLI. The explorer covers the eight admissions sources (currently 2018–2025),
+one campaign at a time and excluding apprenticeship. A standalone Rust API owns
+reads and source rules; Next.js renders the responses. This separation preserves
+the same user-facing behavior.
+
+Search ignores case and French accents and matches all entered words across
+formation titles, establishments and locations. Filters cover formation type,
+region, department, establishment status and selectivity when published. Results
+show descriptive fields, source links and provenance, with 25 rows per page.
+The newest available campaign is the default; URL state can be shared. Changing
+campaign resets the search, filters and page. Submitting a new search or filters
+resets the page; an out-of-range page resolves to the final available page.
+
+Older labels are composed from published fields. Cities are not published before
+2021, status is absent in 2018, and selectivity is absent before 2020. Unsupported
+filters are disabled and incoming unsupported filters are removed with an
+explanation. Unknown filter values produce no results. Source links can point to
+current Parcoursup pages; they are not archived formation detail pages.
+
+No connection, no published campaign and no matching result are distinct states.
+The gallery and browser-test fixtures remain explicitly synthetic. Formation
+detail pages, indicators and comparisons are the next product milestones.
 
 ## Suggested feature order
 

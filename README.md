@@ -2,7 +2,7 @@
 
 A French platform for exploring and comparing public higher education admissions data, starting with Parcoursup.
 
-Orvio includes a Next.js shell, a development component gallery, and a Rust CLI that collects 14 public APB/Parcoursup datasets into PostgreSQL with immutable local source archives. Product analytics and data exploration in the frontend remain future work.
+Orvio includes a Next.js formation explorer, a standalone Rust read API, a development component gallery, and a Rust CLI that collects 14 public APB/Parcoursup datasets into PostgreSQL with immutable local source archives. The explorer browses published Parcoursup admissions campaigns with descriptive information, search, filters, pagination and source provenance. Indicators and comparisons remain future work.
 
 ## Start locally
 
@@ -19,6 +19,12 @@ mise exec -- just dev
 
 Open [localhost:3000](http://localhost:3000). The home page and [component gallery](http://localhost:3000/dev/ui) work without database credentials. The gallery is unavailable in production.
 
+The [formation explorer](http://localhost:3000/formations) reads imported data
+through the Rust API and configured Neon branch. `just dev` supervises both
+services and only passes database credentials to Rust. Without configuration it shows an explicit
+unavailable state, never synthetic results. A reachable database without published
+campaigns shows an empty state. The latest published campaign is selected by default.
+
 Use the Neon **development** branch credentials in the ignored root `.env.local` for database work. Never replace an existing local environment file. See [development](docs/development.md) for connection settings, independent worktrees, and diagnostics.
 
 ## Verify
@@ -34,10 +40,10 @@ mise exec -- just db-check
 | ------------------ | ---------------------------------------------------------- |
 | `just setup`       | Install locked JS/Rust dependencies and Chromium           |
 | `just doctor`      | Check local tools and CLI configuration                    |
-| `just dev`         | Start the website                                          |
+| `just dev`         | Start the API and website                                  |
 | `just check`       | Formatting, lint, types, architecture, docs, Clippy        |
 | `just test`        | Unit, PostgreSQL, development and production browser tests |
-| `just build`       | Build the website and CLI without database credentials     |
+| `just build`       | Build website, API and CLI without live credentials        |
 | `just db-check`    | Read-only Neon HTTP and direct PostgreSQL diagnostics      |
 | `just db-generate` | Generate a Drizzle migration from schema changes           |
 | `just db-migrate`  | Apply committed migrations using a direct connection       |
@@ -57,13 +63,14 @@ Run commands through `mise exec --` if mise is not activated in your shell.
 
 ## Repository
 
-| Path                | Responsibility                                                  |
-| ------------------- | --------------------------------------------------------------- |
-| `apps/web`          | Next.js App Router, French UI, server-side reads                |
-| `packages/db`       | Drizzle schema, SQL migrations, database adapters               |
-| `crates/core`       | Pure Rust domain                                                |
-| `crates/aggregator` | Ingestion CLI and I/O adapters                                  |
-| `scripts`, `tests`  | Diagnostics and executable guardrails                           |
-| `docs`              | Product, data contract, decisions, plans, verification evidence |
+| Path                | Responsibility                                                     |
+| ------------------- | ------------------------------------------------------------------ |
+| `apps/web`          | Next.js App Router, French UI, server-side HTTP client             |
+| `packages/db`       | Drizzle schema, SQL migrations, database adapters                  |
+| `crates/api`        | Standalone Axum/SQLx read service; see [API contract](docs/api.md) |
+| `crates/core`       | Pure Rust domain                                                   |
+| `crates/aggregator` | Ingestion CLI and I/O adapters                                     |
+| `scripts`, `tests`  | Diagnostics and executable guardrails                              |
+| `docs`              | Product, data contract, decisions, plans, verification evidence    |
 
-Start with [architecture](ARCHITECTURE.md), the [documentation index](docs/index.md), and [AGENTS.md](AGENTS.md). Hosting on Cloudflare Workers is planned in a separate milestone.
+Start with [architecture](ARCHITECTURE.md), the [documentation index](docs/index.md), and [AGENTS.md](AGENTS.md). Website hosting on Cloudflare Workers and separate Rust service hosting remain a deployment milestone.

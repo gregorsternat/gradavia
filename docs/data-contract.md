@@ -1,8 +1,9 @@
 # Data contract
 
 The [raw ingestion implementation](ingestion.md) enforces collection, identity,
-representation and publication rules. Statistical harmonization, indicator
-calculations and comparisons remain future work.
+representation and publication rules. The formation explorer implements the
+descriptive read contract below. Statistical harmonization, indicator calculations
+and comparisons remain future work.
 
 ## Source and coverage
 
@@ -65,6 +66,43 @@ campaign. Preserve the previous valid release if processing fails.
 Record row counts, rejects, schema drift, checksums, run status, and timing.
 Do not log individual records by default. The collector locks each dataset, runs
 sources sequentially and bounds HTTP retries. Scheduling remains deferred.
+
+## Formation explorer read contract
+
+The Rust [HTTP API](api.md) owns this contract. Next.js validates its serialized
+response and presents it; no web module reads PostgreSQL directly.
+
+Only the eight registered `parcoursup` admissions sources are read. APB,
+apprenticeship, formation mapping and specialty aggregates are not combined with
+them. Campaigns come from the published release's retained coverage, rather than
+the dataset name or current date. If the mutable alias and a year-specific source
+cover the same campaign, the year-specific source takes precedence.
+
+Read rows by captured `release_id` and `campaign`, preserving `(release_id,
+row_number)` identity and duplicate multiplicity. Counts are source records for
+the selected campaign, never unique people or cross-year formation counts.
+Pagination, counts and campaign-wide filter options share that release. A later
+request observes a newly published current pointer.
+
+The displayed fields are `lib_for_voe_ins`, `g_ea_lib_vx`, `ville_etab`, `dep_lib`,
+`region_etab_aff`, `fili`, `contrat_etab`, `select_form` and `lien_form_psup`.
+When the full title is absent, join distinct nonempty `form_lib_voe_acc`,
+`fil_lib_voe_acc` and `detail_forma` values in source order. No city or identifier is
+inferred. Normalize only the documented 2020/current selectivity spellings for
+presentation; other source vocabularies, including DUT and BUT, remain distinct.
+
+Search matches literal words with AND across title, establishment, city,
+department and region. Case, combining accents and the French ligatures `œ` and
+`æ` are folded for search, without altering displayed source strings. SQL LIKE
+wildcards in user input remain literal. Filters use exact source values except
+for the documented selectivity labels. Rows sort deterministically by title,
+establishment (case/accent folded) and row number; the page size is fixed at 25.
+
+Absent descriptive fields are explicitly unavailable. Source URLs must be valid
+HTTPS links on Parcoursup hosts without embedded credentials; unavailable links
+are not reconstructed. Dataset links, producer, license, campaign, collection
+date and source modification date accompany the results. No numerical admissions
+indicator or admission probability is exposed by this feature.
 
 ## Indicators and comparisons
 
