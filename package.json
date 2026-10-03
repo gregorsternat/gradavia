@@ -1,0 +1,42 @@
+{
+  "name": "orvio",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.21.0",
+  "engines": {
+    "node": ">=24.21.0 <25"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @orvio/web dev",
+    "build": "pnpm --filter @orvio/web build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc --noEmit && pnpm -r --if-present typecheck",
+    "test:unit": "vitest run && node --test scripts/tests/*.test.mjs",
+    "test:db": "tsx scripts/test-db.ts",
+    "test:e2e": "playwright test",
+    "check:architecture": "node scripts/check-architecture.mjs",
+    "check:docs": "node scripts/check-docs.mjs",
+    "db:check": "tsx scripts/db-check.ts",
+    "db:migrate": "tsx scripts/db-migrate.ts",
+    "db:generate": "pnpm --filter @orvio/db generate"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.63.0",
+    "@types/node": "^24.19.0",
+    "@types/pg": "8.23.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "dotenv": "18.0.5",
+    "drizzle-orm": "0.45.3",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "16.3.8",
+    "eslint-config-prettier": "10.1.8",
+    "prettier": "3.9.9",
+    "tsx": "4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
+  }
+}

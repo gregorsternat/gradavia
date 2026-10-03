@@ -1,0 +1,24 @@
+[package]
+name = "orvio-aggregator"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "orvio-ingest"
+path = "src/main.rs"
+
+[dependencies]
+orvio-core = { path = "../core" }
+clap = { version = "4", features = ["derive"] }
+serde.workspace = true
+thiserror.workspace = true
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio", "tls-rustls-ring", "postgres"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "time"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+url = "2"
+
+[lints]
+workspace = true

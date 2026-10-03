@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+target/
+.artifacts/
+.cache/
+.wrangler/
+.open-next/
+.env
+.env.*
+!.env.example
+.neon
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+playwright-report/
+test-results/
