@@ -10,16 +10,21 @@ Follow the [README](../README.md). On Linux, also run
 `pnpm exec playwright install-deps chromium` after setup. CI does this itself.
 
 `just` loads the root `.env.local`. Database Node scripts load that same file.
-Next.js does not need database credentials for the current shell. Future server
-reads run through `just dev`, which passes the root environment to the app.
+`just dev` builds the Rust API and supervises it alongside Next.js. Only the API
+receives database credentials; the web process gets its HTTP origin. Both builds
+and the website shell work without an API or database. The explorer shows a retry
+state if the API is unconfigured or unavailable. Use `just api` and `just dev-web`
+to run the processes independently; see the [API contract](api.md).
 
 ## Environment
 
 | Variable                | Use                                                                       |
 | ----------------------- | ------------------------------------------------------------------------- |
-| `DATABASE_URL`          | Neon development pooled URL, HTTP reads                                   |
+| `DATABASE_URL`          | Neon development pooled URL, Rust API and connectivity diagnostic         |
 | `DATABASE_URL_UNPOOLED` | Direct development URL, migrations and SQLx                               |
 | `PORT`                  | Development server port, default 3000                                     |
+| `API_BIND`              | Rust listener, default `127.0.0.1:3002`; choose a distinct worktree port  |
+| `ORVIO_API_URL`         | Trusted API origin for independent Next.js runs; derived by `just dev`    |
 | `E2E_PORT`              | Dedicated browser-test server port; defaults 3100/3101 for dev/production |
 | `ARTIFACTS_DIR`         | Checkout-local diagnostics directory, default `.artifacts`                |
 | `RAW_DATA_DIR`          | Retained raw exports and manifests, default `.data/raw`                   |
@@ -42,6 +47,11 @@ PostgreSQL major version: 18.
 - Development: `br-hidden-grass-b1z6hk64`, created from production.
 - Development compute: 0.25–1 CU, suspension after 300 seconds of inactivity.
 
+The imported datasets live on `development-raw-ingestion-cc59`
+(`br-wild-surf-b13o7v3x`). The formation explorer worktree uses
+`development-formation-explorer-fdf3` (`br-square-pine-b1qud6l4`), copied from that
+populated branch. The original `development` branch does not contain the import.
+
 Use the development branch for daily work. Branches contain independent data and
 schema history after creation. For simultaneous schema work, use a separate
 Neon branch per feature/worktree and its own local connection strings.
@@ -61,25 +71,36 @@ transactional failure behavior, not a general production rollback strategy.
 ## Local tests and isolation
 
 `just test-db` starts a uniquely named PostgreSQL 18 container on a random
-loopback port, then removes only that container. It creates a uniquely named `orvio_ingest_<uuid>` database so generated public-schema
-foreign keys are tested without rewriting migrations. It verifies real ingestion,
-SQLx and synthetic rollback migrations, then drops only that test database.
+loopback port, or uses an explicitly provided local `TEST_DATABASE_URL`.
+The shared harness creates a unique `orvio_ingest_<uuid>` database so generated
+public-schema foreign keys are tested without rewriting migrations or touching
+another invocation. Cleanup removes only that database and its owned container.
 
-Alternatively, set `TEST_DATABASE_URL` to a disposable loopback database named
-`orvio_test`. The connection must allow creating and dropping the isolated test database.
-Remote hosts and other initial database names are rejected. CI supplies
-this URL through its PostgreSQL service. Neon credentials are never needed in CI.
+Database tests apply real Drizzle migrations, seed synthetic source releases,
+start the real Rust API and assert its HTTP contract through the same response
+validator as the web client. They verify search, filters, historical gaps,
+duplicate identity, stable pagination and a concurrent source publication while
+the API's rows query waits on a table lock. No production test hook is needed.
+Existing Rust ingestion and migration rollback tests still run afterwards.
+
+Browser tests also start the actual Rust binary and an isolated PostgreSQL 18
+database through `scripts/e2e-server.ts`. Synthetic records are labeled through
+source producer/license metadata. There is no application fixture reader,
+fixture environment switch or fallback. `just test-e2e` covers development and
+production interaction, plus production empty, unconfigured and unavailable
+API scenarios. No Neon credentials or public source downloads are used.
 
 Every worktree has its own `.env.local`, `node_modules`, `target`, `.next`,
 and `.artifacts`. Install and configure each checkout independently:
 
 ```sh
-PORT=3200 mise exec -- just dev
+PORT=3200 API_BIND=127.0.0.1:3202 mise exec -- just dev
 E2E_PORT=3210 mise exec -- just test-e2e
 ```
 
 Use different ports for concurrent test invocations. Tests reject reuse of an
-existing server and clear database credentials before starting their own server.
+existing server. Their API uses a random loopback port and disposable database;
+their Next.js process has no database credentials.
 Stop the dev server in the same checkout before browser tests: Next.js locks its
 development output directory even when ports differ. Separate worktrees can run
 their dev servers and checks independently.

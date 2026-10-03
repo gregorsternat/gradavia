@@ -4,22 +4,20 @@
 
 pnpm workspaces for TypeScript, Cargo workspaces for Rust, and just for shared
 commands. No additional task graph service is needed for two JS packages and
-two crates. Versions and lockfiles make local and CI behavior reproducible.
+three crates. Versions and lockfiles make local and CI behavior reproducible.
 
-## 002 — Next.js reads, Rust ingests
+## 002 — Next.js reads, Rust ingests (superseded by 010)
 
-Next.js App Router owns the French product and server-side read paths. Rust
-owns future source ingestion and batch calculations. The aggregator is a CLI;
-a separate Rust HTTP service has no current requirement.
+The initial explorer used server-only Next.js database reads. Decision 010 moves
+those reads into a standalone Rust API at the user's request. Next.js retains
+rendering and URL state; Rust owns ingestion and the application read path.
 
-Pure domain code is isolated from persistence and transport. Add abstractions
-when a real feature needs them, rather than creating empty services.
-
-## 003 — One schema owner, two connection transports
+## 003 — One schema owner, separate connection roles
 
 Drizzle owns schema and SQL migrations. SQLx consumes the resulting schema
-without maintaining its own migration history. Neon HTTP supports website reads;
-`pg` provides direct migration/local-test connections; SQLx connects directly.
+without maintaining its own migration history. The API uses pooled PostgreSQL
+connections; the collector and migrations use direct connections. `pg` serves
+local tooling/tests, and Neon HTTP remains a connectivity diagnostic only.
 
 Development uses Neon branches; local tests and GitHub Actions use disposable
 PostgreSQL 18. CI requires no Neon secrets. Least-privilege deployment roles
@@ -84,3 +82,36 @@ is included in 0.9. Local tests without TLS do not cover that transport behavior
 No individual-level data, source harmonization, cross-campaign matching, frontend
 reads, business calculations or scheduled service is part of this milestone.
 See [ingestion](ingestion.md) for operating limits and backup obligations.
+
+## 009 — Descriptive exploration of immutable releases
+
+The first product read uses retained JSONB records and the existing release/campaign
+index. A published release is captured before bounded SQL search, filtering,
+counting and pagination. A read projection table and search service remain
+unnecessary for the current scope. Decision 010 relocates these queries from
+Next.js into Rust without changing their source semantics.
+
+GET forms make searches shareable and keyboard accessible. Historical gaps remain
+visible, source rows retain their release/position identity, and the display never
+merges campaigns or deduplicates source records. No derived indicators are added.
+Browser fixtures are seeded only by the disposable database harness and labeled
+in source metadata; neither runtime contains a synthetic fallback.
+
+## 010 — Standalone Rust application reads
+
+The user chose an explicit HTTP boundary so application data access and source
+semantics can evolve independently of the UI framework, even with one consumer.
+Use one Axum/SQLx service with `GET /v1/formations`, liveness and database
+readiness. Next.js calls the API from server-only code and validates the payload
+before rendering. It has no database dependency or runtime database credentials.
+
+Keep SQLx queries parameterized and read-only, and preserve captured-release
+consistency. Bound connection acquisition, SQL execution, HTTP deadlines and
+response size. API logs record route categories/status/duration without user queries,
+source records, secrets or raw driver errors. Drizzle remains the migration owner.
+
+The cost is a second runtime, deployment and network boundary. Both processes
+are supervised locally, while integration/browser tests run the actual API over
+HTTP against disposable PostgreSQL 18. No public deployment, authentication,
+new data model or unrelated endpoint is included. The [API contract](api.md)
+documents the wire format and operational behavior.

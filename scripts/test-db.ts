@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
-import { execFileSync, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { createNodeClient } from "../packages/db/src/node";
 import { migrateDatabase } from "../packages/db/src/migrate";
+import { testFormationReads } from "./test-formations-db";
+import { createTestDatabase } from "./test-postgres";
 
 const artifacts = path.resolve(
   process.env.ARTIFACTS_DIR ?? ".artifacts",
@@ -13,91 +15,17 @@ const artifacts = path.resolve(
 );
 await mkdir(artifacts, { recursive: true });
 const id = randomUUID().replaceAll("-", "");
-const container = `orvio-test-${id}`;
 const schema = `probe_${id}`;
 const journalSchema = `journal_${id}`;
-const database = `orvio_ingest_${id}`;
 const folder = await mkdtemp(path.join(tmpdir(), "orvio-migrations-"));
-let ownsContainer = false;
+let database: Awaited<ReturnType<typeof createTestDatabase>> | undefined;
 let client: ReturnType<typeof createNodeClient>["client"] | undefined;
 let connected = false;
-let administrator: ReturnType<typeof createNodeClient>["client"] | undefined;
-let ownsDatabase = false;
 let phase = "start-postgres";
 
-function docker(...args: string[]) {
-  return execFileSync("docker", args, {
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-    timeout: 120_000,
-  }).trim();
-}
-
 try {
-  let url = process.env.TEST_DATABASE_URL;
-  if (!url) {
-    docker(
-      "run",
-      "--rm",
-      "-d",
-      "--name",
-      container,
-      "-e",
-      "POSTGRES_USER=orvio",
-      "-e",
-      "POSTGRES_PASSWORD=orvio",
-      "-e",
-      "POSTGRES_DB=orvio_test",
-      "-p",
-      "127.0.0.1::5432",
-      "postgres:18",
-    );
-    ownsContainer = true;
-    const address = docker("port", container, "5432/tcp");
-    url = `postgresql://orvio:orvio@${address}/orvio_test`;
-    let ready = false;
-    for (let attempt = 0; attempt < 60; attempt++) {
-      try {
-        docker(
-          "exec",
-          container,
-          "pg_isready",
-          "-h",
-          "127.0.0.1",
-          "-U",
-          "orvio",
-          "-d",
-          "orvio_test",
-        );
-        ready = true;
-        break;
-      } catch {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-      }
-    }
-    assert(ready, "Disposable PostgreSQL did not start within 30 seconds");
-  }
-
-  phase = "validate-test-target";
-  const target = new URL(url);
-  assert(
-    ["localhost", "127.0.0.1", "[::1]"].includes(target.hostname),
-    "Tests require a loopback database",
-  );
-  assert.equal(
-    target.pathname,
-    "/orvio_test",
-    "Tests require the disposable orvio_test database",
-  );
-  // Generated migrations reference public explicitly. Give every invocation its
-  // own database instead of rewriting SQL or touching another test's tables.
-  phase = "create-isolated-database";
-  administrator = createNodeClient(url).client;
-  await administrator.connect();
-  await administrator.query(`CREATE DATABASE "${database}"`);
-  ownsDatabase = true;
-  target.pathname = `/${database}`;
-  url = target.toString();
+  database = await createTestDatabase(artifacts);
+  const url = database.url;
   ({ client } = createNodeClient(url));
   phase = "node-connectivity";
   await client.connect();
@@ -120,6 +48,9 @@ try {
     ).rows[0].count,
     4,
   );
+
+  phase = "formation-explorer-contract";
+  await testFormationReads(url);
 
   phase = "raw-ingestion-contract";
   const ingestion = spawnSync(
@@ -252,6 +183,7 @@ try {
     checks: [
       "node-connectivity",
       "real-migrations",
+      "formation-explorer-contract",
       "raw-ingestion-contract",
       "migration-apply",
       "migration-idempotency",
@@ -293,31 +225,7 @@ try {
     await client?.end().catch(() => {
       process.exitCode = 1;
     });
-    if (administrator) {
-      if (ownsDatabase) {
-        try {
-          await administrator.query(`DROP DATABASE "${database}"`);
-        } catch {
-          console.error("Isolated test database cleanup failed.");
-          process.exitCode = 1;
-        }
-      }
-      await administrator.end();
-    }
-    if (ownsContainer) {
-      const logs = spawnSync("docker", ["logs", container], {
-        encoding: "utf8",
-        timeout: 10_000,
-      });
-      try {
-        await writeFile(
-          path.join(artifacts, "postgres.log"),
-          `${logs.stdout ?? ""}${logs.stderr ?? ""}`,
-        );
-      } finally {
-        docker("rm", "-f", container);
-      }
-    }
+    await database?.close();
     await rm(folder, { recursive: true, force: true });
   }
 }

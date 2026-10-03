@@ -53,7 +53,7 @@ function imports(source) {
   return values;
 }
 
-export function checkClientBoundaries(root) {
+function checkRuntimeBoundaries(root, webDatabaseOnly = false) {
   const configPath = path.join(root, "apps/web/tsconfig.json");
   const read = ts.readConfigFile(configPath, ts.sys.readFile);
   if (read.error)
@@ -80,9 +80,11 @@ export function checkClientBoundaries(root) {
     return cache.get(file);
   }
   const forbidden = (value) =>
-    /(^|\/)(server|packages\/db)(\/|$)|\.server\.[jt]sx?$/.test(value) ||
+    (webDatabaseOnly
+      ? /(^|\/)packages\/db(\/|$)/.test(value)
+      : /(^|\/)(server|packages\/db)(\/|$)|\.server\.[jt]sx?$/.test(value)) ||
     [
-      "server-only",
+      ...(webDatabaseOnly ? [] : ["server-only"]),
       "pg",
       "postgres",
       "drizzle-orm",
@@ -97,7 +99,7 @@ export function checkClientBoundaries(root) {
         ts.isStringLiteral(node.expression) &&
         node.expression.text === "use client",
     );
-    if (!client) continue;
+    if (!client && !webDatabaseOnly) continue;
     const seen = new Set();
     function walk(current, chain) {
       if (seen.has(current)) return;
@@ -115,7 +117,7 @@ export function checkClientBoundaries(root) {
           (resolved && forbidden(path.relative(root, resolved)))
         ) {
           failures.push(
-            `${chain.join(" -> ")} -> ${specifier}: move database/server access into a server module and pass serializable props to the client.`,
+            `${chain.join(" -> ")} -> ${specifier}: ${webDatabaseOnly ? "database access belongs to the Rust API; use its HTTP contract." : "move server access into a server module and pass serializable props to the client."}`,
           );
         } else if (
           resolved &&
@@ -128,8 +130,24 @@ export function checkClientBoundaries(root) {
     }
     walk(file, [path.relative(root, file)]);
   }
+  if (webDatabaseOnly) {
+    const manifest = path.join(root, "apps/web/package.json");
+    if (existsSync(manifest)) {
+      const dependencies =
+        JSON.parse(readFileSync(manifest, "utf8")).dependencies ?? {};
+      for (const name of Object.keys(dependencies))
+        if (forbidden(name))
+          failures.push(
+            `apps/web dependency ${name}: database clients belong to the Rust API.`,
+          );
+    }
+  }
   return failures;
 }
+
+export const checkClientBoundaries = (root) => checkRuntimeBoundaries(root);
+export const checkWebDatabaseBoundary = (root) =>
+  checkRuntimeBoundaries(root, true);
 
 export function checkDomainDependencies(packages) {
   const domain = packages.find((entry) => entry.name === "orvio-core");
@@ -138,7 +156,7 @@ export function checkDomainDependencies(packages) {
     .filter((dependency) => !["serde", "thiserror"].includes(dependency.name))
     .map(
       (dependency) =>
-        `orvio-core -> ${dependency.name}: keep I/O and runtime dependencies in orvio-aggregator.`,
+        `orvio-core -> ${dependency.name}: keep I/O and runtime dependencies in adapters (aggregator or API).`,
     );
 }
 
@@ -156,6 +174,7 @@ if (
   );
   const failures = [
     ...checkClientBoundaries(root),
+    ...checkWebDatabaseBoundary(root),
     ...checkDomainDependencies(metadata.packages),
   ];
   failures.forEach((failure) => console.error(failure));

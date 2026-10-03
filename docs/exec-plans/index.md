@@ -10,6 +10,8 @@ None.
 
 ## Completed
 
+- [Rust read API](completed/rust-read-api.md): standalone formation reads with a validated HTTP contract.
+- [Formation explorer](completed/formation-explorer.md): browse published Parcoursup campaigns.
 - [Raw ingestion](completed/raw-ingestion.md): collect and retain the 14 public source datasets.
 - [Bootstrap](completed/bootstrap.md): repository foundation, delivered in PR #1.
 
