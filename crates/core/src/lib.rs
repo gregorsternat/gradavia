@@ -6,6 +6,8 @@
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
+pub mod metrics;
+
 /// A source reference is opaque: identifiers are only unique within their source.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct SourceId(String);

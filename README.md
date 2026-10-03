@@ -2,7 +2,16 @@
 
 A French platform for exploring and comparing public higher education admissions data, starting with Parcoursup.
 
-Orvio includes a Next.js formation explorer, a standalone Rust read API, a development component gallery, and a Rust CLI that collects 14 public APB/Parcoursup datasets into PostgreSQL with immutable local source archives. The explorer browses published Parcoursup admissions campaigns with descriptive information, search, filters, pagination and source provenance. Indicators and comparisons remain future work.
+Orvio is an interactive observatory for French higher education: national
+Parcoursup statistics, formation search, detailed indicators and history,
+same-campaign comparisons, local favorites, regional exploration, and a
+specialty-pair explorer for general baccalaureate graduates. The interface uses
+source-owned beUI controls, Tremor charts and Motion with monochrome light/dark
+themes. All product data comes through a standalone Rust read API.
+
+The manual collector retains 14 official APB/Parcoursup source datasets and
+immutable source releases. The UI distinguishes published zeros, missing and
+suppressed values and keeps source context available beside the indicators.
 
 ## Start locally
 
@@ -17,13 +26,24 @@ mise exec -- just doctor
 mise exec -- just dev
 ```
 
-Open [localhost:3000](http://localhost:3000). The home page and [component gallery](http://localhost:3000/dev/ui) work without database credentials. The gallery is unavailable in production.
+Open [localhost:3000](http://localhost:3000). The shell, loading/error states and [component gallery](http://localhost:3000/dev/ui) work without database credentials. Product charts require the configured Rust API and a published release. The gallery is unavailable in production.
 
-The [formation explorer](http://localhost:3000/formations) reads imported data
+The observatory and [formation explorer](http://localhost:3000/formations) read imported data
 through the Rust API and configured Neon branch. `just dev` supervises both
 services and only passes database credentials to Rust. Without configuration it shows an explicit
-unavailable state, never synthetic results. A reachable database without published
-campaigns shows an empty state. The latest published campaign is selected by default.
+unavailable state, never synthetic results. A migrated database without published
+campaigns shows an empty state; a missing schema shows an unavailable state.
+The latest published campaign is selected by default.
+
+For a read-only preview against an already-populated development checkout while
+preserving this checkout's `.env.local`, explicitly select its environment file:
+
+```sh
+ORVIO_DATA_ENV_FILE=/absolute/path/to/populated-checkout/.env.local mise exec -- just dev
+```
+
+This setting only supplies the development API connection. It does not change
+migration or ingestion targets, and the web process never receives it.
 
 Use the Neon **development** branch credentials in the ignored root `.env.local` for database work. Never replace an existing local environment file. See [development](docs/development.md) for connection settings, independent worktrees, and diagnostics.
 
@@ -65,7 +85,7 @@ Run commands through `mise exec --` if mise is not activated in your shell.
 
 | Path                | Responsibility                                                     |
 | ------------------- | ------------------------------------------------------------------ |
-| `apps/web`          | Next.js App Router, French UI, server-side HTTP client             |
+| `apps/web`          | Next.js observatory, French UI, server-side HTTP client            |
 | `packages/db`       | Drizzle schema, SQL migrations, database adapters                  |
 | `crates/api`        | Standalone Axum/SQLx read service; see [API contract](docs/api.md) |
 | `crates/core`       | Pure Rust domain                                                   |

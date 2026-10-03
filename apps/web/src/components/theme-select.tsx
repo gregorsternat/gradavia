@@ -2,9 +2,10 @@
 
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useSyncExternalStore } from "react";
+import { RadioGroup, RadioGroupItem } from "@/components/motion/radio";
+import { Tooltip } from "@/components/motion/tooltip";
+import { useClientReady } from "@/lib/hooks/use-client-ready";
 
-const subscribe = () => () => {};
 const modes = [
   { value: "system", label: "Système", Icon: Monitor },
   { value: "light", label: "Clair", Icon: Sun },
@@ -12,35 +13,29 @@ const modes = [
 ] as const;
 
 export function ThemeSelect() {
-  const mounted = useSyncExternalStore(
-    subscribe,
-    () => true,
-    () => false,
-  );
+  const ready = useClientReady();
   const { theme, setTheme } = useTheme();
 
   return (
-    <fieldset className="flex gap-0.5 rounded-full border border-border bg-surface p-1">
-      <legend className="sr-only">Apparence</legend>
+    <RadioGroup
+      aria-label="Apparence"
+      orientation="horizontal"
+      value={ready ? (theme ?? "system") : "system"}
+      onValueChange={setTheme}
+      className="w-fit flex-nowrap gap-0.5 rounded-lg bg-subtle p-1"
+    >
       {modes.map(({ value, label, Icon }) => (
-        <label key={value} className="relative cursor-pointer">
-          <input
-            type="radio"
-            name="theme"
+        <Tooltip key={value} content={label}>
+          <RadioGroupItem
             value={value}
-            aria-label={label}
-            checked={mounted && theme === value}
-            onChange={() => setTheme(value)}
-            className="peer absolute inset-0 size-full cursor-pointer opacity-0"
-          />
-          <span
-            className="pointer-events-none flex size-8 items-center justify-center rounded-full text-muted-foreground peer-checked:bg-subtle peer-checked:text-foreground peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-foreground"
-            title={label}
+            label={label}
+            variant="segment"
+            className="size-8 min-h-8 px-0"
           >
-            <Icon size={15} aria-hidden="true" />
-          </span>
-        </label>
+            <Icon className="size-3.5" aria-hidden="true" />
+          </RadioGroupItem>
+        </Tooltip>
       ))}
-    </fieldset>
+    </RadioGroup>
   );
 }

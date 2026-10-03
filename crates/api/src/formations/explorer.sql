@@ -20,7 +20,7 @@ WITH descriptive AS MATERIALIZED (
       WHEN 'formation selective' THEN 'Sélective' WHEN 'formation sélective' THEN 'Sélective'
       WHEN 'formation non selec' THEN 'Non sélective' WHEN 'formation non sélective' THEN 'Non sélective'
       ELSE nullif(btrim(payload->>'select_form'), '') END AS selectivite,
-    payload->>'lien_form_psup' AS parcoursup_url
+    payload->>'lien_form_psup' AS parcoursup_url, payload AS raw_payload
   FROM raw_records WHERE release_id = $1::uuid AND campaign = $2
 ), searchable AS (
   SELECT *,
@@ -41,15 +41,20 @@ WITH descriptive AS MATERIALIZED (
       SELECT 1 FROM words WHERE search_text NOT LIKE
         '%' || replace(replace(replace(word, '!', '!!'), '%', '!%'), '_', '!_') || '%' ESCAPE '!'
     )
+), ranked AS (
+  SELECT *, CASE WHEN btrim(raw_payload->>(CASE $10 WHEN 'capacite' THEN 'capa_fin' WHEN 'candidatures' THEN 'voe_tot' WHEN 'admis' THEN 'acc_tot' WHEN 'acces' THEN 'taux_acces_ens' END)) ~ CASE $10 WHEN 'acces' THEN '^\d+(\.\d+)?$' ELSE '^\d+(\.0+)?$' END
+    THEN CASE WHEN (raw_payload->>(CASE $10 WHEN 'capacite' THEN 'capa_fin' WHEN 'candidatures' THEN 'voe_tot' WHEN 'admis' THEN 'acc_tot' WHEN 'acces' THEN 'taux_acces_ens' END))::numeric BETWEEN 0 AND (CASE $10 WHEN 'acces' THEN 100 ELSE 9007199254740991 END)
+    THEN (raw_payload->>(CASE $10 WHEN 'capacite' THEN 'capa_fin' WHEN 'candidatures' THEN 'voe_tot' WHEN 'admis' THEN 'acc_tot' WHEN 'acces' THEN 'taux_acces_ens' END))::numeric END END AS sort_metric
+  FROM filtered
 ), totals AS (
   SELECT count(*)::int AS total,
     least($9::int, greatest(1, (count(*)::int + 24) / 25)) AS page FROM filtered
 ), paged AS (
-  SELECT * FROM filtered ORDER BY sort_title COLLATE "C", sort_establishment COLLATE "C" NULLS LAST, row_number
+  SELECT * FROM ranked ORDER BY sort_metric DESC NULLS LAST, sort_title COLLATE "C", sort_establishment COLLATE "C" NULLS LAST, row_number
   LIMIT 25 OFFSET (SELECT (page - 1) * 25 FROM totals)
 )
 SELECT total, page,
-  (SELECT coalesce(jsonb_agg(to_jsonb(paged) - 'search_text' - 'sort_title' - 'sort_establishment' ORDER BY sort_title COLLATE "C", sort_establishment COLLATE "C" NULLS LAST, row_number), '[]'::jsonb) FROM paged) AS formations,
+  (SELECT coalesce(jsonb_agg(to_jsonb(paged) - 'search_text' - 'sort_title' - 'sort_establishment' - 'sort_metric' ORDER BY sort_metric DESC NULLS LAST, sort_title COLLATE "C", sort_establishment COLLATE "C" NULLS LAST, row_number), '[]'::jsonb) FROM paged) AS formations,
   (SELECT jsonb_build_object(
     'type', coalesce(jsonb_agg(DISTINCT type ORDER BY type) FILTER (WHERE type IS NOT NULL), '[]'::jsonb),
     'region', coalesce(jsonb_agg(DISTINCT region ORDER BY region) FILTER (WHERE region IS NOT NULL), '[]'::jsonb),

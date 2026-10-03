@@ -8,7 +8,9 @@
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@floating-ui/dom": "1.8.0",
     "@remixicon/react": "4.9.0",
+    "@tanstack/react-virtual": "3.14.13",
     "clsx": "2.1.1",
     "lucide-react": "1.49.0",
     "motion": "14.0.0",

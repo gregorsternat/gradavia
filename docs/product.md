@@ -1,62 +1,71 @@
 # Product
 
-Orvio helps students, families, educators, and journalists understand public
-higher education admissions data. The first source is Parcoursup.
+Orvio helps students, families, educators and journalists explore French public
+higher-education admissions data. It is a public French-language application
+with no account requirement, a restrained monochrome interface and useful
+interactive visualizations. The source and meaning of every number matter more
+than producing a ranking or predicting an individual's admission.
 
-The interface is French, with a clean monochrome light/dark design. It should
-make useful facts easy to compare and support expressive visual storytelling
-without hiding definitions, missing data, or uncertainty. Public exploration
-does not require an account.
+## Supported journeys
 
-## Current milestone
+| Surface          | User job                                                                  | Scope                                                              |
+| ---------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Overview         | Understand national offer and admission volumes, distribution and history | Published Parcoursup campaign, outside apprenticeship              |
+| Formations       | Search, filter, sort, inspect, save and select records                    | Eight registered admissions sources, one campaign at a time        |
+| Formation detail | Read published metrics, profiles, definitions and qualified history       | One immutable formation/establishment/campaign source row          |
+| Comparison       | See up to four formations together across exact metrics and profiles      | Same campaign required; different populations remain labelled      |
+| Favorites        | Retain a shortlist and return to source records                           | Browser-local, no account, bounded to 100 selections               |
+| Territories      | Compare regional formation, capacity, application and admission counts    | One campaign; missing values and coverage preserved                |
+| Specialties      | Explore destinations for a general-baccalaureate specialty pair           | Reviewed 2025 national/group/formation scopes kept separate        |
+| Sources          | Inspect imports, campaigns, freshness and definitions                     | All 14 registered source datasets, including separate APB archives |
 
-Browse formations in the published Parcoursup admissions campaigns through
-`/formations`, using the 14-dataset raw collection already retained by the manual
-Rust CLI. The explorer covers the eight admissions sources (currently 2018–2025),
-one campaign at a time and excluding apprenticeship. A standalone Rust API owns
-reads and source rules; Next.js renders the responses. This separation preserves
-the same user-facing behavior.
+The shell provides a responsive beUI navigation panel, a Cmd/Ctrl+K palette,
+keyboard-accessible theme choices and a skip link. Mobile search defaults to
+cards; desktop defaults to a table. Explicit view choice is retained in the URL.
+Tables, chart details and CSV exports provide exact values alongside graphics.
+
+## Formation search
 
 Search ignores case and French accents and matches all entered words across
 formation titles, establishments and locations. Filters cover formation type,
-region, department, establishment status and selectivity when published. Results
-show descriptive fields, source links and provenance, with 25 rows per page.
-The newest available campaign is the default; URL state can be shared. Changing
-campaign resets the search, filters and page. Submitting a new search or filters
-resets the page; an out-of-range page resolves to the final available page.
+region, department, establishment status and selectivity when published. Sorting
+supports source title, capacity, candidatures, accepted offers and official
+access rate, with stable tie-breaking and unavailable metrics ordered last.
+Pagination is fixed at 25 source records. The newest published campaign is the
+default; URL state can be shared.
 
-Older labels are composed from published fields. Cities are not published before
-2021, status is absent in 2018, and selectivity is absent before 2020. Unsupported
-filters are disabled and incoming unsupported filters are removed with an
-explanation. Unknown filter values produce no results. Source links can point to
-current Parcoursup pages; they are not archived formation detail pages.
+Changing campaign resets incompatible search/filter/page state. Applying filters
+resets pagination. Unsupported historical filters are disabled and removed from
+incoming queries with a notice. Unknown values produce a legitimate empty result.
+Cities are unavailable before 2021, establishment status in 2018 and selectivity
+before 2020. Historical source strings, including DUT/BUT, are not harmonized.
 
-No connection, no published campaign and no matching result are distinct states.
-The gallery and browser-test fixtures remain explicitly synthetic. Formation
-detail pages, indicators and comparisons are the next product milestones.
+Formation links preserve the immutable release and row. Favorites keep those
+identities, so a later import does not silently change the saved record. The
+comparison selection rejects a fifth record and mixed campaigns with an
+explanation. Local storage failure is explicit; transient memory still works.
 
-## Suggested feature order
-
-1. Collect the selected public datasets with provenance, raw retention,
-   validation, replay without duplicates, and atomic publication. See [ingestion](ingestion.md).
-2. Browse formations within one campaign, with useful filters and source links.
-3. Show a formation detail page with indicator definitions and completeness.
-4. Compare formations within compatible populations and campaigns.
-5. Build editorial visualizations and longitudinal views after reviewing
-   continuity, definitions, and source coverage.
-6. Review APB methodology before longitudinal comparison; raw collection already
-   retains it in a separate source namespace.
-
-Each feature should include its data definition, user behavior, focused
-verification, and known limits. Hosting is its own milestone and can proceed
-alongside the first import.
-
-## Product constraints
+## Data and UX principles
 
 - A count of formation applications is not a count of unique applicants.
-- Missing and suppressed values are never silently displayed as zero.
-- Historical statistics are not an individual's probability of admission.
-- Comparisons explain cohort, phase, campaign, denominator, and coverage changes.
-- Charts expose values and source context without requiring color perception.
+- Missing, suppressed and invalid values are distinct from an observed zero.
+- Published rates retain source definitions and population denominators.
+- Historical rates are not an individual's probability of admission.
+- National changes also reflect coverage changes; individual history qualifies
+  identity and label continuity and breaks lines for changed/ambiguous records.
+- APB is archived separately and never stitched into a continuous Parcoursup line.
+- Specialty groups overlap: national figures come from national source rows,
+  not from adding groups or aggregation levels.
+- The default view is useful without hover. Every graph has a table or equivalent
+  labelled values; keyboard and reduced-motion users can complete each journey.
+- Definitions are available at the relevant number or source disclosure; avoid
+  repeated explanatory paragraphs, decorative filler and redundant separators.
 
-The [data contract](data-contract.md) is authoritative for statistical semantics.
+No connection, no published campaign, no matching results and unavailable
+individual records are distinct states. Product routes never show synthetic
+fallbacks. The development gallery and test fixtures remain explicitly synthetic.
+
+The [data contract](data-contract.md) governs statistical semantics and the
+[quality log](quality.md) records observed verification. Hosting, production
+roles, monitoring, remote archival and refresh scheduling remain separate
+milestones. Authentication and personal admission prediction are not features.

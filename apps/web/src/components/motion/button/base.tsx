@@ -1,12 +1,8 @@
 "use client";
 // beui.dev/components/motion/button
 
-import {
-  AnimatePresence,
-  type HTMLMotionProps,
-  motion,
-  useReducedMotion,
-} from "motion/react";
+import { AnimatePresence, type HTMLMotionProps, motion } from "motion/react";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import {
   forwardRef,
   type PointerEvent,

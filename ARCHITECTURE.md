@@ -10,15 +10,17 @@ flowchart LR
   Validation --> Store[PostgreSQL raw releases]
   Store --> API[Rust read API]
   API --> Server[Next.js server rendering]
-  Server --> UI[React formation explorer]
+  Server --> UI[React observatory]
 ```
 
 The executable data path is now a manual Rust collector: official JSONL exports,
 immutable local archives, schema validation and atomic publication to PostgreSQL.
-The Rust API reads descriptive data from published Parcoursup releases.
+The Rust API reads published Parcoursup releases and computes reviewed indicators,
+aggregate observations, specialty destinations and source coverage.
 Next.js consumes its versioned HTTP contract and owns rendering and URL navigation.
 The web shell, gallery and health endpoint remain independent of datasets.
-Calculations, comparisons and scheduling are deferred.
+Pure indicator representation belongs in `orvio-core`; source-specific field
+selection and read aggregation belong in the API. Scheduling remains deferred.
 
 ## Ownership and boundaries
 
@@ -51,9 +53,19 @@ Static analysis does not replace review of side effects or data semantics.
 
 ## Runtime interfaces
 
-- `GET /formations` renders a server-side, 25-row formation page. GET parameters
-  `campagne`, `q`, `type`, `region`, `departement`, `statut`, `selectivite`, and
-  `page` encode its state. It calls `GET /v1/formations` on the Rust API.
+- `GET /formations` renders a 25-row search page. `campagne`, `q`, `type`,
+  `region`, `departement`, `statut`, `selectivite`, `tri` and `page` encode its
+  API query; `vue` selects the client presentation. It calls `/v1/formations`.
+- `/` and `/territoires` consume `/v1/overview`; each headline, breakdown and
+  coverage value uses the same selected immutable campaign release.
+- `/formations/[id]` reads a retained `release:row` identity, source-defined
+  indicators and separately qualified history. Retained links survive imports.
+- `/comparer` reads at most four formations, requires one campaign and exposes
+  exact metric states. `/favoris` resolves saved identities through the same API.
+- `/specialites` uses the separately reviewed 2025 general-baccalaureate
+  specialty dataset. National, group and formation levels stay separate.
+- `/sources` reads the 14-source inventory and explains metric definitions,
+  population differences, history limits and local selection persistence.
 - The Rust service provides `/health/live` and `/health/ready`. See the
   [HTTP contract](docs/api.md) for schemas, errors, timeouts and deployment limits.
 - `GET /api/health` reports application liveness without opening a database.
@@ -66,7 +78,9 @@ Static analysis does not replace review of side effects or data semantics.
 - `orvio-ingest replay --manifest <path>` loads a verified local archive.
 - `orvio-ingest status` reports stored releases and latest run states.
 - `/dev/ui` uses clearly labeled synthetic values. It calls `notFound()`
-  outside development, and the home page removes its link.
+  outside development, and the home page removes its link. Loading boundaries
+  are scoped to data routes; there is no root loading fallback that could stream
+  a 200 response before this production 404 is decided.
 
 The CLI writes structured JSON logs and sanitized errors. Network diagnostics
 have bounded connection/query timeouts.
@@ -98,7 +112,11 @@ request/response rules (`formations/domain.rs`) and SQL reads
 
 A request captures a current release before querying that immutable release for
 rows, facets and counts. SQL limits transferred results and preserves duplicate
-rows. No persistent cache obscures publication changes. Builds do not read data.
+rows. Bounded in-memory overview and historical-summary caches are keyed by all
+captured immutable source/provenance records. The overview key also includes the
+selected campaign. Every request checks current pointers before lookup;
+publication changes invalidate the keys. Historical
+observations are aggregated in one database query. Builds do not read data.
 
 Database and browser harnesses start the real Rust binary against an isolated
 PostgreSQL 18 database seeded with labeled synthetic source records. The same
@@ -111,5 +129,21 @@ browser harness remove database credentials from the web process environment.
 Cloudflare Workers is the planned website deployment target; the Rust service
 needs a separate compatible host. No API hosting provider has been selected. This milestone uses
 official Next.js locally and in CI. Adapter choice, runtime compatibility,
-bindings, caching, secrets, and deployment are deferred to the hosting milestone.
+bindings, hosting/CDN caching, secrets, and deployment are deferred to the hosting milestone.
 See [decisions](docs/decisions.md) and [data contract](docs/data-contract.md).
+
+## Client state and visualization
+
+Shared beUI sources remain under `components/motion`; Tremor chart sources and
+licenses remain under `components/charts/tremor`. `features/navigation/ui`
+owns the responsive app shell and command palette. `features/observatory`
+separates overview/source contracts, server loading and interactive charts.
+`features/specialties` owns the distinct specialty population and UI.
+
+Browser-local storage contains only explicitly selected formation IDs, campaign
+and display labels. It is schema-validated, bounded, versioned and synchronized
+between tabs; storage failure degrades to the current tab with a visible notice.
+No account, user profile backend or individual admission prediction is added.
+CSV generation preserves missingness and provenance and neutralizes spreadsheet
+formula prefixes. Chart values have table equivalents and filters have
+keyboard-accessible controls; Motion respects reduced motion.

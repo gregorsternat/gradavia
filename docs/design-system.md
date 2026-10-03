@@ -1,40 +1,70 @@
 # Design system
 
-## Foundation
+## Visual foundation
 
-French product copy, monochrome light and dark themes, system preference by
-default, and an explicit system/light/dark selector. System fonts keep the shell
-independent of network font downloads.
+Orvio is a French-language data application with a restrained monochrome shell,
+compact navigation, generous breathing room and clear numeric hierarchy. System
+fonts keep the application independent of network font downloads. Light and dark
+themes share semantic tokens; the default follows the system preference.
 
-Shared CSS tokens in `apps/web/src/app/globals.css` define background,
-foreground, surface, muted text, borders, subtle backgrounds, and chart colors.
-Tailwind's spacing scale and type utilities provide consistent layout. Prefer
-generous whitespace, readable content widths, and clear headings over decoration.
+`apps/web/src/app/globals.css` defines background, foreground, surface, subtle
+background, border, muted text and chart colors. Panels use quiet borders and
+rounded corners; avoid stacked separators, decorative headings and repeated
+explanatory copy. A page title describes the task. Definitions belong beside
+metrics or in a disclosure, rather than in repeated introductory paragraphs.
 
-- beUI supplies source-owned interaction primitives from its shadcn registry.
-- Tremor Raw supplies source-owned charts compatible with Tailwind 4.
-- Motion supplies interaction transitions with `MotionConfig reducedMotion="user"`.
-- Dashboardcn can be considered when a concrete missing component warrants it.
+The desktop sidebar collapses to icons. On mobile it becomes a focus-managed
+sheet with an explicit close button. The Cmd/Ctrl+K palette, navigation and theme
+selector use the same shared primitives. Formation search defaults to cards on
+mobile and a table on desktop; an explicit URL view overrides that default.
 
-Install only what is used. See [third-party sources](third-party.md).
+## Components and animation
 
-## Accessibility
+- beUI is the default for every interactive primitive: buttons, inputs, select,
+  combobox, tabs, radio controls, tooltip, accordion, table, command palette,
+  sidebar, loaders and animated numbers. Components are installed as owned source.
+- Tremor Raw supplies area, line, bar and donut charts. Monochrome series use the
+  `charcoal`, `silver`, `mist`, `steel` and `pale` tokens. Exact values and labels
+  carry meaning independently of the shade.
+- Motion supplies component transitions, shared selection backgrounds, number
+  changes and short content reveals. `MotionConfig reducedMotion="user"` governs
+  movement; loading and every action remain understandable without animation.
+- Product-specific compositions reuse these primitives and Tailwind spacing and
+  typography. Do not add another design system or install unused blocks.
 
-Use semantic elements, visible keyboard focus, explicit labels, and sufficient
-contrast in both themes. Preserve the skip link and keyboard theme controls.
-Reduced motion must leave every action usable.
+Source files, licenses, upstream revisions and local compatibility/accessibility
+changes are recorded in [third-party sources](third-party.md). Local fixes include
+Recharts 3 event payloads and keys, select listbox semantics, tab and radio roving
+focus, command focus restoration and French decimal formatting.
 
-Charts must state units, population, campaign, source, and definitions. Provide
-an accessible table or equivalent text. Do not use color as the only distinction
-between series. Never replace missing or suppressed values with zero.
+## Charts and data
 
-## Development gallery
+Use a chart to answer a concrete question: time series for offer/admission
+history, ranked bars for regional or specialty destinations, a donut for a small
+composition, and a histogram for the official access-rate distribution. Keep
+baselines honest and null gaps visible. Do not interpolate unavailable records.
 
-`/dev/ui` demonstrates the current button primitives, themes, and one chart.
-Its six values are clearly labeled as synthetic. A visible table provides the
-same values. The route returns 404 in production.
+Charts state units, population, campaign and source. History explicitly qualifies
+coverage and formation continuity. Every chart has an accessible table or
+labelled value equivalent. Clickable chart destinations also have visible links.
+Never represent missing, suppressed or invalid observations as zero; partial
+aggregates show coverage. Specialty groups overlap and cannot be stacked into a
+national total.
 
-The gallery is a technical verification surface, not a preview of real
-Parcoursup indicators. Playwright checks mobile/desktop, keyboard use, theme
-persistence, accessibility rules, and the production restriction. Visual review
-and real screen-reader testing remain separate from automated checks.
+## Accessibility and states
+
+Use semantic elements, labelled controls, visible keyboard focus and sufficient
+contrast in both themes. Preserve the skip link, focus restoration for overlays,
+arrow/Home/End navigation for composite controls, Escape dismissal and keyboard
+activation. Respect reduced motion. Check narrow screens for page overflow,
+truncated action names and unusable tables, including after real data loads.
+
+Loading skeletons preserve the page structure. No configuration, no published
+data, unavailable service, no search matches, invalid selection and missing
+formation are distinct states. Recovery actions preserve useful URL context.
+No production route substitutes synthetic data when the service is unavailable.
+
+`/dev/ui` remains a technical component gallery with clearly labelled synthetic
+values and a table equivalent. It returns 404 in production. Real product
+screens, both themes, desktop/mobile and keyboard workflows are reviewed
+separately. Automated accessibility checks do not replace screen-reader testing.

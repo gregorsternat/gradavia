@@ -6,10 +6,12 @@ Keep brief work brief; use a plan when several boundaries change together.
 
 ## Active
 
-None.
+No active implementation plan.
 
 ## Completed
 
+- [Complete observatory](completed/complete-observatory.md): rich data exploration,
+  animated application UI and verified desktop/mobile journeys.
 - [Rust read API](completed/rust-read-api.md): standalone formation reads with a validated HTTP contract.
 - [Formation explorer](completed/formation-explorer.md): browse published Parcoursup campaigns.
 - [Raw ingestion](completed/raw-ingestion.md): collect and retain the 14 public source datasets.
@@ -18,4 +20,4 @@ None.
 ## Follow-up work
 
 [Technical debt](tech-debt.md) records deferred work with an explicit trigger.
-The [product roadmap](../product.md) orders the first features.
+The [product scope](../product.md) documents the supported user journeys.

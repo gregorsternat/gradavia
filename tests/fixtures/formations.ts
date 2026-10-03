@@ -11,6 +11,18 @@ export function fixtureDataset(campaign: number): string {
 export function fixturePayloads(campaign: number): Record<string, unknown>[] {
   const base = {
     session: String(campaign),
+    cod_aff_form: "00042",
+    cod_uai: "0690001A",
+    capa_fin: 100 + (campaign - 2018) * 10,
+    voe_tot: 900 + (campaign - 2018) * 120,
+    prop_tot: 400 + (campaign - 2018) * 40,
+    acc_tot: 95 + (campaign - 2018) * 10,
+    taux_acces_ens: 42.5,
+    pct_f: 58.2,
+    pct_bours: 21.4,
+    pct_bg: 72,
+    pct_bt: 18,
+    pct_bp: 10,
     g_ea_lib_vx: "Université de démonstration",
     ville_etab: "Lyon",
     dep_lib: "Rhône",
@@ -29,7 +41,10 @@ export function fixturePayloads(campaign: number): Record<string, unknown>[] {
     delete historical.ville_etab;
     if (campaign < 2020) delete historical.select_form;
     else historical.select_form = "formation non selec";
-    if (campaign === 2018) delete historical.contrat_etab;
+    if (campaign === 2018) {
+      delete historical.contrat_etab;
+      delete historical.taux_acces_ens;
+    }
     if (campaign === 2019) historical.g_ea_lib_vx = " \n\t ";
     historical.lien_form_psup = null;
     return [historical];
@@ -38,6 +53,12 @@ export function fixturePayloads(campaign: number): Record<string, unknown>[] {
   const economics = {
     ...base,
     lib_for_voe_ins: "Licence - Économie",
+    cod_aff_form: "00043",
+    cod_uai: "0910002B",
+    capa_fin: 80,
+    voe_tot: 1220,
+    acc_tot: 75,
+    taux_acces_ens: 27.8,
     g_ea_lib_vx: "École de démonstration",
     ville_etab: "Étampes",
     dep_lib: "Essonne",
@@ -47,12 +68,24 @@ export function fixturePayloads(campaign: number): Record<string, unknown>[] {
     ...Array.from({ length: 27 }, (_, index) => ({
       ...base,
       lib_for_voe_ins: `Licence - Droit ${String(index + 1).padStart(2, "0")}`,
+      cod_aff_form: index === 0 ? "00042" : `00042-${index + 1}`,
+      capa_fin: 170 + index * 5,
+      voe_tot: 1740 + index * 60,
+      acc_tot: index === 1 ? 0 : 165 + index * 5,
+      taux_acces_ens:
+        index === 2 ? "*" : index === 3 ? "invalid" : 42.5 + index,
+      pct_bours: index === 2 ? "*" : 21.4,
     })),
     economics,
     { ...economics },
     {
       ...base,
       lib_for_voe_ins: "BTS - Systèmes numériques",
+      cod_aff_form: "00044",
+      capa_fin: 32,
+      voe_tot: 487,
+      acc_tot: 30,
+      taux_acces_ens: 65.7,
       fili: "BTS",
       contrat_etab: "Privé sous contrat d'association",
       select_form: "formation sélective",
@@ -60,6 +93,10 @@ export function fixturePayloads(campaign: number): Record<string, unknown>[] {
     {
       ...base,
       lib_for_voe_ins: "Autre formation - 100%_réussite!",
+      cod_aff_form: "00045",
+      capa_fin: null,
+      voe_tot: null,
+      acc_tot: "*",
       fili: "Autre formation",
       lien_form_psup: "javascript:alert(1)",
     },

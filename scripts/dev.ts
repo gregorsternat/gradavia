@@ -1,5 +1,10 @@
 import path from "node:path";
-import { startApi, startProcess, webEnvironment } from "./runtime";
+import {
+  developmentDatabase,
+  startApi,
+  startProcess,
+  webEnvironment,
+} from "./runtime";
 
 const artifacts = path.resolve(
   process.env.ARTIFACTS_DIR ?? ".artifacts",
@@ -26,9 +31,10 @@ for (const signal of ["SIGINT", "SIGTERM"] as const)
     interrupt(0);
   });
 try {
-  if (process.env.DATABASE_URL) {
+  const databaseUrl = await developmentDatabase(process.env);
+  if (databaseUrl) {
     api = await startApi(
-      process.env.DATABASE_URL,
+      databaseUrl,
       artifacts,
       process.env.API_BIND ?? "127.0.0.1:3002",
     );
