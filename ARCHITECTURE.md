@@ -147,7 +147,9 @@ separates overview/source contracts, server loading and interactive charts.
 application shell excludes only `/`; product routes and error pages retain it.
 The landing reuses global theme, selection persistence and reduced-motion
 providers. Its search uses a native GET form; campaign controls stay scoped to
-their exploration route.
+their exploration route. Viewport-height sections, document scroll snapping and
+smooth native fragment links stay scoped to the landing's presence. Content can
+grow beyond a viewport; no wheel, touch or keyboard event interception is added.
 
 Browser-local storage contains only explicitly selected formation IDs, campaign
 and display labels. It is schema-validated, bounded, versioned and synchronized

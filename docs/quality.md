@@ -352,3 +352,50 @@ These observations do not assert a merge or deployment.
 Evidence: `.artifacts/landing-alignment/verify.log`, `browser-rerun.log`, and
 screenshots in `.artifacts/landing-alignment/output/playwright/`.
 No remote CI or deployment was performed.
+
+## Viewport-sized landing sections (2026-10-05)
+
+- Each section fills the available viewport below the sticky header. Tall mobile
+  content and open disclosures grow naturally. Native scroll snapping, smooth
+  fragment navigation, keyboard focus and the footer remain usable; reduced
+  motion disables smooth scrolling and snapping. Product routes retain their
+  ordinary scrolling after client navigation.
+- `CI=true E2E_PORT=3471 mise exec -- just verify` passed static, unit,
+  PostgreSQL 18 and credential-free build checks before stopping on browser-test
+  automation failures. The scroll recorder now registers before keyboard
+  activation, and the no-JavaScript search test scrolls to the form before typing.
+- The final `just check test-e2e` passed: all static checks, builds, 80 development
+  browser cases, 78 production cases and 12 production data-state cases. Two
+  development-gallery cases remain intentionally skipped in production. Tests
+  check section geometry, wheel snapping, actual intermediate scroll positions,
+  anchor focus, footer access, reduced motion and native no-JavaScript links.
+- Real Chromium views at 1200×818 and 390×844 were inspected against the existing
+  local read API. The first screen contains only the introduction; mobile preview
+  content scrolls through to its source and observatory link. Existing 320px,
+  both-theme and disclosure journeys also pass.
+
+Evidence: `.artifacts/landing-scroll/verify.log`, `final-checks.log`, `no-js.log`,
+screenshots in `.artifacts/landing-scroll/` and initial traces in
+`initial-failures/`. Safari/Firefox, remote CI and deployment were not verified.
+
+### Landing content regrouping (2026-10-05)
+
+- Six full-height content sections become four chapters. Search, specialties,
+  territories, comparison and favorites share a compact exploration grid. The
+  final call to action is a compact panel below the methodology and questions;
+  the last chapter shares its viewport allowance with the footer.
+- Existing destinations, the separate first-screen introduction, native scroll
+  snapping and smooth anchors are preserved. Fragment focus outlines the heading
+  instead of the entire viewport; oversized mobile content remains scrollable.
+- `CI=true E2E_PORT=3471 mise exec -- just verify` passed all static, unit,
+  PostgreSQL 18 and build checks, plus 80 development, 78 production and 12
+  production data-state browser cases. Two development-gallery cases remain
+  intentionally skipped in production.
+- Real Chromium review at 1440×1000 and 390×844 covered the exploration grid,
+  final chapter/footer, keyboard search focus and FAQ expansion. Evidence:
+  `.artifacts/landing-restructure/verify.log` and screenshots in that directory.
+- The full verification command also passed after rebasing on the search
+  alignment and footer fixes from `main`:
+  `.artifacts/landing-restructure/verify-pr.log`.
+
+These are local checks; remote CI and deployment were not performed.
