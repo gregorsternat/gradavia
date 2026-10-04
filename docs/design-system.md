@@ -18,6 +18,18 @@ sheet with an explicit close button. The Cmd/Ctrl+K palette, navigation and them
 selector use the same shared primitives. Formation search defaults to cards on
 mobile and a table on desktop; an explicit URL view overrides that default.
 
+The homepage uses the same tokens and wordmark in an independent layout with a
+compact sticky header, a large two-line heading, a source-backed product preview
+and widely spaced sections. Borders group actual surfaces rather than divide
+every section. Native search forms and direct links make the page useful without
+JavaScript; charts and theme controls enhance it after hydration. Motion entrances
+progress from the two hero lines to its copy/actions, then reveal individual
+sections and cards as they enter the viewport. Fade-and-rise transitions run once
+for 800ms with short, local stagger delays; returning to a section does not hide
+it again. Server-rendered content stays visible until hydration enables motion.
+Keyboard focus and reduced motion show content immediately without a delay.
+The application sidebar begins at `/observatoire` and the other product routes.
+
 ## Components and animation
 
 - beUI is the default for every interactive primitive: buttons, inputs, select,

@@ -40,7 +40,7 @@ import { useFormationSelection } from "@/features/formations/ui/selection-provid
 
 const destinations = [
   {
-    href: "/",
+    href: "/observatoire",
     label: "Vue d’ensemble",
     icon: ChartNoAxesCombined,
     keywords: ["accueil", "observatoire", "statistiques"],
@@ -178,11 +178,7 @@ function ShellContents({ children }: { children: ReactNode }) {
                   <AnimatedSidebarMenuButton
                     href={href}
                     icon={<Icon className="size-[17px]" strokeWidth={1.65} />}
-                    isActive={
-                      href === "/"
-                        ? pathname === "/"
-                        : pathname.startsWith(href)
-                    }
+                    isActive={pathname.startsWith(href)}
                     className="min-h-10 rounded-lg text-[13px] font-normal"
                     badge={
                       href === "/favoris" && favorites.length
@@ -260,6 +256,9 @@ function ShellContents({ children }: { children: ReactNode }) {
   );
 }
 export function AppShell({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  if (pathname === "/") return children;
+
   return (
     <AnimatedSidebarProvider
       style={{ "--sidebar-width": "224px", "--sidebar-width-icon": "64px" }}

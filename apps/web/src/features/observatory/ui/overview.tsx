@@ -270,6 +270,7 @@ function ReadyOverview({ data }: { data: OverviewData }) {
         <CampaignSelect
           campaign={data.source.campaign}
           campaigns={data.campaigns}
+          path="/observatoire"
         />
       </div>
       {data.requestNotices.map((notice) => (

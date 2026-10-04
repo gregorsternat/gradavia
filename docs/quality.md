@@ -241,3 +241,69 @@ server logs in `.artifacts/pr10-ci/`, and
   not been verified in this milestone.
 - Documentation checks cover entry points and links, not semantic accuracy.
 - Cloudflare runtime and deployment remain unverified until the hosting milestone.
+
+## Landing page (2026-10-05)
+
+- `/` is a distinct public landing page; `/observatoire` retains the existing
+  overview. Valid legacy `/?campagne=YYYY` links preserve their selected campaign
+  through a redirect. The wordmark returns to the new homepage.
+- The homepage uses the existing beUI primitives, Tremor AreaChart and Motion
+  with shared monochrome themes. Its preview reads the Rust API, preserves
+  source/campaign/coverage and renders exact headline values immediately.
+  Loading is inert; empty/unavailable data uses a useful search/navigation panel
+  without invented metrics. Missing formation types are not turned into invalid
+  search filters.
+- `CI=true E2E_PORT=3250 mise exec -- just verify` passed: formatting, lint,
+  types, architecture/docs, Clippy, unit tests, disposable PostgreSQL 18 contracts
+  and credential-free builds. Browser coverage passed 70 development cases,
+  68 production cases and 12 production state cases. Two development-gallery
+  cases are intentionally skipped in production; its HTTP 404 remains covered.
+- New browser journeys cover the standalone homepage, return navigation, legacy
+  campaigns, accented GET search, exact preview data and coverage, keyboard
+  metric/FAQ controls, skip link, reduced motion, both themes and 320px layouts.
+  Accessibility scans cover the open source disclosure and visible theme tooltip.
+  The initial run found a missing chart role and an ambiguous test selector;
+  both were corrected. A later contrast test sampled a tooltip's entrance
+  opacity; it now waits for its fully visible state before scanning. All ten
+  repeated contrast cases passed. Landing/specialty journeys also passed 44
+  focused repetitions; an initial specialty warning did not recur.
+- Manual in-app Chromium review used the configured live read API with desktop
+  and mobile viewports in both themes. Mobile refinements included full FAQ
+  wrapping, inset keyboard focus, compact source attribution and a denser metric
+  layout. No data import, migration or remote environment change was needed.
+
+Evidence: `.artifacts/landing/verify-final.log`, `focused.log`,
+`contrast-check.log`, and screenshots under `.artifacts/landing/`. Initial failure
+traces are retained in its `initial-browser-failures/` and
+`tooltip-transition-failure/` directories. The core content, links and native
+search are server-rendered; enhanced preview/accordion interactions require
+JavaScript. Full screen-reader, Safari/Firefox, remote CI and deployment have
+not been verified for this change.
+
+### Scroll entrance refinement (2026-10-05)
+
+- Hero lines, copy and actions enter in sequence. Search columns, utility links,
+  entry cards, source columns and the closing CTA reveal separately on scroll.
+  The numeric preview enters as one surface without counting through false values.
+- Entrances run once, preserve visible server-rendered/no-JavaScript content,
+  and finish immediately for reduced motion and keyboard interactions.
+- The first verification exposed lost pointer clicks when focus reset a moving
+  target's position. Immediate focus handling now follows keyboard-visible focus,
+  and its final position is retained after blur. The existing preview/table and
+  route tests caught both the initial focus jump and the subsequent blur jump.
+- All 18 focused desktop/mobile landing cases passed after correction. Coverage
+  includes actual opacity/transform before and after scrolling, once-only
+  entrances, focus-before-scroll recovery, reduced motion and native navigation
+  and search with JavaScript disabled. Static contrast scans use reduced motion.
+- Manual in-app browser inspection confirmed staggered desktop/mobile entrances
+  and a visible keyboard focus after the search form appears.
+- The final application code passed `just verify` through static checks, unit
+  tests, PostgreSQL 18 contracts, credential-free builds, 74 development browser
+  cases and 72 production browser cases (two intended gallery skips). The final
+  state scan sampled an entrance fade; its test-only contrast setup was aligned
+  with the reduced-motion scans above. All 12 production state cases then passed
+  in a focused rerun, for 158 successful browser cases across the final runs.
+
+Evidence: `.artifacts/landing/verify-motion-final.log`, `motion-states-final.log`,
+`motion-focused-final.log`, `scroll-mobile.png`, `scroll-final.png`, and the
+retained first-run traces under `motion-pointer-failure/`.

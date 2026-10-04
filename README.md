@@ -26,7 +26,12 @@ mise exec -- just doctor
 mise exec -- just dev
 ```
 
-Open [localhost:3000](http://localhost:3000). The shell, loading/error states and [component gallery](http://localhost:3000/dev/ui) work without database credentials. Product charts require the configured Rust API and a published release. The gallery is unavailable in production.
+Open [localhost:3000](http://localhost:3000) for the landing page, or go directly
+to the [observatory](http://localhost:3000/observatoire). The landing's content
+and search, shell, loading/error states and [component gallery](http://localhost:3000/dev/ui)
+work without database credentials. Product charts, including the optional
+homepage preview, require the configured Rust API and a published release.
+The gallery is unavailable in production.
 
 The observatory and [formation explorer](http://localhost:3000/formations) read imported data
 through the Rust API and configured Neon branch. `just dev` supervises both

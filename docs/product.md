@@ -10,6 +10,7 @@ than producing a ranking or predicting an individual's admission.
 
 | Surface          | User job                                                                  | Scope                                                              |
 | ---------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Landing          | Discover Orvio and start exploring without an account                     | `/`, with source-backed preview when data is available             |
 | Overview         | Understand national offer and admission volumes, distribution and history | Published Parcoursup campaign, outside apprenticeship              |
 | Formations       | Search, filter, sort, inspect, save and select records                    | Eight registered admissions sources, one campaign at a time        |
 | Formation detail | Read published metrics, profiles, definitions and qualified history       | One immutable formation/establishment/campaign source row          |
@@ -19,7 +20,12 @@ than producing a ranking or predicting an individual's admission.
 | Specialties      | Explore destinations for a general-baccalaureate specialty pair           | Reviewed 2025 national/group/formation scopes kept separate        |
 | Sources          | Inspect imports, campaigns, freshness and definitions                     | All 14 registered source datasets, including separate APB archives |
 
-The shell provides a responsive beUI navigation panel, a Cmd/Ctrl+K palette,
+The landing uses a compact header, direct search, feature entry points and
+source/methodology questions. Its content works independently of API availability;
+it never substitutes invented metrics. The existing overview lives at
+`/observatoire`, including campaign links and command-palette navigation.
+
+The application shell provides a responsive beUI navigation panel, a Cmd/Ctrl+K palette,
 keyboard-accessible theme choices and a skip link. Mobile search defaults to
 cards; desktop defaults to a table. Explicit view choice is retained in the URL.
 Tables, chart details and CSV exports provide exact values alongside graphics.

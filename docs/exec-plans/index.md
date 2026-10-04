@@ -10,6 +10,9 @@ No active implementation plan.
 
 ## Completed
 
+- [Landing page](completed/landing-page.md): a dedicated homepage, source-backed
+  preview and preserved observatory/campaign navigation.
+
 - [Complete observatory](completed/complete-observatory.md): rich data exploration,
   animated application UI and verified desktop/mobile journeys.
 - [Rust read API](completed/rust-read-api.md): standalone formation reads with a validated HTTP contract.

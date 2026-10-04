@@ -10,7 +10,7 @@ export default defineConfig({
   testDir: "./tests/browser",
   testMatch: process.env.E2E_STATE
     ? "**/explorer-state.spec.ts"
-    : "**/{shell,formations,observatory,specialties}.spec.ts",
+    : "**/{shell,landing,formations,observatory,specialties}.spec.ts",
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: 0,

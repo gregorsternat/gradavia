@@ -56,7 +56,11 @@ Static analysis does not replace review of side effects or data semantics.
 - `GET /formations` renders a 25-row search page. `campagne`, `q`, `type`,
   `region`, `departement`, `statut`, `selectivite`, `tri` and `page` encode its
   API query; `vue` selects the client presentation. It calls `/v1/formations`.
-- `/` and `/territoires` consume `/v1/overview`; each headline, breakdown and
+- `/` introduces the product with independent server-rendered content and a
+  streamed preview from `/v1/overview`. Loading uses inert placeholders;
+  empty/unavailable data uses a non-numeric search/navigation panel.
+  Legacy `/?campagne=YYYY` links redirect to `/observatoire?campagne=YYYY`.
+- `/observatoire` and `/territoires` consume `/v1/overview`; each headline, breakdown and
   coverage value uses the same selected immutable campaign release.
 - `/formations/[id]` reads a retained `release:row` identity, source-defined
   indicators and separately qualified history. Retained links survive imports.
@@ -139,6 +143,11 @@ licenses remain under `components/charts/tremor`. `features/navigation/ui`
 owns the responsive app shell and command palette. `features/observatory`
 separates overview/source contracts, server loading and interactive charts.
 `features/specialties` owns the distinct specialty population and UI.
+`features/landing/ui` owns the homepage composition and preview. The shared
+application shell excludes only `/`; product routes and error pages retain it.
+The landing reuses global theme, selection persistence and reduced-motion
+providers. Its search uses a native GET form; campaign controls stay scoped to
+their exploration route.
 
 Browser-local storage contains only explicitly selected formation IDs, campaign
 and display labels. It is schema-validated, bounded, versioned and synchronized
