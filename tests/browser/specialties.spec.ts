@@ -1,6 +1,90 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "./fixtures";
 
+test("inverse specialty search preserves the national scope, suppression and reproducible indicator", async ({
+  page,
+}) => {
+  await page.goto("/specialites/inverse");
+  const picker = page.getByRole("combobox", {
+    name: "Libellé national de formation",
+  });
+  await expect(picker).toBeEnabled();
+  await picker.fill("Informatique");
+  await page
+    .getByRole("option", { name: "BUT - Informatique · BUT", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "BUT - Informatique", exact: true }),
+  ).toBeVisible();
+  const table = page.getByRole("table", {
+    name: "Combinaisons par formation nationale",
+  });
+  await expect(table).toContainText("Masqué");
+  await expect(table).toContainText("150");
+  await expect(page.getByRole("main")).toContainText("Périmètre national");
+  await page
+    .getByRole("button", { name: "Indicateur des spécialités" })
+    .click();
+  await page
+    .getByRole("option", { name: "Vœux confirmés", exact: true })
+    .click();
+  await expect(page).toHaveURL(/tri=applications/);
+  const firstFormation = page.url();
+  await picker.fill("Chimie");
+  await page
+    .getByRole("option", { name: "BUT - Chimie · BUT", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "BUT - Chimie", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Indicateur des spécialités", exact: true })
+    .click();
+  await page
+    .getByRole("option", { name: "Avec une acceptation", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", {
+      name: "Indicateur des spécialités",
+      exact: true,
+    }),
+  ).toContainText("Avec une acceptation");
+  expect(new URL(page.url()).searchParams.has("tri")).toBe(false);
+  await page.goBack();
+  await expect(page).toHaveURL(firstFormation);
+  await expect(
+    page.getByRole("heading", { name: "BUT - Informatique", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", {
+      name: "Indicateur des spécialités",
+      exact: true,
+    }),
+  ).toContainText("Vœux confirmés");
+  await page.reload();
+  await expect(
+    page.getByRole("button", { name: "Indicateur des spécialités" }),
+  ).toContainText("Vœux confirmés");
+  await expect(page.locator(".recharts-wrapper svg").first()).toBeVisible();
+  await page
+    .getByRole("button", { name: "Source et périmètre · Spécialités 2025" })
+    .click();
+  await expect(page.getByRole("main")).toContainText(
+    "ne décrivent pas le recrutement d’un établissement ou d’un campus",
+  );
+  const downloadEvent = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Exporter", exact: true }).click();
+  expect((await downloadEvent).suggestedFilename()).toBe(
+    "gradavia-specialites-par-formation.csv",
+  );
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
+});
+
 const pairLabel = "Mathématiques + Physique-Chimie";
 const secondLabel = "Mathématiques + Sciences économiques et sociales";
 
@@ -134,7 +218,9 @@ test("specialty drill-down preserves masked and observed zero and exports labell
       exact: true,
     })
     .click();
-  await expect(page.getByText(/Champ source : acceptations/)).toBeVisible();
+  await expect(
+    page.getByRole("main").getByText(/Champ source : acceptations/),
+  ).toBeVisible();
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.getByRole("link", { name: "Tous les groupes" }).click();
   await expect(

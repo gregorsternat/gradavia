@@ -107,6 +107,34 @@ The API uses a bounded SQLx pool over the pooled URL and read-only transactions;
 the collector keeps its dedicated direct connection.
 See [ingestion](docs/ingestion.md) for schema, identity and archive contracts.
 
+### Campaign atlas and preparation workspace
+
+`features/atlas` consumes a separate compact Rust projection of one immutable
+campaign, bounded to 30,000 source rows. Numeric values and explicit non-observed
+states travel together; definitions and provenance travel once per snapshot.
+Parcoursup, apprenticeship and APB have distinct adapters and definitions. The
+original paginated formation contract remains compatible. Geographic exploration
+and `features/analysis` derive their linked views from the same captured snapshot;
+no tile provider supplies admissions observations. Leaflet renders published
+coordinates and OpenStreetMap supplies only the basemap.
+
+Extended detail reads retain honors, source-specific candidate profiles,
+recruitment fields, actual offer milestones and rank groups. A formation page
+computes its peer summary on the server and sends only that summary to the UI.
+Peer similarity is descriptive and is not an admissions or curriculum model.
+
+Local preparation extends the existing bounded selection store with named lists,
+notes, status and source-aware snapshots. Shared links omit notes by default;
+explicitly shared annotations use the URL fragment. The printable dossier makes
+snapshot coverage visible. `features/budget` stores optional user-entered cost
+scenarios separately and never introduces inferred city prices.
+
+The public dataset/export route calls the Rust service through the existing
+server-only transport. It accepts bounded dataset selectors and fixed export
+formats, never SQL, filesystem paths or an arbitrary upstream URL. The Rust
+service remains private in Cloudflare. See [analysis methodology](docs/analysis-methodology.md)
+for aggregation, saved views and comparison rules.
+
 The web `formations` feature keeps pure URL/presentation rules and the validated
 HTTP response contract under `domain`, the HTTP client under `server`, and
 presentation under `ui`. Rust separates transport (`lib.rs`), pure formation
@@ -160,8 +188,9 @@ their exploration route. Viewport-height sections, document scroll snapping and
 smooth native fragment links stay scoped to the landing's presence. Content can
 grow beyond a viewport; no wheel, touch or keyboard event interception is added.
 
-Browser-local storage contains only explicitly selected formation IDs, campaign
-and display labels. It is schema-validated, bounded, versioned and synchronized
+Browser-local storage contains explicitly selected formation IDs, campaign,
+display labels, bounded source snapshots, named lists and user-entered notes/status.
+It is schema-validated, bounded, versioned and synchronized
 between tabs; storage failure degrades to the current tab with a visible notice.
 No account, user profile backend or individual admission prediction is added.
 Selections saved before the rename remain readable through the legacy

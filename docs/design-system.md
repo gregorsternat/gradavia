@@ -75,6 +75,16 @@ Never represent missing, suppressed or invalid observations as zero; partial
 aggregates show coverage. Specialty groups overlap and cannot be stacked into a
 national total.
 
+The atlas uses one quiet map surface next to a matching result list; exact numeric
+inputs supplement proximity and priority sliders. Coordinate coverage remains
+visible. Browser map controls and list links offer equivalent navigation without
+requiring pointer selection. Analysis places one selected visualization above its
+record table, with cohort controls shared across views. A Canvas scatter retains
+all source observations without creating thousands of DOM nodes; Tremor remains
+the default for supported chart types. Exports retain source and campaign context.
+Selection notes and optional sharing live behind explicit actions. No decoration
+or automatic motion communicates a statistical finding.
+
 ## Accessibility and states
 
 Use semantic elements, labelled controls, visible keyboard focus and sufficient

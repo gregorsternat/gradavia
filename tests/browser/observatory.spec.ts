@@ -154,7 +154,7 @@ test("source inventory distinguishes imported data and explains indicator bounda
   );
   await expect(
     page.getByRole("button", { name: "Import publié", exact: true }),
-  ).toHaveCount(9);
+  ).toHaveCount(11);
   await expect(page.getByRole("main")).toContainText("Fixtures synthétiques");
   const access = page.getByRole("button", {
     name: "Taux d’accès",
@@ -167,9 +167,16 @@ test("source inventory distinguishes imported data and explains indicator bounda
   await page
     .getByRole("button", { name: "Pourquoi APB est séparé de Parcoursup" })
     .click();
-  await expect(
-    page.getByRole("region", { name: "Pourquoi APB est séparé de Parcoursup" }),
-  ).toContainText("ne trace pas de courbe continue");
+  const apbExplanation = page.getByRole("region", {
+    name: "Pourquoi APB est séparé de Parcoursup",
+    exact: true,
+  });
+  await expect(apbExplanation).toContainText("ne trace pas de courbe continue");
   await expect(access).toHaveAttribute("aria-expanded", "false");
+  // Contrast describes the readable resting state, after the opening fade.
+  await expect(apbExplanation.locator(":scope > div")).toHaveCSS(
+    "opacity",
+    "1",
+  );
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });

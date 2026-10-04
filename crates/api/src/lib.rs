@@ -1,4 +1,5 @@
 pub mod analytics;
+pub mod atlas;
 pub mod config;
 pub mod formations;
 
@@ -18,10 +19,13 @@ use std::time::{Duration, Instant};
 pub fn router(pool: PgPool) -> Router {
     Router::new()
         .route("/v1/formations", get(explorer))
+        .route("/v1/atlas", get(atlas_snapshot))
+        .route("/v1/atlas/formations/{id}", get(atlas_detail))
         .route("/v1/formations/{id}", get(formation_detail))
         .route("/v1/overview", get(overview))
         .route("/v1/sources", get(sources))
         .route("/v1/specialties", get(specialties))
+        .route("/v1/specialties/inverse", get(inverse_specialties))
         .route(
             "/health/live",
             get(|| async { Json(json!({"status":"ok"})) }),
@@ -51,6 +55,24 @@ async fn explorer(State(pool): State<PgPool>, RawQuery(raw): RawQuery) -> Respon
     };
     match tokio::time::timeout(Duration::from_secs(15), repository::read(&pool, query)).await {
         Ok(Ok(result)) => Json(result).into_response(),
+        _ => error(StatusCode::SERVICE_UNAVAILABLE, "unavailable"),
+    }
+}
+
+async fn atlas_snapshot(State(pool): State<PgPool>, RawQuery(raw): RawQuery) -> Response {
+    let Ok(query) = atlas::Query::parse(raw.as_deref().unwrap_or_default()) else {
+        return error(StatusCode::BAD_REQUEST, "invalid_query");
+    };
+    match tokio::time::timeout(Duration::from_secs(15), atlas::snapshot(&pool, query)).await {
+        Ok(Ok(Some(result))) => Json(result).into_response(),
+        Ok(Ok(None)) => error(StatusCode::NOT_FOUND, "not_found"),
+        _ => error(StatusCode::SERVICE_UNAVAILABLE, "unavailable"),
+    }
+}
+async fn atlas_detail(State(pool): State<PgPool>, Path(id): Path<String>) -> Response {
+    match tokio::time::timeout(Duration::from_secs(15), atlas::detail(&pool, &id)).await {
+        Ok(Ok(Some(result))) => Json(result).into_response(),
+        Ok(Ok(None)) => error(StatusCode::NOT_FOUND, "not_found"),
         _ => error(StatusCode::SERVICE_UNAVAILABLE, "unavailable"),
     }
 }
@@ -90,6 +112,23 @@ async fn sources(State(pool): State<PgPool>) -> Response {
     }
 }
 
+async fn inverse_specialties(State(pool): State<PgPool>, RawQuery(raw): RawQuery) -> Response {
+    let Ok(query) =
+        analytics::specialties::inverse::Query::parse(raw.as_deref().unwrap_or_default())
+    else {
+        return error(StatusCode::BAD_REQUEST, "invalid_query");
+    };
+    match tokio::time::timeout(
+        Duration::from_secs(15),
+        analytics::specialties::inverse::read(&pool, query),
+    )
+    .await
+    {
+        Ok(Ok(result)) => Json(result).into_response(),
+        _ => error(StatusCode::SERVICE_UNAVAILABLE, "unavailable"),
+    }
+}
+
 async fn specialties(State(pool): State<PgPool>, RawQuery(raw): RawQuery) -> Response {
     let Ok(query) = analytics::specialties::Query::parse(raw.as_deref().unwrap_or_default()) else {
         return error(StatusCode::BAD_REQUEST, "invalid_query");
@@ -123,6 +162,8 @@ async fn observe(request: Request, next: Next) -> Response {
     let route = match request.uri().path() {
         "/v1/formations" => "formations",
         "/v1/overview" => "overview",
+        "/v1/atlas" => "atlas",
+        path if path.starts_with("/v1/atlas/formations/") => "atlas_detail",
         "/v1/sources" => "sources",
         "/v1/specialties" => "specialties",
         path if path.starts_with("/v1/formations/") => "formation_detail",

@@ -3,14 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Bookmark,
-  GitCompareArrows,
-  Plus,
-  X,
-} from "lucide-react";
+import { ArrowRight, Bookmark, GitCompareArrows, Plus, X } from "lucide-react";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import { Table, type TableColumn } from "@/components/motion/table";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
@@ -19,7 +12,7 @@ import type {
   FormationDetail,
   MetricKey,
 } from "../domain/api-contract";
-import { FAVORITES_PAGE_SIZE, selectionUrl } from "../domain/selection";
+import { selectionUrl } from "../domain/selection";
 import {
   formatCount,
   formationUrl,
@@ -28,11 +21,10 @@ import {
   percentMetrics,
 } from "../domain/metrics";
 import { useFormationSelection } from "./selection-provider";
+import { comparisonComments } from "../domain/selection-workspace";
 import {
-  ComparisonTray,
   ExportButton,
   FormationActions,
-  FormationCard,
   MetricValue,
   Reveal,
   SelectField,
@@ -273,6 +265,25 @@ export function ComparisonPageView({
             </section>
           ) : details.length > 0 ? (
             <Reveal className="space-y-5">
+              {comparisonComments(details, ids).length > 0 && (
+                <section
+                  aria-label="Différences entre les formations"
+                  className="rounded-xl bg-subtle p-5"
+                >
+                  <h2 className="text-sm font-semibold">
+                    Ce qui distingue ces formations
+                  </h2>
+                  <ul className="mt-3 space-y-2 text-sm leading-6">
+                    {comparisonComments(details, ids).map((comment) => (
+                      <li key={comment}>{comment}</li>
+                    ))}
+                  </ul>
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    Les taux d’accès décrivent la campagne passée ; ils ne
+                    prédisent pas une admission individuelle.
+                  </p>
+                </section>
+              )}
               <section className="rounded-xl border border-border bg-surface p-5 sm:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
@@ -359,174 +370,4 @@ export function ComparisonPageView({
   );
 }
 
-export function FavoritesPageView({
-  results,
-  ids,
-  page,
-}: {
-  results: LoadedSelection;
-  ids: string[];
-  page: number;
-}) {
-  const router = useRouter();
-  const [pending, startTransition] = useTransition();
-  const { favoriteRecords, favorites, removeFavorite, hydrated } =
-    useFormationSelection();
-  const pages = Math.max(1, Math.ceil(favorites.length / FAVORITES_PAGE_SIZE));
-  const currentPage = Math.min(page, pages);
-  const visibleIds = favorites.slice(
-    (currentPage - 1) * FAVORITES_PAGE_SIZE,
-    currentPage * FAVORITES_PAGE_SIZE,
-  );
-  const localIds = visibleIds.join(",");
-  const loadedIds = ids.join(",");
-  useEffect(() => {
-    if (hydrated && (localIds !== loadedIds || currentPage !== page)) {
-      const url = new URL(
-        selectionUrl(localIds ? localIds.split(",") : [], "/favoris"),
-        "https://gradavia.invalid",
-      );
-      if (currentPage > 1) url.searchParams.set("page", String(currentPage));
-      startTransition(() =>
-        router.replace(url.pathname + url.search, { scroll: false }),
-      );
-    }
-  }, [localIds, loadedIds, currentPage, page, router, hydrated]);
-  const details = readyDetails(results);
-  const changePage = (next: number) => {
-    if (pending) return;
-    const url = new URL(
-      selectionUrl(
-        favorites.slice(
-          (next - 1) * FAVORITES_PAGE_SIZE,
-          next * FAVORITES_PAGE_SIZE,
-        ),
-        "/favoris",
-      ),
-      "https://gradavia.invalid",
-    );
-    if (next > 1) url.searchParams.set("page", String(next));
-    startTransition(() => router.push(url.pathname + url.search));
-  };
-  return (
-    <main id="contenu" className="min-w-0 flex-1 py-8" aria-busy={pending}>
-      <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p className="mb-2 text-xs text-muted-foreground">Votre espace</p>
-          <h1 className="text-3xl font-semibold tracking-[-0.045em]">
-            Mes favoris
-            <span className="ml-3 align-middle text-lg font-normal text-muted-foreground">
-              {favorites.length || ""}
-            </span>
-          </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Votre sélection, conservée dans ce navigateur.
-          </p>
-        </div>
-        {hydrated && localIds === loadedIds && details.length > 0 && (
-          <ExportButton
-            rows={details}
-            label="Exporter cette page"
-            filename="gradavia-favoris"
-          />
-        )}
-      </div>
-      {!hydrated ? (
-        <p
-          role="status"
-          className="py-16 text-center text-sm text-muted-foreground"
-        >
-          Chargement de vos favoris…
-        </p>
-      ) : !favorites.length ? (
-        <EmptySelection type="favorites" />
-      ) : localIds !== loadedIds ? (
-        <p
-          role="status"
-          className="py-16 text-center text-sm text-muted-foreground"
-        >
-          Chargement de vos favoris…
-        </p>
-      ) : (
-        <>
-          <Reveal className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {results.map(({ id, result }) =>
-              result.status === "ready" ? (
-                <FormationCard
-                  key={id}
-                  formation={result.data.formation}
-                  source={result.data.source}
-                  actionsDisabled={pending}
-                />
-              ) : (
-                <section
-                  key={id}
-                  className="rounded-xl border border-border bg-surface p-5"
-                >
-                  <h2 className="text-sm font-medium">
-                    {favoriteRecords.find((row) => row.id === id)?.title ??
-                      "Formation enregistrée"}
-                  </h2>
-                  <p className="mt-3 text-xs text-muted-foreground">
-                    {result.status === "not-found"
-                      ? "Cette version des données n’est plus disponible."
-                      : "Les données sont temporairement indisponibles."}
-                  </p>
-                  <div className="mt-5 flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      disabled={pending}
-                      onClick={() => removeFavorite(id)}
-                    >
-                      Retirer des favoris
-                    </Button>
-                    {result.status === "unavailable" && (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        disabled={pending}
-                        onClick={() => startTransition(() => router.refresh())}
-                      >
-                        Réessayer
-                      </Button>
-                    )}
-                  </div>
-                </section>
-              ),
-            )}
-          </Reveal>
-          {pages > 1 && (
-            <nav
-              aria-label="Pagination des favoris"
-              className="mt-5 flex items-center justify-between"
-            >
-              <Button
-                variant="secondary"
-                size="sm"
-                disabled={currentPage === 1 || pending}
-                onClick={() => changePage(currentPage - 1)}
-              >
-                <ArrowLeft className="size-3.5" />
-                Précédente
-              </Button>
-              <p className="text-xs text-muted-foreground">
-                Page {currentPage} sur {pages}
-              </p>
-              <Button
-                variant="secondary"
-                size="sm"
-                disabled={currentPage === pages || pending}
-                onClick={() => changePage(currentPage + 1)}
-              >
-                Suivante
-                <ArrowRight className="size-3.5" />
-              </Button>
-            </nav>
-          )}
-        </>
-      )}
-      <ComparisonTray />
-    </main>
-  );
-}
+export { FavoritesWorkspace as FavoritesPageView } from "./selection-workspace";

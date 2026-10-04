@@ -6,6 +6,24 @@ Source: [beUI](https://beui.dev/) and
 [starc007/ui-components](https://github.com/starc007/ui-components).
 License: [MIT](licenses/beui.txt).
 
+### Expanded exploration (2026-10-05)
+
+The live registry and `range-slider-inline` item were read from
+[beUI](https://beui.dev/r/range-slider-inline.json). The complete
+`components/motion/range-slider-inline.tsx` and `lib/hooks/use-slider.ts` files
+were installed; existing ease, touch and utility helpers were preserved.
+Local changes add strict indexed-access guards, replace `findLast` with an
+ES2022-compatible reverse/find and apply repository formatting. The source's
+keyboard, pointer and reduced-motion behavior is retained.
+
+Leaflet 1.9.4 ([BSD-2-Clause](https://github.com/Leaflet/Leaflet/blob/v1.9.4/LICENSE))
+provides the interactive geographic map. It is imported only in the browser,
+uses canvas for source points and keeps an equivalent accessible result list.
+OpenStreetMap tiles retain visible [attribution](https://www.openstreetmap.org/copyright)
+and ordinary browser caching, with no prefetch/bulk download/offline tile cache.
+The source records and test assertions never depend on the tile service; browser
+tests replace only the basemap images with a local one-pixel response.
+
 The live shadcn registry was inspected before installing the initial button
 component:
 
@@ -75,6 +93,8 @@ Local integration patches:
   preserve the upstream keyboard/pointer model under React lint rules.
   The input stays disabled during server rendering and initial hydration so
   early text entry cannot race the selected-label registration or query handlers.
+  The atlas supplies a literal, accent-insensitive city/department filter so
+  scattered letters in unrelated city labels do not match the typed place.
 - Selects support labelled triggers, Arrow/Home/End navigation, selected-option
   focus, bounded scrollable option lists, and Escape/selection focus restoration.
   Radio groups and tabs have
@@ -171,7 +191,13 @@ Recharts 3 no longer supplies `tooltipPayload` on each bar. DonutChart uses
 Recharts 3's `shape` callback to preserve selected-sector
 opacity instead of the removed `activeIndex` prop. The shared palette includes
 `charcoal`, `silver`, `steel`, `mist` and `pale` for theme-aware monochrome composition. No Tremor
-runtime package or separately licensed premium blocks are used.
+runtime package or separately licensed premium blocks are used. The analysis
+workbench fixes BarChart legend list semantics: its scrolling `<ol>` directly
+owns `<li>` entries inside a separate layout container. Desktop/mobile axe checks
+cover the multi-series legend.
+BarChart axis labels carry a local `gradavia-axis-label` class so scoped theme
+styles preserve readable contrast in both themes; current Recharts no longer
+adds its former label class when a custom class is supplied.
 
 ## Landing page reuse (2026-10-05)
 

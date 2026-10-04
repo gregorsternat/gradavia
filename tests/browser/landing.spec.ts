@@ -123,6 +123,8 @@ test("landing opens the observatory and the home link returns to the public entr
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Vue d’ensemble",
   );
+  // The server heading can precede the shell's interactive navigation.
+  await expect(page.locator(".recharts-surface")).toHaveCount(4);
   if (isMobile)
     await page
       .getByRole("button", { name: "Afficher ou masquer la navigation" })

@@ -8,17 +8,26 @@ than producing a ranking or predicting an individual's admission.
 
 ## Supported journeys
 
-| Surface          | User job                                                                  | Scope                                                              |
-| ---------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| Landing          | Discover Gradavia and start exploring without an account                  | `/`, with source-backed preview when data is available             |
-| Overview         | Understand national offer and admission volumes, distribution and history | Published Parcoursup campaign, outside apprenticeship              |
-| Formations       | Search, filter, sort, inspect, save and select records                    | Eight registered admissions sources, one campaign at a time        |
-| Formation detail | Read published metrics, profiles, definitions and qualified history       | One immutable formation/establishment/campaign source row          |
-| Comparison       | See up to four formations together across exact metrics and profiles      | Same campaign required; different populations remain labelled      |
-| Favorites        | Retain a shortlist and return to source records                           | Browser-local, no account, bounded to 100 selections               |
-| Territories      | Compare regional formation, capacity, application and admission counts    | One campaign; missing values and coverage preserved                |
-| Specialties      | Explore destinations for a general-baccalaureate specialty pair           | Reviewed 2025 national/group/formation scopes kept separate        |
-| Sources          | Inspect imports, campaigns, freshness and definitions                     | All 14 registered source datasets, including separate APB archives |
+| Surface              | User job                                                                  | Scope                                                              |
+| -------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Landing              | Discover Gradavia and start exploring without an account                  | `/`, with source-backed preview when data is available             |
+| Overview             | Understand national offer and admission volumes, distribution and history | Published Parcoursup campaign, outside apprenticeship              |
+| Formations           | Search, filter, sort, inspect, save and select records                    | Eight registered admissions sources, one campaign at a time        |
+| Formation detail     | Read published metrics, profiles, definitions and qualified history       | One immutable formation/establishment/campaign source row          |
+| Comparison           | See up to four formations together across exact metrics and profiles      | Same campaign required; different populations remain labelled      |
+| Favorites            | Retain a shortlist and return to source records                           | Browser-local, no account, bounded to 100 selections               |
+| Territories          | Compare regional formation, capacity, application and admission counts    | One campaign; missing values and coverage preserved                |
+| Specialties          | Explore destinations for a general-baccalaureate specialty pair           | Reviewed 2025 national/group/formation scopes kept separate        |
+| Sources              | Inspect imports, campaigns, freshness and definitions                     | All 14 registered source datasets, including separate APB archives |
+| Map                  | Explore geography, interests, numeric criteria and a straight-line radius | One source/campaign, published coordinates only, synchronized list |
+| Apprenticeship / APB | Explore independently defined populations                                 | Distinct adapters and explicit unavailable indicators              |
+| Modalities           | Choose and compare two records from the same campaign                     | No inferred equivalence between curricula or procedures            |
+| Preparation          | Organize named lists, notes, statuses and personal checklists             | Browser-local, deliberate annotation sharing, printable dossier    |
+| Budget               | Compare user-entered cost scenarios over a study duration                 | No inferred rent, salary, scholarship or city-cost estimate        |
+| Analysis workshop    | Build linked charts, cohorts, cross-tabs and exports                      | One retained snapshot with per-indicator missingness               |
+| Evolutions           | Compare counts in two captured campaigns                                  | Unique unchanged source identities, paired coverage and exclusions |
+| Discovery            | Estimate and reveal documented source proportions                         | Three deterministic questions, without response tracking           |
+| Public datasets      | Download versioned CSV/JSON and reproduce calculations                    | Fixed public read contract and Python/R notebook downloads         |
 
 The landing uses a compact header, direct search, feature entry points and
 source/methodology questions. Its content works independently of API availability;
@@ -72,6 +81,9 @@ individual records are distinct states. Product routes never show synthetic
 fallbacks. The development gallery and test fixtures remain explicitly synthetic.
 
 The [data contract](data-contract.md) governs statistical semantics and the
-[quality log](quality.md) records observed verification. Hosting, production
-roles, monitoring, remote archival and refresh scheduling remain separate
-milestones. Authentication and personal admission prediction are not features.
+[quality log](quality.md) records observed verification. The
+[coverage register](feature-coverage.md) evaluates each requested feature, while
+[enrichment feasibility](enrichment-feasibility.md) records why external course,
+career, transport and cost data require further integration. Hosting is already
+live; monitoring, remote archival and refresh scheduling remain separate work.
+Authentication and personal admission prediction are not features.

@@ -197,7 +197,7 @@ const ScrollButton = ({ icon, onClick, disabled }: ScrollButtonProps) => {
   );
 };
 
-interface LegendProps extends React.OlHTMLAttributes<HTMLOListElement> {
+interface LegendProps extends React.HTMLAttributes<HTMLDivElement> {
   categories: string[];
   colors?: AvailableChartColorsKeys[];
   onClickLegendItem?: (category: string, color: string) => void;
@@ -210,7 +210,7 @@ type HasScrollProps = {
   right: boolean;
 };
 
-const Legend = React.forwardRef<HTMLOListElement, LegendProps>((props, ref) => {
+const Legend = React.forwardRef<HTMLDivElement, LegendProps>((props, ref) => {
   const {
     categories,
     colors = AvailableChartColors,
@@ -220,7 +220,7 @@ const Legend = React.forwardRef<HTMLOListElement, LegendProps>((props, ref) => {
     enableLegendSlider = false,
     ...other
   } = props;
-  const scrollableRef = React.useRef<HTMLInputElement>(null);
+  const scrollableRef = React.useRef<HTMLOListElement>(null);
   const scrollButtonsRef = React.useRef<HTMLDivElement>(null);
   const [hasScroll, setHasScroll] = React.useState<HasScrollProps | null>(null);
   const [isKeyDowned, setIsKeyDowned] = React.useState<string | null>(null);
@@ -306,12 +306,12 @@ const Legend = React.forwardRef<HTMLOListElement, LegendProps>((props, ref) => {
   }, [checkScroll, enableLegendSlider]);
 
   return (
-    <ol
+    <div
       ref={ref}
       className={cx("relative overflow-hidden", className)}
       {...other}
     >
-      <div
+      <ol
         ref={scrollableRef}
         tabIndex={0}
         className={cx(
@@ -332,7 +332,7 @@ const Legend = React.forwardRef<HTMLOListElement, LegendProps>((props, ref) => {
             activeLegend={activeLegend}
           />
         ))}
-      </div>
+      </ol>
       {enableLegendSlider && (hasScroll?.right || hasScroll?.left) ? (
         <>
           <div
@@ -362,7 +362,7 @@ const Legend = React.forwardRef<HTMLOListElement, LegendProps>((props, ref) => {
           </div>
         </>
       ) : null}
-    </ol>
+    </div>
   );
 });
 
@@ -726,7 +726,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                 <Label
                   position="insideBottom"
                   offset={-20}
-                  className="fill-gray-800 text-sm font-medium dark:fill-gray-200"
+                  className="gradavia-axis-label fill-gray-800 text-sm font-medium dark:fill-gray-200"
                 >
                   {xAxisLabel}
                 </Label>
@@ -775,7 +775,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   style={{ textAnchor: "middle" }}
                   angle={-90}
                   offset={-15}
-                  className="fill-gray-800 text-sm font-medium dark:fill-gray-200"
+                  className="gradavia-axis-label fill-gray-800 text-sm font-medium dark:fill-gray-200"
                 >
                   {yAxisLabel}
                 </Label>

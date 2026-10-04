@@ -242,7 +242,13 @@ function ReadySpecialties({
             {data.source.campaign}
           </p>
         </div>
-        <ShareButton />
+        <div className="flex flex-wrap items-center gap-2">
+          <ButtonLink href="/specialites/inverse" variant="secondary" size="sm">
+            Partir d’une formation
+            <ArrowRight className="size-3.5" />
+          </ButtonLink>
+          <ShareButton />
+        </div>
       </div>
       <section aria-label="Choisir ses spécialités" className="mb-6">
         <p className="mb-2 text-xs font-medium">

@@ -6,9 +6,13 @@ Keep brief work brief; use a plan when several boundaries change together.
 
 ## Active
 
-None.
+No active execution plan.
 
 ## Completed
+
+- [Expanded exploration and preparation](completed/expanded-exploration.md):
+  geographic exploration, preparation lists, budget scenarios, source-backed
+  analysis, historical comparison and reproducible public exports.
 
 - [Cloudflare continuous deployment](completed/cloudflare-continuous-deployment.md):
   verified main pushes publish the API and website, with a successful first release.

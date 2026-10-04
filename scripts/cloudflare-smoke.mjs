@@ -85,6 +85,98 @@ try {
       await expect(
         page.getByRole("button", { name: /^Source et périmètre · Parcoursup/ }),
       ).toBeVisible();
+
+      // Exercise the complete snapshot through the public Worker, not just the
+      // small metadata or paginated formation responses. No production count
+      // is hard-coded: publication can legitimately change between deploys.
+      stage = "public dataset metadata";
+      const metadataResponse = await context.request.get(
+        `${origin}/api/v1/datasets?famille=parcoursup&format=metadata`,
+        { timeout: 35_000 },
+      );
+      assert.equal(metadataResponse.status(), 200);
+      const metadata = await metadataResponse.json();
+      assert.equal(metadata.schemaVersion, 1);
+      assert.equal(metadata.family, "parcoursup");
+      assert.ok(Number.isSafeInteger(metadata.records) && metadata.records > 0);
+      assert.ok(metadata.records <= 30_000);
+      assert.match(metadata.source.releaseId, /^[0-9a-f-]{36}$/);
+      assert.ok(Number.isSafeInteger(metadata.source.campaign));
+      assert.ok(
+        Array.isArray(metadata.coverage) && metadata.coverage.length > 0,
+      );
+      const snapshotUrl = new URL(metadata.snapshot, origin);
+      assert.equal(snapshotUrl.origin, origin);
+      assert.equal(snapshotUrl.pathname, "/api/v1/datasets");
+      assert.equal(
+        snapshotUrl.searchParams.get("version"),
+        metadata.source.releaseId,
+      );
+
+      stage = "complete public dataset snapshot";
+      const snapshotResponse = await context.request.get(snapshotUrl.href, {
+        timeout: 35_000,
+      });
+      assert.equal(snapshotResponse.status(), 200);
+      assert.match(snapshotResponse.headers()["cache-control"], /immutable/);
+      const snapshotBytes = await snapshotResponse.body();
+      assert.ok(
+        snapshotBytes.length > 0 && snapshotBytes.length <= 32 * 1024 * 1024,
+      );
+      const snapshot = JSON.parse(snapshotBytes.toString("utf8"));
+      assert.equal(snapshot.status, "ready");
+      assert.equal(snapshot.data.family, metadata.family);
+      assert.equal(snapshot.data.source.releaseId, metadata.source.releaseId);
+      assert.equal(snapshot.data.source.campaign, metadata.source.campaign);
+      assert.equal(snapshot.data.items.length, metadata.records);
+      assert.deepEqual(snapshot.data.coverage, metadata.coverage);
+      assert.equal(
+        new Set(snapshot.data.items.map((row) => row.id)).size,
+        metadata.records,
+      );
+      for (const coverage of metadata.coverage) {
+        const actual = { observed: 0, missing: 0, suppressed: 0, invalid: 0 };
+        for (const row of snapshot.data.items) {
+          assert.ok(row.id.startsWith(`${metadata.source.releaseId}:`));
+          const state = row.states[coverage.key] ?? "observed";
+          assert.ok(Object.hasOwn(actual, state));
+          if (state === "observed") {
+            assert.ok(Number.isFinite(row.metrics[coverage.key]));
+            assert.ok(row.metrics[coverage.key] >= 0);
+          } else {
+            assert.equal(row.metrics[coverage.key], null);
+          }
+          actual[state] += 1;
+        }
+        for (const state of Object.keys(actual))
+          assert.equal(actual[state], coverage[state]);
+      }
+
+      stage = "full analysis rendering and hydration";
+      const analysisQuery = new URLSearchParams({
+        famille: metadata.family,
+        campagne: String(metadata.source.campaign),
+        version: metadata.source.releaseId,
+      });
+      const analysisResponse = await page.goto(
+        `${origin}/analyses?${analysisQuery}`,
+      );
+      assert.equal(analysisResponse?.status(), 200);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+        "Atelier d’analyse",
+      );
+      const renderedCount = page
+        .getByText(/^\d[\d\s]* formations sur \d[\d\s]* · \d{4}$/)
+        .filter({ visible: true });
+      await expect(renderedCount).toBeVisible();
+      assert.equal(
+        (await renderedCount.innerText()).replace(/\s/g, ""),
+        `${metadata.records}formationssur${metadata.records}·${metadata.source.campaign}`,
+      );
+      await page.getByRole("tab", { name: "Qualité", exact: true }).click();
+      await expect(
+        page.getByRole("tab", { name: "Qualité", exact: true }),
+      ).toHaveAttribute("aria-selected", "true");
       await writeFile(
         `${directory}/result.json`,
         JSON.stringify(
@@ -94,6 +186,9 @@ try {
             commit: process.env.GITHUB_SHA ?? null,
             attempt,
             formations: count,
+            snapshotRecords: metadata.records,
+            snapshotBytes: snapshotBytes.length,
+            snapshotRelease: metadata.source.releaseId,
             checkedAt: new Date().toISOString(),
           },
           null,
@@ -101,7 +196,7 @@ try {
         ) + "\n",
       );
       console.log(
-        `Production smoke passed: ${count} formations and detail verified.`,
+        `Production smoke passed: ${count} formations, detail and ${metadata.records}-record analysis verified.`,
       );
       break;
     } catch {

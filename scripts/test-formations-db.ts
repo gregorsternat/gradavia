@@ -1,4 +1,8 @@
 import assert from "node:assert/strict";
+import {
+  atlasResponse,
+  atlasDetailResponse,
+} from "../apps/web/src/features/atlas/domain/api-contract";
 import { randomUUID } from "node:crypto";
 import { eq, sql } from "drizzle-orm";
 import { createNodeClient } from "../packages/db/src/node";
@@ -14,6 +18,7 @@ import {
   sourcesResponse,
 } from "../apps/web/src/features/observatory/domain/overview";
 import { specialtyResponse } from "../apps/web/src/features/specialties/domain/api-contract";
+import { inverseResponse } from "../apps/web/src/features/specialties/domain/inverse";
 import {
   defaultSpecialtyPair,
   secondSpecialtyPair,
@@ -345,15 +350,16 @@ export async function testFormationReads(connection: string) {
     );
     assert.equal(
       inventory.data.totals.published,
-      9,
+      11,
       "Only published datasets count as available",
     );
     assert(
       inventory.data.datasets.some(
         (dataset: { family: string; status: string }) =>
-          dataset.family === "apb" && dataset.status === "not-imported",
+          dataset.family === "formation_map" &&
+          dataset.status === "not-imported",
       ),
-      "Unimported APB is not represented as imported",
+      "Unimported cartography is not represented as imported",
     );
 
     const readSpecialties = async (
@@ -441,6 +447,150 @@ export async function testFormationReads(connection: string) {
       400,
       "Specialty query input is bounded",
     );
+    const inverseCatalog = inverseResponse.parse(
+      await jsonEndpoint("/v1/specialties/inverse"),
+    );
+    assert.equal(inverseCatalog.status, "ready");
+    if (inverseCatalog.status !== "ready")
+      throw new Error("Expected inverse specialty catalog");
+    assert.equal(
+      inverseCatalog.data.rows.length,
+      0,
+      "No national label is selected implicitly",
+    );
+    const inverseInformatics = inverseCatalog.data.formations.find(
+      (row) => row.group === "BUT" && row.label === "BUT - Informatique",
+    );
+    assert(inverseInformatics);
+    const inverseResult = inverseResponse.parse(
+      await jsonEndpoint(
+        `/v1/specialties/inverse?${new URLSearchParams({ formation: inverseInformatics.id })}`,
+      ),
+    );
+    assert.equal(inverseResult.status, "ready");
+    if (inverseResult.status !== "ready")
+      throw new Error("Expected inverse specialty observations");
+    assert.equal(inverseResult.data.rows.length, 1);
+    assert.deepEqual(
+      inverseResult.data.rows[0]!.pair.specialties,
+      defaultSpecialtyPair,
+    );
+    assert.equal(inverseResult.data.rows[0]!.accepted.state, "suppressed");
+    assert.equal(inverseResult.data.rows[0]!.applications.value, 150);
+    assert.equal(inverseResult.data.rows[0]!.group, "BUT");
+    const inverseUnknown = inverseResponse.parse(
+      await jsonEndpoint(`/v1/specialties/inverse?formation=unknown`),
+    );
+    assert.equal(inverseUnknown.status, "ready");
+    if (inverseUnknown.status === "ready") {
+      assert.equal(inverseUnknown.data.rows.length, 0);
+      assert.equal(inverseUnknown.data.requestNotices.length, 1);
+    }
+    assert.equal(
+      (
+        await fetch(
+          `${api.url}/v1/specialties/inverse?formation=${"x".repeat(17000)}`,
+        )
+      ).status,
+      400,
+    );
+
+    const snapshot = atlasResponse.parse(await jsonEndpoint("/v1/atlas"));
+    assert.equal(snapshot.status, "ready");
+    if (snapshot.status !== "ready") throw new Error("Expected snapshot");
+    assert.equal(
+      snapshot.data.items.length,
+      31,
+      "Atlas retains every row and duplicate",
+    );
+    assert(
+      snapshot.data.items.some(
+        (item) =>
+          item.metrics.capacity === null && item.states.capacity === "missing",
+      ),
+    );
+    assert(
+      snapshot.data.items.some(
+        (item) =>
+          item.metrics.admitted === 0 && item.states.admitted === undefined,
+      ),
+    );
+    assert(
+      snapshot.data.items.some((item) => item.states.admitted === "suppressed"),
+    );
+    assert(
+      snapshot.data.items.some((item) => item.states.accessRate === "invalid"),
+    );
+    assert.equal(snapshot.data.items[0]!.latitude, 45.75);
+    const rich = atlasDetailResponse.parse(
+      await jsonEndpoint(`/v1/atlas/formations/${snapshot.data.items[0]!.id}`),
+    );
+    assert.equal(rich.data.metrics.mentionNone!.value, 20);
+    assert.equal(rich.data.metrics.admittedBeforeBac!.value, 110);
+    assert.equal(rich.data.rankGroups[0]!.rank.value, 850);
+    assert.equal(rich.data.history.length, 8);
+    const apb = atlasResponse.parse(
+      await jsonEndpoint("/v1/atlas?famille=apb"),
+    );
+    assert.equal(apb.status, "ready");
+    if (apb.status === "ready") {
+      assert.equal(apb.data.source.campaign, 2017);
+      assert.equal(apb.data.items[0]!.metrics.scholarshipShare, 25.8);
+      assert.equal(apb.data.items[0]!.latitude, null);
+      assert.equal(apb.data.items[0]!.sourceFormationId, null);
+      assert.equal(apb.data.items[0]!.states.accessRate, "missing");
+      const apbDetail = atlasDetailResponse.parse(
+        await jsonEndpoint(`/v1/atlas/formations/${apb.data.items[0]!.id}`),
+      );
+      assert.equal(apbDetail.data.metrics.mentionNone!.value, 10);
+      assert.equal(
+        apbDetail.data.history.length,
+        0,
+        "No invented APB identity match",
+      );
+    }
+    const apprentice = atlasResponse.parse(
+      await jsonEndpoint("/v1/atlas?famille=apprentissage"),
+    );
+    assert.equal(apprentice.status, "ready");
+    if (apprentice.status === "ready") {
+      assert.equal(apprentice.data.items[0]!.states.offers, "suppressed");
+      assert.equal(apprentice.data.items[0]!.states.admitted, "missing");
+      const apprenticeDetail = atlasDetailResponse.parse(
+        await jsonEndpoint(
+          `/v1/atlas/formations/${apprentice.data.items[0]!.id}`,
+        ),
+      );
+      assert.equal(
+        apprenticeDetail.data.metrics.generalApplications!.value,
+        30,
+      );
+      assert.equal(apprenticeDetail.data.metrics.contractSearch!.value, 12);
+    }
+    for (const query of [
+      "famille=invalid",
+      "version=not-a-uuid",
+      "campagne=bad",
+    ])
+      assert.equal((await fetch(`${api.url}/v1/atlas?${query}`)).status, 400);
+    assert.equal(
+      (
+        await fetch(
+          `${api.url}/v1/atlas?famille=apb&version=${snapshot.data.source.releaseId}`,
+        )
+      ).status,
+      404,
+      "A pinned release cannot silently switch family",
+    );
+    assert.equal(
+      (
+        await fetch(
+          `${api.url}/v1/atlas?version=${snapshot.data.source.releaseId}&campagne=2017`,
+        )
+      ).status,
+      404,
+      "A pinned release cannot silently switch campaign",
+    );
 
     const replacement = randomUUID();
     await db.execute(sql`INSERT INTO source_releases
@@ -524,6 +674,59 @@ export async function testFormationReads(connection: string) {
       retainedDetail.data.source.releaseId,
       first.source.releaseId,
       "Saved formation links retain their original snapshot after publication",
+    );
+    const freshAtlas = atlasResponse.parse(await jsonEndpoint("/v1/atlas"));
+    assert.equal(freshAtlas.status, "ready");
+    if (freshAtlas.status === "ready") {
+      assert.equal(freshAtlas.data.source.releaseId, replacement);
+      assert.equal(
+        freshAtlas.data.items.length,
+        1,
+        "Publication invalidates cached snapshots",
+      );
+    }
+    const retainedAtlas = atlasResponse.parse(
+      await jsonEndpoint(`/v1/atlas?version=${snapshot.data.source.releaseId}`),
+    );
+    assert.equal(retainedAtlas.status, "ready");
+    if (retainedAtlas.status === "ready") {
+      assert.equal(
+        retainedAtlas.data.source.releaseId,
+        snapshot.data.source.releaseId,
+      );
+      assert.equal(
+        retainedAtlas.data.items.length,
+        31,
+        "Pinned analyses remain reproducible",
+      );
+    }
+    const uppercaseAtlas = atlasResponse.parse(
+      await jsonEndpoint(
+        `/v1/atlas?version=${snapshot.data.source.releaseId.toUpperCase()}`,
+      ),
+    );
+    assert.equal(
+      uppercaseAtlas.status,
+      "ready",
+      "UUID selectors normalize without changing identity",
+    );
+    const oversizedRelease = randomUUID();
+    await db.execute(sql`INSERT INTO source_releases
+      SELECT ${oversizedRelease}::uuid, dataset_id, repeat('e',64), contract_version, collected_at,
+      source_modified_at, importer_version, license, metadata, manifest, manifest_path,
+      30001, data_bytes, '{"2025":30001}'::jsonb, created_at
+      FROM source_releases WHERE id = ${first.source.releaseId}::uuid`);
+    await client.query(
+      "INSERT INTO raw_records (release_id,row_number,campaign,payload) SELECT $1::uuid,n,2025,payload FROM raw_records CROSS JOIN generate_series(1,30001) n WHERE release_id=$2::uuid AND row_number=1",
+      [oversizedRelease, first.source.releaseId],
+    );
+    const oversized = await fetch(
+      `${api.url}/v1/atlas?version=${oversizedRelease}`,
+    );
+    assert.equal(
+      oversized.status,
+      503,
+      "A snapshot exceeding 30,000 rows fails instead of silently truncating",
     );
     await db.update(sourceDatasets).set({ currentReleaseId: null });
     assert.equal(

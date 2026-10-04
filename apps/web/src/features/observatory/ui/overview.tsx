@@ -410,6 +410,9 @@ function ReadyOverview({ data }: { data: OverviewData }) {
       </Tabs>
       <div className="mt-9 flex flex-wrap items-center justify-between gap-4">
         <SourceLine source={data.source} />
+        <ButtonLink href="/decouvrir" variant="ghost" size="sm">
+          À vous d’estimer <ArrowRight className="size-3.5" />
+        </ButtonLink>
         <ButtonLink
           href="/sources#indicateurs"
           variant="ghost"

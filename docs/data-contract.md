@@ -244,3 +244,86 @@ snapshot evidence, not a hard-coded expectation for future releases. The API
 refuses to aggregate duplicate national keys. The older 2021–2024 specialty
 sources remain visible in the inventory but require a separate methodology
 review before longitudinal display.
+
+Inverse specialty exploration uses the same level-2 observations and selects
+the exact published `(regroupement_de_formations, formation)` tuple. Its catalog
+and observations describe **national labels**, not a campus or establishment.
+An admissions detail link leads to explicit label selection; it does not infer
+an exact match from a similar title. All published pairs remain available in the
+table/export, with suppressed and missing counts preserved. The chart's leading
+12 pairs are a labelled preview, never a replacement for the complete rows.
+The inverse view does not sum counts across overlapping national formation
+scopes, infer an admission chance or identify an effect of taking a specialty.
+
+## Atlas family projections
+
+The atlas exposes three independent populations with an immutable source version
+per snapshot. It retains every source row, its formation and establishment
+identifiers when published, coordinates, explicit missingness and coverage. Its
+30,000-row limit fails explicitly; it never samples an apparently complete map
+or analysis. Stored analysis URLs can pin a retained release. A different
+publication does not rewrite those observations.
+
+The regular Parcoursup projection adds `localShare` from `pct_aca_orig`: the
+published percentage of admitted neo-baccalaureate candidates from the same
+academy. The separate `pct_aca_orig_idf` field combines Paris, Créteil and
+Versailles and is available only in enriched detail. Neither percentage supplies
+origin-destination flows. The regular source publishes a geo object; apprenticeship publishes text
+`latitude, longitude`. Both are range-validated without geocoding. Source
+coordinates locate formations; distance is
+straight-line distance and never transport time or accessibility.
+
+The apprenticeship adapter reads only `fr-esr-parcoursup-apprentissage`, preserving
+its own campaign coverage. It exposes the source capacity, candidatures and
+propositions. Its source does not publish accepted admissions or the ordinary
+Parcoursup access rate; these remain missing. `nb_rech_con`, `nb_ref_classe` and
+`nb_ref_place` describe wishes placed in contract search, refused after dossier
+review, and refused for capacity respectively. Contract-search status is not an
+admission. Its candidate baccalaureate categories use `nb_voe_ap_bg`,
+`nb_voe_ap_bt`, `nb_voe_ap_bp` and `nb_voe_ap_at`, not main-phase fields from the
+regular source.
+
+The APB adapter reads only `fr-esr-apb_voeux-et-admissions`. It preserves textual
+source numbers with the same observed/missing/suppressed/invalid parser. Source
+fields `lib_dep`/`lib_reg`, `p_acc_boursier` and `p_acc_academies` provide territory,
+scholarship and local-recruitment values. APB scholarship percentages concern the
+published APB admitted population, unlike the Parcoursup neo-baccalaureate
+percentage. Absent city, coordinates, formation identifiers and access rates stay
+missing. APB's hierarchical wishes, indicators and 2016–2017 coverage remain
+separate from Parcoursup; no cross-system time series or identity match is made.
+
+### Enriched formation observations
+
+The retained source field labels and representations were reviewed in the
+committed official metadata fixtures on 2026-10-05. These projections do not add
+external datasets or claim newer source publication. The detailed contract
+exposes these additional source fields without imputing values:
+
+- Candidate/admitted profiles: `voe_tot_f`, `acc_tot_f`, `acc_neobac`, `acc_bg`,
+  `acc_bt`, `acc_bp`, `acc_at`, `acc_brs`; APB uses `acc_boursier` for scholarships.
+- Main-phase candidate profiles: `nb_voe_pp`, `nb_voe_pp_bg`, `nb_voe_pp_bt`,
+  `nb_voe_pp_bp`, `nb_voe_pp_at`. Source offer profiles `prop_tot_bg`,
+  `prop_tot_bt`, `prop_tot_bp`, `prop_tot_at` and admissions cover the campaign's
+  published phases. These must not be presented as a single-cohort conversion
+  funnel. Each column keeps its phase and population label.
+- Mentions: `acc_mention_nonrenseignee`, `acc_sansmention`, `acc_ab`, `acc_b`,
+  `acc_tb`, `acc_tbf`; these describe admitted neo-baccalaureate candidates.
+  Missing historical categories remain missing rather than zero. APB uses
+  `acc_passable`, `acc_assez_bien`, `acc_bien`, `acc_tres_bien` with its own scope.
+- Origin: `acc_aca_orig`, `pct_aca_orig_idf`, `pct_etab_orig`; APB uses
+  `acc_academies` and `p_acc_term`. Published count and percentage labels can refer
+  to different scopes; the API does not reconstruct one from the other.
+- Offer-receipt milestones among ultimately admitted candidates:
+  `acc_debutpp`, `acc_datebac`, `acc_finpp`. These report the final admitted
+  population's offer timing at published milestones, not daily admissions or a
+  live waiting-list curve. Cumulative milestones must not be added.
+- Last-called ranks: paired `lib_grp1`/`ran_grp1` through
+  `lib_grp3`/`ran_grp3`. Each rank remains attached to its source group. Historical
+  `rang_der_max` is labelled as a published maximum without a detailed group.
+  No rank predicts future admission and ranks from different groups are not
+  interchangeable.
+
+Enriched history applies the existing formation+establishment identity rules
+within one family. Changed descriptions remain explicit; ambiguous and missing
+matches have no values. APB lacks a formation-level identifier in this source,
+so its individual records do not receive invented longitudinal matches.

@@ -1,4 +1,11 @@
 @import "tailwindcss";
+
+.gradavia-map .leaflet-tile-pane {
+  filter: grayscale(1);
+}
+.dark .gradavia-map .leaflet-tile-pane {
+  filter: grayscale(1) invert(1) brightness(0.8);
+}
 @custom-variant dark (&:where(.dark, .dark *));
 :root {
   color-scheme: light;
@@ -124,7 +131,8 @@ summary {
   --color-gray-50: var(--surface);
   font-size: 11px;
 }
-.gradavia-chart .recharts-cartesian-axis-tick-value {
+.gradavia-chart .recharts-cartesian-axis-tick-value,
+.gradavia-chart .gradavia-axis-label {
   fill: var(--muted);
 }
 .gradavia-chart .recharts-cartesian-grid line {
