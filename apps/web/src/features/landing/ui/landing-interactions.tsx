@@ -85,7 +85,7 @@ export function LandingSearch() {
             placeholder="Une formation, une ville…"
             leftIcon={<Search className="size-4" aria-hidden="true" />}
             className="min-w-0 flex-1"
-            classNames={{ input: "h-12 text-sm", field: "rounded-xl" }}
+            classNames={{ input: "text-sm", field: "h-12 rounded-xl" }}
           />
           <Button
             type="submit"
