@@ -108,6 +108,11 @@ Local integration patches:
   semantic panel IDs, avoiding zero-size measurements from hidden charts.
   Their text remains opaque during entrance motion. Disabled tabs expose native
   disabled semantics and are excluded from keyboard navigation.
+  Tab triggers use the existing client-ready guard to remain disabled during
+  server rendering and initial hydration. This prevents the first pointer
+  activation from racing the tab list's initial overflow measurement and
+  selected-tab reveal. A delayed-JavaScript browser regression covers that
+  first activation; verification status is recorded in [quality](quality.md).
   Input placeholders use the full muted text token to remain readable in both
   themes instead of attenuating it to 60% opacity.
 - The command palette restores the opener's focus and contains Tab navigation;

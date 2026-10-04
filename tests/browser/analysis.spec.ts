@@ -108,6 +108,49 @@ test("analysis filters, local views and exported provenance share one cohort", a
   ).toBe(true);
 });
 
+test("analysis tabs preserve their first activation after delayed hydration", async ({
+  page,
+}) => {
+  let hydrate!: () => void;
+  const hydration = new Promise<void>((resolve) => {
+    hydrate = resolve;
+  });
+  await page.route("**/_next/static/**/*.js", async (route) => {
+    await hydration;
+    await route.continue();
+  });
+  try {
+    await page.goto("/analyses?vue=matrix", { waitUntil: "commit" });
+    const distribution = page.getByRole("tab", {
+      name: "Distribution",
+      exact: true,
+    });
+    await expect(distribution).toBeDisabled();
+    hydrate();
+    await expect(distribution).toBeEnabled();
+    await distribution.click();
+    await expect(distribution).toHaveAttribute("aria-selected", "true");
+    await expect(page).toHaveURL(/vue=distribution/);
+    await page
+      .getByRole("button", { name: "Voir les valeurs", exact: true })
+      .click();
+    await expect(
+      page.getByRole("table", {
+        name: "Distribution des formations",
+        exact: true,
+      }),
+    ).toBeVisible();
+    await distribution.focus();
+    await page.keyboard.press("End");
+    await expect(
+      page.getByRole("tab", { name: "Qualité", exact: true }),
+    ).toHaveAttribute("aria-selected", "true");
+    await expect(page).toHaveURL(/vue=quality/);
+  } finally {
+    hydrate();
+  }
+});
+
 test("analysis views expose keyboard-accessible values and missingness", async ({
   page,
 }, testInfo) => {

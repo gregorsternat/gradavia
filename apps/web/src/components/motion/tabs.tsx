@@ -10,6 +10,7 @@ import {
   type Transition,
 } from "motion/react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { useClientReady } from "@/lib/hooks/use-client-ready";
 import {
   createContext,
   useCallback,
@@ -403,6 +404,10 @@ export function TabsTrigger({
   disabled?: boolean;
 }) {
   const { value: current, setValue, layoutId, variant } = useTabs();
+  const ready = useClientReady();
+  // Initial overflow measurement can reveal the selected tab during hydration.
+  // Do not accept a pointer activation while that first layout is changing.
+  const unavailable = disabled || !ready;
   const active = current === value;
   // React owns the initial mask only; TabsList synchronizes subsequent masks.
   const [initialClip] = useState(() =>
@@ -416,8 +421,8 @@ export function TabsTrigger({
         role="tab"
         id={`${layoutId}-tab-${value}`}
         aria-controls={`${layoutId}-panel-${value}`}
-        tabIndex={active && !disabled ? 0 : -1}
-        disabled={disabled}
+        tabIndex={active && !unavailable ? 0 : -1}
+        disabled={unavailable}
         aria-selected={active}
         onClick={() => setValue(value)}
         className={cn(
@@ -466,8 +471,8 @@ export function TabsTrigger({
         role="tab"
         id={`${layoutId}-tab-${value}`}
         aria-controls={`${layoutId}-panel-${value}`}
-        tabIndex={active && !disabled ? 0 : -1}
-        disabled={disabled}
+        tabIndex={active && !unavailable ? 0 : -1}
+        disabled={unavailable}
         aria-selected={active}
         data-tabs-value={value}
         onClick={() => setValue(value)}
