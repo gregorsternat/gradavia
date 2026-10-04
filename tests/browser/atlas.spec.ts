@@ -46,9 +46,17 @@ test("map filters keep the complete snapshot, radius and share URL synchronized"
       .getByRole("region", { name: "Formations de la carte" })
       .getByRole("link", { name: "BTS - Systèmes numériques" }),
   ).toBeVisible();
-  await page.getByRole("combobox", { name: "Autour d’une ville" }).fill("Lyon");
+  const cityInput = page.getByRole("combobox", { name: "Autour d’une ville" });
+  await cityInput.fill("rhone");
+  await expect(page.getByRole("option")).toHaveCount(1);
+  await cityInput.fill("Lyon");
   await expect(page).not.toHaveURL(/ville=/);
-  await page.getByRole("option", { name: "Lyon · Rhône", exact: true }).click();
+  await expect(
+    page.getByRole("option", { name: "Lyon · Rhône", exact: true }),
+  ).toBeVisible();
+  await cityInput.press("ArrowDown");
+  await cityInput.press("Enter");
+  await expect(page).toHaveURL(/ville=Lyon/);
   const radiusInput = page.getByRole("spinbutton", {
     name: "Rayon exact en kilomètres",
   });

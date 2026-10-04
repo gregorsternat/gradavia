@@ -38,6 +38,7 @@ import {
   filterItems,
   hasCoordinates,
   interests,
+  matchesCity,
   parseExploration,
   sortItems,
   type ExplorationQuery,
@@ -291,6 +292,7 @@ function ReadyExplorer({
                     </p>
                     <Combobox
                       value={query.city}
+                      filter={matchesCity}
                       onValueChange={(city) => change({ city })}
                     >
                       <ComboboxTrigger className="rounded-lg bg-background">

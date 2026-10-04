@@ -8,6 +8,7 @@ import {
   sortItems,
   inBounds,
   cityChoices,
+  matchesCity,
   boundNumericFilter,
 } from "./exploration";
 
@@ -140,6 +141,21 @@ describe("geographic exploration", () => {
     expect(boundNumericFilter("0", 100)).toBe("0");
     expect(boundNumericFilter("", 100)).toBe("");
     expect(boundNumericFilter("Infinity", 100)).toBe("");
+  });
+  it("finds literal city or department names without scattered-letter matches", () => {
+    expect(matchesCity("Lyon · Rhône", "lyon")).toBe(true);
+    expect(matchesCity("Lyon · Rhône", "rhone")).toBe(true);
+    expect(
+      matchesCity("La Rochelle · Charente-Maritime", " la  rochelle "),
+    ).toBe(true);
+    expect(matchesCity("Étampes · Essonne", "etampes")).toBe(true);
+    expect(matchesCity("Argelès-sur-Mer · Pyrénées-Orientales", "Lyon")).toBe(
+      false,
+    );
+    expect(matchesCity("Aulnay-sous-Bois · Seine-Saint-Denis", "Lyon")).toBe(
+      false,
+    );
+    expect(matchesCity("Lyon · Rhône", "")).toBe(true);
   });
   it("normalizes source spacing in city choices while keeping a published coordinate", () => {
     const cities = cityChoices([

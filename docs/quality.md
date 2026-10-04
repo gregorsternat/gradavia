@@ -615,7 +615,7 @@ Evidence: `.artifacts/atlas/payload-measurements.json`,
 
 Final `CI=true E2E_PORT=3492 mise exec -- just verify` passed: formatting, lint,
 TypeScript and architecture/documentation checks, Rust formatting/Clippy,
-92 TypeScript tests, 7 Node checks, 32 Rust tests, disposable PostgreSQL 18
+93 TypeScript tests, 7 Node checks, 32 Rust tests, disposable PostgreSQL 18
 contracts and credential-free builds. Browser results were 114 development,
 112 production and 12 unavailable/empty/unconfigured cases passed, with two
 intended production gallery skips. Remote CI, merge and deployment are separate
@@ -643,3 +643,8 @@ the settled foreground `#64666e` on white has 5.73:1 contrast. The source-invent
 and formation-provenance scans now wait for the description's computed opacity
 to reach one before measuring contrast. Motion and accessibility rules remain
 enabled; no fixed sleeps, retry-on-failure or contrast exclusions were added.
+
+Live city-picker inspection also exposed the generic combobox's scattered-letter
+matching: a query for Lyon included unrelated city/department labels. The atlas
+now uses literal matching with accent and whitespace normalization. Regression
+coverage includes those real counterexamples and keyboard city selection.

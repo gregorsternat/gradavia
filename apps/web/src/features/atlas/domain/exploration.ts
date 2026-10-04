@@ -234,6 +234,11 @@ export function distanceKm(
     Math.atan2(Math.sqrt(Math.min(1, x)), Math.sqrt(Math.max(0, 1 - x)))
   );
 }
+export function matchesCity(value: string, query: string): boolean {
+  const normalize = (text: string) => fold(text).replace(/\s+/g, " ").trim();
+  return normalize(value).includes(normalize(query));
+}
+
 export function cityChoices(items: AtlasItem[]) {
   const cities = new Map<
     string,

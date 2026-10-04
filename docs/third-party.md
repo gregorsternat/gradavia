@@ -93,6 +93,8 @@ Local integration patches:
   preserve the upstream keyboard/pointer model under React lint rules.
   The input stays disabled during server rendering and initial hydration so
   early text entry cannot race the selected-label registration or query handlers.
+  The atlas supplies a literal, accent-insensitive city/department filter so
+  scattered letters in unrelated city labels do not match the typed place.
 - Selects support labelled triggers, Arrow/Home/End navigation, selected-option
   focus, bounded scrollable option lists, and Escape/selection focus restoration.
   Radio groups and tabs have
