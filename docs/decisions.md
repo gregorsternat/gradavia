@@ -187,3 +187,19 @@ fingerprint and advisory-lock namespaces. Existing browser selections are read
 from the historical key until the next write uses the new key. Existing empty
 selections take precedence over that fallback. See the
 [execution plan](exec-plans/completed/rename-gradavia.md) for verification and delivery.
+
+## 016 — Preserve both runtimes on Cloudflare
+
+Adapt official Next.js build output with OpenNext and run the existing Rust read
+API in a Cloudflare Container. Although Cloudflare recommends vinext for new
+projects, adopting its beta reimplementation would broaden this deployment into
+a framework migration. The adapter retains the version of Next.js exercised by
+the existing browser suite.
+
+Use a private Worker service binding for web-to-API calls. Only the API container
+receives the dedicated read-only Neon credential at runtime. Keep manual ingestion,
+schema migrations, source release identity and missing-value semantics unchanged.
+Bound the initial container count and allow idle shutdown. A cold container and
+suspended Neon compute can delay the first request; verify that complete path
+before claiming production readiness. Account activation and deployment are
+separate from the checked-in configuration; see [deployment](deployment.md).

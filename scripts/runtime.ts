@@ -30,6 +30,7 @@ export function webEnvironment(origin: string): NodeJS.ProcessEnv {
   for (const key of [
     "DATABASE_URL",
     "DATABASE_URL_UNPOOLED",
+    "GRADAVIA_API_DATABASE_URL",
     "TEST_DATABASE_URL",
     "GRADAVIA_TEST_DATABASE_URL",
     "GRADAVIA_DATA_ENV_FILE",
@@ -97,7 +98,7 @@ export async function startApi(
     path.resolve("target/debug/gradavia-api"),
     [],
     {
-      ...process.env,
+      ...webEnvironment(""),
       DATABASE_URL: databaseUrl,
       DATABASE_URL_UNPOOLED: "",
       API_BIND: bind,

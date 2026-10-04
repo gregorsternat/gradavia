@@ -10,6 +10,10 @@ export default defineConfig([
   { settings: { next: { rootDir: "apps/web/" } } },
   globalIgnores([
     "**/.next/**",
+    "**/.open-next/**",
+    "**/.wrangler/**",
+    "**/cloudflare-env.d.ts",
+    "**/worker-configuration.d.ts",
     "**/next-env.d.ts",
     "target/**",
     ".artifacts/**",

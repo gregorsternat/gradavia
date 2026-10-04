@@ -81,6 +81,8 @@ test("command palette searches pages and restores keyboard focus", async ({
   page,
 }) => {
   await page.goto("/observatoire");
+  // The server-rendered navigation can appear before keyboard handlers attach.
+  await expect(page.locator(".recharts-surface")).toHaveCount(4);
   const opener = page.getByRole("button", {
     name: "Afficher ou masquer la navigation",
   });

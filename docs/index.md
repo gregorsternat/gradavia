@@ -7,6 +7,7 @@ Use this index to find the source of truth for each concern.
 | [Architecture](../ARCHITECTURE.md)     | Module boundaries and runtime interfaces                        |
 | [Product](product.md)                  | Audience, scope, and feature order                              |
 | [Development](development.md)          | Setup, environments, migration and test procedures              |
+| [Deployment](deployment.md)            | Cloudflare runtime, credentials, release checks and operations  |
 | [Design system](design-system.md)      | Visual and accessibility conventions                            |
 | [Data contract](data-contract.md)      | Source provenance and statistical meaning                       |
 | [Read API](api.md)                     | Rust HTTP contract, service configuration and failure semantics |

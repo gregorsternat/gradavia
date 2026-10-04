@@ -5,5 +5,10 @@ target/
 .artifacts/
 .data/
 node_modules/
+.pnpm-store/
 **/next-env.d.ts
+**/.open-next/
+**/.wrangler/
+**/cloudflare-env.d.ts
+**/worker-configuration.d.ts
 *.tsbuildinfo
