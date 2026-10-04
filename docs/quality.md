@@ -488,3 +488,28 @@ Evidence: `.artifacts/cloudflare-ci/verify.log`, prior failure logs/traces under
 These are pre-merge checks; actual CI, merge and production release outcomes are
 recorded by the repository's [GitHub Actions runs](https://github.com/gregorsternat/gradavia/actions/workflows/ci.yml).
 A stored secret or local smoke does not establish a successful GitHub deployment.
+
+## Continuous deployment activation (2026-10-05)
+
+- [PR #14](https://github.com/gregorsternat/gradavia/pull/14) passed remote CI in
+  run `37225275669`; production publication was skipped for the PR event. The
+  change was merged as `5135f08438d70f8de7e60cf289cc401ec5edd618`.
+- The resulting main-push [run 37226070152](https://github.com/gregorsternat/gradavia/actions/runs/37226070152)
+  passed full verification, constructed both releases, confirmed the main SHA,
+  published the API then the website, and passed its public smoke. Both publish
+  and smoke steps completed successfully; this was not a stale-commit skip.
+- Cloudflare accepted the dedicated GitHub token. The first automatic API version
+  was `fc158431-75d6-4077-a462-d399342e0fea`; the web version was
+  `44ea6de0-a158-4bbe-be26-d3865f27da67`. Runtime database credentials were retained
+  in Cloudflare and were not supplied to the GitHub job.
+- The remote smoke passed on its first attempt with 14,252 formations and a real
+  detail/provenance journey, health, canonical redirect/query preservation and
+  production gallery exclusion. A separate public health request also returned
+  200 after completion. An additional local build/dry-run/image check passed with
+  an empty Wrangler configuration and no Cloudflare authentication.
+
+Evidence: `.artifacts/cloudflare-ci/main-result.json`, `deploy-job.log`,
+`first-production-smoke/result.json`, and `anonymous-build.log`. The smoke report's
+commit is the workflow's requested revision; the deploy logs establish the Worker
+versions actually published. GitHub Actions is the source for later release
+outcomes. No database migration, data refresh or automatic rollback was added.

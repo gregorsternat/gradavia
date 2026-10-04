@@ -6,10 +6,12 @@ Keep brief work brief; use a plan when several boundaries change together.
 
 ## Active
 
-- [Cloudflare continuous deployment](active/cloudflare-continuous-deployment.md):
-  verified main pushes publish the production API and website.
+None.
 
 ## Completed
+
+- [Cloudflare continuous deployment](completed/cloudflare-continuous-deployment.md):
+  verified main pushes publish the API and website, with a successful first release.
 
 - [Cloudflare deployment](completed/cloudflare-deployment.md): live website,
   private Rust container, isolated production data and verified custom domains.

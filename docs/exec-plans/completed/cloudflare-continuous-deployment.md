@@ -41,5 +41,23 @@ API and website, with no routine manual publishing step.
   execute the actual workflow before remote success is claimed.
 - Full local `just verify` passed: static checks, unit/database contracts, builds,
   76 development, 74 production and 12 state browser cases (two intended skips).
-- Remote activation remains to be verified after publishing the workflow to main.
-  A working script or stored secret does not prove a GitHub production deployment.
+- PR #14 passed GitHub verification in run `37225275669`; the deploy job was
+  skipped for the pull-request event as intended. The PR was merged into main
+  as `5135f08438d70f8de7e60cf289cc401ec5edd618`.
+- Main push [run 37226070152](https://github.com/gregorsternat/gradavia/actions/runs/37226070152)
+  passed full verification, published the API and web, and passed the public smoke
+  on its first attempt with 14,252 formations and a real detail/provenance check.
+  The dedicated GitHub token was accepted by Cloudflare without local OAuth.
+- First automatic versions: API `fc158431-75d6-4077-a462-d399342e0fea`,
+  web `44ea6de0-a158-4bbe-be26-d3865f27da67`. A separate public health request
+  returned 200 after the run. Evidence is retained in
+  `.artifacts/cloudflare-ci/main-result.json`, `deploy-job.log` and
+  `first-production-smoke/result.json`.
+
+## Remaining operational limits
+
+Migrations and ingestion remain manual. A failed post-publication smoke requires
+inspection and, when appropriate, a manual rollback; it does not silently revert
+production. The latest release and any later failures are recorded in GitHub
+Actions. This completed plan records the initial activation, not an ongoing
+monitoring service.

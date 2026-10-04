@@ -121,8 +121,8 @@ Deployment commands remove database environment variables from build processes.
 Verification evidence is recorded in the
 [execution plan](exec-plans/completed/cloudflare-deployment.md) and
 [quality status](quality.md). Both Workers and custom domains were published on
-2026-10-05 after Wrangler OAuth was renewed. The deployed API version is
-`0e5e59c6-62c3-49a5-9940-45ed4a363c47`; the corrected web version is
+2026-10-05 after Wrangler OAuth was renewed. The initial manual API version was
+`0e5e59c6-62c3-49a5-9940-45ed4a363c47`; the corrected manual web version was
 `ea72f0af-50f3-4a22-8700-c1d2edb29d69`. Both workers.dev URLs and preview URLs are
 disabled; only the web Worker owns custom domains.
 
@@ -155,9 +155,11 @@ public-page screenshot for seven days. A failed release does not automatically
 roll back either Worker; inspect the job and use the rollback procedure below.
 Migrations and ingestion remain explicit operations outside this workflow.
 
-Follow the [continuous deployment plan](exec-plans/active/cloudflare-continuous-deployment.md)
-for activation and live-run evidence. After setup, pushing or merging into main
-is sufficient; no local Wrangler login or manual publishing command is needed.
+Follow the [continuous deployment plan](exec-plans/completed/cloudflare-continuous-deployment.md)
+for activation and live-run evidence. The first automatic
+[main release](https://github.com/gregorsternat/gradavia/actions/runs/37226070152)
+completed successfully on 2026-10-05. Pushing or merging into main is sufficient;
+no local Wrangler login or manual publishing command is needed.
 
 ## Release checks
 
