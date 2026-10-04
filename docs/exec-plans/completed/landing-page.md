@@ -2,7 +2,7 @@
 
 ## Objective
 
-Make `/` a complete French landing page that introduces Orvio through useful
+Make `/` a complete French landing page that introduces Gradavia through useful
 product entry points and a source-backed preview. Preserve the existing
 observatory at `/observatoire` and all other exploration journeys.
 

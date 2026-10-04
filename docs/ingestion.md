@@ -110,6 +110,12 @@ metadata includes field definitions, title, description, license, publisher and
 references. Collection/processing timestamps remain archived and participate in
 race detection, but do not create new releases by themselves.
 
+The product rename retains the `orvio-raw-v1` fingerprint namespace and
+`orvio-ingestion` advisory-lock namespace as compatibility contracts. Existing
+manifests, release identities and mutual exclusion with older collectors stay
+valid. These internal identifiers are independent of the `gradavia-ingest`
+binary name; the rename requires no data migration or reimport.
+
 Unchanged syncs retain newly collected files and run reports without duplicating
 database rows. Archives can grow even when database contents do not change.
 

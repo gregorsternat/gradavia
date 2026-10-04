@@ -19,7 +19,7 @@ The Rust API reads published Parcoursup releases and computes reviewed indicator
 aggregate observations, specialty destinations and source coverage.
 Next.js consumes its versioned HTTP contract and owns rendering and URL navigation.
 The web shell, gallery and health endpoint remain independent of datasets.
-Pure indicator representation belongs in `orvio-core`; source-specific field
+Pure indicator representation belongs in `gradavia-core`; source-specific field
 selection and read aggregation belong in the API. Scheduling remains deferred.
 
 ## Ownership and boundaries
@@ -74,13 +74,13 @@ Static analysis does not replace review of side effects or data semantics.
   [HTTP contract](docs/api.md) for schemas, errors, timeouts and deployment limits.
 - `GET /api/health` reports application liveness without opening a database.
   It is not a database readiness or dataset freshness check.
-- `orvio-ingest doctor` validates the CLI runtime.
-- `orvio-ingest doctor --database` checks a direct PostgreSQL connection.
+- `gradavia-ingest doctor` validates the CLI runtime.
+- `gradavia-ingest doctor --database` checks a direct PostgreSQL connection.
 - `just db-check` checks both Neon HTTP and Rust/SQLx.
-- `orvio-ingest sources` lists the versioned registry offline.
-- `orvio-ingest sync [--dataset <id>]` collects full datasets.
-- `orvio-ingest replay --manifest <path>` loads a verified local archive.
-- `orvio-ingest status` reports stored releases and latest run states.
+- `gradavia-ingest sources` lists the versioned registry offline.
+- `gradavia-ingest sync [--dataset <id>]` collects full datasets.
+- `gradavia-ingest replay --manifest <path>` loads a verified local archive.
+- `gradavia-ingest status` reports stored releases and latest run states.
 - `/dev/ui` uses clearly labeled synthetic values. It calls `notFound()`
   outside development, and the home page removes its link. Loading boundaries
   are scoped to data routes; there is no root loading fallback that could stream
@@ -94,10 +94,10 @@ have bounded connection/query timeouts.
 Drizzle is the only schema and migration owner. Both languages consume the same
 PostgreSQL schema. Rust migrations and ad hoc production DDL are not permitted.
 
-- `@orvio/db/neon`: Neon HTTP connectivity diagnostic only; not a web dependency.
-- `@orvio/db/node`: bounded `pg` connections for tooling and local tests.
-- `@orvio/db/migrate`: Drizzle SQL migration runner over a direct connection.
-- `@orvio/db/schema`: datasets, immutable releases, raw records and ingestion runs.
+- `@gradavia/db/neon`: Neon HTTP connectivity diagnostic only; not a web dependency.
+- `@gradavia/db/node`: bounded `pg` connections for tooling and local tests.
+- `@gradavia/db/migrate`: Drizzle SQL migration runner over a direct connection.
+- `@gradavia/db/schema`: datasets, immutable releases, raw records and ingestion runs.
 
 No database is initialized during module evaluation or a build. Apply generated
 Drizzle migrations explicitly before running ingestion. SQLx uses a dedicated
@@ -112,7 +112,7 @@ HTTP response contract under `domain`, the HTTP client under `server`, and
 presentation under `ui`. Rust separates transport (`lib.rs`), pure formation
 request/response rules (`formations/domain.rs`) and SQL reads
 (`formations/repository.rs`). Future shared business calculations belong in
-`orvio-core`; no empty shared abstraction is introduced.
+`gradavia-core`; no empty shared abstraction is introduced.
 
 A request captures a current release before querying that immutable release for
 rows, facets and counts. SQL limits transferred results and preserves duplicate
@@ -153,6 +153,10 @@ Browser-local storage contains only explicitly selected formation IDs, campaign
 and display labels. It is schema-validated, bounded, versioned and synchronized
 between tabs; storage failure degrades to the current tab with a visible notice.
 No account, user profile backend or individual admission prediction is added.
+Selections saved before the rename remain readable through the legacy
+`orvio.selection.v1` key. Writes use `gradavia.selection.v1`, which takes
+precedence even when empty. This compatibility applies within the same browser
+origin; it does not transfer local storage between domains.
 CSV generation preserves missingness and provenance and neutralizes spreadsheet
 formula prefixes. Chart values have table equivalents and filters have
 keyboard-accessible controls; Motion respects reduced motion.

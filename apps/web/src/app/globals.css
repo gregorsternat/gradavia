@@ -115,7 +115,7 @@ summary {
   text-transform: uppercase;
   color: var(--muted);
 }
-.orvio-chart {
+.gradavia-chart {
   --color-gray-500: var(--chart-secondary);
   --color-gray-900: var(--chart-primary);
   --color-gray-200: var(--border);
@@ -124,14 +124,14 @@ summary {
   --color-gray-50: var(--surface);
   font-size: 11px;
 }
-.orvio-chart .recharts-cartesian-axis-tick-value {
+.gradavia-chart .recharts-cartesian-axis-tick-value {
   fill: var(--muted);
 }
-.orvio-chart .recharts-cartesian-grid line {
+.gradavia-chart .recharts-cartesian-grid line {
   stroke: var(--border);
   stroke-dasharray: 3 4;
 }
-.orvio-chart .recharts-tooltip-wrapper {
+.gradavia-chart .recharts-tooltip-wrapper {
   z-index: 10;
 }
 .chart-table th,

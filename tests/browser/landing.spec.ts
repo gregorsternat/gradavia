@@ -24,7 +24,7 @@ test("landing opens the observatory and the home link returns to the public entr
     await page
       .getByRole("button", { name: "Afficher ou masquer la navigation" })
       .click();
-  await page.getByRole("link", { name: "Orvio, accueil" }).click();
+  await page.getByRole("link", { name: "Gradavia, accueil" }).click();
   await expect(page).toHaveURL(/\/$/);
   await expect(
     page.getByRole("navigation", { name: "Navigation d’accueil" }),

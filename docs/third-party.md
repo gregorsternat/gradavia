@@ -102,7 +102,7 @@ Local integration patches:
   Portalled tooltips retain their trigger description and expose a named
   complementary landmark around the surface, keeping visible overlay content
   reachable through landmark navigation.
-- Formatting follows the repository. Shared semantic colors inherit Orvio's
+- Formatting follows the repository. Shared semantic colors inherit Gradavia's
   theme. Components retain their upstream reduced-motion handling.
 
 ### Global page states (2026-10-04)

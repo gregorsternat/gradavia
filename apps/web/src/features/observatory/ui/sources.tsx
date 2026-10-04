@@ -70,7 +70,7 @@ const definitions = [
     id: "apb",
     title: "Pourquoi APB est séparé de Parcoursup",
     description:
-      "APB utilisait des vœux hiérarchisés et des règles différentes. Les populations, phases et identifiants ne sont pas directement équivalents. Les archives APB sont conservées, mais Orvio ne trace pas de courbe continue entre APB et Parcoursup.",
+      "APB utilisait des vœux hiérarchisés et des règles différentes. Les populations, phases et identifiants ne sont pas directement équivalents. Les archives APB sont conservées, mais Gradavia ne trace pas de courbe continue entre APB et Parcoursup.",
   },
 ];
 export function Sources({ result }: { result: SourcesResult }) {

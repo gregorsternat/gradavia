@@ -19,7 +19,7 @@ export async function readApi(
   params?: URLSearchParams,
 ): Promise<{ status: number; body: unknown }> {
   // Trusted server configuration only; never derive the API origin from a request.
-  const origin = new URL(process.env.ORVIO_API_URL ?? "");
+  const origin = new URL(process.env.GRADAVIA_API_URL ?? "");
   if (
     !["http:", "https:"].includes(origin.protocol) ||
     origin.username ||

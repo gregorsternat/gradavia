@@ -105,7 +105,7 @@ function ReadyExplorer({
   const pages = Math.max(1, Math.ceil(data.total / PAGE_SIZE));
   const navigate = (query = draft, page = 1, nextView = view) => {
     if (pending) return;
-    const url = new URL(explorerUrl(query, page), "https://orvio.invalid");
+    const url = new URL(explorerUrl(query, page), "https://gradavia.invalid");
     if (selectedView !== null) url.searchParams.set("vue", nextView);
     startTransition(() => router.push(url.pathname + url.search));
   };
@@ -115,7 +115,7 @@ function ReadyExplorer({
     setSelectedView(normalized);
     const url = new URL(
       explorerUrl(data.query, data.query.page),
-      "https://orvio.invalid",
+      "https://gradavia.invalid",
     );
     url.searchParams.set("vue", normalized);
     window.history.replaceState(null, "", url.pathname + url.search);
@@ -278,7 +278,7 @@ function ReadyExplorer({
               formation,
               source: data.source,
             }))}
-            filename={`orvio-parcoursup-${data.source.campaign}-page-${data.query.page}`}
+            filename={`gradavia-parcoursup-${data.source.campaign}-page-${data.query.page}`}
           />
         </div>
       </ExplorerHeader>

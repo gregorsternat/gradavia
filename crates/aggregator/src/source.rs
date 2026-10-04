@@ -34,7 +34,7 @@ impl SourceClient {
             .gzip(true)
             .redirect(reqwest::redirect::Policy::limited(3))
             .user_agent(concat!(
-                "Orvio/",
+                "Gradavia/",
                 env!("CARGO_PKG_VERSION"),
                 " public-data-archiver"
             ))
@@ -110,7 +110,7 @@ impl SourceClient {
                     {
                         return Err(error);
                     }
-                    tracing::warn!(target: "orvio_ingest", event="download_retry", artifact=name, attempt=attempt+1, code=error.code, delay_seconds=delay.as_secs());
+                    tracing::warn!(target: "gradavia_ingest", event="download_retry", artifact=name, attempt=attempt+1, code=error.code, delay_seconds=delay.as_secs());
                     thread::sleep(delay);
                 }
             }

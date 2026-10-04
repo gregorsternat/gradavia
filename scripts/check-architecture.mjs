@@ -89,7 +89,7 @@ function checkRuntimeBoundaries(root, webDatabaseOnly = false) {
       "postgres",
       "drizzle-orm",
       "@neondatabase",
-      "@orvio/db",
+      "@gradavia/db",
     ].some((prefix) => value === prefix || value.startsWith(`${prefix}/`));
   for (const file of files) {
     const source = parse(file);
@@ -150,13 +150,13 @@ export const checkWebDatabaseBoundary = (root) =>
   checkRuntimeBoundaries(root, true);
 
 export function checkDomainDependencies(packages) {
-  const domain = packages.find((entry) => entry.name === "orvio-core");
-  if (!domain) return ["Missing orvio-core domain crate"];
+  const domain = packages.find((entry) => entry.name === "gradavia-core");
+  if (!domain) return ["Missing gradavia-core domain crate"];
   return domain.dependencies
     .filter((dependency) => !["serde", "thiserror"].includes(dependency.name))
     .map(
       (dependency) =>
-        `orvio-core -> ${dependency.name}: keep I/O and runtime dependencies in adapters (aggregator or API).`,
+        `gradavia-core -> ${dependency.name}: keep I/O and runtime dependencies in adapters (aggregator or API).`,
     );
 }
 

@@ -131,7 +131,7 @@ test("navigation collapses on desktop and behaves as a modal on mobile", async (
       name: "Système",
       exact: true,
     });
-    const home = navigation.getByRole("link", { name: "Orvio, accueil" });
+    const home = navigation.getByRole("link", { name: "Gradavia, accueil" });
     await system.click();
     await system.focus();
     await page.keyboard.press("Tab");
@@ -180,7 +180,7 @@ test("navigation collapses on desktop and behaves as a modal on mobile", async (
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
     await expect(
       page
-        .getByRole("navigation", { name: "Explorer Orvio" })
+        .getByRole("navigation", { name: "Explorer Gradavia" })
         .getByRole("link", { name: "Formations", exact: true }),
     ).toBeVisible();
     await trigger.click();

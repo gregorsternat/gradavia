@@ -1,5 +1,5 @@
 {
-  "name": "orvio",
+  "name": "gradavia",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.21.0",
@@ -7,8 +7,8 @@
     "node": ">=24.21.0 <25"
   },
   "scripts": {
-    "dev": "pnpm --filter @orvio/web dev",
-    "build": "pnpm --filter @orvio/web build",
+    "dev": "pnpm --filter @gradavia/web dev",
+    "build": "pnpm --filter @gradavia/web build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --max-warnings=0",
@@ -20,7 +20,7 @@
     "check:docs": "node scripts/check-docs.mjs",
     "db:check": "tsx scripts/db-check.ts",
     "db:migrate": "tsx scripts/db-migrate.ts",
-    "db:generate": "pnpm --filter @orvio/db generate"
+    "db:generate": "pnpm --filter @gradavia/db generate"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

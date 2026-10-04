@@ -1,11 +1,11 @@
-use orvio_api::{config, router};
+use gradavia_api::{config, router};
 use std::{env, process::ExitCode};
 
 #[tokio::main]
 async fn main() -> ExitCode {
     // Never enable raw SQLx errors or log user-controlled request contents.
     tracing_subscriber::fmt()
-        .with_env_filter("orvio_api=info")
+        .with_env_filter("gradavia_api=info")
         .json()
         .with_writer(std::io::stderr)
         .init();

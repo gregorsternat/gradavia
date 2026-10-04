@@ -130,7 +130,7 @@ export function LandingQuestions() {
             <>
               Des jeux de données publics du ministère chargé de l’Enseignement
               supérieur. Chaque indicateur garde sa campagne, sa définition et
-              sa source. Orvio est un observatoire indépendant du service
+              sa source. Gradavia est un observatoire indépendant du service
               Parcoursup.
               <Link
                 href="/sources"

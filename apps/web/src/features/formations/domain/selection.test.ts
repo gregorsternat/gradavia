@@ -28,7 +28,7 @@ describe("local formation selection", () => {
     );
     const url = new URL(
       selectionUrl(parseSelectionIds(ids)),
-      "https://orvio.test",
+      "https://gradavia.test",
     );
     expect(parseSelectionIds(url.searchParams.get("ids")!)).toEqual(
       parseSelectionIds(ids),

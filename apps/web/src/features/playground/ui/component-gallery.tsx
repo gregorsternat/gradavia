@@ -57,7 +57,7 @@ export function ComponentGallery() {
           Exemple technique Tremor. Valeurs sans unité et sans lien avec
           Parcoursup.
         </p>
-        <div className="orvio-chart mt-8" aria-hidden="true" inert>
+        <div className="gradavia-chart mt-8" aria-hidden="true" inert>
           <LineChart
             className="h-64"
             data={sample}

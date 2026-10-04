@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Tremor hasOnlyOneValueForKey [v0.1.0]
-// Modified for Orvio: repository formatting.
+// Modified for Gradavia: repository formatting.
 
 export function hasOnlyOneValueForKey(
   array: any[],

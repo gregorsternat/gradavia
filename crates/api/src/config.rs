@@ -14,7 +14,7 @@ pub fn database_pool(value: &str) -> Result<PgPool, &'static str> {
     }
     let options = PgConnectOptions::from_str(value)
         .map_err(|_| invalid)?
-        .application_name("orvio-api")
+        .application_name("gradavia-api")
         .disable_statement_logging();
     Ok(PgPoolOptions::new()
         .max_connections(5)
@@ -46,7 +46,7 @@ mod tests {
             assert!(!error.contains("secret"));
             assert!(!error.contains(value) || value.is_empty());
         }
-        let pool = database_pool("postgres://user:secret@localhost/orvio").unwrap();
+        let pool = database_pool("postgres://user:secret@localhost/gradavia").unwrap();
         assert_eq!(
             pool.size(),
             0,

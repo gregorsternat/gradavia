@@ -469,7 +469,7 @@ export async function testFormationReads(connection: string) {
       let waiting = false;
       for (let attempt = 0; attempt < 80; attempt++) {
         const result = await client.query(
-          "SELECT 1 FROM pg_stat_activity WHERE datname = current_database() AND application_name = 'orvio-api' AND wait_event_type = 'Lock'",
+          "SELECT 1 FROM pg_stat_activity WHERE datname = current_database() AND application_name = 'gradavia-api' AND wait_event_type = 'Lock'",
         );
         if (result.rowCount) {
           waiting = true;

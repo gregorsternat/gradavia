@@ -10,7 +10,7 @@ historical gaps, provenance, duplicate identity and stable pagination.
 ## Decisions
 
 - Add one Axum/SQLx service in `crates/api`, with transport, pure formation
-  rules and repository modules. Keep `orvio-core` free of I/O.
+  rules and repository modules. Keep `gradavia-core` free of I/O.
 - Expose `GET /v1/formations`, liveness and database readiness. Use bounded
   connection/request timeouts, read-only transactions, sanitized diagnostics
   and graceful shutdown. Do not add schema changes or authentication.

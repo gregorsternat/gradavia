@@ -1,5 +1,5 @@
 // Tremor useOnWindowResize [v0.0.2]
-// Modified for Orvio: repository formatting.
+// Modified for Gradavia: repository formatting.
 
 import * as React from "react";
 

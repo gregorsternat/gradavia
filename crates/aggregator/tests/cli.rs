@@ -2,7 +2,7 @@ use std::process::Command;
 
 #[test]
 fn sources_lists_all_contracts_without_credentials() {
-    let output = Command::new(env!("CARGO_BIN_EXE_orvio-ingest"))
+    let output = Command::new(env!("CARGO_BIN_EXE_gradavia-ingest"))
         .arg("sources")
         .env_remove("DATABASE_URL_UNPOOLED")
         .output()
@@ -14,7 +14,7 @@ fn sources_lists_all_contracts_without_credentials() {
 
 #[test]
 fn unknown_source_is_rejected_before_any_database_work() {
-    let output = Command::new(env!("CARGO_BIN_EXE_orvio-ingest"))
+    let output = Command::new(env!("CARGO_BIN_EXE_gradavia-ingest"))
         .args([
             "sync",
             "--dataset",
@@ -32,7 +32,7 @@ fn unknown_source_is_rejected_before_any_database_work() {
 
 #[test]
 fn doctor_runs_without_credentials() {
-    let output = Command::new(env!("CARGO_BIN_EXE_orvio-ingest"))
+    let output = Command::new(env!("CARGO_BIN_EXE_gradavia-ingest"))
         .arg("doctor")
         .env_remove("DATABASE_URL_UNPOOLED")
         .output()
@@ -43,7 +43,7 @@ fn doctor_runs_without_credentials() {
 
 #[test]
 fn invalid_configuration_fails_without_disclosing_input() {
-    let output = Command::new(env!("CARGO_BIN_EXE_orvio-ingest"))
+    let output = Command::new(env!("CARGO_BIN_EXE_gradavia-ingest"))
         .args(["doctor", "--database"])
         .env(
             "DATABASE_URL_UNPOOLED",

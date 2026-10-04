@@ -209,7 +209,7 @@ export function FormationActions({
 }
 export function ExportButton({
   rows,
-  filename = "orvio-formations",
+  filename = "gradavia-formations",
   label = "Exporter cette page",
 }: {
   rows: { formation: Formation; source: CampaignSource }[];

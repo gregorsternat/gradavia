@@ -20,17 +20,17 @@ jobs:
     env:
       CI: true
       NEXT_TELEMETRY_DISABLED: 1
-      TEST_DATABASE_URL: postgresql://orvio:orvio@127.0.0.1:5432/orvio_test
+      TEST_DATABASE_URL: postgresql://gradavia:gradavia@127.0.0.1:5432/gradavia_test
     services:
       postgres:
         image: postgres:18
         env:
-          POSTGRES_USER: orvio
-          POSTGRES_PASSWORD: orvio
-          POSTGRES_DB: orvio_test
+          POSTGRES_USER: gradavia
+          POSTGRES_PASSWORD: gradavia
+          POSTGRES_DB: gradavia_test
         ports: [5432:5432]
         options: >-
-          --health-cmd "pg_isready -h 127.0.0.1 -U orvio -d orvio_test"
+          --health-cmd "pg_isready -h 127.0.0.1 -U gradavia -d gradavia_test"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10

@@ -86,7 +86,7 @@ function ReadyTerritories({ data }: { data: OverviewData }) {
             content={() =>
               breakdownCsv(rows, data.source.campaign, data.source)
             }
-            filename={`orvio-territoires-${data.source.campaign}.csv`}
+            filename={`gradavia-territoires-${data.source.campaign}.csv`}
           />
         </div>
         <div className="mt-5 max-w-xs">
@@ -100,7 +100,7 @@ function ReadyTerritories({ data }: { data: OverviewData }) {
         </div>
         {rows.length ? (
           <BarChart
-            className="orvio-chart mt-6"
+            className="gradavia-chart mt-6"
             style={{ height: Math.max(260, rows.length * 35) }}
             data={chart}
             index="Région"

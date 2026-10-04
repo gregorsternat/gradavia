@@ -1,4 +1,4 @@
-# Working on Orvio
+# Working on Gradavia
 
 This file is a map. Keep detailed rules and evidence in the linked documents.
 
@@ -22,7 +22,7 @@ This file is a map. Keep detailed rules and evidence in the linked documents.
 - Client components receive serializable data. Next.js calls the Rust API from
   server-only modules and never imports database clients or schema. The import
   checker follows aliases and re-exports.
-- `orvio-core` stays free of I/O. Adapters validate external input.
+- `gradavia-core` stays free of I/O. Adapters validate external input.
 - Drizzle alone owns schema and migrations; SQLx consumes that schema.
 - Follow the [data contract](docs/data-contract.md): preserve provenance,
   campaign, missing/suppressed values, and indicator definitions.

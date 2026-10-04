@@ -44,7 +44,7 @@ mod tests {
 
     #[test]
     fn validates_direct_connection_and_redacts_secrets() {
-        let config = DatabaseConfig::parse("postgresql://user:secret@localhost/orvio").unwrap();
+        let config = DatabaseConfig::parse("postgresql://user:secret@localhost/gradavia").unwrap();
         assert!(!format!("{config:?}").contains("secret"));
         for value in [
             "",

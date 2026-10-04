@@ -1,5 +1,5 @@
 // Tremor cx [v0.0.0]
-// Modified for Orvio: repository formatting.
+// Modified for Gradavia: repository formatting.
 
 import clsx, { type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";

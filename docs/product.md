@@ -1,6 +1,6 @@
 # Product
 
-Orvio helps students, families, educators and journalists explore French public
+Gradavia helps students, families, educators and journalists explore French public
 higher-education admissions data. It is a public French-language application
 with no account requirement, a restrained monochrome interface and useful
 interactive visualizations. The source and meaning of every number matter more
@@ -10,7 +10,7 @@ than producing a ranking or predicting an individual's admission.
 
 | Surface          | User job                                                                  | Scope                                                              |
 | ---------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| Landing          | Discover Orvio and start exploring without an account                     | `/`, with source-backed preview when data is available             |
+| Landing          | Discover Gradavia and start exploring without an account                  | `/`, with source-backed preview when data is available             |
 | Overview         | Understand national offer and admission volumes, distribution and history | Published Parcoursup campaign, outside apprenticeship              |
 | Formations       | Search, filter, sort, inspect, save and select records                    | Eight registered admissions sources, one campaign at a time        |
 | Formation detail | Read published metrics, profiles, definitions and qualified history       | One immutable formation/establishment/campaign source row          |
