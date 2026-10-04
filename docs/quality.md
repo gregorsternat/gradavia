@@ -628,3 +628,11 @@ test clicked the server-rendered navigation before its handlers were ready.
 Analysis screenshots now preserve the caret and await the drawn canvas; the
 landing navigation journey awaits the existing rendered overview charts. These
 checks retain the console-error assertion and use no fixed delay or retry.
+
+The next PR run (`37234053604`) passed all 114 development cases; production
+passed 111 with two intended skips and one ambiguous text locator. Its trace
+showed the expected alternatives paragraph in the active main landmark and a
+second copy inside React's temporary hidden streaming segment (`div[hidden]#S:0`).
+Content-text assertions in the affected new journeys now use the active main
+landmark, preserving strict single-element checks while excluding hidden
+streaming copies.

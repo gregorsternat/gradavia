@@ -36,7 +36,9 @@ test("map filters keep the complete snapshot, radius and share URL synchronized"
   await page.getByRole("button", { name: "Proximité et critères" }).click();
   await page.getByRole("spinbutton", { name: "Places maximum" }).fill("0");
   await expect(
-    page.getByText("Aucune formation ne correspond à ces critères."),
+    page
+      .getByRole("main")
+      .getByText("Aucune formation ne correspond à ces critères."),
   ).toBeVisible();
   await page.getByRole("spinbutton", { name: "Places maximum" }).fill("40");
   await expect(
@@ -111,7 +113,9 @@ test("apprenticeship and APB stay separate and retain missing indicators", async
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "BTS - Informatique en apprentissage",
   );
-  await expect(page.getByText("Masqué", { exact: true }).first()).toBeVisible();
+  await expect(
+    page.getByRole("main").getByText("Masqué", { exact: true }).first(),
+  ).toBeVisible();
   await page.goto("/archives");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Explorer les archives APB",
@@ -124,7 +128,9 @@ test("apprenticeship and APB stay separate and retain missing indicators", async
     .click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText("BTS");
   await expect(
-    page.getByText(/Le dénominateur diffère de celui de Parcoursup/),
+    page
+      .getByRole("main")
+      .getByText(/Le dénominateur diffère de celui de Parcoursup/),
   ).toBeVisible();
 });
 
@@ -153,7 +159,7 @@ test("formation profiles expose observed mentions, rank groups and explicit peer
     .click();
   await expect(page).toHaveURL(/similaire=/);
   await expect(
-    page.getByText(/Alternatives à Licence - Droit 01/),
+    page.getByRole("main").getByText(/Alternatives à Licence - Droit 01/),
   ).toBeVisible();
 });
 

@@ -70,7 +70,9 @@ test("evolution compares exactly matched fixture observations and preserves indi
     .getByRole("tabpanel", { name: "Deux campagnes" })
     .getByRole("button", { name: "2024", exact: true })
     .click();
-  await expect(page.getByText("Campagne 2024", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("main").getByText("Campagne 2024", { exact: true }),
+  ).toBeVisible();
   await page
     .getByRole("button", { name: "Affichage des graphiques", exact: true })
     .click();

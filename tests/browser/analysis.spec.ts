@@ -180,7 +180,9 @@ test("source quiz reveals real denominators and links to the pinned analysis", a
     .getByRole("button", { name: "Révéler les données", exact: true })
     .click();
   await expect(page.getByRole("status")).toContainText("93,5 %");
-  await expect(page.getByText(/29 lignes sur 31/)).toBeVisible();
+  await expect(
+    page.getByRole("main").getByText(/29 lignes sur 31/),
+  ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Explorer la réponse", exact: true }),
   ).toHaveAttribute("href", /version=.*indicateur=records/);

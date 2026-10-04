@@ -218,7 +218,9 @@ test("specialty drill-down preserves masked and observed zero and exports labell
       exact: true,
     })
     .click();
-  await expect(page.getByText(/Champ source : acceptations/)).toBeVisible();
+  await expect(
+    page.getByRole("main").getByText(/Champ source : acceptations/),
+  ).toBeVisible();
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.getByRole("link", { name: "Tous les groupes" }).click();
   await expect(
