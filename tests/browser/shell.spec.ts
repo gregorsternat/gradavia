@@ -13,10 +13,10 @@ async function openNavigation(
       .click();
 }
 
-test("home is accessible, responsive and free of hydration errors", async ({
+test("overview is accessible, responsive and free of hydration errors", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/observatoire");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "Vue d’ensemble",
   );
@@ -38,7 +38,7 @@ test("theme follows the system and preserves an explicit selection", async ({
   isMobile,
 }) => {
   await page.emulateMedia({ colorScheme: "dark" });
-  await page.goto("/");
+  await page.goto("/observatoire");
   await expect(page.locator("html")).toHaveClass(/dark/);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await openNavigation(page, isMobile);
@@ -55,7 +55,7 @@ test("keyboard users can skip to the content and change the appearance", async (
   page,
   isMobile,
 }) => {
-  await page.goto("/");
+  await page.goto("/observatoire");
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("link", { name: "Aller au contenu" }),
@@ -80,7 +80,7 @@ test("keyboard users can skip to the content and change the appearance", async (
 test("command palette searches pages and restores keyboard focus", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/observatoire");
   const opener = page.getByRole("button", {
     name: "Afficher ou masquer la navigation",
   });
@@ -104,13 +104,20 @@ test("command palette searches pages and restores keyboard focus", async ({
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Territoires",
   );
+  await page.keyboard.press("Control+k");
+  await dialog.getByRole("combobox").fill("observatoire");
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/observatoire$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Vue d’ensemble",
+  );
 });
 
 test("navigation collapses on desktop and behaves as a modal on mobile", async ({
   page,
   isMobile,
 }) => {
-  await page.goto("/");
+  await page.goto("/observatoire");
   const trigger = page.getByRole("button", {
     name: "Afficher ou masquer la navigation",
   });

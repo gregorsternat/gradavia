@@ -5,7 +5,7 @@ import { expect, test } from "./fixtures";
 test("overview renders published fixture totals with coverage and chart values", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/observatoire");
   const main = page.getByRole("main");
   await expect(main).toContainText("31");
   await expect(main).toContainText("6 537");
@@ -45,7 +45,7 @@ test("campaign selection is keyboard accessible and changes the retained data", 
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
+  await page.goto("/observatoire");
   const campaign = page.getByRole("button", { name: "Campagne d’admission" });
   await campaign.focus();
   await page.keyboard.press("ArrowDown");
@@ -57,7 +57,7 @@ test("campaign selection is keyboard accessible and changes the retained data", 
     page.getByRole("option", { name: "2018", exact: true }),
   ).toBeFocused();
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\?campagne=2018$/);
+  await expect(page).toHaveURL(/\/observatoire\?campagne=2018$/);
   await expect(campaign).toContainText("2018");
   await expect(page.getByRole("main")).toContainText(
     "Campagne 2018 · Hors apprentissage",
@@ -74,7 +74,7 @@ test("campaign selection is keyboard accessible and changes the retained data", 
 test("access distribution preserves suppressed and invalid observations outside buckets", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/observatoire");
   const distribution = page.locator("section").filter({
     has: page.getByRole("heading", {
       name: "Distribution des taux d’accès",

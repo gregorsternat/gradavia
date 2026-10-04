@@ -173,6 +173,14 @@ opacity instead of the removed `activeIndex` prop. The shared palette includes
 `charcoal`, `silver`, `steel`, `mist` and `pale` for theme-aware monochrome composition. No Tremor
 runtime package or separately licensed premium blocks are used.
 
+## Landing page reuse (2026-10-05)
+
+The landing composes existing beUI buttons, input, accordion, radio controls,
+tooltips and loader with the existing Tremor AreaChart.
+No additional registry source, asset, dependency or license was introduced.
+The homepage's layout, source-backed preview and Motion reveals are local
+feature compositions; upstream primitive implementations are unchanged.
+
 ## Updating
 
 Inspect upstream changes, preserve licenses, document local patches, and rerun

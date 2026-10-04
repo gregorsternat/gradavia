@@ -1,6 +1,35 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "./fixtures";
 
+test("landing stays useful without published data and does not invent numerical previews", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(
+    "Votre orientation,",
+  );
+  const fallback = page.getByRole("region", { name: "Explorer Parcoursup" });
+  await expect(fallback).toBeVisible();
+  await expect(fallback).not.toContainText(/\d/);
+  await expect(
+    page.getByRole("region", { name: "Aperçu de l’observatoire" }),
+  ).toHaveCount(0);
+  await expect(page.locator(".recharts-surface")).toHaveCount(0);
+  await expect(
+    fallback.getByRole("link", { name: "Vue d’ensemble" }),
+  ).toHaveAttribute("href", "/observatoire");
+  await expect(
+    page.getByRole("link", { name: "Lire la méthode" }),
+  ).toHaveAttribute("href", "/sources");
+  const search = page.getByRole("search", { name: "Trouver une formation" });
+  await search.getByRole("searchbox").fill("Droit");
+  await expect(
+    search.getByRole("button", { name: "Rechercher", exact: true }),
+  ).toBeEnabled();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+});
+
 test("empty, unconfigured and unavailable API states support retry", async ({
   page,
 }) => {

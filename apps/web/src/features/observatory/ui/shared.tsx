@@ -51,11 +51,11 @@ export function Reveal({
 export function CampaignSelect({
   campaign,
   campaigns,
-  path = "/",
+  path,
 }: {
   campaign: number;
   campaigns: number[];
-  path?: string;
+  path: string;
 }) {
   const router = useRouter();
   return (

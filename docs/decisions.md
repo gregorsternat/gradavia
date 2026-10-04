@@ -162,3 +162,18 @@ URL nor the path. An unreadable or incomplete selection fails explicitly. Existi
 environment files, migration targets and ingestion commands remain independent.
 This supports review against an existing populated development branch without
 copying secrets or silently mutating the checkout's database configuration.
+
+## 014 — A public homepage and a dedicated observatory route
+
+Use `/` for a distinct landing page and `/observatoire` for the existing national
+overview. Preserve valid legacy `/?campagne=YYYY` links with a redirect and keep
+campaign navigation explicitly scoped to each exploration route. The home
+wordmark remains the route back to the landing.
+
+The landing's content, native search and navigation render independently of data
+availability. Only the streamed preview consumes the existing Rust overview
+contract. It retains exact values, source, campaign and coverage; unavailable or
+empty data yields useful search and navigation without invented statistics.
+Inert loading placeholders cannot accept input that would disappear when the
+preview resolves. Reuse the existing visual system and libraries; no second UI
+system, analytics endpoint or marketing data snapshot is introduced.
