@@ -305,12 +305,7 @@ export function LandingPage({ preview }: { preview: ReactNode }) {
         </section>
       </main>
       <footer className={`${styles.container} ${styles.footer}`}>
-        <div>
-          <Wordmark />
-          <p className="mt-3 text-xs text-muted-foreground">
-            L’observatoire de l’orientation.
-          </p>
-        </div>
+        <Wordmark />
         <nav
           aria-label="Liens utiles"
           className="flex flex-wrap gap-x-6 gap-y-3 text-xs text-muted-foreground"
