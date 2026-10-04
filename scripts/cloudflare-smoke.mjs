@@ -77,7 +77,12 @@ try {
 
       stage = "formation detail and provenance";
       await expect(page).toHaveURL(/\/formations\/[^/?]+/);
-      await expect(page.getByRole("heading", { level: 1 })).toHaveText(title);
+      // The retained detail and its atlas enrichment stream after navigation.
+      // Wait for that result within the public readiness budget, rather than
+      // Playwright's implicit five-second assertion timeout.
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(title, {
+        timeout: 30_000,
+      });
       await expect(
         page.getByRole("heading", { name: "Places proposées", exact: true }),
       ).toBeVisible();

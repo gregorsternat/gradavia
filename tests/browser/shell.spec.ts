@@ -115,6 +115,39 @@ test("command palette searches pages and restores keyboard focus", async ({
   );
 });
 
+test("navigation waits for hydration before accepting its first activation", async ({
+  page,
+  isMobile,
+}) => {
+  let hydrate!: () => void;
+  const hydration = new Promise<void>((resolve) => {
+    hydrate = resolve;
+  });
+  await page.route("**/_next/static/**/*.js", async (route) => {
+    await hydration;
+    await route.continue();
+  });
+  try {
+    await page.goto("/observatoire", { waitUntil: "commit" });
+    const trigger = page.getByRole("button", {
+      name: "Afficher ou masquer la navigation",
+    });
+    await expect(trigger).toBeDisabled();
+    hydrate();
+    await expect(trigger).toBeEnabled();
+    await trigger.click();
+    if (isMobile) {
+      await expect(
+        page.getByRole("dialog", { name: "Navigation principale" }),
+      ).toBeVisible();
+    } else {
+      await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    }
+  } finally {
+    hydrate();
+  }
+});
+
 test("navigation collapses on desktop and behaves as a modal on mobile", async ({
   page,
   isMobile,

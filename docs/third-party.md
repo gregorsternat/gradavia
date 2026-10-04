@@ -79,6 +79,8 @@ Local integration patches:
   Mobile sidebar focus boundaries include only visible, non-inert tab stops,
   so inactive theme radios cannot let Tab escape the dialog.
   Its deferred initial focus respects focus already moved inside the panel.
+  The trigger stays disabled until hydration; activation reads the current
+  viewport so an early mobile click cannot toggle the server's desktop state.
 - A local `useClientReady` external-store snapshot keeps DOM portal markup out
   of server rendering and initial hydration. Number ticker arming derives from
   the existing one-shot intersection state. Existing helpers are not replaced.

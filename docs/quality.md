@@ -648,3 +648,18 @@ Live city-picker inspection also exposed the generic combobox's scattered-letter
 matching: a query for Lyon included unrelated city/department labels. The atlas
 now uses literal matching with accent and whitespace normalization. Regression
 coverage includes those real counterexamples and keyboard city selection.
+
+Production publication of `0edefb8` succeeded. Read-only public browser checks
+validated all three complete atlas families, the prior Parcoursup campaign,
+interactive analysis, modality/evolution views and keyboard city/radius controls.
+The release smoke exposed an implicit five-second detail assertion deadline:
+measured public detail/provenance readiness was 6.4–7.4 seconds with no page error.
+That assertion now waits for the expected result within a bounded 30-second
+budget; provenance and subsequent complete-snapshot checks remain required.
+
+A subsequent CI trace caught an early mobile navigation click toggling the
+desktop state while the responsive external-store snapshot was still hydrating.
+The source-owned sidebar trigger now waits for hydration and activation reads
+the actual viewport. A deterministic browser regression holds JavaScript until
+the disabled server-rendered trigger is observed, then verifies its first
+activation on desktop and mobile after hydration.

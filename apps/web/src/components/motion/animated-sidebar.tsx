@@ -255,9 +255,11 @@ export function AnimatedSidebarProvider({
   );
 
   const toggleSidebar = useCallback(() => {
-    if (isMobile) setOpenMobile(!mobileOpen);
+    // Hydration initially exposes the server's desktop snapshot. Resolve the
+    // actual viewport when activating, including replayed early clicks.
+    if (getMobileSnapshot()) setOpenMobile(!mobileOpen);
     else setOpen(!desktopOpen);
-  }, [desktopOpen, isMobile, mobileOpen, setOpen, setOpenMobile]);
+  }, [desktopOpen, mobileOpen, setOpen, setOpenMobile]);
 
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
@@ -591,6 +593,7 @@ export const AnimatedSidebarTrigger = forwardRef<
 ) {
   const { isMobile, openMobile, open, toggleSidebar, triggerRef } =
     useAnimatedSidebar();
+  const ready = useClientReady();
   const expanded = isMobile ? openMobile : open;
 
   return (
@@ -602,6 +605,7 @@ export const AnimatedSidebarTrigger = forwardRef<
         else if (forwardedRef) forwardedRef.current = node;
       }}
       type={type}
+      disabled={!ready || props.disabled}
       aria-label={props["aria-label"] ?? "Afficher ou réduire la navigation"}
       aria-expanded={expanded}
       data-slot="sidebar-trigger"
