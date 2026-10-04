@@ -3,12 +3,18 @@
   "private": true,
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1",
-    "build": "next build",
+    "build": "pnpm cf:typegen && next build",
+    "cf:build": "opennextjs-cloudflare build",
+    "cf:preview": "opennextjs-cloudflare preview",
+    "cf:deploy": "opennextjs-cloudflare deploy",
+    "cf:dry-run": "wrangler deploy --dry-run",
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv",
     "start": "next start --hostname 127.0.0.1",
-    "typecheck": "next typegen && tsc --noEmit"
+    "typecheck": "pnpm cf:typegen && next typegen && tsc --noEmit"
   },
   "dependencies": {
     "@floating-ui/dom": "1.8.0",
+    "@opennextjs/cloudflare": "1.20.8",
     "@remixicon/react": "4.9.0",
     "@tanstack/react-virtual": "3.14.13",
     "clsx": "2.1.1",
@@ -25,6 +31,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.3",
-    "tailwindcss": "4.3.3"
+    "tailwindcss": "4.3.3",
+    "wrangler": "4.147.0"
   }
 }

@@ -1,0 +1,9 @@
+# Only the Cargo workspace enters the API image build context.
+*
+!Cargo.toml
+!Cargo.lock
+!rust-toolchain.toml
+!crates/
+!crates/**
+crates/**/target
+crates/**/.env*

@@ -1,0 +1,17 @@
+{
+  "name": "@gradavia/api-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "cf:dry-run": "wrangler deploy --dry-run --outdir ../../.artifacts/cloudflare/api-worker",
+    "cf:deploy": "wrangler deploy",
+    "types": "wrangler types",
+    "typecheck": "pnpm types && tsc --noEmit"
+  },
+  "dependencies": {
+    "@cloudflare/containers": "0.3.7"
+  },
+  "devDependencies": {
+    "wrangler": "4.147.0"
+  }
+}

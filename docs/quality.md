@@ -240,7 +240,8 @@ server logs in `.artifacts/pr10-ci/`, and
 - Mobile browser tests use Chromium device emulation; Safari and Firefox have
   not been verified in this milestone.
 - Documentation checks cover entry points and links, not semantic accuracy.
-- Cloudflare runtime and deployment remain unverified until the hosting milestone.
+- Cloudflare preparation and the subsequent public release are recorded below.
+  Manual data refresh, uptime alerts and freshness policies remain operational work.
 
 ## Landing page (2026-10-05)
 
@@ -334,6 +335,108 @@ Evidence: `.artifacts/rename-gradavia/verify.log`, `.artifacts/database/result.j
 [completed plan](exec-plans/completed/rename-gradavia.md) for compatibility decisions.
 These observations do not assert a merge or deployment.
 
+## Cloudflare preparation (2026-10-05)
+
+- `CI=true E2E_PORT=3360 just verify` passed: static checks, Rust/TypeScript
+  suites, PostgreSQL 18 contracts including real reader-role permission checks,
+  credential-free builds, 76 development browser cases, 74 production cases and
+  12 production state cases. Two development-gallery cases were expected skips.
+- OpenNext 1.20.8 builds the pinned Next.js 16.3.8 application. Final web and API
+  Worker dry runs passed with Wrangler 4.147.0. The web bundle is approximately
+  2,426 KiB gzip; the private API Worker is approximately 13.55 KiB gzip.
+- The Linux/amd64 image builds from digest-pinned Docker Official Images via
+  public ECR. Docker Hub authentication was unreachable locally; no machine
+  network configuration was changed. The runtime uses UID/GID 10001:10001.
+  Local liveness returned 200; unavailable database cases returned sanitized 503.
+- The same container successfully read the existing Neon development branch
+  over TLS. All six health/product endpoints returned 200. The current 2025
+  formation release contains 14,252 records; overview reports 4,058 identified
+  establishments and eight historical campaigns. The current inventory has 13
+  published sources and 199,655 rows, unlike earlier milestone snapshots. The
+  cartography source has no publication and an import remains marked running.
+- Live Neon CLI inspection maps that populated endpoint to `development`
+  (`br-hidden-grass-b1z6hk64`), not `production`. The default production root is
+  `br-tiny-leaf-b1dh585q`; its data has not been verified. No production database
+  role, copied branch, import or credential was created during preparation.
+- Actual workerd preview returned health 200, gallery 404 and a canonical 308
+  preserving encoded queries. Real Chromium at 1440×1000 and 390×844 verified
+  keyboard search, skip link, light/dark theme persistence and no horizontal
+  overflow or console errors. This web preview intentionally had no API binding;
+  it verifies the honest unavailable state, not the complete deployed data path.
+- Runtime review found and fixed three adapter-specific issues: an unsupported
+  future compatibility date, a serialized theme script broken by function-name
+  helpers, and encoded query corruption in the adapter's canonical redirect.
+  The configuration pins the installed runtime date, disables `keep_names`, and
+  handles the canonical redirect before OpenNext. Focused regression checks pass.
+- An independent read-only review found a new production-secret environment key
+  reaching local web processes. The supervisor, standalone dev/build commands and
+  regression key list now strip it; follow-up review found no remaining blockers.
+
+Evidence: `.artifacts/cloudflare/verify.log`, `web-smoke.md`,
+`web-dry-run-final.log`, `api-dry-run-final.log`, `api-image-build.log`,
+`api-image-smoke.json`, `api-live-smoke.json`, and browser screenshots under
+`.artifacts/output/playwright/cloudflare/`.
+
+At the end of preparation, Workers Paid and renewed Wrangler authentication were
+still required. Local checks alone did not establish public availability. These
+prerequisites and the live release were subsequently completed below.
+
+## Cloudflare public release (2026-10-05)
+
+- The owner activated Workers Paid and renewed Wrangler OAuth. Cloudflare reports
+  both custom domains on `gradavia-web`, with workers.dev and preview URLs
+  disabled for both Workers. `gradavia-api` has no public route. Final versions:
+  API `0e5e59c6-62c3-49a5-9940-45ed4a363c47`, web
+  `ea72f0af-50f3-4a22-8700-c1d2edb29d69`.
+- The empty default Neon production root and populated development branch were
+  preserved. A normal independent `gradavia-production` branch was created from
+  development, with matching release pointers, fingerprints, campaigns and
+  counts: 14 registered datasets, 13 published releases and 199,655 raw records.
+  Compute is fixed at 0.25 CU, with 300-second suspension. The copied ingestion
+  journal does not indicate a production importer; cartography remains unpublished.
+- The dedicated `gradavia_api` login read published data over the pooled TLS
+  connection. A harmless write was rejected with PostgreSQL 42501 even inside a
+  read-write transaction. Effective grants cover SELECT on the three source
+  tables, without ownership, administrative attributes or role memberships.
+  Only the reader credential remains in ignored local configuration; the
+  temporary administrator environment was removed after provisioning.
+- The first live web version exposed that workerd rejects `redirect: "error"`
+  during Request construction. An actual runtime reproduction isolated it.
+  The corrected service-binding path uses `manual` and rejects every 3xx before
+  reading its body, with bounded, sanitized diagnostic stages. Regression tests
+  cover refusal to follow redirects and omission of raw error names/messages.
+- Final `CI=true E2E_PORT=3360 mise exec -- just verify` passed after the fix:
+  formatting, lint, types, architecture/docs, Clippy, 49 Vitest cases, seven Node
+  cases, Rust tests, PostgreSQL 18 contracts and credential-free builds. Browser
+  suites passed 76 development, 74 production and 12 production-state cases;
+  two development-gallery cases were intentionally skipped in production.
+- Public HTTPS returned health 200 and gallery 404. The `www` canonical 308
+  preserved the encoded path/query. Actual private API traffic appeared in the
+  Cloudflare tail and the corrected site rendered published data end to end.
+- Real Chromium at 1440×1000 and 390×844 verified 2025 overview aggregates:
+  14,252 formations, 4,058 establishments, 769,351 places, 13,502,385 cumulative
+  applications and 660,752 admitted. Accented search returned 789 results for
+  `école`, and a real formation detail displayed its source and indicators.
+- Keyboard selection and reload preserved the mathematics/SES specialty pair and
+  its values; the CPGE ECG drilldown showed eight formation categories. Mobile
+  homepage and specialties showed real data, retained the selected theme and had
+  no horizontal overflow. Skip-link and mobile-dialog focus behavior passed.
+  Browser console checks found no errors or warnings.
+- A final independent read-only implementation review found no remaining blockers.
+
+Evidence: `.artifacts/cloudflare/verify-release.log`, `production-database.json`,
+`api-deploy.log`, `web-deploy-fixed.log`, `remote-routing.json`,
+`remote-bindings.json`, `request-runtime.json`, `public-formations-fixed.html`,
+`live-web-smoke.md`, and screenshots under
+`.artifacts/output/playwright/cloudflare-live/.playwright-cli/`.
+
+This verifies the public Cloudflare-to-Neon path; it does not claim remote CI,
+a merge, cross-browser/load testing or automated ingestion. Container idle
+shutdown is configured to ten minutes but was not timed in production. The
+one-instance limit is not a monetary cap. See the
+[completed plan](exec-plans/completed/cloudflare-deployment.md) and
+[deployment guide](deployment.md) for operations and remaining limits.
+
 ## Landing search alignment and footer (2026-10-05)
 
 - Removed the homepage footer tagline. The search field now sets its 48px
@@ -352,3 +455,36 @@ These observations do not assert a merge or deployment.
 Evidence: `.artifacts/landing-alignment/verify.log`, `browser-rerun.log`, and
 screenshots in `.artifacts/landing-alignment/output/playwright/`.
 No remote CI or deployment was performed.
+
+## Continuous deployment preparation (2026-10-05)
+
+- The CI workflow now gates production publication on full verification of a main
+  push. Pull requests cannot deploy. Verification is grouped by main SHA so old
+  reruns cannot cancel a newer revision; production jobs queue without cancelling
+  an active API/web pair and check the current main SHA before publishing.
+- Both releases are built before mutation. The API publishes before the prebuilt
+  web Worker. Only that publishing step receives `CLOUDFLARE_API_TOKEN`; the
+  runtime database credential stays in Cloudflare. GitHub secret metadata confirms
+  that the owner supplied the token; its value was not read or logged.
+- The live public smoke passed with 14,252 formations, a real formation detail and
+  provenance, health 200, canonical 308 preserving the query, and gallery 404.
+  It retries bounded propagation/cold starts and records sanitized diagnostics.
+- Two earlier main CI failures (runs `37220586933` and `37221950500`) were isolated
+  to pre-hydration keyboard/click actions in existing browser tests. Trace
+  snapshots showed chart placeholders before the action and SVGs afterward. The
+  affected tests now await the client-rendered charts, following the suite's
+  existing convention, without fixed sleeps, retries or product changes.
+- Final `CI=true E2E_PORT=3360 mise exec -- just verify` passed: static checks,
+  Rust/TypeScript suites, PostgreSQL 18 contracts, credential-free builds, 76
+  development browser cases, 74 production cases and 12 state cases. Two
+  development-gallery cases were intentionally skipped in production.
+- Independent static review found no blockers. Focused Prettier, ESLint and diff
+  checks passed. Actionlint 1.7.12 requires a narrowly scoped ignore for the newer
+  `queue` key; its remaining checks pass. The queue syntax is supported by the
+  [current GitHub workflow reference](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idconcurrency).
+
+Evidence: `.artifacts/cloudflare-ci/verify.log`, prior failure logs/traces under
+`.artifacts/cloudflare-ci/run-*`, and `.artifacts/cloudflare/smoke/result.json`.
+These are pre-merge checks; actual CI, merge and production release outcomes are
+recorded by the repository's [GitHub Actions runs](https://github.com/gregorsternat/gradavia/actions/workflows/ci.yml).
+A stored secret or local smoke does not establish a successful GitHub deployment.

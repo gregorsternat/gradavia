@@ -1,4 +1,5 @@
 import "server-only";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { z } from "zod";
 import {
   detailResponse,
@@ -18,47 +19,106 @@ export async function readApi(
   path: string,
   params?: URLSearchParams,
 ): Promise<{ status: number; body: unknown }> {
-  // Trusted server configuration only; never derive the API origin from a request.
-  const origin = new URL(process.env.GRADAVIA_API_URL ?? "");
-  if (
-    !["http:", "https:"].includes(origin.protocol) ||
-    origin.username ||
-    origin.password ||
-    origin.pathname !== "/" ||
-    origin.search ||
-    origin.hash
-  )
-    throw new Error("Invalid API origin");
-  const url = new URL(path, origin);
-  if (params) url.search = params.toString();
-  const response = await fetch(url, {
-    headers: { Accept: "application/json" },
-    cache: "no-store",
-    redirect: "error",
-    signal: AbortSignal.timeout(18_000),
-  });
-  if (
-    !response.headers.get("content-type")?.includes("application/json") ||
-    !response.body
-  )
-    throw new Error("API unavailable");
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let bytes = 0,
-    body = "";
+  let stage:
+    | "configuration"
+    | "context"
+    | "origin"
+    | "request"
+    | "fetch"
+    | "response"
+    | "body" = "configuration";
   try {
-    for (;;) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      bytes += value.byteLength;
-      if (bytes > RESPONSE_LIMIT) throw new Error("API response exceeds limit");
-      body += decoder.decode(value, { stream: true });
+    const transport = process.env.GRADAVIA_API_TRANSPORT;
+    if (transport && transport !== "service-binding")
+      throw new Error("Invalid API transport");
+    stage = "context";
+    const service =
+      transport === "service-binding"
+        ? getCloudflareContext().env.GRADAVIA_API
+        : undefined;
+    if (transport === "service-binding" && !service)
+      throw new Error("API service binding unavailable");
+    stage = "origin";
+    // Trusted server configuration only; never derive the API origin from a request.
+    const origin = new URL(
+      service
+        ? "https://gradavia-api.internal"
+        : (process.env.GRADAVIA_API_URL ?? ""),
+    );
+    if (
+      !["http:", "https:"].includes(origin.protocol) ||
+      origin.username ||
+      origin.password ||
+      origin.pathname !== "/" ||
+      origin.search ||
+      origin.hash
+    )
+      throw new Error("Invalid API origin");
+    const url = new URL(path, origin);
+    if (params) url.search = params.toString();
+    stage = "request";
+    const options: RequestInit = {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+      // Workers Request supports manual redirects; reject their responses below.
+      redirect: service ? "manual" : "error",
+      signal: AbortSignal.timeout(18_000),
+    };
+    const serviceRequest = service ? new Request(url, options) : undefined;
+    stage = "fetch";
+    const response =
+      service && serviceRequest
+        ? await service.fetch(serviceRequest)
+        : await fetch(url, options);
+    stage = "response";
+    if (response.status >= 300 && response.status < 400) {
+      await response.body?.cancel();
+      throw new Error("API redirect rejected");
     }
-    body += decoder.decode();
-  } finally {
-    await reader.cancel();
+    if (
+      !response.headers.get("content-type")?.includes("application/json") ||
+      !response.body
+    )
+      throw new Error("API unavailable");
+    stage = "body";
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let bytes = 0,
+      body = "";
+    try {
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        bytes += value.byteLength;
+        if (bytes > RESPONSE_LIMIT)
+          throw new Error("API response exceeds limit");
+        body += decoder.decode(value, { stream: true });
+      }
+      body += decoder.decode();
+    } finally {
+      await reader.cancel();
+    }
+    return { status: response.status, body: JSON.parse(body) as unknown };
+  } catch (error) {
+    // Error names can be customized; emit only known classes and fixed stages.
+    const errorName =
+      error instanceof Error &&
+      [
+        "Error",
+        "TypeError",
+        "RangeError",
+        "SyntaxError",
+        "ReferenceError",
+        "URIError",
+        "EvalError",
+        "AbortError",
+        "TimeoutError",
+      ].includes(error.name)
+        ? error.name
+        : "UnknownError";
+    console.error("API request failed.", { stage, errorName });
+    throw new Error("API unavailable");
   }
-  return { status: response.status, body: JSON.parse(body) as unknown };
 }
 
 export async function loadExplorer(
