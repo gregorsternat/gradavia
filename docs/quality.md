@@ -333,3 +333,22 @@ Evidence: `.artifacts/rename-gradavia/verify.log`, `.artifacts/database/result.j
 `.artifacts/output/playwright/rename-gradavia/`. See the
 [completed plan](exec-plans/completed/rename-gradavia.md) for compatibility decisions.
 These observations do not assert a merge or deployment.
+
+## Landing search alignment and footer (2026-10-05)
+
+- Removed the homepage footer tagline. The search field now sets its 48px
+  height on the bordered container; the native input fills its inner height
+  instead of overflowing the previous 44px container.
+- Real Chromium review at 1440×1000 and 390×844 confirmed centered placeholder
+  and entered text, with a measured input/container center offset of zero.
+  Both widths also passed Tab/Enter search submission and footer inspection.
+- `CI=true E2E_PORT=3451 mise exec -- just verify` passed static checks, unit
+  tests, PostgreSQL 18 integration and credential-free builds. Its browser
+  server initially hit the manual inspection server's Next.js checkout lock.
+  After stopping that server, `just test-e2e` passed all remaining checks:
+  76 development, 74 production and 12 production-state browser cases, with
+  two intended development-gallery skips in production.
+
+Evidence: `.artifacts/landing-alignment/verify.log`, `browser-rerun.log`, and
+screenshots in `.artifacts/landing-alignment/output/playwright/`.
+No remote CI or deployment was performed.
