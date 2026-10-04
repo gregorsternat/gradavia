@@ -620,3 +620,11 @@ contracts and credential-free builds. Browser results were 114 development,
 112 production and 12 unavailable/empty/unconfigured cases passed, with two
 intended production gallery skips. Remote CI, merge and deployment are separate
 states; their observed results belong to the associated PR and workflow run.
+
+The first PR run (`37232949519`) passed 112 development browser cases and exposed
+two mobile test races. Its trace placed a React hydration warning inside a
+Playwright screenshot that temporarily added `caret-color: transparent`; another
+test clicked the server-rendered navigation before its handlers were ready.
+Analysis screenshots now preserve the caret and await the drawn canvas; the
+landing navigation journey awaits the existing rendered overview charts. These
+checks retain the console-error assertion and use no fixed delay or retry.

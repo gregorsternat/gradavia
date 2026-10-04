@@ -52,9 +52,15 @@ test("analysis filters, local views and exported provenance share one cohort", a
   await expect(
     page.getByRole("heading", { name: "Atelier d’analyse", exact: true }),
   ).toBeVisible();
+  // The canvas receives its pixel size when the client has drawn the chart.
+  await expect(page.getByRole("img", { name: /^Nuage de/ })).toHaveAttribute(
+    "width",
+    /^[1-9]\d*$/,
+  );
   await page.screenshot({
     path: testInfo.outputPath("analysis-workspace.png"),
     fullPage: true,
+    caret: "initial",
   });
   await page
     .getByRole("textbox", { name: "Formation ou établissement" })
@@ -134,6 +140,7 @@ test("analysis views expose keyboard-accessible values and missingness", async (
   await page.screenshot({
     path: testInfo.outputPath("analysis-distribution-dark.png"),
     fullPage: true,
+    caret: "initial",
   });
   await page.getByRole("tab", { name: "Qualité", exact: true }).click();
   await page
@@ -180,6 +187,7 @@ test("source quiz reveals real denominators and links to the pinned analysis", a
   await page.screenshot({
     path: testInfo.outputPath("discovery-reveal.png"),
     fullPage: true,
+    caret: "initial",
   });
   await page
     .getByRole("button", { name: "Question suivante", exact: true })
