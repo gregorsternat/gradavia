@@ -10,6 +10,8 @@ test("the web process only receives the API origin, never database credentials",
     "DATABASE_URL",
     "DATABASE_URL_UNPOOLED",
     "TEST_DATABASE_URL",
+    "GRADAVIA_TEST_DATABASE_URL",
+    "GRADAVIA_DATA_ENV_FILE",
     "ORVIO_TEST_DATABASE_URL",
     "ORVIO_DATA_ENV_FILE",
   ];
@@ -18,7 +20,7 @@ test("the web process only receives the API origin, never database credentials",
     for (const key of keys) process.env[key] = "test-only-secret";
     const env = webEnvironment("http://127.0.0.1:3002");
     for (const key of keys) assert.equal(env[key], undefined);
-    assert.equal(env.ORVIO_API_URL, "http://127.0.0.1:3002");
+    assert.equal(env.GRADAVIA_API_URL, "http://127.0.0.1:3002");
   } finally {
     keys.forEach((key, index) => {
       if (previous[index] === undefined) delete process.env[key];
@@ -28,11 +30,11 @@ test("the web process only receives the API origin, never database credentials",
 });
 
 test("an explicitly selected development datasource never falls back to another database", async () => {
-  const directory = await mkdtemp(path.join(tmpdir(), "orvio-env-test-"));
+  const directory = await mkdtemp(path.join(tmpdir(), "gradavia-env-test-"));
   const filename = path.join(directory, ".env.local");
   const environment = {
     DATABASE_URL: "original-test-only",
-    ORVIO_DATA_ENV_FILE: filename,
+    GRADAVIA_DATA_ENV_FILE: filename,
   };
   try {
     await writeFile(filename, "DATABASE_URL=selected-test-only\n", {

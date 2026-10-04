@@ -300,6 +300,70 @@ test("favorites persist through reload and can be removed from the saved page", 
   ).toBeVisible();
 });
 
+test("selections saved before the rename survive and new empty selections take precedence", async ({
+  page,
+}) => {
+  await page.goto("/formations?q=Droit+01&vue=cartes");
+  const href = await page
+    .getByRole("link", { name: "Licence - Droit 01", exact: true })
+    .getAttribute("href");
+  const formation = {
+    id: decodeURIComponent(href!.split("/").at(-1)!),
+    campaign: 2025,
+    title: "Licence - Droit 01",
+    establishment: null,
+  };
+  await page.evaluate((row) => {
+    localStorage.setItem(
+      "orvio.selection.v1",
+      JSON.stringify({ favorites: [row], comparison: [row] }),
+    );
+  }, formation);
+  await page.goto("/favoris");
+  await expect(
+    page.getByRole("heading", { name: formation.title, exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", {
+      name: `Retirer des favoris : ${formation.title}`,
+      exact: true,
+    })
+    .click();
+  await page.reload();
+  await expect(
+    page.getByRole("heading", {
+      name: "Votre prochaine formation se trouve peut-être ici.",
+    }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(() =>
+      JSON.parse(localStorage.getItem("gradavia.selection.v1")!),
+    ),
+  ).toEqual({ favorites: [], comparison: [formation] });
+  await page.goto("/comparer");
+  await expect(
+    page.getByRole("link", { name: formation.title, exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", {
+      name: `Retirer ${formation.title} de la comparaison`,
+      exact: true,
+    })
+    .click();
+  await page.goto("/comparer");
+  await expect(
+    page.getByRole("heading", {
+      name: "Quelles formations vous intéressent ?",
+      exact: true,
+    }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(() =>
+      JSON.parse(localStorage.getItem("gradavia.selection.v1")!),
+    ),
+  ).toEqual({ favorites: [], comparison: [] });
+});
+
 test("comparison is shareable, exports its values and blocks mixed campaign selection", async ({
   page,
 }) => {
@@ -323,7 +387,7 @@ test("comparison is shareable, exports its values and blocks mixed campaign sele
   const shared = page.url();
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Exporter la comparaison" }).click();
-  expect((await download).suggestedFilename()).toBe("orvio-comparaison.csv");
+  expect((await download).suggestedFilename()).toBe("gradavia-comparaison.csv");
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.reload();
   await expect(page).toHaveURL(shared);
@@ -416,7 +480,7 @@ test("adding to a shared comparison preserves its formations and campaign with f
     }),
   );
   expect(
-    await page.evaluate(() => localStorage.getItem("orvio.selection.v1")),
+    await page.evaluate(() => localStorage.getItem("gradavia.selection.v1")),
   ).toBeNull();
   await page.goto(
     `/comparer?${new URLSearchParams({ ids: ids.slice(0, 2).join(",") })}`,

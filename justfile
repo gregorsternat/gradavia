@@ -13,12 +13,12 @@ setup:
 # Inspect prerequisites without connecting to external services.
 doctor:
     node scripts/doctor.mjs
-    cargo run --locked -q -p orvio-aggregator -- doctor
+    cargo run --locked -q -p gradavia-aggregator -- doctor
 
 # Manual raw ingestion; run sources, sync, status, or replay --manifest <path>.
 [positional-arguments]
 ingest *args:
-    cargo run --release --locked -q -p orvio-aggregator -- "$@"
+    cargo run --release --locked -q -p gradavia-aggregator -- "$@"
 
 # Refresh Rust resolution after an intentional dependency change.
 lock-rust:
@@ -32,19 +32,19 @@ check-ingest:
 
 [positional-arguments]
 test-ingest *args:
-    cargo test --locked -p orvio-aggregator "$@"
+    cargo test --locked -p gradavia-aggregator "$@"
 
 # Start the Rust API and website; only the API receives database credentials.
 dev:
-    cargo build --locked -p orvio-api
+    cargo build --locked -p gradavia-api
     pnpm exec tsx scripts/dev.ts
 
 # Run each service independently when needed.
 api:
-    cargo run --locked -p orvio-api
+    cargo run --locked -p gradavia-api
 
 dev-web:
-    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u TEST_DATABASE_URL -u ORVIO_TEST_DATABASE_URL pnpm dev
+    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u TEST_DATABASE_URL -u GRADAVIA_TEST_DATABASE_URL -u ORVIO_TEST_DATABASE_URL pnpm dev
 
 # Fast checks; these are the same commands used in CI.
 check:
@@ -61,7 +61,7 @@ test-unit:
     cargo test --workspace --locked
 
 test-db:
-    cargo build --locked -p orvio-api
+    cargo build --locked -p gradavia-api
     pnpm test:db
 
 test-e2e: build
@@ -76,13 +76,13 @@ test: test-unit test-db test-e2e
 
 # Verify that build steps never need live database credentials.
 build:
-    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u ORVIO_API_URL pnpm build
+    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u GRADAVIA_API_URL pnpm build
     cargo build --workspace --locked
 
 # Read-only checks against the explicitly configured development database.
 db-check:
     pnpm db:check
-    cargo run --locked -q -p orvio-aggregator -- doctor --database
+    cargo run --locked -q -p gradavia-aggregator -- doctor --database
 
 db-generate:
     pnpm db:generate

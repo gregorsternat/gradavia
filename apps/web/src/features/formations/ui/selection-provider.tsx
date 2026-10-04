@@ -21,15 +21,19 @@ import {
   type SavedSelection,
 } from "../domain/selection";
 
-const STORAGE_KEY = "orvio.selection.v1";
-const EVENT = "orvio-selection-change";
+const STORAGE_KEY = "gradavia.selection.v1";
+// Preserve selections saved before the product rename; new writes take precedence.
+const LEGACY_STORAGE_KEY = "orvio.selection.v1";
+const EVENT = "gradavia-selection-change";
 let cachedRaw: string | null = null;
 let cachedSelection = EMPTY_SELECTION;
 let memoryOnly = false;
 function getSnapshot(): SavedSelection {
   if (memoryOnly) return cachedSelection;
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw =
+      window.localStorage.getItem(STORAGE_KEY) ??
+      window.localStorage.getItem(LEGACY_STORAGE_KEY);
     if (raw !== cachedRaw) {
       cachedRaw = raw;
       cachedSelection = readSavedSelection(raw);

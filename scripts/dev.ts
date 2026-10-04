@@ -43,8 +43,8 @@ try {
   if (stopping) throw new Error("Startup interrupted");
   web = await startProcess(
     "pnpm",
-    ["--filter", "@orvio/web", "dev"],
-    webEnvironment(api?.url ?? process.env.ORVIO_API_URL ?? ""),
+    ["--filter", "@gradavia/web", "dev"],
+    webEnvironment(api?.url ?? process.env.GRADAVIA_API_URL ?? ""),
     path.join(artifacts, "web.log"),
   );
   web.child.stdout.pipe(process.stdout);

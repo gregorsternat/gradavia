@@ -8,10 +8,10 @@ import { parse } from "dotenv";
 export async function developmentDatabase(
   environment: NodeJS.ProcessEnv,
 ): Promise<string | undefined> {
-  if (!environment.ORVIO_DATA_ENV_FILE) return environment.DATABASE_URL;
+  if (!environment.GRADAVIA_DATA_ENV_FILE) return environment.DATABASE_URL;
   try {
     const selected = parse(
-      await readFile(environment.ORVIO_DATA_ENV_FILE, "utf8"),
+      await readFile(environment.GRADAVIA_DATA_ENV_FILE, "utf8"),
     );
     if (!selected.DATABASE_URL)
       throw new Error("Missing development datasource");
@@ -24,13 +24,16 @@ export async function developmentDatabase(
 export function webEnvironment(origin: string): NodeJS.ProcessEnv {
   const env = {
     ...process.env,
-    ORVIO_API_URL: origin,
+    GRADAVIA_API_URL: origin,
     NEXT_TELEMETRY_DISABLED: "1",
   };
   for (const key of [
     "DATABASE_URL",
     "DATABASE_URL_UNPOOLED",
     "TEST_DATABASE_URL",
+    "GRADAVIA_TEST_DATABASE_URL",
+    "GRADAVIA_DATA_ENV_FILE",
+    // Older checkout environments must not leak database settings to Next.js.
     "ORVIO_TEST_DATABASE_URL",
     "ORVIO_DATA_ENV_FILE",
   ])
@@ -91,7 +94,7 @@ export async function startApi(
   bind = "127.0.0.1:0",
 ) {
   const api = await startProcess(
-    path.resolve("target/debug/orvio-api"),
+    path.resolve("target/debug/gradavia-api"),
     [],
     {
       ...process.env,

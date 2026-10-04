@@ -1,5 +1,5 @@
 mod support;
-use orvio_aggregator::{config::DatabaseConfig, ingestion, registry};
+use gradavia_aggregator::{config::DatabaseConfig, ingestion, registry};
 use serde_json::{Value, json};
 use sqlx::Connection;
 use std::{env, fs};
@@ -8,13 +8,13 @@ use support::{Response, Server, fixture, jsonl, make_archive};
 #[tokio::test]
 #[ignore = "just test-db supplies a disposable migrated PostgreSQL 18 database"]
 async fn raw_ingestion_database_contract() {
-    let uri = env::var("ORVIO_TEST_DATABASE_URL").expect("run through just test-db");
+    let uri = env::var("GRADAVIA_TEST_DATABASE_URL").expect("run through just test-db");
     let parsed = url::Url::parse(&uri).expect("valid local test URL");
     assert!(matches!(
         parsed.host_str(),
         Some("127.0.0.1" | "localhost" | "[::1]")
     ));
-    assert!(parsed.path().starts_with("/orvio_ingest_"));
+    assert!(parsed.path().starts_with("/gradavia_ingest_"));
     let config = DatabaseConfig::parse(&uri).unwrap();
     let mut connection = ingestion::connect(&config).await.unwrap();
     let root = support::tempdir();

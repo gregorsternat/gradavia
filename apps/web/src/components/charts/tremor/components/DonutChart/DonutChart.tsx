@@ -1,5 +1,5 @@
 // Tremor DonutChart [v1.0.0]
-// Modified for Orvio: palette guards and Recharts 3 sector selection.
+// Modified for Gradavia: palette guards and Recharts 3 sector selection.
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 "use client";

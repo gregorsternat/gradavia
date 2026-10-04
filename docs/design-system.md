@@ -2,7 +2,7 @@
 
 ## Visual foundation
 
-Orvio is a French-language data application with a restrained monochrome shell,
+Gradavia is a French-language data application with a restrained monochrome shell,
 compact navigation, generous breathing room and clear numeric hierarchy. System
 fonts keep the application independent of network font downloads. Light and dark
 themes share semantic tokens; the default follows the system preference.

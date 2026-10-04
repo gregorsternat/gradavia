@@ -1,6 +1,6 @@
 // Tremor chartColors [v0.1.0]
 
-// Modified for Orvio: formatting and a fallback for empty palettes.
+// Modified for Gradavia: formatting and a fallback for empty palettes.
 export type ColorUtility = "bg" | "stroke" | "fill" | "text";
 
 export const chartColors = {

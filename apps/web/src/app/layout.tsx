@@ -6,8 +6,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Orvio — L’observatoire de l’orientation",
-    template: "%s · Orvio",
+    default: "Gradavia — L’observatoire de l’orientation",
+    template: "%s · Gradavia",
   },
   description:
     "Explorez les données publiques de Parcoursup, comparez les formations et construisez votre sélection. Capacités, admissions et taux d’accès, avec leurs sources.",

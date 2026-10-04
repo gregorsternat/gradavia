@@ -75,7 +75,7 @@ function History({ data }: { data: OverviewData }) {
       </div>
       <div className="mt-6">
         <AreaChart
-          className="orvio-chart h-64 sm:h-72"
+          className="gradavia-chart h-64 sm:h-72"
           data={history}
           index="Campagne"
           categories={[category]}
@@ -149,7 +149,7 @@ function Composition({ data }: { data: OverviewData }) {
         Répartition des {number(data.totals.formations)} formations
       </p>
       <DonutChart
-        className="orvio-chart mx-auto my-6 size-44"
+        className="gradavia-chart mx-auto my-6 size-44"
         data={groups}
         category="name"
         value="value"
@@ -211,7 +211,7 @@ function Distribution({ data }: { data: OverviewData }) {
       </p>
       {coverage?.observed ? (
         <BarChart
-          className="orvio-chart mt-6 h-56"
+          className="gradavia-chart mt-6 h-56"
           data={rows}
           index="Taux d’accès"
           categories={["Formations"]}
@@ -335,7 +335,7 @@ function ReadyOverview({ data }: { data: OverviewData }) {
             <Map className="size-4 shrink-0 text-muted-foreground" />
           </div>
           <BarChart
-            className="orvio-chart mt-6 h-64"
+            className="gradavia-chart mt-6 h-64"
             data={regions.map((r) => ({
               Région: r.label,
               Formations: r.formations,

@@ -3,7 +3,7 @@ use crate::formations::{
     domain::{CampaignSource, MAX_QUERY_BYTES},
     repository::{ReadError, decode_campaigns},
 };
-use orvio_core::metrics::MetricValue;
+use gradavia_core::metrics::MetricValue;
 use serde::Serialize;
 use serde_json::Value;
 use sqlx::{PgPool, Row};

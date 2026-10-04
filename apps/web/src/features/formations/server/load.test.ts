@@ -42,7 +42,7 @@ const ready = () => ({
 
 describe("formation HTTP client boundary", () => {
   beforeEach(() => {
-    vi.stubEnv("ORVIO_API_URL", "http://127.0.0.1:3002");
+    vi.stubEnv("GRADAVIA_API_URL", "http://127.0.0.1:3002");
     vi.spyOn(console, "error").mockImplementation(() => {});
   });
   afterEach(() => {
@@ -88,7 +88,7 @@ describe("formation HTTP client boundary", () => {
       "https://api.test/path",
       "https://api.test/?secret=value",
     ]) {
-      vi.stubEnv("ORVIO_API_URL", origin);
+      vi.stubEnv("GRADAVIA_API_URL", origin);
       expect(await loadExplorer({})).toEqual({ status: "unavailable" });
     }
     expect(fetcher).not.toHaveBeenCalled();
@@ -176,7 +176,7 @@ const detail = () => {
 
 describe("formation detail HTTP boundary", () => {
   beforeEach(() => {
-    vi.stubEnv("ORVIO_API_URL", "http://127.0.0.1:3002");
+    vi.stubEnv("GRADAVIA_API_URL", "http://127.0.0.1:3002");
     vi.spyOn(console, "error").mockImplementation(() => {});
   });
   afterEach(() => {

@@ -120,7 +120,7 @@ test("territory search scopes the table and downloadable source data", async ({
   const downloadEvent = page.waitForEvent("download");
   await page.getByRole("button", { name: "Exporter", exact: true }).click();
   const download = await downloadEvent;
-  expect(download.suggestedFilename()).toBe("orvio-territoires-2025.csv");
+  expect(download.suggestedFilename()).toBe("gradavia-territoires-2025.csv");
   const file = await download.path();
   expect(file).not.toBeNull();
   const csv = await readFile(file!, "utf8");

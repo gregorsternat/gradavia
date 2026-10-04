@@ -3,7 +3,7 @@ use std::process::Command;
 #[test]
 fn configuration_errors_fail_startup_without_leaking_credentials() {
     for value in [None, Some("https://user:private-value@example.test/db")] {
-        let mut command = Command::new(env!("CARGO_BIN_EXE_orvio-api"));
+        let mut command = Command::new(env!("CARGO_BIN_EXE_gradavia-api"));
         command
             .env_remove("DATABASE_URL")
             .env("API_BIND", "127.0.0.1:0");

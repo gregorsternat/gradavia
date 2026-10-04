@@ -3,9 +3,9 @@ import { validateDatabaseUrl } from "./config";
 
 describe("database configuration", () => {
   it("accepts a direct local URL and a pooled application URL", () => {
-    expect(validateDatabaseUrl("postgres://localhost/orvio", true)).toContain(
-      "orvio",
-    );
+    expect(
+      validateDatabaseUrl("postgres://localhost/gradavia", true),
+    ).toContain("gradavia");
     expect(
       validateDatabaseUrl("postgres://ep-name-pooler.neon.tech/neondb"),
     ).toContain("pooler");

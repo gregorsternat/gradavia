@@ -1,16 +1,16 @@
 [package]
-name = "orvio-aggregator"
+name = "gradavia-aggregator"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 publish.workspace = true
 
 [[bin]]
-name = "orvio-ingest"
+name = "gradavia-ingest"
 path = "src/main.rs"
 
 [dependencies]
-orvio-core = { path = "../core" }
+gradavia-core = { path = "../core" }
 clap = { version = "4", features = ["derive"] }
 serde.workspace = true
 thiserror.workspace = true

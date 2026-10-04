@@ -35,7 +35,7 @@ The gallery makes integration observable without inventing product metrics.
 Cloudflare Workers is the intended host. The
 [current Cloudflare Next.js guide](https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/)
 recommends vinext for new apps and also documents OpenNext. This does not select
-a replacement runtime for Orvio yet. The hosting milestone will verify official
+a replacement runtime for Gradavia yet. The hosting milestone will verify official
 Next.js compatibility, adapter maturity, database transport, caching, and tests
 before choosing and documenting an adapter.
 
@@ -122,7 +122,7 @@ Expand the descriptive explorer into overview, detail, comparison, favorites,
 territories and specialty destinations. Reuse immutable raw releases rather than
 introducing speculative materialized tables or another ingestion model. The API
 validates source fields into observed, missing, suppressed and invalid metric
-states; `orvio-core` owns their pure representation. Official rates retain their
+states; `gradavia-core` owns their pure representation. Official rates retain their
 published definitions. Aggregated applications are never unique people.
 
 Bounded overview and historical-summary caches use captured release/provenance
@@ -156,7 +156,7 @@ animation that delays access to data.
 
 ## 013 — Explicit development data selection
 
-`ORVIO_DATA_ENV_FILE` optionally selects a populated development environment for
+`GRADAVIA_DATA_ENV_FILE` optionally selects a populated development environment for
 `just dev`. Only the API receives its database URL; Next.js receives neither the
 URL nor the path. An unreadable or incomplete selection fails explicitly. Existing
 environment files, migration targets and ingestion commands remain independent.
@@ -177,3 +177,13 @@ empty data yields useful search and navigation without invented statistics.
 Inert loading placeholders cannot accept input that would disappear when the
 preview resolves. Reuse the existing visual system and libraries; no second UI
 system, analytics endpoint or marketing data snapshot is introduced.
+
+## 015 — Gradavia project identity
+
+Gradavia is the product, repository, package and binary name. The runtime uses
+`GRADAVIA_*` configuration, and downloads and UI labels use the same identity.
+The rename preserves the schema, source dataset identifiers, version-one archive
+fingerprint and advisory-lock namespaces. Existing browser selections are read
+from the historical key until the next write uses the new key. Existing empty
+selections take precedence over that fallback. See the
+[execution plan](exec-plans/completed/rename-gradavia.md) for verification and delivery.

@@ -155,7 +155,7 @@ export function ComparisonPageView({
             <ExportButton
               rows={details}
               label="Exporter la comparaison"
-              filename="orvio-comparaison"
+              filename="gradavia-comparaison"
             />
           </div>
         )}
@@ -303,7 +303,7 @@ export function ComparisonPageView({
                     categories={[metricLabels[metric]]}
                     colors={["charcoal"]}
                     showLegend={false}
-                    className="orvio-chart mt-7 h-64"
+                    className="gradavia-chart mt-7 h-64"
                     minValue={0}
                     maxValue={percentMetrics.has(metric) ? 100 : undefined}
                     allowDecimals={percentMetrics.has(metric)}
@@ -384,7 +384,7 @@ export function FavoritesPageView({
     if (hydrated && (localIds !== loadedIds || currentPage !== page)) {
       const url = new URL(
         selectionUrl(localIds ? localIds.split(",") : [], "/favoris"),
-        "https://orvio.invalid",
+        "https://gradavia.invalid",
       );
       if (currentPage > 1) url.searchParams.set("page", String(currentPage));
       startTransition(() =>
@@ -403,7 +403,7 @@ export function FavoritesPageView({
         ),
         "/favoris",
       ),
-      "https://orvio.invalid",
+      "https://gradavia.invalid",
     );
     if (next > 1) url.searchParams.set("page", String(next));
     startTransition(() => router.push(url.pathname + url.search));
@@ -427,7 +427,7 @@ export function FavoritesPageView({
           <ExportButton
             rows={details}
             label="Exporter cette page"
-            filename="orvio-favoris"
+            filename="gradavia-favoris"
           />
         )}
       </div>

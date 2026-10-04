@@ -18,18 +18,18 @@ to run the processes independently; see the [API contract](api.md).
 
 ## Environment
 
-| Variable                | Use                                                                                        |
-| ----------------------- | ------------------------------------------------------------------------------------------ |
-| `DATABASE_URL`          | Neon development pooled URL, Rust API and connectivity diagnostic                          |
-| `DATABASE_URL_UNPOOLED` | Direct development URL, migrations and SQLx                                                |
-| `PORT`                  | Development server port, default 3000                                                      |
-| `API_BIND`              | Rust listener, default `127.0.0.1:3002`; choose a distinct worktree port                   |
-| `ORVIO_DATA_ENV_FILE`   | Optional explicit environment file for development API reads only; preserves root settings |
-| `ORVIO_API_URL`         | Trusted API origin for independent Next.js runs; derived by `just dev`                     |
-| `E2E_PORT`              | Dedicated browser-test server port; defaults 3100/3101 for dev/production                  |
-| `ARTIFACTS_DIR`         | Checkout-local diagnostics directory, default `.artifacts`                                 |
-| `RAW_DATA_DIR`          | Retained raw exports and manifests, default `.data/raw`                                    |
-| `TEST_DATABASE_URL`     | Optional local PostgreSQL 18 database named `orvio_test`                                   |
+| Variable                 | Use                                                                                        |
+| ------------------------ | ------------------------------------------------------------------------------------------ |
+| `DATABASE_URL`           | Neon development pooled URL, Rust API and connectivity diagnostic                          |
+| `DATABASE_URL_UNPOOLED`  | Direct development URL, migrations and SQLx                                                |
+| `PORT`                   | Development server port, default 3000                                                      |
+| `API_BIND`               | Rust listener, default `127.0.0.1:3002`; choose a distinct worktree port                   |
+| `GRADAVIA_DATA_ENV_FILE` | Optional explicit environment file for development API reads only; preserves root settings |
+| `GRADAVIA_API_URL`       | Trusted API origin for independent Next.js runs; derived by `just dev`                     |
+| `E2E_PORT`               | Dedicated browser-test server port; defaults 3100/3101 for dev/production                  |
+| `ARTIFACTS_DIR`          | Checkout-local diagnostics directory, default `.artifacts`                                 |
+| `RAW_DATA_DIR`           | Retained raw exports and manifests, default `.data/raw`                                    |
+| `TEST_DATABASE_URL`      | Optional local PostgreSQL 18 database named `gradavia_test`                                |
 
 Copy `.env.example` only when `.env.local` does not exist. Keep secrets ignored
 and restrict local file permissions (`chmod 600 .env.local`). Never paste
@@ -39,9 +39,16 @@ connection strings into plans, screenshots, logs, issues, or PRs.
 read-only `SELECT 1` requests with both transports. Generic errors deliberately
 omit driver messages that may contain credentials.
 
+After updating an existing checkout to Gradavia, rename the `ORVIO_API_URL` and
+`ORVIO_DATA_ENV_FILE` settings in ignored environment files or shell commands to
+`GRADAVIA_API_URL` and `GRADAVIA_DATA_ENV_FILE`. Keep their values unchanged.
+The test harness now uses `GRADAVIA_TEST_DATABASE_URL` internally and the
+`gradavia_test` disposable database. Existing Git checkout directory names do
+not need to change; `origin` points to `gregorsternat/gradavia`.
+
 ## Neon development
 
-Project: [orvio, Frankfurt](https://console.neon.tech/app/projects/morning-firefly-45046041).
+Project: [gradavia, Frankfurt](https://console.neon.tech/app/projects/morning-firefly-45046041).
 PostgreSQL major version: 18.
 
 - Production: `br-tiny-leaf-b1dh585q`.
@@ -54,7 +61,7 @@ The imported datasets live on `development-raw-ingestion-cc59`
 populated branch. The original `development` branch does not contain the import. A successful
 `db-check` confirms connectivity, not schema or data availability. To preview
 against an existing populated development configuration without replacing the
-root environment, run `ORVIO_DATA_ENV_FILE=/absolute/path/to/.env.local just dev`.
+root environment, run `GRADAVIA_DATA_ENV_FILE=/absolute/path/to/.env.local just dev`.
 The supervisor reads only its `DATABASE_URL` for the API child and removes both
 connection strings and the selection path from the web environment. Missing or
 unreadable explicit files fail safely instead of falling back to another DB.
@@ -80,7 +87,7 @@ transactional failure behavior, not a general production rollback strategy.
 
 `just test-db` starts a uniquely named PostgreSQL 18 container on a random
 loopback port, or uses an explicitly provided local `TEST_DATABASE_URL`.
-The shared harness creates a unique `orvio_ingest_<uuid>` database so generated
+The shared harness creates a unique `gradavia_ingest_<uuid>` database so generated
 public-schema foreign keys are tested without rewriting migrations or touching
 another invocation. Cleanup removes only that database and its owned container.
 

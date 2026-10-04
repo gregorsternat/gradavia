@@ -34,7 +34,7 @@ pub struct Outcome {
 pub async fn connect(config: &DatabaseConfig) -> Result<PgConnection> {
     let options = PgConnectOptions::from_str(config.connection_url())
         .map_err(|_| IngestError::new("invalid_database_config"))?
-        .application_name("orvio-ingest")
+        .application_name("gradavia-ingest")
         .disable_statement_logging();
     let mut connection = tokio::time::timeout(
         Duration::from_secs(20),
@@ -52,6 +52,7 @@ pub async fn connect(config: &DatabaseConfig) -> Result<PgConnection> {
 }
 
 pub fn lock_key(dataset_id: &str) -> i64 {
+    // Keep old and renamed collectors in the same advisory-lock namespace.
     let digest = Sha256::digest(format!("orvio-ingestion:{dataset_id}"));
     i64::from_be_bytes(digest[..8].try_into().expect("SHA-256 has eight bytes"))
 }
@@ -159,7 +160,7 @@ async fn complete(
     if report_result.is_err() {
         // A diagnostics disk failure cannot undo an already committed release or
         // replace the original import error. The database status remains true.
-        tracing::warn!(target: "orvio_ingest", event="diagnostic_write_failed", run_id=%id);
+        tracing::warn!(target: "gradavia_ingest", event="diagnostic_write_failed", run_id=%id);
     }
     result
 }
@@ -304,7 +305,7 @@ async fn copy_records(
         buffer.push(b'\n');
         if buffer.len() >= COPY_BATCH_BYTES {
             copy_batch(connection, &buffer, batch_rows).await?;
-            tracing::info!(target: "orvio_ingest", event="records_loaded", dataset_id=%source.id, rows, total=archive.manifest.row_count);
+            tracing::info!(target: "gradavia_ingest", event="records_loaded", dataset_id=%source.id, rows, total=archive.manifest.row_count);
             buffer.clear();
             batch_rows = 0;
         }

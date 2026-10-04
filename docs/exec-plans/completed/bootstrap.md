@@ -1,4 +1,4 @@
-# Bootstrap Orvio
+# Bootstrap Gradavia
 
 ## Objective
 
@@ -25,7 +25,7 @@ hosting deployment.
 
 ## Evidence
 
-Delivered in [PR #1](https://github.com/gregorsternat/orvio/pull/1).
+Delivered in [PR #1](https://github.com/gregorsternat/gradavia/pull/1).
 Local verification and Linux CI passed; the workflow uploaded its diagnostics.
 See [quality status](../../quality.md) for evidence and limits. The PR remains
 open for review; deployment is a later milestone.

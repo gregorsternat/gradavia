@@ -222,7 +222,7 @@ function ReadySpecialties({
     );
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `orvio-specialites-${data.source.campaign}.csv`;
+    anchor.download = `gradavia-specialites-${data.source.campaign}.csv`;
     anchor.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
@@ -406,7 +406,7 @@ function ReadySpecialties({
                   }).format(value)
                 }
                 customTooltip={SpecialtyTooltip}
-                className="orvio-chart"
+                className="gradavia-chart"
                 style={{ height: Math.max(200, visibleRows.length * 38 + 45) }}
                 onValueChange={
                   drilled

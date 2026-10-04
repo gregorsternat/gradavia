@@ -10,6 +10,9 @@ No active implementation plan.
 
 ## Completed
 
+- [Rename Gradavia](completed/rename-gradavia.md): product, packages, runtime
+  configuration, GitHub and Neon names with existing data compatibility.
+
 - [Landing page](completed/landing-page.md): a dedicated homepage, source-backed
   preview and preserved observatory/campaign navigation.
 

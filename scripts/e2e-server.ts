@@ -35,7 +35,7 @@ for (const signal of ["SIGINT", "SIGTERM"] as const)
 try {
   if (process.env.E2E_STATE === "unavailable") {
     api = await startApi(
-      "postgresql://unavailable@127.0.0.1:1/orvio_test",
+      "postgresql://unavailable@127.0.0.1:1/gradavia_test",
       artifacts,
     );
   } else if (process.env.E2E_STATE !== "unconfigured") {
@@ -50,7 +50,7 @@ try {
     "pnpm",
     [
       "--filter",
-      "@orvio/web",
+      "@gradavia/web",
       production ? "start" : "dev",
       "--port",
       process.env.E2E_PORT ?? (production ? "3101" : "3100"),

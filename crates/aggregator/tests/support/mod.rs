@@ -1,5 +1,5 @@
 #![allow(dead_code)]
-use orvio_aggregator::{archive, registry::Dataset};
+use gradavia_aggregator::{archive, registry::Dataset};
 use serde_json::Value;
 use std::{
     collections::BTreeMap,

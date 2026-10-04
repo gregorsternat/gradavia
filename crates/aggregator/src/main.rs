@@ -1,13 +1,13 @@
 use clap::{Parser, Subcommand};
-use orvio_aggregator::{config::DatabaseConfig, ingestion, registry, storage::check_database};
+use gradavia_aggregator::{config::DatabaseConfig, ingestion, registry, storage::check_database};
 use std::{env, path::PathBuf, process::ExitCode};
 use tracing::{error, info};
 
 #[derive(Parser)]
 #[command(
-    name = "orvio-ingest",
+    name = "gradavia-ingest",
     version,
-    about = "Orvio data ingestion workspace"
+    about = "Gradavia data ingestion workspace"
 )]
 struct Cli {
     #[command(subcommand)]
@@ -43,7 +43,7 @@ async fn main() -> ExitCode {
     let cli = Cli::parse();
     // Keep SQL drivers silent: connection details and SQL errors may contain secrets.
     tracing_subscriber::fmt()
-        .with_env_filter("orvio_ingest=info")
+        .with_env_filter("gradavia_ingest=info")
         .json()
         .with_writer(std::io::stderr)
         .init();

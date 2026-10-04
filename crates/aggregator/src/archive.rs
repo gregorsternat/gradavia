@@ -248,6 +248,7 @@ pub fn describe(
     // The hard row limit bounds this buffer to 64 MB; payloads are streamed.
     row_hashes.sort_unstable();
     let mut digest = Sha256::new();
+    // Persisted v1 namespace: changing it would invalidate existing manifests.
     digest.update(b"orvio-raw-v1\0");
     digest.update(serde_json::to_vec(&json!({"dataset":source.id, "contract":source.contract_version, "metadata":relevant_metadata(&metadata)?, "attachments":attachments.iter().map(|(id, a)| (id, &a.sha256)).collect::<BTreeMap<_,_>>()}))?);
     for row_hash in row_hashes {

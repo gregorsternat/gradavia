@@ -9,8 +9,8 @@ import { createNodeClient } from "../packages/db/src/node";
 export async function createTestDatabase(artifacts: string) {
   await mkdir(artifacts, { recursive: true });
   const id = randomUUID().replaceAll("-", "");
-  const container = `orvio-test-${id}`;
-  const database = `orvio_ingest_${id}`;
+  const container = `gradavia-test-${id}`;
+  const database = `gradavia_ingest_${id}`;
   let ownsContainer = false,
     ownsDatabase = false;
   let administrator: ReturnType<typeof createNodeClient>["client"] | undefined;
@@ -64,17 +64,17 @@ export async function createTestDatabase(artifacts: string) {
         "--name",
         container,
         "-e",
-        "POSTGRES_USER=orvio",
+        "POSTGRES_USER=gradavia",
         "-e",
-        "POSTGRES_PASSWORD=orvio",
+        "POSTGRES_PASSWORD=gradavia",
         "-e",
-        "POSTGRES_DB=orvio_test",
+        "POSTGRES_DB=gradavia_test",
         "-p",
         "127.0.0.1::5432",
         "postgres:18",
       );
       ownsContainer = true;
-      url = `postgresql://orvio:orvio@${docker("port", container, "5432/tcp")}/orvio_test`;
+      url = `postgresql://gradavia:gradavia@${docker("port", container, "5432/tcp")}/gradavia_test`;
       let ready = false;
       for (let attempt = 0; attempt < 60; attempt++) {
         try {
@@ -85,9 +85,9 @@ export async function createTestDatabase(artifacts: string) {
             "-h",
             "127.0.0.1",
             "-U",
-            "orvio",
+            "gradavia",
             "-d",
-            "orvio_test",
+            "gradavia_test",
           );
           ready = true;
           break;
@@ -104,8 +104,8 @@ export async function createTestDatabase(artifacts: string) {
     );
     assert.equal(
       target.pathname,
-      "/orvio_test",
-      "Tests require the disposable orvio_test database",
+      "/gradavia_test",
+      "Tests require the disposable gradavia_test database",
     );
     administrator = createNodeClient(url).client;
     await administrator.connect();

@@ -8,18 +8,18 @@ Observed locally on 2026-10-03 (Asia/Shanghai), using the pinned toolchain.
 The schema and data state in this historical table describes the foundation
 milestone; raw ingestion evidence is recorded separately below.
 
-| Check                                | Evidence                                                                                                                                                                          |
-| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Locked setup and doctor              | `just setup`, `just doctor` passed; Node 24.21.0, pnpm 11.21.0, Rust 1.98.1, just 1.58.0                                                                                          |
-| TypeScript, formatting, lint, Clippy | `just check` passed                                                                                                                                                               |
-| Unit and architecture tests          | 6 Vitest cases, 4 boundary regression cases, 5 Rust tests passed                                                                                                                  |
-| PostgreSQL 18                        | Disposable local container: Node and SQLx connectivity, migration apply, idempotency, and transaction rollback passed                                                             |
-| Drizzle generation                   | `just db-generate` reports zero tables and no changes; no business migration created                                                                                              |
-| Development Neon                     | `just db-check` passed with Neon HTTP and SQLx; branch contains no tables; compute suspension verified at 300 seconds                                                             |
-| Browser tests                        | 12 development and 10 production cases passed; 2 production gallery interaction cases intentionally skipped; gallery 404 explicitly verified                                      |
-| Visual review                        | Real Chromium screenshots reviewed at 1440px and 390px, light and dark; chart axis contrast corrected                                                                             |
-| Failure artifacts                    | Hydration regression reproduced, screenshot/video/trace retained, then test passed after the fix                                                                                  |
-| GitHub Actions                       | [CI run 37066016490](https://github.com/gregorsternat/orvio/actions/runs/37066016490) passed on Linux at `6857523`; `verification-1` diagnostics archive uploaded (472,695 bytes) |
+| Check                                | Evidence                                                                                                                                                                             |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Locked setup and doctor              | `just setup`, `just doctor` passed; Node 24.21.0, pnpm 11.21.0, Rust 1.98.1, just 1.58.0                                                                                             |
+| TypeScript, formatting, lint, Clippy | `just check` passed                                                                                                                                                                  |
+| Unit and architecture tests          | 6 Vitest cases, 4 boundary regression cases, 5 Rust tests passed                                                                                                                     |
+| PostgreSQL 18                        | Disposable local container: Node and SQLx connectivity, migration apply, idempotency, and transaction rollback passed                                                                |
+| Drizzle generation                   | `just db-generate` reports zero tables and no changes; no business migration created                                                                                                 |
+| Development Neon                     | `just db-check` passed with Neon HTTP and SQLx; branch contains no tables; compute suspension verified at 300 seconds                                                                |
+| Browser tests                        | 12 development and 10 production cases passed; 2 production gallery interaction cases intentionally skipped; gallery 404 explicitly verified                                         |
+| Visual review                        | Real Chromium screenshots reviewed at 1440px and 390px, light and dark; chart axis contrast corrected                                                                                |
+| Failure artifacts                    | Hydration regression reproduced, screenshot/video/trace retained, then test passed after the fix                                                                                     |
+| GitHub Actions                       | [CI run 37066016490](https://github.com/gregorsternat/gradavia/actions/runs/37066016490) passed on Linux at `6857523`; `verification-1` diagnostics archive uploaded (472,695 bytes) |
 
 Local tests, CI, merge, and deployment are separate states.
 
@@ -163,9 +163,9 @@ Observed locally on 2026-10-04 (Asia/Shanghai):
   against current source pointers on every request.
 - The original root environment points to an empty development branch. Live review
   explicitly selects the populated `development-formation-explorer-fdf3` branch
-  using `ORVIO_DATA_ENV_FILE`; no existing environment file or remote data was
-  modified. The development supervisor strips that path and database credentials
-  from Next.js.
+  using the explicit datasource setting (now `GRADAVIA_DATA_ENV_FILE`); no existing
+  environment file or remote data was modified. The development supervisor strips
+  that path and database credentials from Next.js.
 - Real Chromium views were reviewed at 1440×1000 and 390×844 in light and dark
   themes. Live journeys covered campaign selection, search/card views, detail
   and keyboard history tabs, comparison, favorite persistence, specialty pair
@@ -201,7 +201,7 @@ performed for this milestone.
 
 ## PR #10 CI regression repair (2026-10-04)
 
-The first remote [verification run](https://github.com/gregorsternat/orvio/actions/runs/37183463982)
+The first remote [verification run](https://github.com/gregorsternat/gradavia/actions/runs/37183463982)
 failed four development browser cases. Its traces identified visible tooltip
 content outside landmarks, specialty text entry before hydration completed,
 and a first detail-route compilation taking 5.3 seconds against a five-second
@@ -232,7 +232,7 @@ server logs in `.artifacts/pr10-ci/`, and
   national/regional exploration and 2025 specialties are now implemented.
   Apprenticeship exploration, older specialty methodology and import scheduling
   remain deferred. Historical source links may point to current fiches or be
-  unavailable; Orvio does not reconstruct them.
+  unavailable; Gradavia does not reconstruct them.
 - Builds and CI do not contact Neon or public datasets.
 - No remote CI run, merge or deployment is claimed for the raw ingestion changes.
 - Automated accessibility scans complement keyboard and visual review; they do
@@ -307,3 +307,29 @@ not been verified for this change.
 Evidence: `.artifacts/landing/verify-motion-final.log`, `motion-states-final.log`,
 `motion-focused-final.log`, `scroll-mobile.png`, `scroll-final.png`, and the
 retained first-run traces under `motion-pointer-failure/`.
+
+## Gradavia rename verification (2026-10-05)
+
+- `CI=true E2E_PORT=3410 mise exec -- just verify` passed with the pinned
+  toolchain: static checks, Clippy, 30 Vitest cases, seven Node boundary/environment
+  cases, 28 Rust cases, PostgreSQL 18 integration and credential-free builds.
+- Playwright passed 76 development, 74 production and 12 production-state cases.
+  The two development-only gallery cases remain intentionally skipped in
+  production. Legacy browser selections survive the rename; new empty selections
+  take precedence, so removed favorites and comparisons do not reappear.
+- Golden archive fingerprint and advisory-lock values preserve compatibility
+  with the previous importer. No database migration or source reimport is needed.
+- Real Chromium review at 1440×1000 and 390×844 verified the renamed landing,
+  title metadata, wordmark and app navigation, including the command palette and
+  mobile menu. The preview uses the real services with labeled synthetic records
+  in disposable PostgreSQL, not a live Neon dataset.
+- GitHub repository ID `1402245426` is now `gregorsternat/gradavia`, and the local
+  `origin` points to its new URL. Neon project `morning-firefly-45046041` reports
+  the name `gradavia`; only its display name was updated.
+
+Evidence: `.artifacts/rename-gradavia/verify.log`, `.artifacts/database/result.json`,
+`.artifacts/rename-gradavia/repository-{before,after}.json`,
+`.artifacts/rename-gradavia/neon-project.json`, browser reports and screenshots in
+`.artifacts/output/playwright/rename-gradavia/`. See the
+[completed plan](exec-plans/completed/rename-gradavia.md) for compatibility decisions.
+These observations do not assert a merge or deployment.

@@ -1,5 +1,5 @@
 mod support;
-use orvio_aggregator::{archive, registry, source::SourceClient};
+use gradavia_aggregator::{archive, ingestion, registry, source::SourceClient};
 use serde_json::{Value, json};
 use std::{
     fs,
@@ -18,11 +18,11 @@ fn reject_ambiguous_json_before_jsonb_can_discard_source_content() {
         br#"{"value":"\u0000"}"#,
         b"{\"value\":\xff}",
     ] {
-        assert!(orvio_aggregator::json::parse(bytes).is_err());
+        assert!(gradavia_aggregator::json::parse(bytes).is_err());
     }
     let bytes = br#"{"precise":1.2345678901234567890123456789,"list":[1,null,"x"],"missing":null}"#;
     assert_eq!(
-        orvio_aggregator::json::parse(bytes).unwrap()["precise"].to_string(),
+        gradavia_aggregator::json::parse(bytes).unwrap()["precise"].to_string(),
         "1.2345678901234567890123456789"
     );
 }
@@ -86,6 +86,12 @@ fn raw_identity_ignores_order_but_preserves_duplicate_multiplicity_and_revisions
     );
     let a = archive::validate_manifest(&first, &source).unwrap();
     let b = archive::validate_manifest(&second, &source).unwrap();
+    // Pinned v1 values from before the rename keep retained archives and locks valid.
+    assert_eq!(
+        a.manifest.fingerprint,
+        "d55584cc29e68c3e417d3d94e57a372786da51f75d024d4df44482997d95de68"
+    );
+    assert_eq!(ingestion::lock_key(&source.id), -2_795_675_440_343_943_534);
     assert_eq!(a.manifest.fingerprint, b.manifest.fingerprint);
     assert_ne!(a.manifest.data.sha256, b.manifest.data.sha256);
     let mut duplicates = records.clone();

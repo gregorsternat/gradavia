@@ -1,5 +1,5 @@
 // Tremor LineChart [v1.0.0]
-// Modified for Orvio: formatting, strict types, Recharts 3 labels, and scroll cleanup.
+// Modified for Gradavia: formatting, strict types, Recharts 3 labels, and scroll cleanup.
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 "use client";

@@ -17,7 +17,7 @@ await mkdir(artifacts, { recursive: true });
 const id = randomUUID().replaceAll("-", "");
 const schema = `probe_${id}`;
 const journalSchema = `journal_${id}`;
-const folder = await mkdtemp(path.join(tmpdir(), "orvio-migrations-"));
+const folder = await mkdtemp(path.join(tmpdir(), "gradavia-migrations-"));
 let database: Awaited<ReturnType<typeof createTestDatabase>> | undefined;
 let client: ReturnType<typeof createNodeClient>["client"] | undefined;
 let connected = false;
@@ -59,7 +59,7 @@ try {
       "test",
       "--locked",
       "-p",
-      "orvio-aggregator",
+      "gradavia-aggregator",
       "--test",
       "ingestion_db",
       "--",
@@ -67,7 +67,7 @@ try {
       "--nocapture",
     ],
     {
-      env: { ...process.env, ORVIO_TEST_DATABASE_URL: url },
+      env: { ...process.env, GRADAVIA_TEST_DATABASE_URL: url },
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
       timeout: 600_000,
@@ -160,7 +160,7 @@ try {
       "--locked",
       "-q",
       "-p",
-      "orvio-aggregator",
+      "gradavia-aggregator",
       "--",
       "doctor",
       "--database",

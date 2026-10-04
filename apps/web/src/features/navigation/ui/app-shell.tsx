@@ -96,7 +96,7 @@ function ShellContents({ children }: { children: ReactNode }) {
         ...destinations,
         { href: "/sources", label: "Données & méthode" },
         { href: "/dev/ui", label: "Composants" },
-      ].find((item) => item.href === pathname)?.label ?? "Orvio");
+      ].find((item) => item.href === pathname)?.label ?? "Gradavia");
   const commands = [
     ...destinations.map((item) => ({
       id: item.href,
@@ -134,7 +134,7 @@ function ShellContents({ children }: { children: ReactNode }) {
             {open || isMobile ? (
               <Wordmark />
             ) : (
-              <Link href="/" aria-label="Orvio, accueil">
+              <Link href="/" aria-label="Gradavia, accueil">
                 <Telescope className="size-5" />
               </Link>
             )}
@@ -166,7 +166,7 @@ function ShellContents({ children }: { children: ReactNode }) {
               </>
             )}
           </Button>
-          <nav aria-label="Explorer Orvio">
+          <nav aria-label="Explorer Gradavia">
             {(open || isMobile) && (
               <p className="mb-2 px-3 text-[10px] font-medium tracking-[.08em] text-muted-foreground uppercase">
                 Observatoire
@@ -225,7 +225,7 @@ function ShellContents({ children }: { children: ReactNode }) {
               <PanelLeft className="size-4" />
             </AnimatedSidebarTrigger>
             <span className="hidden text-muted-foreground sm:inline">
-              Orvio
+              Gradavia
             </span>
             <span aria-hidden="true" className="hidden text-border sm:inline">
               /

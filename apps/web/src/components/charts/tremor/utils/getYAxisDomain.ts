@@ -1,5 +1,5 @@
 // Tremor getYAxisDomain [v0.0.0]
-// Modified for Orvio: repository formatting.
+// Modified for Gradavia: repository formatting.
 
 export const getYAxisDomain = (
   autoMinValue: boolean,

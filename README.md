@@ -1,8 +1,8 @@
-# Orvio
+# Gradavia
 
 A French platform for exploring and comparing public higher education admissions data, starting with Parcoursup.
 
-Orvio is an interactive observatory for French higher education: national
+Gradavia is an interactive observatory for French higher education: national
 Parcoursup statistics, formation search, detailed indicators and history,
 same-campaign comparisons, local favorites, regional exploration, and a
 specialty-pair explorer for general baccalaureate graduates. The interface uses
@@ -44,7 +44,7 @@ For a read-only preview against an already-populated development checkout while
 preserving this checkout's `.env.local`, explicitly select its environment file:
 
 ```sh
-ORVIO_DATA_ENV_FILE=/absolute/path/to/populated-checkout/.env.local mise exec -- just dev
+GRADAVIA_DATA_ENV_FILE=/absolute/path/to/populated-checkout/.env.local mise exec -- just dev
 ```
 
 This setting only supplies the development API connection. It does not change

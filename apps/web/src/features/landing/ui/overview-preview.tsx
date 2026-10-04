@@ -235,7 +235,7 @@ function ReadyPreview({ data }: { data: OverviewData }) {
               <AreaChart
                 role="group"
                 aria-label={`${category} par campagne`}
-                className="orvio-chart mt-3 h-36 sm:h-40"
+                className="gradavia-chart mt-3 h-36 sm:h-40"
                 data={observations.map((row) => ({
                   Campagne: String(row.campaign),
                   [category]: row[metric].value,

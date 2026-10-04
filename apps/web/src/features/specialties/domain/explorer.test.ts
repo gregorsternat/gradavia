@@ -41,7 +41,7 @@ describe("specialty source semantics", () => {
     const pair = JSON.stringify(["Mathématiques", "Physique-Chimie"]);
     const url = new URL(
       specialtiesUrl(pair, "Licence & sciences", "accepted"),
-      "https://orvio.test",
+      "https://gradavia.test",
     );
     expect(url.searchParams.get("paire")).toBe(pair);
     expect(url.searchParams.get("groupe")).toBe("Licence & sciences");

@@ -126,7 +126,7 @@ function History({ detail }: { detail: FormationDetail }) {
         </div>
         {available ? (
           <LineChart
-            className="orvio-chart mt-7 h-72"
+            className="gradavia-chart mt-7 h-72"
             data={points}
             index="campagne"
             categories={[metricLabels[metric]]}
@@ -303,7 +303,7 @@ export function FormationDetailView({ detail }: { detail: FormationDetail }) {
                   <ExportButton
                     rows={[{ formation, source }]}
                     label="CSV"
-                    filename={`orvio-formation-${source.campaign}`}
+                    filename={`gradavia-formation-${source.campaign}`}
                   />
                 </div>
                 {numerical ? (
@@ -311,7 +311,7 @@ export function FormationDetailView({ detail }: { detail: FormationDetail }) {
                     data={volumeData}
                     index="indicateur"
                     categories={["Effectif"]}
-                    className="orvio-chart mt-8 h-64"
+                    className="gradavia-chart mt-8 h-64"
                     colors={["charcoal"]}
                     showLegend={false}
                     valueFormatter={formatCount}
@@ -355,7 +355,7 @@ export function FormationDetailView({ detail }: { detail: FormationDetail }) {
                     data={bacData}
                     index="profil"
                     categories={["Part des néo-bacheliers admis"]}
-                    className="orvio-chart mt-7 h-48"
+                    className="gradavia-chart mt-7 h-48"
                     colors={["silver"]}
                     showLegend={false}
                     layout="vertical"

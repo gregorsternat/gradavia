@@ -126,7 +126,7 @@ test("specialty drill-down preserves masked and observed zero and exports labell
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Exporter", exact: true }).click();
   expect((await download).suggestedFilename()).toBe(
-    "orvio-specialites-2025.csv",
+    "gradavia-specialites-2025.csv",
   );
   await page
     .getByRole("button", {

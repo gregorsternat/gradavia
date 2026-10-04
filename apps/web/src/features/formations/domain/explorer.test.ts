@@ -29,7 +29,7 @@ describe("explorer input and source semantics", () => {
       page: "3",
       tri: "capacite",
     });
-    const search = new URL(explorerUrl(query), "https://orvio.test")
+    const search = new URL(explorerUrl(query), "https://gradavia.test")
       .searchParams;
     expect(search.get("q")).toBe("droit & santé");
     expect(search.get("type")).toBe("Licence");

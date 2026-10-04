@@ -10,7 +10,7 @@ import {
 } from "../check-architecture.mjs";
 
 function fixture(files, run) {
-  const root = mkdtempSync(path.join(tmpdir(), "orvio-boundaries-"));
+  const root = mkdtempSync(path.join(tmpdir(), "gradavia-boundaries-"));
   for (const [name, content] of Object.entries({
     "apps/web/tsconfig.json":
       '{"compilerOptions":{"moduleResolution":"bundler","module":"esnext","paths":{"@/*":["./src/*"]}}}',
@@ -84,13 +84,13 @@ test("allows server imports and client type-only imports", () => {
 test("rejects I/O dependencies in the pure Rust domain", () => {
   assert.equal(
     checkDomainDependencies([
-      { name: "orvio-core", dependencies: [{ name: "sqlx" }] },
+      { name: "gradavia-core", dependencies: [{ name: "sqlx" }] },
     ]).length,
     1,
   );
   assert.deepEqual(
     checkDomainDependencies([
-      { name: "orvio-core", dependencies: [{ name: "serde" }] },
+      { name: "gradavia-core", dependencies: [{ name: "serde" }] },
     ]),
     [],
   );

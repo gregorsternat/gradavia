@@ -1,6 +1,6 @@
 # Rust read API
 
-The standalone `orvio-api` binary uses Axum and SQLx. Next.js calls it from a
+The standalone `gradavia-api` binary uses Axum and SQLx. Next.js calls it from a
 server-only module; the browser receives rendered pages and has no database or
 API credentials. The service currently exposes public source-backed formation and aggregate admissions data. It has no write routes, ingestion trigger, authentication or CORS layer.
 Public deployment, network exposure and least-privilege database roles remain
@@ -13,11 +13,11 @@ other exits; SIGINT/SIGTERM drains requests and closes the SQLx pool. Without
 database configuration the website still starts and shows its unavailable state.
 
 For independent processes, use `just api` and `just dev-web`. The latter needs
-`ORVIO_API_URL`, a trusted HTTP(S) origin with no credentials, query or path.
+`GRADAVIA_API_URL`, a trusted HTTP(S) origin with no credentials, query or path.
 `API_BIND` defaults to `127.0.0.1:3002`; explicitly bind another address when
 operating behind a deployment proxy. The API alone receives `DATABASE_URL` (the
 pooled Neon URL). The collector and migrations retain their direct connection.
-Build a standalone release binary with `cargo build --release --locked -p orvio-api`.
+Build a standalone release binary with `cargo build --release --locked -p gradavia-api`.
 
 ## Endpoints
 

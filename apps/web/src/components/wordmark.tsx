@@ -5,7 +5,7 @@ export function Wordmark() {
     <Link
       href="/"
       className="inline-flex items-center gap-2.5 text-xl font-semibold tracking-[-0.055em]"
-      aria-label="Orvio, accueil"
+      aria-label="Gradavia, accueil"
     >
       <svg
         width="24"
@@ -23,7 +23,7 @@ export function Wordmark() {
           strokeLinejoin="round"
         />
       </svg>
-      orvio
+      gradavia
     </Link>
   );
 }

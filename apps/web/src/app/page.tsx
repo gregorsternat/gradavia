@@ -9,7 +9,7 @@ import {
 } from "@/features/landing/ui/overview-preview";
 
 export const metadata: Metadata = {
-  title: { absolute: "Orvio — Votre orientation, les données en main" },
+  title: { absolute: "Gradavia — Votre orientation, les données en main" },
   description:
     "Explorez les formations Parcoursup, comparez les admissions et gardez vos favoris. Un observatoire indépendant, en accès libre, fondé sur les données publiques.",
 };
