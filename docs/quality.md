@@ -636,3 +636,10 @@ second copy inside React's temporary hidden streaming segment (`div[hidden]#S:0`
 Content-text assertions in the affected new journeys now use the active main
 landmark, preserving strict single-element checks while excluding hidden
 streaming copies.
+
+A repeated local run also caught an existing source-accordion contrast scan
+inside its 180 ms opening fade. The trace placed Axe about 71 ms after the click;
+the settled foreground `#64666e` on white has 5.73:1 contrast. The source-inventory
+and formation-provenance scans now wait for the description's computed opacity
+to reach one before measuring contrast. Motion and accessibility rules remain
+enabled; no fixed sleeps, retry-on-failure or contrast exclusions were added.

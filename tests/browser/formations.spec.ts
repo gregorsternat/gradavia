@@ -38,14 +38,12 @@ test("explorer is accessible with provenance and bounded list and card views", a
       exact: true,
     })
     .click();
-  await expect(
-    page
-      .getByRole("region", {
-        name: "Source et périmètre · Parcoursup 2025",
-        exact: true,
-      })
-      .getByText(/Fixtures synthétiques/),
-  ).toBeVisible();
+  const provenance = page.getByRole("region", {
+    name: "Source et périmètre · Parcoursup 2025",
+    exact: true,
+  });
+  await expect(provenance.getByText(/Fixtures synthétiques/)).toBeVisible();
+  await expect(provenance.locator(":scope > div")).toHaveCSS("opacity", "1");
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   expect(
     await page.evaluate(
