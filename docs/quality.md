@@ -663,3 +663,22 @@ The source-owned sidebar trigger now waits for hydration and activation reads
 the actual viewport. A deterministic browser regression holds JavaScript until
 the disabled server-rendered trigger is observed, then verifies its first
 activation on desktop and mobile after hydration.
+
+The main workflow at `aa5f1ab` ([run 37241612085](https://github.com/gregorsternat/gradavia/actions/runs/37241612085))
+passed 115 development browser cases and exposed an initial tab interaction race
+in the mobile analysis view. The trace shows an enabled server-rendered
+Distribution tab moving horizontally as hydration measures overflow and reveals
+the selected matrix tab. The pointer action never activated Distribution:
+the matrix remained selected and the URL stayed `vue=matrix`, without a browser
+runtime error. Deployment was skipped because verification failed.
+
+The narrow correction uses the existing client-ready guard in the source-owned
+tab trigger. Tabs stay disabled through server rendering and initial hydration,
+then accept interaction after the initial layout work. A delayed-JavaScript
+browser regression observes the disabled initial tabs before checking their first
+activation after hydration, its version-pinned URL and keyboard navigation. The
+new regression fails on both desktop and mobile before the guard; after the
+correction, it and the original analysis-values case passed 20 repeated
+desktop/mobile executions. The regression runs in both development and production
+suites. The failing trace and frame captures are retained under `.artifacts/expanded/ci-main-aa5/` and
+`.artifacts/expanded/main-aa5-tab-*.jpg`.
