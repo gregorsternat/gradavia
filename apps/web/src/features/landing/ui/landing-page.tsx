@@ -27,7 +27,6 @@ const entries = [
     title: "À partir de vos spécialités",
     description:
       "Découvrez les formations rejointes par les bacheliers qui ont suivi votre doublette.",
-    action: "Explorer les spécialités",
   },
   {
     href: "/territoires",
@@ -35,7 +34,20 @@ const entries = [
     title: "À l’échelle d’un territoire",
     description:
       "Repérez l’offre de formation et les capacités d’accueil dans chaque région.",
-    action: "Explorer les territoires",
+  },
+  {
+    href: "/comparer",
+    icon: GitCompareArrows,
+    title: "Vos options, côte à côte.",
+    description:
+      "Jusqu’à quatre formations d’une même campagne, sur les mêmes indicateurs.",
+  },
+  {
+    href: "/favoris",
+    icon: Heart,
+    title: "Une sélection à retrouver.",
+    description:
+      "Gardez les formations qui vous intéressent dans les favoris de votre navigateur.",
   },
 ];
 
@@ -44,19 +56,19 @@ export function LandingPage({ preview }: { preview: ReactNode }) {
     <div className={styles.landing}>
       <header className={styles.header}>
         <div
-          className={`${styles.container} flex h-20 items-center justify-between gap-5`}
+          className={`${styles.container} ${styles.headerInner} flex items-center justify-between gap-5`}
         >
           <Wordmark />
           <nav
             aria-label="Navigation d’accueil"
             className="flex items-center gap-7 text-[13px]"
           >
-            <Link
+            <a
               href="#explorer"
               className="hidden text-muted-foreground transition-colors hover:text-foreground md:inline-flex"
             >
               Découvrir
-            </Link>
+            </a>
             <Link
               href="/sources"
               className="hidden text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
@@ -78,7 +90,7 @@ export function LandingPage({ preview }: { preview: ReactNode }) {
       <main id="contenu" tabIndex={-1}>
         <section
           aria-labelledby="landing-title"
-          className={`${styles.container} ${styles.hero}`}
+          className={`${styles.container} ${styles.section} ${styles.hero}`}
         >
           <LandingReveal distance={16}>
             <p className={styles.kicker}>L’observatoire de Parcoursup</p>
@@ -122,13 +134,13 @@ export function LandingPage({ preview }: { preview: ReactNode }) {
               Explorer les formations{" "}
               <ArrowRight className="size-4" aria-hidden="true" />
             </ButtonLink>
-            <Link
+            <a
               href="#apercu"
               className="inline-flex min-h-12 items-center gap-2 px-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               Voir l’aperçu{" "}
               <ArrowDown className="size-3.5" aria-hidden="true" />
-            </Link>
+            </a>
           </LandingReveal>
           <LandingReveal delay={0.46} distance={12}>
             <p className="mt-5 text-xs text-muted-foreground">
@@ -138,17 +150,20 @@ export function LandingPage({ preview }: { preview: ReactNode }) {
         </section>
         <div
           id="apercu"
-          className={`${styles.container} ${styles.previewWrap}`}
+          tabIndex={-1}
+          className={`${styles.container} ${styles.section}`}
         >
           <LandingReveal distance={40} delay={0.12}>
             <div className={styles.previewFrame}>{preview}</div>
           </LandingReveal>
         </div>
         <section
+          id="explorer"
+          tabIndex={-1}
           aria-labelledby="explorer-title"
           className={`${styles.container} ${styles.section}`}
         >
-          <div id="explorer" className={styles.searchSection}>
+          <div className={styles.searchSection}>
             <LandingReveal>
               <h2 id="explorer-title" className={styles.sectionTitle}>
                 Une formation en tête ?<br />
@@ -163,93 +178,36 @@ export function LandingPage({ preview }: { preview: ReactNode }) {
               <LandingSearch />
             </LandingReveal>
           </div>
-          <div className="mt-8 grid gap-x-12 gap-y-7 px-1 sm:grid-cols-2 sm:px-2 lg:mt-10 lg:gap-x-20">
-            <LandingReveal>
-              <Link href="/comparer" className={`${styles.utilityLink} group`}>
-                <GitCompareArrows
-                  className="mt-0.5 size-5 shrink-0"
-                  strokeWidth={1.5}
-                  aria-hidden="true"
-                />
-                <div>
-                  <h3 className="text-sm font-medium">
-                    Vos options, côte à côte.
-                  </h3>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    Jusqu’à quatre formations d’une même campagne, sur les mêmes
-                    indicateurs.
-                  </p>
-                </div>
-                <ArrowUpRight className={styles.linkArrow} aria-hidden="true" />
-              </Link>
-            </LandingReveal>
-            <LandingReveal delay={0.12}>
-              <Link href="/favoris" className={`${styles.utilityLink} group`}>
-                <Heart
-                  className="mt-0.5 size-5 shrink-0"
-                  strokeWidth={1.5}
-                  aria-hidden="true"
-                />
-                <div>
-                  <h3 className="text-sm font-medium">
-                    Une sélection à retrouver.
-                  </h3>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    Gardez les formations qui vous intéressent dans les favoris
-                    de votre navigateur.
-                  </p>
-                </div>
-                <ArrowUpRight className={styles.linkArrow} aria-hidden="true" />
-              </Link>
-            </LandingReveal>
-          </div>
-        </section>
-        <section
-          aria-labelledby="directions-title"
-          className={styles.container}
-        >
-          <LandingReveal>
-            <div className="mb-9 flex flex-wrap items-end justify-between gap-5 sm:mb-11">
-              <h2 id="directions-title" className={styles.sectionTitle}>
-                D’autres points de départ.
-              </h2>
-            </div>
-          </LandingReveal>
-          <div className="grid gap-5 md:grid-cols-2">
-            {entries.map(
-              ({ href, icon: Icon, title, description, action }, index) => (
-                <LandingReveal key={href} delay={index * 0.14}>
-                  <Link
-                    href={href}
-                    className={`${styles.entryCard} group h-full`}
-                  >
-                    <Icon
-                      className="mb-9 size-7"
-                      strokeWidth={1.25}
-                      aria-hidden="true"
-                    />
-                    <h3 className="text-xl font-medium tracking-[-0.035em]">
-                      {title}
-                    </h3>
-                    <p className="mt-3 max-w-sm text-sm leading-7 text-muted-foreground">
+          <div className={styles.entryGrid}>
+            {entries.map(({ href, icon: Icon, title, description }, index) => (
+              <LandingReveal key={href} delay={(index % 2) * 0.12}>
+                <Link
+                  href={href}
+                  className={`${styles.entryCard} group h-full`}
+                >
+                  <Icon
+                    className="mt-0.5 size-5 shrink-0"
+                    strokeWidth={1.5}
+                    aria-hidden="true"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-sm font-medium">{title}</h3>
+                    <p className="mt-2 text-[13px] leading-6 text-muted-foreground">
                       {description}
                     </p>
-                    <span className="mt-8 flex items-center justify-between gap-3 text-xs font-medium">
-                      {action}
-                      <ArrowUpRight
-                        className={styles.linkArrow}
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </Link>
-                </LandingReveal>
-              ),
-            )}
+                  </div>
+                  <ArrowUpRight
+                    className={styles.linkArrow}
+                    aria-hidden="true"
+                  />
+                </Link>
+              </LandingReveal>
+            ))}
           </div>
         </section>
         <section
           aria-labelledby="sources-title"
-          className={`${styles.container} ${styles.section}`}
+          className={`${styles.container} ${styles.section} ${styles.conclusion}`}
         >
           <div className="grid min-w-0 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-24">
             <LandingReveal>
@@ -280,15 +238,9 @@ export function LandingPage({ preview }: { preview: ReactNode }) {
               <LandingQuestions />
             </LandingReveal>
           </div>
-        </section>
-        <section aria-labelledby="start-title" className={styles.closing}>
-          <div
-            className={`${styles.container} flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center`}
-          >
+          <div className={styles.closing}>
             <LandingReveal distance={32}>
-              <h2 id="start-title" className={styles.closingTitle}>
-                À vous d’explorer.
-              </h2>
+              <h3 className={styles.closingTitle}>À vous d’explorer.</h3>
             </LandingReveal>
             <LandingReveal delay={0.14}>
               <ButtonLink

@@ -1,6 +1,109 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "./fixtures";
 
+test("landing fills the first screen and settles on the next section after scrolling", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  const preview = page.locator("#apercu");
+  await expect(preview).toContainText("Campagne 2025");
+  const headerHeight = (await page.getByRole("banner").boundingBox())!.height;
+  const viewport = page.viewportSize()!;
+  const availableHeight = viewport.height - headerHeight;
+  const heights = await page
+    .locator("main > section, main > #apercu")
+    .evaluateAll((sections) =>
+      sections.map((section) => section.getBoundingClientRect().height),
+    );
+  // The final chapter shares its screen with the page footer.
+  const footerHeight = (await page.getByRole("contentinfo").boundingBox())!
+    .height;
+  for (const [index, height] of heights.entries()) {
+    const chapterHeight =
+      height + (index === heights.length - 1 ? footerHeight : 0);
+    expect(chapterHeight).toBeGreaterThanOrEqual(availableHeight - 1);
+  }
+  expect((await preview.boundingBox())!.y).toBeGreaterThanOrEqual(
+    viewport.height,
+  );
+
+  await page.mouse.move(viewport.width - 10, viewport.height / 2);
+  await page.mouse.wheel(0, availableHeight * 0.65);
+  await expect
+    .poll(async () => Math.abs((await preview.boundingBox())!.y - headerHeight))
+    .toBeLessThan(2);
+
+  await page.keyboard.press("End");
+  await expect(page.getByRole("contentinfo")).toBeInViewport();
+  await expect(
+    page.getByRole("radiogroup", { name: "Apparence" }),
+  ).toBeInViewport();
+});
+
+test("landing anchor links glide to their section and retain keyboard navigation", async ({
+  page,
+  isMobile,
+}) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  await expect(page.locator("#apercu")).toContainText("Campagne 2025");
+  const previewLink = page.getByRole("link", { name: "Voir l’aperçu" });
+  await previewLink.focus();
+  const samples: number[] = [];
+  await page.exposeFunction("recordLandingScroll", (position: number) => {
+    samples.push(position);
+  });
+  await page.evaluate(() => {
+    const record = (
+      window as typeof window & {
+        recordLandingScroll: (position: number) => Promise<void>;
+      }
+    ).recordLandingScroll;
+    window.addEventListener("scroll", () => {
+      void record(window.scrollY);
+    });
+  });
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/#apercu$/);
+  const headerHeight = (await page.getByRole("banner").boundingBox())!.height;
+  await expect
+    .poll(async () =>
+      Math.abs((await page.locator("#apercu").boundingBox())!.y - headerHeight),
+    )
+    .toBeLessThan(2);
+  const destination = await page.evaluate(() => window.scrollY);
+  expect(
+    new Set(samples.filter((y) => y > 0 && y < destination - 1)).size,
+  ).toBeGreaterThan(1);
+  await expect(page.locator("#apercu")).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(
+    page.getByRole("button", { name: "Définition : Formations" }),
+  ).toBeFocused();
+
+  if (!isMobile) {
+    await page.getByRole("link", { name: "Découvrir", exact: true }).click();
+    await expect(page).toHaveURL(/\/#explorer$/);
+    await expect
+      .poll(async () =>
+        Math.abs(
+          (await page.locator("#explorer").boundingBox())!.y - headerHeight,
+        ),
+      )
+      .toBeLessThan(2);
+    await page.keyboard.press("Tab");
+    await expect(page.getByRole("searchbox")).toBeFocused();
+  }
+  await page
+    .getByRole("navigation", { name: "Navigation d’accueil" })
+    .getByRole("link", { name: "Ouvrir l’observatoire" })
+    .click();
+  await expect(page).toHaveURL(/\/observatoire$/);
+  await expect(page.locator("html")).toHaveCSS("scroll-snap-type", "none");
+  await expect(page.locator("html")).toHaveCSS("scroll-behavior", "auto");
+});
+
 test("landing opens the observatory and the home link returns to the public entry", async ({
   page,
   isMobile,
@@ -154,6 +257,15 @@ test("skip link and source questions remain keyboard accessible with reduced mot
   ).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("main")).toBeFocused();
+  const previewTop = await page
+    .getByRole("link", { name: "Voir l’aperçu" })
+    .evaluate((link) => {
+      (link as HTMLAnchorElement).click();
+      return document.getElementById("apercu")!.getBoundingClientRect().top;
+    });
+  expect(previewTop).toBe(
+    (await page.getByRole("banner").boundingBox())!.height,
+  );
   const sources = page.getByRole("button", {
     name: "D’où viennent les données ?",
   });
@@ -262,6 +374,10 @@ test("landing content, navigation and native search remain available without Jav
     for (const appearance of appearances)
       expect(appearance).toEqual({ opacity: "1", transform: "none" });
 
+    await staticPage.getByRole("link", { name: "Voir l’aperçu" }).click();
+    await expect(staticPage).toHaveURL(/\/#apercu$/);
+    await expect(staticPage.locator("#apercu")).toBeInViewport();
+
     await staticPage
       .getByRole("navigation", { name: "Navigation d’accueil" })
       .getByRole("link", { name: "Ouvrir l’observatoire" })
@@ -271,6 +387,7 @@ test("landing content, navigation and native search remain available without Jav
     const search = staticPage.getByRole("search", {
       name: "Trouver une formation",
     });
+    await search.scrollIntoViewIfNeeded();
     await search.getByRole("searchbox").fill("école étampes");
     await search
       .getByRole("button", { name: "Rechercher", exact: true })

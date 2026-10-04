@@ -30,6 +30,18 @@ it again. Server-rendered content stays visible until hydration enables motion.
 Keyboard focus and reduced motion show content immediately without a delay.
 The application sidebar begins at `/observatoire` and the other product routes.
 
+The landing has four chapters: introduction, source-backed preview, exploration
+and methodology. Search and the four exploration routes share one chapter; the
+final call to action is a compact panel below the methodology and questions.
+The final chapter shares its screen with the page footer. Each chapter fills at
+least the current viewport below the sticky header, with vertically centered
+content. Taller chapters grow naturally on small screens,
+after zooming or when disclosures open; they never clip content or introduce a
+nested scrollbar. Native vertical scroll snapping settles on section boundaries,
+and fragment links glide to their target below the header. Reduced motion disables
+both smooth scrolling and snapping. These scroll styles apply only while the
+landing is present, including when navigating between routes without a reload.
+
 ## Components and animation
 
 - beUI is the default for every interactive primitive: buttons, inputs, select,
