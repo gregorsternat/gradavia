@@ -21,6 +21,8 @@ export function TooltipPositioner({
   return (
     <span
       ref={floatingRef}
+      role="complementary"
+      aria-label="Informations contextuelles"
       inert={!present}
       aria-hidden={!present || undefined}
       className="pointer-events-none fixed left-0 top-0 z-[9999] w-max"

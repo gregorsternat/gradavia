@@ -54,6 +54,10 @@ test("explorer is accessible with provenance and bounded list and card views", a
       .click();
   await page.getByRole("radio", { name: "Sombre", exact: true }).click();
   if (isMobile) await page.keyboard.press("Escape");
+  else
+    await expect(
+      page.getByRole("tooltip", { name: "Sombre", exact: true }),
+    ).toBeVisible();
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
 

@@ -4,6 +4,36 @@ import { expect, test } from "./fixtures";
 const pairLabel = "Mathématiques + Physique-Chimie";
 const secondLabel = "Mathématiques + Sciences économiques et sociales";
 
+test("specialty search waits for hydration before accepting text", async ({
+  page,
+}) => {
+  let hydrate!: () => void;
+  const hydration = new Promise<void>((resolve) => {
+    hydrate = resolve;
+  });
+  await page.route("**/_next/static/**/*.js", async (route) => {
+    await hydration;
+    await route.continue();
+  });
+  try {
+    await page.goto("/specialites", { waitUntil: "commit" });
+    const input = page.getByRole("combobox", {
+      name: "Combinaison de spécialités",
+    });
+    await expect(input).toBeDisabled();
+    hydrate();
+    await expect(input).toBeEnabled();
+    await input.fill("economiques");
+    await expect(input).toHaveValue("economiques");
+    await expect(page.getByRole("option", { name: secondLabel })).toBeVisible();
+    await page.keyboard.press("ArrowDown");
+    await page.keyboard.press("Enter");
+    await expect(input).toHaveValue(secondLabel);
+  } finally {
+    hydrate();
+  }
+});
+
 test("specialties keep national counts separate from overlapping groups and provide accessible charts", async ({
   page,
 }) => {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { useClientReady } from "@/lib/hooks/use-client-ready";
 import {
   createContext,
   type MutableRefObject,
@@ -134,10 +135,12 @@ export function Combobox({
   defaultQuery = "",
   onQueryChange,
   filter = defaultFilter,
-  disabled = false,
+  disabled: suppliedDisabled = false,
   className,
 }: ComboboxProps) {
   const reduce = useReducedMotion() ?? false;
+  const ready = useClientReady();
+  const disabled = suppliedDisabled || !ready;
   const baseId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);

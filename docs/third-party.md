@@ -73,6 +73,8 @@ Local integration patches:
   search filter, labelled input and a bounded portal list. Strict cursor guards,
   direct ref aliases, derived placement and the existing client-ready snapshot
   preserve the upstream keyboard/pointer model under React lint rules.
+  The input stays disabled during server rendering and initial hydration so
+  early text entry cannot race the selected-label registration or query handlers.
 - Selects support labelled triggers, Arrow/Home/End navigation, selected-option
   focus, bounded scrollable option lists, and Escape/selection focus restoration.
   Radio groups and tabs have
@@ -97,6 +99,9 @@ Local integration patches:
   reduced to 14px. Tooltip ref aliases preserve the upstream positioning model
   under the React lint rules, and stale asynchronous placement results remain
   invalidated during cleanup.
+  Portalled tooltips retain their trigger description and expose a named
+  complementary landmark around the surface, keeping visible overlay content
+  reachable through landmark navigation.
 - Formatting follows the repository. Shared semantic colors inherit Orvio's
   theme. Components retain their upstream reduced-motion handling.
 

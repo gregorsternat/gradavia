@@ -199,6 +199,33 @@ remain under `.artifacts/observatory-regressions/` and
 public deployment remain separate states; no remote CI, merge or deployment was
 performed for this milestone.
 
+## PR #10 CI regression repair (2026-10-04)
+
+The first remote [verification run](https://github.com/gregorsternat/orvio/actions/runs/37183463982)
+failed four development browser cases. Its traces identified visible tooltip
+content outside landmarks, specialty text entry before hydration completed,
+and a first detail-route compilation taking 5.3 seconds against a five-second
+assertion budget. All preceding checks had passed.
+
+- Portalled tooltips now have a named complementary landmark while keeping
+  their tooltip role and trigger description. The accessibility test explicitly
+  opens the theme tooltip before scanning the page.
+- Combobox input remains disabled until hydration completes. A regression test
+  gates JavaScript downloads, then verifies clean text entry and keyboard
+  selection after releasing the gate on desktop and mobile.
+- Development assertions allow 15 seconds for on-demand route compilation.
+  Production assertions keep their five-second budget; retries remain disabled.
+- The affected journeys passed 24 focused desktop/mobile repetitions with
+  `CI=true` and two workers.
+- Full `just verify` also passed with `CI=true`: all static/unit/database/build
+  checks, 56 development browser cases, 54 production cases and six production
+  state cases. Two development-gallery cases remain intentionally skipped in
+  production.
+
+Evidence: `.artifacts/pr10-ci-failure.log`, downloaded CI screenshots/traces and
+server logs in `.artifacts/pr10-ci/`, and
+`.artifacts/pr10-focused-fixed.log` and `.artifacts/pr10-verify.log`.
+
 ## Scope and limitations
 
 - Formation detail, numerical indicators, same-campaign comparison, favorites,
