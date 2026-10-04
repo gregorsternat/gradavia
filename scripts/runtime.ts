@@ -1,7 +1,25 @@
 import { spawn } from "node:child_process";
 import { createWriteStream } from "node:fs";
-import { mkdir } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
+import { parse } from "dotenv";
+
+/** An explicit development datasource changes API reads, never migration targets. */
+export async function developmentDatabase(
+  environment: NodeJS.ProcessEnv,
+): Promise<string | undefined> {
+  if (!environment.ORVIO_DATA_ENV_FILE) return environment.DATABASE_URL;
+  try {
+    const selected = parse(
+      await readFile(environment.ORVIO_DATA_ENV_FILE, "utf8"),
+    );
+    if (!selected.DATABASE_URL)
+      throw new Error("Missing development datasource");
+    return selected.DATABASE_URL;
+  } catch {
+    throw new Error("Selected development datasource is unavailable");
+  }
+}
 
 export function webEnvironment(origin: string): NodeJS.ProcessEnv {
   const env = {
@@ -14,6 +32,7 @@ export function webEnvironment(origin: string): NodeJS.ProcessEnv {
     "DATABASE_URL_UNPOOLED",
     "TEST_DATABASE_URL",
     "ORVIO_TEST_DATABASE_URL",
+    "ORVIO_DATA_ENV_FILE",
   ])
     delete env[key as keyof typeof env];
   return env;

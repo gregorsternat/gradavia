@@ -115,3 +115,50 @@ are supervised locally, while integration/browser tests run the actual API over
 HTTP against disposable PostgreSQL 18. No public deployment, authentication,
 new data model or unrelated endpoint is included. The [API contract](api.md)
 documents the wire format and operational behavior.
+
+## 011 — A source-aware admissions observatory
+
+Expand the descriptive explorer into overview, detail, comparison, favorites,
+territories and specialty destinations. Reuse immutable raw releases rather than
+introducing speculative materialized tables or another ingestion model. The API
+validates source fields into observed, missing, suppressed and invalid metric
+states; `orvio-core` owns their pure representation. Official rates retain their
+published definitions. Aggregated applications are never unique people.
+
+Bounded overview and historical-summary caches use captured release/provenance
+records as keys and revalidate current pointers on every request. This reduces
+repeated wide JSONB aggregation while preserving publication visibility. Formation
+history resolves the source identifier but separately qualifies changed labels,
+missing and ambiguous matches; it is not a guarantee of cohort comparability.
+APB remains a separate archive.
+
+Specialty exploration uses the reviewed 2025 general-baccalaureate dataset. Its
+national, group and formation aggregation levels stay separate because people
+can occur in several groups. No candidate probability or recommendation engine
+is inferred from descriptive source counts. Older specialty sources and
+apprenticeship remain discoverable in the inventory but are not silently merged.
+
+## 012 — Browser-local selection and a shared visual language
+
+Favorites and comparisons require no backend account. Store a bounded, validated,
+versioned list of immutable source identities with display labels in local
+storage. Resolve metrics again from the API, synchronize tabs and explain storage
+failure. Comparing at most four records from one campaign keeps the result
+readable and avoids accidental cross-campaign comparisons. Exports retain source,
+campaign, metric state and spreadsheet-safe text.
+
+Use beUI for default controls, Tremor for charts and Motion for animation, as
+explicitly requested. Source ownership permits focused accessibility and
+framework-compatibility repairs. A shared shell, monochrome tokens, local theme
+selection and responsive density replace the previous sparse home page. Every
+visualization has an exact-value alternative. Do not add decorative copy or
+animation that delays access to data.
+
+## 013 — Explicit development data selection
+
+`ORVIO_DATA_ENV_FILE` optionally selects a populated development environment for
+`just dev`. Only the API receives its database URL; Next.js receives neither the
+URL nor the path. An unreadable or incomplete selection fails explicitly. Existing
+environment files, migration targets and ingestion commands remain independent.
+This supports review against an existing populated development branch without
+copying secrets or silently mutating the checkout's database configuration.

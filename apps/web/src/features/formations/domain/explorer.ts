@@ -40,6 +40,9 @@ export function parseQuery(params: SearchParams): ExplorerQuery {
     departement: value("departement"),
     statut: value("statut"),
     selectivite: value("selectivite"),
+    tri: ["capacite", "candidatures", "admis", "acces"].includes(value("tri"))
+      ? (value("tri") as ExplorerQuery["tri"])
+      : "nom",
   };
 }
 
@@ -48,6 +51,7 @@ export function explorerUrl(query: ExplorerQuery, page = 1): string {
   if (query.campagne) params.set("campagne", String(query.campagne));
   if (query.q) params.set("q", query.q);
   for (const key of FILTER_KEYS) if (query[key]) params.set(key, query[key]);
+  if (query.tri !== "nom") params.set("tri", query.tri);
   if (page > 1) params.set("page", String(page));
   return `/formations${params.size ? `?${params}` : ""}`;
 }

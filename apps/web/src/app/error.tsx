@@ -1,20 +1,22 @@
 "use client";
 
-export default function ErrorPage({ reset }: { reset: () => void }) {
+import { RefreshCw } from "lucide-react";
+import { Button } from "@/components/motion/button/base";
+
+export default function ErrorPage({ retry }: { retry: () => void }) {
   return (
     <main
       id="contenu"
-      className="flex flex-1 flex-col justify-center gap-6 py-24"
+      tabIndex={-1}
+      className="flex min-h-[65vh] flex-col items-start justify-center gap-6 py-16"
     >
       <h1 className="text-3xl tracking-tight">
         La page n’a pas pu s’afficher.
       </h1>
-      <button
-        onClick={reset}
-        className="w-fit rounded-md border border-border px-4 py-2"
-      >
+      <Button variant="secondary" onClick={retry} className="w-fit rounded-lg">
+        <RefreshCw className="size-4" aria-hidden="true" />
         Réessayer
-      </button>
+      </Button>
     </main>
   );
 }

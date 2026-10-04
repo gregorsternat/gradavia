@@ -14,6 +14,7 @@ pub struct ExplorerQuery {
     pub departement: String,
     pub statut: String,
     pub selectivite: String,
+    pub tri: String,
 }
 
 impl ExplorerQuery {
@@ -52,6 +53,10 @@ impl ExplorerQuery {
             departement: value("departement", 160),
             statut: value("statut", 160),
             selectivite: value("selectivite", 160),
+            tri: match value("tri", 20).as_str() {
+                sort @ ("capacite" | "candidatures" | "admis" | "acces") => sort.into(),
+                _ => "nom".into(),
+            },
         })
     }
 
@@ -110,7 +115,7 @@ pub struct Facets {
     pub selectivite: Vec<String>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Formation {
     pub id: String,
@@ -123,6 +128,8 @@ pub struct Formation {
     pub status: Option<String>,
     pub selectivity: Option<String>,
     pub parcoursup_url: Option<String>,
+    pub source_formation_id: Option<String>,
+    pub metrics: crate::analytics::metrics::Metrics,
 }
 
 #[derive(Debug, Serialize)]

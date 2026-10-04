@@ -10,12 +10,14 @@ export default defineConfig({
   testDir: "./tests/browser",
   testMatch: process.env.E2E_STATE
     ? "**/explorer-state.spec.ts"
-    : "**/{shell,formations}.spec.ts",
+    : "**/{shell,formations,observatory,specialties}.spec.ts",
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: 0,
   workers: process.env.CI ? 2 : undefined,
   timeout: 30_000,
+  // Development routes compile on first navigation; production stays at 5s.
+  expect: { timeout: production ? 5_000 : 15_000 },
   outputDir: `${artifacts}/results`,
   reporter: [
     ["list"],

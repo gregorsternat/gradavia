@@ -4,6 +4,36 @@
 export type ColorUtility = "bg" | "stroke" | "fill" | "text";
 
 export const chartColors = {
+  charcoal: {
+    bg: "bg-[var(--chart-primary)]",
+    stroke: "stroke-[var(--chart-primary)]",
+    fill: "fill-[var(--chart-primary)]",
+    text: "text-[var(--chart-primary)]",
+  },
+  silver: {
+    bg: "bg-[var(--chart-secondary)]",
+    stroke: "stroke-[var(--chart-secondary)]",
+    fill: "fill-[var(--chart-secondary)]",
+    text: "text-[var(--chart-secondary)]",
+  },
+  steel: {
+    bg: "bg-neutral-400 dark:bg-neutral-500",
+    stroke: "stroke-neutral-400 dark:stroke-neutral-500",
+    fill: "fill-neutral-400 dark:fill-neutral-500",
+    text: "text-neutral-400 dark:text-neutral-500",
+  },
+  pale: {
+    bg: "bg-neutral-200 dark:bg-neutral-700",
+    stroke: "stroke-neutral-200 dark:stroke-neutral-700",
+    fill: "fill-neutral-200 dark:fill-neutral-700",
+    text: "text-neutral-200 dark:text-neutral-700",
+  },
+  mist: {
+    bg: "bg-neutral-300 dark:bg-neutral-600",
+    stroke: "stroke-neutral-300 dark:stroke-neutral-600",
+    fill: "fill-neutral-300 dark:fill-neutral-600",
+    text: "text-neutral-300 dark:text-neutral-600",
+  },
   blue: {
     bg: "bg-blue-500",
     stroke: "stroke-blue-500",

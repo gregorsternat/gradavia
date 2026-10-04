@@ -12,19 +12,36 @@ import {
   fixturePayloads,
 } from "../tests/fixtures/formations";
 
+import {
+  specialtyDataset,
+  fixtureSpecialties,
+} from "../tests/fixtures/specialties";
+
 /** Only the disposable database harness imports synthetic formations. */
 export async function seedFormations(connection: string) {
   const { client, db } = createNodeClient(connection);
   await client.connect();
   try {
     await client.query("BEGIN");
-    for (const campaign of fixtureCampaigns) {
-      const datasetId = fixtureDataset(campaign),
-        releaseId = randomUUID();
-      const payloads = fixturePayloads(campaign);
+    const fixtures = [
+      ...fixtureCampaigns.map((campaign) => ({
+        campaign,
+        datasetId: fixtureDataset(campaign),
+        payloads: fixturePayloads(campaign),
+        family: "parcoursup",
+      })),
+      {
+        campaign: 2025,
+        datasetId: specialtyDataset,
+        payloads: fixtureSpecialties(),
+        family: "specialties",
+      },
+    ];
+    for (const { campaign, datasetId, payloads, family } of fixtures) {
+      const releaseId = randomUUID();
       await db.insert(sourceDatasets).values({
         id: datasetId,
-        family: "parcoursup",
+        family,
         provider: "Producteur de démonstration",
         archived: false,
       });

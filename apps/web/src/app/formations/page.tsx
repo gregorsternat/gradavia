@@ -24,6 +24,13 @@ export default async function FormationsPage({
     <FormationExplorer
       result={await loadExplorer(params)}
       retryUrl={explorerUrl(query, query.page)}
+      initialView={
+        params.vue === "cartes"
+          ? "cartes"
+          : params.vue === "liste"
+            ? "liste"
+            : undefined
+      }
     />
   );
 }

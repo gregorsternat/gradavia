@@ -3,14 +3,27 @@ import AxeBuilder from "@axe-core/playwright";
 
 const production = process.env.E2E_PRODUCTION === "1";
 
+async function openNavigation(
+  page: import("@playwright/test").Page,
+  mobile: boolean,
+) {
+  if (mobile)
+    await page
+      .getByRole("button", { name: "Afficher ou masquer la navigation" })
+      .click();
+}
+
 test("home is accessible, responsive and free of hydration errors", async ({
   page,
 }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
-    "Plus de clarté",
+    "Vue d’ensemble",
   );
-  await expect(page.getByRole("heading", { name: "Parcoursup" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Les familles de formation" }),
+  ).toBeVisible();
+  await expect(page.locator(".recharts-surface")).toHaveCount(4);
   const scan = await new AxeBuilder({ page }).analyze();
   expect(scan.violations).toEqual([]);
   expect(
@@ -22,21 +35,25 @@ test("home is accessible, responsive and free of hydration errors", async ({
 
 test("theme follows the system and preserves an explicit selection", async ({
   page,
+  isMobile,
 }) => {
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");
   await expect(page.locator("html")).toHaveClass(/dark/);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
-  await page.getByRole("radio", { name: "Clair", exact: true }).check();
+  await openNavigation(page, isMobile);
+  await page.getByRole("radio", { name: "Clair", exact: true }).click();
   await expect(page.locator("html")).toHaveClass(/light/);
   await page.reload();
   await expect(page.locator("html")).toHaveClass(/light/);
-  await page.getByRole("radio", { name: "Système", exact: true }).check();
+  await openNavigation(page, isMobile);
+  await page.getByRole("radio", { name: "Système", exact: true }).click();
   await expect(page.locator("html")).toHaveClass(/dark/);
 });
 
 test("keyboard users can skip to the content and change the appearance", async ({
   page,
+  isMobile,
 }) => {
   await page.goto("/");
   await page.keyboard.press("Tab");
@@ -45,9 +62,123 @@ test("keyboard users can skip to the content and change the appearance", async (
   ).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/#contenu$/);
-  await page.getByRole("radio", { name: "Clair", exact: true }).focus();
-  await page.keyboard.press("Space");
+  await expect(page.locator("#contenu")).toBeFocused();
+  await openNavigation(page, isMobile);
+  await page.getByRole("radio", { name: "Système", exact: true }).focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(
+    page.getByRole("radio", { name: "Clair", exact: true }),
+  ).toBeFocused();
   await expect(page.locator("html")).toHaveClass(/light/);
+  await page.keyboard.press("End");
+  await expect(
+    page.getByRole("radio", { name: "Sombre", exact: true }),
+  ).toBeChecked();
+  await expect(page.locator("html")).toHaveClass(/dark/);
+});
+
+test("command palette searches pages and restores keyboard focus", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const opener = page.getByRole("button", {
+    name: "Afficher ou masquer la navigation",
+  });
+  await opener.focus();
+  await page.keyboard.press("Control+k");
+  const dialog = page.getByRole("dialog", { name: "Recherche rapide" });
+  const input = dialog.getByRole("combobox");
+  await expect(input).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(input).toBeFocused();
+  await expect(dialog).toHaveCSS("opacity", "1");
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(opener).toBeFocused();
+  await page.keyboard.press("Control+k");
+  await input.fill("territoires");
+  await expect(dialog.getByRole("option")).toHaveCount(1);
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/territoires$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Territoires",
+  );
+});
+
+test("navigation collapses on desktop and behaves as a modal on mobile", async ({
+  page,
+  isMobile,
+}) => {
+  await page.goto("/");
+  const trigger = page.getByRole("button", {
+    name: "Afficher ou masquer la navigation",
+  });
+  await trigger.click();
+  if (isMobile) {
+    const navigation = page.getByRole("dialog", {
+      name: "Navigation principale",
+    });
+    await expect(navigation).toBeVisible();
+    const system = navigation.getByRole("radio", {
+      name: "Système",
+      exact: true,
+    });
+    const home = navigation.getByRole("link", { name: "Orvio, accueil" });
+    await system.click();
+    await system.focus();
+    await page.keyboard.press("Tab");
+    await expect(home).toBeFocused();
+    await page.keyboard.press("Shift+Tab");
+    await expect(system).toBeFocused();
+    await page.keyboard.press("Tab");
+    await page.keyboard.press("Tab");
+    await expect(
+      navigation.getByRole("button", { name: "Fermer la navigation" }),
+    ).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(navigation).toBeHidden();
+    await expect(trigger).toBeFocused();
+    await trigger.click();
+    await navigation
+      .getByRole("link", { name: "Formations", exact: true })
+      .focus();
+    await page.keyboard.press("Escape");
+    await expect(navigation).toBeHidden();
+    await expect(trigger).toBeFocused();
+    await trigger.click();
+    await navigation
+      .getByRole("button", { name: "Ouvrir la recherche rapide" })
+      .click();
+    await expect(navigation).toBeHidden();
+    await expect(
+      page.getByRole("dialog", { name: "Recherche rapide" }),
+    ).toBeVisible();
+    await page.keyboard.press("Escape");
+    await trigger.click();
+    await navigation
+      .getByRole("link", { name: "Formations", exact: true })
+      .focus();
+    await page.keyboard.press("Control+k");
+    await expect(navigation).toBeHidden();
+    await expect(
+      page
+        .getByRole("dialog", { name: "Recherche rapide" })
+        .getByRole("combobox"),
+    ).toBeFocused();
+    await expect(page.getByRole("dialog")).toHaveCount(1);
+    await page.keyboard.press("Escape");
+    await expect(trigger).toBeFocused();
+  } else {
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(
+      page
+        .getByRole("navigation", { name: "Explorer Orvio" })
+        .getByRole("link", { name: "Formations", exact: true }),
+    ).toBeVisible();
+    await trigger.click();
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+  }
 });
 
 test("gallery is restricted to development", async ({ page }) => {

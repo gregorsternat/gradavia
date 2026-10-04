@@ -1,9 +1,10 @@
+pub mod analytics;
 pub mod config;
 pub mod formations;
 
 use axum::{
     Json, Router,
-    extract::{RawQuery, Request, State},
+    extract::{Path, RawQuery, Request, State},
     http::{StatusCode, header},
     middleware::{self, Next},
     response::{IntoResponse, Response},
@@ -17,6 +18,10 @@ use std::time::{Duration, Instant};
 pub fn router(pool: PgPool) -> Router {
     Router::new()
         .route("/v1/formations", get(explorer))
+        .route("/v1/formations/{id}", get(formation_detail))
+        .route("/v1/overview", get(overview))
+        .route("/v1/sources", get(sources))
+        .route("/v1/specialties", get(specialties))
         .route(
             "/health/live",
             get(|| async { Json(json!({"status":"ok"})) }),
@@ -50,6 +55,56 @@ async fn explorer(State(pool): State<PgPool>, RawQuery(raw): RawQuery) -> Respon
     }
 }
 
+async fn overview(State(pool): State<PgPool>, RawQuery(raw): RawQuery) -> Response {
+    let Ok(query) = ExplorerQuery::parse(raw.as_deref().unwrap_or_default()) else {
+        return error(StatusCode::BAD_REQUEST, "invalid_query");
+    };
+    match tokio::time::timeout(
+        Duration::from_secs(15),
+        analytics::repository::overview(&pool, query),
+    )
+    .await
+    {
+        Ok(Ok(result)) => Json(result).into_response(),
+        _ => error(StatusCode::SERVICE_UNAVAILABLE, "unavailable"),
+    }
+}
+
+async fn formation_detail(State(pool): State<PgPool>, Path(id): Path<String>) -> Response {
+    match tokio::time::timeout(
+        Duration::from_secs(15),
+        analytics::repository::detail(&pool, &id),
+    )
+    .await
+    {
+        Ok(Ok(Some(result))) => Json(result).into_response(),
+        Ok(Ok(None)) => error(StatusCode::NOT_FOUND, "not_found"),
+        _ => error(StatusCode::SERVICE_UNAVAILABLE, "unavailable"),
+    }
+}
+
+async fn sources(State(pool): State<PgPool>) -> Response {
+    match tokio::time::timeout(Duration::from_secs(15), analytics::sources::read(&pool)).await {
+        Ok(Ok(result)) => Json(result).into_response(),
+        _ => error(StatusCode::SERVICE_UNAVAILABLE, "unavailable"),
+    }
+}
+
+async fn specialties(State(pool): State<PgPool>, RawQuery(raw): RawQuery) -> Response {
+    let Ok(query) = analytics::specialties::Query::parse(raw.as_deref().unwrap_or_default()) else {
+        return error(StatusCode::BAD_REQUEST, "invalid_query");
+    };
+    match tokio::time::timeout(
+        Duration::from_secs(15),
+        analytics::specialties::read(&pool, query),
+    )
+    .await
+    {
+        Ok(Ok(result)) => Json(result).into_response(),
+        _ => error(StatusCode::SERVICE_UNAVAILABLE, "unavailable"),
+    }
+}
+
 async fn readiness(State(pool): State<PgPool>) -> Response {
     match tokio::time::timeout(
         Duration::from_secs(8),
@@ -67,6 +122,10 @@ async fn observe(request: Request, next: Next) -> Response {
     // No raw URI/query/headers: they can carry user data or credentials.
     let route = match request.uri().path() {
         "/v1/formations" => "formations",
+        "/v1/overview" => "overview",
+        "/v1/sources" => "sources",
+        "/v1/specialties" => "specialties",
+        path if path.starts_with("/v1/formations/") => "formation_detail",
         "/health/live" => "liveness",
         "/health/ready" => "readiness",
         _ => "unknown",

@@ -5,7 +5,19 @@ import { createNodeClient } from "../packages/db/src/node";
 import { rawRecords, sourceDatasets } from "../packages/db/src/schema";
 import { startApi } from "./runtime";
 import { seedFormations } from "./seed-formations";
-import { explorerResponse } from "../apps/web/src/features/formations/domain/api-contract";
+import {
+  detailResponse,
+  explorerResponse,
+} from "../apps/web/src/features/formations/domain/api-contract";
+import {
+  overviewResponse,
+  sourcesResponse,
+} from "../apps/web/src/features/observatory/domain/overview";
+import { specialtyResponse } from "../apps/web/src/features/specialties/domain/api-contract";
+import {
+  defaultSpecialtyPair,
+  secondSpecialtyPair,
+} from "../tests/fixtures/specialties";
 import type {
   ExplorerResult,
   SearchParams,
@@ -161,6 +173,275 @@ export async function testFormationReads(connection: string) {
       "Legacy selectivity spelling",
     );
 
+    const jsonEndpoint = async (pathname: string) => {
+      const result = await fetch(`${api.url}${pathname}`, {
+        signal: AbortSignal.timeout(15_000),
+      });
+      assert.equal(
+        result.status,
+        200,
+        `Successful analytics endpoint: ${pathname}`,
+      );
+      assert.equal(result.headers.get("cache-control"), "no-store");
+      return result.json();
+    };
+    // Independent mutations exercise all statistical value states and continuity.
+    const cases = [0, null, "ns", -3];
+    for (const [index, capacity] of cases.entries()) {
+      await client.query(
+        "UPDATE raw_records SET payload = payload || $3::jsonb WHERE release_id = $1::uuid AND row_number = $2",
+        [
+          first.source.releaseId,
+          index + 1,
+          JSON.stringify({
+            capa_fin: capacity,
+            cod_aff_form: `test-law-${index}`,
+            cod_uai: "TEST-UAI",
+            taux_acces_ens: index === 3 ? 101 : index * 20,
+          }),
+        ],
+      );
+    }
+    await client.query(
+      "UPDATE raw_records SET payload = payload || $1::jsonb WHERE campaign < 2025",
+      [JSON.stringify({ cod_aff_form: "test-law-0", cod_uai: "TEST-UAI" })],
+    );
+    const states = ["observed", "missing", "suppressed", "invalid"];
+    for (const [index, state] of states.entries()) {
+      const detail = detailResponse.parse(
+        await jsonEndpoint(
+          `/v1/formations/${first.source.releaseId}:${index + 1}`,
+        ),
+      ).data;
+      assert.equal(
+        detail.formation.metrics.capacity.state,
+        state,
+        "Source value state remains explicit",
+      );
+      assert.equal(
+        detail.formation.metrics.capacity.value,
+        index === 0 ? 0 : null,
+        "Missing and suppressed counts never become zero",
+      );
+      assert.equal(
+        detail.definitions.length,
+        10,
+        "Each exposed indicator has a definition",
+      );
+      if (index === 0) {
+        assert.equal(
+          detail.history.length,
+          8,
+          "All published campaigns have history slots",
+        );
+        assert.equal(
+          detail.history[0]!.continuity,
+          "changed-description",
+          "Historical description changes are marked",
+        );
+        assert.equal(
+          detail.history.at(-1)!.continuity,
+          "same-source-identity",
+          "Same source identity is recognizable",
+        );
+      }
+    }
+    const ambiguous = detailResponse.parse(
+      await jsonEndpoint(`/v1/formations/${economics.formations[0]!.id}`),
+    );
+    assert.equal(
+      ambiguous.data.history.at(-1)!.continuity,
+      "ambiguous",
+      "Duplicate identities are never silently collapsed into a historical series",
+    );
+    assert.equal(ambiguous.data.history.at(-1)!.metrics, null);
+    const detailId = `${first.source.releaseId}:1`;
+    const canonical = detailResponse.parse(
+      await jsonEndpoint(
+        `/v1/formations/${first.source.releaseId.toUpperCase()}:1`,
+      ),
+    );
+    assert.equal(
+      canonical.data.formation.id,
+      detailId,
+      "UUID input normalizes to captured source identity",
+    );
+    const invalidDetail = await fetch(`${api.url}/v1/formations/not-a-record`);
+    assert.equal(
+      invalidDetail.status,
+      404,
+      "Invalid IDs cannot reach SQL casts",
+    );
+    const missingDetail = await fetch(
+      `${api.url}/v1/formations/${first.source.releaseId}:999999`,
+    );
+    assert.equal(missingDetail.status, 404, "Unknown rows return not found");
+    const sorted = await read({ tri: "capacite" });
+    assert.equal(sorted.query.tri, "capacite");
+    const observedCapacities = sorted.formations
+      .map((f) => f.metrics.capacity.value)
+      .filter((n): n is number => n !== null);
+    assert.deepEqual(
+      observedCapacities,
+      [...observedCapacities].sort((a, b) => b - a),
+      "Capacity sort uses source values descending",
+    );
+    assert.equal(
+      (await read({ tri: "arbitrary" })).query.tri,
+      "nom",
+      "Unknown sorts have a safe default",
+    );
+    const overview = overviewResponse.parse(await jsonEndpoint("/v1/overview"));
+    assert.equal(overview.status, "ready");
+    if (overview.status !== "ready") throw new Error("Expected an overview");
+    assert.equal(
+      overview.data.totals.formations,
+      31,
+      "Overview counts source rows, preserving duplicates",
+    );
+    assert.equal(overview.data.totals.capacity.total, 31);
+    const capacityCoverage = overview.data.coverage.find(
+      (item: { key: string }) => item.key === "capacity",
+    );
+    assert(
+      capacityCoverage!.missing >= 1 &&
+        capacityCoverage!.suppressed >= 1 &&
+        capacityCoverage!.invalid >= 1,
+      "Coverage exposes all non-observed cases",
+    );
+    assert.equal(
+      overview.data.byType.reduce(
+        (sum: number, group: { formations: number }) => sum + group.formations,
+        0,
+      ),
+      31,
+      "Breakdowns reconcile exactly to the selected source",
+    );
+    assert.equal(
+      overview.data.accessDistribution.reduce(
+        (sum: number, bucket: { count: number }) => sum + bucket.count,
+        0,
+      ),
+      overview.data.coverage.find(
+        (item: { key: string }) => item.key === "accessRate",
+      )!.observed,
+      "Histogram excludes invalid and unavailable access rates",
+    );
+    assert.equal(
+      overview.data.history.length,
+      8,
+      "Aggregate history contains one distinct observation per campaign",
+    );
+    assert.deepEqual(
+      overview.data.history.at(-1)!.capacity,
+      overview.data.totals.capacity,
+      "History and current coverage agree",
+    );
+    const inventory = sourcesResponse.parse(await jsonEndpoint("/v1/sources"));
+    assert.equal(
+      inventory.data.datasets.length,
+      14,
+      "Inventory includes the complete committed registry",
+    );
+    assert.equal(
+      inventory.data.totals.published,
+      9,
+      "Only published datasets count as available",
+    );
+    assert(
+      inventory.data.datasets.some(
+        (dataset: { family: string; status: string }) =>
+          dataset.family === "apb" && dataset.status === "not-imported",
+      ),
+      "Unimported APB is not represented as imported",
+    );
+
+    const readSpecialties = async (
+      params: URLSearchParams = new URLSearchParams(),
+    ) => {
+      const result = specialtyResponse.parse(
+        await jsonEndpoint(`/v1/specialties?${params}`),
+      );
+      assert.equal(result.status, "ready");
+      if (result.status !== "ready")
+        throw new Error("Expected specialty observations");
+      return result.data;
+    };
+    const specialties = await readSpecialties();
+    assert.equal(specialties.source.campaign, 2025);
+    assert.deepEqual(
+      specialties.selectedPair.specialties,
+      defaultSpecialtyPair,
+    );
+    assert.equal(
+      specialties.national!.applications.value,
+      1000,
+      "National population comes from level 0",
+    );
+    assert.equal(
+      specialties.groups.reduce(
+        (sum, row) => sum + (row.applications.value ?? 0),
+        0,
+      ),
+      1570,
+      "Overlapping group counts are not collapsed into the national population",
+    );
+    assert.equal(
+      specialties.formations.length,
+      0,
+      "No group drill is selected implicitly",
+    );
+    const cpge = await readSpecialties(
+      new URLSearchParams({
+        paire: specialties.selectedPair.id,
+        groupe: "CPGE",
+      }),
+    );
+    assert.equal(cpge.formations.length, 2);
+    assert(
+      cpge.formations.every((formation) => formation.group === "CPGE"),
+      "Drill rows preserve the selected source scope",
+    );
+    const but = await readSpecialties(
+      new URLSearchParams({
+        paire: specialties.selectedPair.id,
+        groupe: "BUT",
+      }),
+    );
+    assert.equal(
+      but.formations.find(
+        (formation) => formation.formation === "BUT - Informatique",
+      )!.accepted.state,
+      "suppressed",
+    );
+    assert.equal(
+      but.formations.find(
+        (formation) => formation.formation === "BUT - Chimie",
+      )!.accepted.value,
+      0,
+    );
+    const other = await readSpecialties(
+      new URLSearchParams({ paire: JSON.stringify(secondSpecialtyPair) }),
+    );
+    assert.equal(other.national!.applications.value, 800);
+    const invalidSpecialtyQuery = await readSpecialties(
+      new URLSearchParams({ paire: "missing", groupe: "unknown" }),
+    );
+    assert.equal(
+      invalidSpecialtyQuery.requestNotices.length,
+      2,
+      "Unknown specialty selections are explained",
+    );
+    assert.equal(invalidSpecialtyQuery.query.groupe, "");
+    const longSpecialtyQuery = await fetch(
+      `${api.url}/v1/specialties?paire=${"x".repeat(17000)}`,
+    );
+    assert.equal(
+      longSpecialtyQuery.status,
+      400,
+      "Specialty query input is bounded",
+    );
+
     const replacement = randomUUID();
     await db.execute(sql`INSERT INTO source_releases
       SELECT ${replacement}::uuid, dataset_id, repeat('f',64), contract_version, collected_at,
@@ -224,11 +505,47 @@ export async function testFormationReads(connection: string) {
       1,
       "Next request sees the newly published release",
     );
+    const publishedOverview = overviewResponse.parse(
+      await jsonEndpoint("/v1/overview"),
+    );
+    assert.equal(publishedOverview.status, "ready");
+    if (publishedOverview.status === "ready") {
+      assert.equal(
+        publishedOverview.data.totals.formations,
+        1,
+        "A newly published release invalidates cached aggregates immediately",
+      );
+      assert.equal(publishedOverview.data.source.releaseId, replacement);
+    }
+    const retainedDetail = detailResponse.parse(
+      await jsonEndpoint(`/v1/formations/${detailId}`),
+    );
+    assert.equal(
+      retainedDetail.data.source.releaseId,
+      first.source.releaseId,
+      "Saved formation links retain their original snapshot after publication",
+    );
     await db.update(sourceDatasets).set({ currentReleaseId: null });
     assert.equal(
       (await response()).status,
       "empty",
       "No current release is an explicit empty state",
+    );
+    assert.equal(
+      specialtyResponse.parse(await jsonEndpoint("/v1/specialties")).status,
+      "empty",
+      "Unpublished specialty data is explicit",
+    );
+    assert.equal(
+      overviewResponse.parse(await jsonEndpoint("/v1/overview")).status,
+      "empty",
+      "Empty overview stays distinct from unavailable service",
+    );
+    assert.equal(
+      sourcesResponse.parse(await jsonEndpoint("/v1/sources")).data.totals
+        .published,
+      0,
+      "Inventory observes removed publication pointers",
     );
     await client.query(
       "ALTER TABLE source_datasets RENAME TO temporarily_unavailable_datasets",

@@ -858,7 +858,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                   }
                   return <React.Fragment key={index}></React.Fragment>;
                 }}
-                key={category}
+                key={`${category}-line`}
                 name={category}
                 type="linear"
                 dataKey={category}
@@ -876,7 +876,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                   <Line
                     className={cx("cursor-pointer")}
                     strokeOpacity={0}
-                    key={category}
+                    key={`${category}-interaction`}
                     name={category}
                     type="linear"
                     dataKey={category}

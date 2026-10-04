@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 vi.mock("server-only", () => ({}));
-import { loadExplorer } from "./load";
+import { loadExplorer, loadFormation, loadFormationSelection } from "./load";
 
 const ready = () => ({
   status: "ready",
@@ -20,6 +20,7 @@ const ready = () => ({
       campagne: 2025,
       q: "",
       page: 1,
+      tri: "nom",
       type: "",
       region: "",
       departement: "",
@@ -129,5 +130,120 @@ describe("formation HTTP client boundary", () => {
             args.length === 1 && args[0] === "Formation API unavailable.",
         ),
     ).toBe(true);
+  });
+});
+
+const detail = () => {
+  const indicator = { value: 0, state: "observed", sourceField: "capa_fin" };
+  const metrics = Object.fromEntries(
+    [
+      "capacity",
+      "applications",
+      "offers",
+      "admitted",
+      "accessRate",
+      "femaleShare",
+      "scholarshipShare",
+      "generalBacShare",
+      "technologyBacShare",
+      "vocationalBacShare",
+    ].map((key) => [key, indicator]),
+  );
+  return {
+    status: "ready",
+    data: {
+      source: ready().data.source,
+      formation: {
+        id: "11111111-1111-4111-8111-111111111111:1",
+        sourceFormationId: "00042",
+        title: "Synthetic formation",
+        establishment: null,
+        city: null,
+        department: null,
+        region: null,
+        type: null,
+        status: null,
+        selectivity: null,
+        parcoursupUrl: null,
+        metrics,
+      },
+      definitions: [],
+      history: [],
+      notices: [],
+    },
+  };
+};
+
+describe("formation detail HTTP boundary", () => {
+  beforeEach(() => {
+    vi.stubEnv("ORVIO_API_URL", "http://127.0.0.1:3002");
+    vi.spyOn(console, "error").mockImplementation(() => {});
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+    vi.restoreAllMocks();
+  });
+
+  test("rejects malformed identities without contacting upstream and distinguishes missing from unavailable", async () => {
+    const fetcher = vi
+      .fn()
+      .mockResolvedValue(
+        Response.json({ error: { code: "not_found" } }, { status: 404 }),
+      );
+    vi.stubGlobal("fetch", fetcher);
+    expect(await loadFormation("../../admin")).toEqual({ status: "not-found" });
+    expect(fetcher).not.toHaveBeenCalled();
+    expect(await loadFormation(detail().data.formation.id)).toEqual({
+      status: "not-found",
+    });
+    fetcher.mockResolvedValueOnce(
+      Response.json({ error: { code: "internal" } }, { status: 404 }),
+    );
+    expect(await loadFormation(detail().data.formation.id)).toEqual({
+      status: "unavailable",
+    });
+  });
+  test("validates both the requested identity and the published metric states", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockImplementation(() => Promise.resolve(Response.json(detail()))),
+    );
+    expect((await loadFormation(detail().data.formation.id)).status).toBe(
+      "ready",
+    );
+    expect(
+      await loadFormation("11111111-1111-4111-8111-111111111111:2"),
+    ).toEqual({ status: "unavailable" });
+    const invalid = detail();
+    invalid.data.formation.metrics.capacity = {
+      value: 0,
+      state: "missing",
+      sourceField: "capa_fin",
+    };
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(Response.json(invalid)));
+    expect(await loadFormation(detail().data.formation.id)).toEqual({
+      status: "unavailable",
+    });
+  });
+  test("bounds selection requests and deduplicates repeated identities", async () => {
+    const fetcher = vi
+      .fn()
+      .mockImplementation(() =>
+        Promise.resolve(
+          Response.json({ error: { code: "not_found" } }, { status: 404 }),
+        ),
+      );
+    vi.stubGlobal("fetch", fetcher);
+    const ids = Array.from(
+      { length: 20 },
+      (_, index) => `11111111-1111-4111-8111-111111111111:${index + 1}`,
+    );
+    const result = await loadFormationSelection([ids[0]!, ...ids]);
+    expect(result).toHaveLength(12);
+    expect(fetcher).toHaveBeenCalledTimes(12);
+    expect(result.map((row) => row.id)).toEqual(ids.slice(0, 12));
   });
 });

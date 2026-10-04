@@ -18,17 +18,18 @@ to run the processes independently; see the [API contract](api.md).
 
 ## Environment
 
-| Variable                | Use                                                                       |
-| ----------------------- | ------------------------------------------------------------------------- |
-| `DATABASE_URL`          | Neon development pooled URL, Rust API and connectivity diagnostic         |
-| `DATABASE_URL_UNPOOLED` | Direct development URL, migrations and SQLx                               |
-| `PORT`                  | Development server port, default 3000                                     |
-| `API_BIND`              | Rust listener, default `127.0.0.1:3002`; choose a distinct worktree port  |
-| `ORVIO_API_URL`         | Trusted API origin for independent Next.js runs; derived by `just dev`    |
-| `E2E_PORT`              | Dedicated browser-test server port; defaults 3100/3101 for dev/production |
-| `ARTIFACTS_DIR`         | Checkout-local diagnostics directory, default `.artifacts`                |
-| `RAW_DATA_DIR`          | Retained raw exports and manifests, default `.data/raw`                   |
-| `TEST_DATABASE_URL`     | Optional local PostgreSQL 18 database named `orvio_test`                  |
+| Variable                | Use                                                                                        |
+| ----------------------- | ------------------------------------------------------------------------------------------ |
+| `DATABASE_URL`          | Neon development pooled URL, Rust API and connectivity diagnostic                          |
+| `DATABASE_URL_UNPOOLED` | Direct development URL, migrations and SQLx                                                |
+| `PORT`                  | Development server port, default 3000                                                      |
+| `API_BIND`              | Rust listener, default `127.0.0.1:3002`; choose a distinct worktree port                   |
+| `ORVIO_DATA_ENV_FILE`   | Optional explicit environment file for development API reads only; preserves root settings |
+| `ORVIO_API_URL`         | Trusted API origin for independent Next.js runs; derived by `just dev`                     |
+| `E2E_PORT`              | Dedicated browser-test server port; defaults 3100/3101 for dev/production                  |
+| `ARTIFACTS_DIR`         | Checkout-local diagnostics directory, default `.artifacts`                                 |
+| `RAW_DATA_DIR`          | Retained raw exports and manifests, default `.data/raw`                                    |
+| `TEST_DATABASE_URL`     | Optional local PostgreSQL 18 database named `orvio_test`                                   |
 
 Copy `.env.example` only when `.env.local` does not exist. Keep secrets ignored
 and restrict local file permissions (`chmod 600 .env.local`). Never paste
@@ -50,7 +51,14 @@ PostgreSQL major version: 18.
 The imported datasets live on `development-raw-ingestion-cc59`
 (`br-wild-surf-b13o7v3x`). The formation explorer worktree uses
 `development-formation-explorer-fdf3` (`br-square-pine-b1qud6l4`), copied from that
-populated branch. The original `development` branch does not contain the import.
+populated branch. The original `development` branch does not contain the import. A successful
+`db-check` confirms connectivity, not schema or data availability. To preview
+against an existing populated development configuration without replacing the
+root environment, run `ORVIO_DATA_ENV_FILE=/absolute/path/to/.env.local just dev`.
+The supervisor reads only its `DATABASE_URL` for the API child and removes both
+connection strings and the selection path from the web environment. Missing or
+unreadable explicit files fail safely instead of falling back to another DB.
+This setting does not affect migrations, ingestion or `db-check`.
 
 Use the development branch for daily work. Branches contain independent data and
 schema history after creation. For simultaneous schema work, use a separate

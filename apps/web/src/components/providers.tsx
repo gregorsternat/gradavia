@@ -3,6 +3,7 @@
 import { MotionConfig } from "motion/react";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
+import { FormationSelectionProvider } from "@/features/formations/ui/selection-provider";
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
@@ -12,7 +13,9 @@ export function Providers({ children }: { children: ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+      <MotionConfig reducedMotion="user">
+        <FormationSelectionProvider>{children}</FormationSelectionProvider>
+      </MotionConfig>
     </ThemeProvider>
   );
 }

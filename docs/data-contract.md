@@ -2,14 +2,15 @@
 
 The [raw ingestion implementation](ingestion.md) enforces collection, identity,
 representation and publication rules. The formation explorer implements the
-descriptive read contract below. Statistical harmonization, indicator calculations
-and comparisons remain future work.
+read contracts below, including source indicators, within-campaign comparisons,
+and explicitly qualified historical observations. APB/Parcoursup harmonization
+remains deferred.
 
 ## Source and coverage
 
 Primary source: [Parcoursup public dataset](https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-parcoursup/).
 Its [catalog API](https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-parcoursup)
-and field definitions were reviewed on 2026-10-03.
+and field definitions were reviewed on 2026-10-04.
 
 At review time, this mutable catalog entry describes the 2025 campaign, 14,252
 formation records, an update dated 2026-03-09, and Licence Ouverte v2.0.
@@ -43,8 +44,9 @@ Represent at least three distinct states:
 3. Suppressed/masked value.
 
 Retain the original marker and parsing context in the raw data. Do not impute
-suppressed values. Invalid values must fail validation or enter an explicit
-quarantine report; they must not silently disappear.
+suppressed values. Ingestion rejects invalid representations. Semantically invalid
+indicators remain in the raw data and the API exposes them as `state: "invalid"`
+with a null value; overview coverage counts them explicitly.
 
 Raw ingestion validates representations, field coverage, campaigns and identifiers
 against a versioned source contract. It retains field definitions for later
@@ -95,14 +97,15 @@ Search matches literal words with AND across title, establishment, city,
 department and region. Case, combining accents and the French ligatures `œ` and
 `æ` are folded for search, without altering displayed source strings. SQL LIKE
 wildcards in user input remain literal. Filters use exact source values except
-for the documented selectivity labels. Rows sort deterministically by title,
-establishment (case/accent folded) and row number; the page size is fixed at 25.
+for the documented selectivity labels. Rows sort by name or descending observed capacity, applications, admitted count
+or official access rate. Missing and invalid values sort last. Folded title,
+establishment and row number break ties; the page size is fixed at 25.
 
 Absent descriptive fields are explicitly unavailable. Source URLs must be valid
 HTTPS links on Parcoursup hosts without embedded credentials; unavailable links
 are not reconstructed. Dataset links, producer, license, campaign, collection
-date and source modification date accompany the results. No numerical admissions
-indicator or admission probability is exposed by this feature.
+date and source modification date accompany the results. The reviewed source indicators below accompany each record. No admission
+probability or personalized score is calculated.
 
 ## Indicators and comparisons
 
@@ -131,3 +134,113 @@ schema drift; duplicate/replayed releases; failed runs; and atomic publication.
 Review results against the pinned source release and document any source
 limitations. These checks run through offline fixtures and disposable PostgreSQL
 integration tests. See [quality](quality.md) for observed evidence.
+
+## Published indicators
+
+The API exposes ten source fields. It never derives the official access rate or
+averages percentages across formations. Raw archives retain the original source
+representation. API numbers use double precision; presentation may round
+percentages to one decimal and counts to whole numbers.
+Every detail carries its campaign, retained metadata label, field, unit and
+population/phase explanation. Source metadata descriptions are retained when
+published.
+
+| API key              | Source field     | Unit and population                                   | Phase / denominator                                                                                                 |
+| -------------------- | ---------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `capacity`           | `capa_fin`       | Published places for one formation                    | Campaign capacity; not currently vacant places                                                                      |
+| `applications`       | `voe_tot`        | Candidates to one formation                           | All campaign phases; sums count formation candidatures, not people                                                  |
+| `offers`             | `prop_tot`       | Candidates receiving a proposition from one formation | All campaign phases                                                                                                 |
+| `admitted`           | `acc_tot`        | Candidates accepting a proposition from one formation | All campaign phases                                                                                                 |
+| `accessRate`         | `taux_acces_ens` | Source percentage                                     | Main phase; candidates whose rank is at most the last called rank of their group / candidates with a validated wish |
+| `femaleShare`        | `pct_f`          | Published female share                                | Women admitted / all admitted                                                                                       |
+| `scholarshipShare`   | `pct_bours`      | Published scholarship share                           | Scholarship neo-baccalaureate admitted / neo-baccalaureate admitted                                                 |
+| `generalBacShare`    | `pct_bg`         | Published general baccalaureate share                 | General neo-baccalaureate admitted / neo-baccalaureate admitted                                                     |
+| `technologyBacShare` | `pct_bt`         | Published technological baccalaureate share           | Technological neo-baccalaureate admitted / neo-baccalaureate admitted                                               |
+| `vocationalBacShare` | `pct_bp`         | Published vocational baccalaureate share              | Vocational neo-baccalaureate admitted / neo-baccalaureate admitted                                                  |
+
+The three baccalaureate shares refer to neo-baccalaureate admissions, so they must
+not be combined with an all-admitted denominator. Independently rounded source
+percentages need not sum to exactly 100. An absent field, including the access
+rate in 2018, stays unavailable.
+
+`MetricValue` distinguishes `observed`, `missing`, `suppressed` and `invalid`.
+Only observed values have a number. Counts must be nonnegative safe integers;
+percentages must lie in [0, 100]. Empty/null, `na`, `n/a`, `nd` and textual `null`
+are unavailable. `ns`, `n.s.`, `s`, `ss`, `secret`, `*`, `<5` and `< 5` are
+suppressed. Other malformed markers remain explicitly invalid. Marker parsing
+is case-insensitive and trims surrounding whitespace; immutable raw records
+retain the original representation. No value is imputed.
+
+## Overview aggregates and coverage
+
+Each overview uses exactly one captured Parcoursup admissions release/campaign.
+Types and regions are source labels; absent labels form an explicit “Non
+renseigné” group. The formation count is a source row count, retaining duplicates.
+The establishment count is distinct nonempty `cod_uai`, never inferred names.
+
+Capacity, candidature and admitted totals sum only observed source values. Every
+sum includes `observed` and `total` row counts. If no value is observed, its sum is
+null; a fully observed zero remains zero. Partial sums are not estimates of the
+missing population. Per-indicator coverage separately counts missing, suppressed
+and invalid values. Type and region row counts reconcile to the overview total.
+
+The access histogram counts source records with an observed official rate in
+[0,20), [20,40), [40,60), [60,80), [80,100]. It is not a national access rate or
+candidate-weighted distribution. No arithmetic or weighted mean access rate is
+published.
+
+Aggregate history consists of one independent campaign observation, with its own
+captured release and coverage. Changing formation supply, classifications and
+source definitions can change totals. No APB values are stitched into Parcoursup
+series, no synthetic missing campaign is filled and no growth claim assumes a
+constant population. The source inventory reports all 14 registered sources,
+including unimported sources, and preserves their distinct grains.
+
+## Formation identity and comparison
+
+Detail URLs retain `(release_id, row_number)` snapshot identity. They remain
+readable after later publication while the archive is retained. Historical
+candidate matching requires the same nonempty opaque `cod_aff_form` **and**
+`cod_uai`. One match exposes the source observation; description, type or
+establishment-name changes are marked `changed-description`. Multiple matches
+are `ambiguous` with no historical metrics; zero matches are `missing`. Even
+`same-source-identity` is evidence of shared source identifiers, not a guarantee
+of unchanged formation content. Historical charts must preserve these gaps and
+explain continuity, never silently present the matching as a stable cohort.
+
+Formation comparisons use the same campaign and indicator definitions. A
+comparison containing different snapshots must retain each source, and differences
+between types/selectivity/populations must be visible. No ranking is labelled
+quality, chance of admission, or an applicant recommendation.
+
+## Specialty pairs: 2025 scope
+
+The specialty explorer uses the retained
+[2025 general baccalaureate specialty dataset](https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-parcoursup-enseignements-de-specialite-bacheliers-generaux-3/).
+It does not infer causal effects of taking a specialty pair, school-level
+selection, individual admission chances or cross-year equivalence.
+
+The grain is `(campaign, doublette, niveau_d_agregation,
+regroupement_de_formations, formation)`. `doublette` is the published two-item
+specialty array, preserved in source order. The three published counts are:
+
+| API key        | Source field                | Population                                                                                                     |
+| -------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `applications` | `voeux`                     | General baccalaureate graduates of this specialty pair with at least one confirmed wish within the row's scope |
+| `offers`       | `propositions_d_admissions` | Those graduates receiving at least one offer within the row's scope                                            |
+| `accepted`     | `acceptations`              | Those graduates accepting an offer within the row's scope                                                      |
+
+Counts use the source's 2025 campaign scope, not the main-phase rank-based access
+rate. Their units are people **within one row's scope**. The same person may
+appear in multiple formation groups or formation labels, so neither rows nor
+aggregation levels may be summed into a population. National totals must be read
+from level 0, groups from level 1, and group drilldowns from level 2. Suppressed,
+missing and invalid counts retain the same explicit `MetricValue` states.
+
+On 2026-10-04, read-only profiling of the retained release found 75 specialty
+pairs, 75 level-0 rows, 5,475 level-1 rows (73 groups) and 11,661 level-2 rows
+(313 formation labels), with zero duplicate keys at the stated grain. This is
+snapshot evidence, not a hard-coded expectation for future releases. The API
+refuses to aggregate duplicate national keys. The older 2021–2024 specialty
+sources remain visible in the inventory but require a separate methodology
+review before longitudinal display.

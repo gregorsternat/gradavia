@@ -58,7 +58,9 @@ match each source and campaign to its retained manifest. A complete repeat took
 confirmed no new records or releases, unchanged current pointers and campaign
 counts, and no running attempts. Storage and timing are recorded in the
 [execution plan](exec-plans/completed/raw-ingestion.md).
-Diagnostics remain in `.artifacts`; complete source archives remain in `.data/raw`.
+Diagnostics and source archives were retained in the original ingestion checkout
+at that milestone. The current observatory checkout does not include that
+`.data/raw` tree; archive inventory and backup are tracked as OPS-002.
 
 ## Formation explorer verification (before Rust API extraction)
 
@@ -138,11 +140,99 @@ No remote CI, merge or deployment was performed for this API extraction. API
 hosting, network exposure, production database roles and monitoring remain
 separate work in [technical debt](exec-plans/tech-debt.md).
 
+## Complete observatory verification
+
+Observed locally on 2026-10-04 (Asia/Shanghai):
+
+- Source-aware indicators, overview, regional exploration, immutable detail,
+  qualified history, same-campaign comparison, browser-local favorites and
+  2025 specialty destinations are implemented behind the existing Rust/Next.js
+  boundary. beUI controls, Tremor charts and Motion transitions share the new shell.
+- Independent SQL reconciliation on the existing populated development branch
+  matched the 2025 API totals: 14,252 formation rows, 4,058 identified establishments,
+  769,351 places, 13,502,385 cumulative formation applications and 660,752 admitted.
+  These application counts are not unique people.
+- The source inventory returned all 14 published datasets and 357,164 retained
+  rows. The 2025 specialties source contains 75 national rows, 5,475 group rows and
+  11,661 formation rows. Reviewed count fields were complete and their ordering
+  consistent; overlapping groups and levels are never added into a national total.
+- Live read-only measurements after query optimization: overview 4.24 seconds on
+  its initial request and 1.36 seconds cached, first request for another campaign
+  2.12 seconds, formation detail 2.72 seconds. These are observations from this
+  network/session, not a production latency guarantee. Cache keys are revalidated
+  against current source pointers on every request.
+- The original root environment points to an empty development branch. Live review
+  explicitly selects the populated `development-formation-explorer-fdf3` branch
+  using `ORVIO_DATA_ENV_FILE`; no existing environment file or remote data was
+  modified. The development supervisor strips that path and database credentials
+  from Next.js.
+- Real Chromium views were reviewed at 1440×1000 and 390×844 in light and dark
+  themes. Live journeys covered campaign selection, search/card views, detail
+  and keyboard history tabs, comparison, favorite persistence, specialty pair
+  search/drill-down, territory filtering, source definitions and the command
+  palette. Mobile document width remained within the viewport. No browser
+  warnings or errors were captured during these journeys.
+- Visual review corrected cramped sorting controls, oversized mobile comparison
+  and specialty cards, territorial control wrapping and English source-family
+  labels. Contrast, hydration and immediate keyboard checks passed 20 focused
+  desktop/mobile repetitions with unchanged keyboard assertions.
+- Final `just verify` passed on the completed implementation: formatting, lint,
+  TypeScript, architecture/documentation checks, Clippy, 30 Vitest cases, seven
+  Node boundary/environment cases, 28 Rust cases, PostgreSQL 18 integration and
+  credential-free builds. The explicitly database-backed Rust case runs in the
+  integration phase rather than the ordinary unit invocation.
+- Playwright passed 54 development cases, 52 production cases and six production
+  state cases (unconfigured, empty and unavailable). Two development-only gallery
+  interaction cases were intentionally skipped in production; its HTTP 404 is
+  tested separately. Coverage includes rapid search/sort/view transitions,
+  shared comparison additions and successive removals, exports, persistence,
+  keyboard access, reduced motion, themes and accessibility scans.
+
+Evidence: `.artifacts/data-review/reconciliation.json`,
+`.artifacts/data-review/live-profile-final.json`,
+`.artifacts/backend-verification/database/result.json`,
+`.artifacts/observatory-visual/review.json`, screenshots in
+`.artifacts/observatory-visual/` and
+`.artifacts/verify-observatory-delivery.log`. Reproduced failures and their traces
+remain under `.artifacts/observatory-regressions/` and
+`.artifacts/ui-foundation-regressions/`. Local verification, remote CI, merge and
+public deployment remain separate states; no remote CI, merge or deployment was
+performed for this milestone.
+
+## PR #10 CI regression repair (2026-10-04)
+
+The first remote [verification run](https://github.com/gregorsternat/orvio/actions/runs/37183463982)
+failed four development browser cases. Its traces identified visible tooltip
+content outside landmarks, specialty text entry before hydration completed,
+and a first detail-route compilation taking 5.3 seconds against a five-second
+assertion budget. All preceding checks had passed.
+
+- Portalled tooltips now have a named complementary landmark while keeping
+  their tooltip role and trigger description. The accessibility test explicitly
+  opens the theme tooltip before scanning the page.
+- Combobox input remains disabled until hydration completes. A regression test
+  gates JavaScript downloads, then verifies clean text entry and keyboard
+  selection after releasing the gate on desktop and mobile.
+- Development assertions allow 15 seconds for on-demand route compilation.
+  Production assertions keep their five-second budget; retries remain disabled.
+- The affected journeys passed 24 focused desktop/mobile repetitions with
+  `CI=true` and two workers.
+- Full `just verify` also passed with `CI=true`: all static/unit/database/build
+  checks, 56 development browser cases, 54 production cases and six production
+  state cases. Two development-gallery cases remain intentionally skipped in
+  production.
+
+Evidence: `.artifacts/pr10-ci-failure.log`, downloaded CI screenshots/traces and
+server logs in `.artifacts/pr10-ci/`, and
+`.artifacts/pr10-focused-fixed.log` and `.artifacts/pr10-verify.log`.
+
 ## Scope and limitations
 
-- Formation detail pages, numerical indicators, comparisons, apprenticeship
-  exploration and import scheduling remain deferred. Historical source links may
-  point to current fiches or be unavailable; Orvio does not reconstruct them.
+- Formation detail, numerical indicators, same-campaign comparison, favorites,
+  national/regional exploration and 2025 specialties are now implemented.
+  Apprenticeship exploration, older specialty methodology and import scheduling
+  remain deferred. Historical source links may point to current fiches or be
+  unavailable; Orvio does not reconstruct them.
 - Builds and CI do not contact Neon or public datasets.
 - No remote CI run, merge or deployment is claimed for the raw ingestion changes.
 - Automated accessibility scans complement keyboard and visual review; they do

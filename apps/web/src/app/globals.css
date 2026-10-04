@@ -1,51 +1,59 @@
 @import "tailwindcss";
-
 @custom-variant dark (&:where(.dark, .dark *));
-
 :root {
   color-scheme: light;
-  --background: #fafaf9;
-  --foreground: #181818;
+  --background: #ffffff;
+  --foreground: #202124;
   --surface: #ffffff;
-  --muted: #626262;
-  --border: #dfdfdc;
-  --subtle: #f1f1ef;
-  --chart-primary: #202020;
-  --chart-secondary: #767676;
+  --sidebar: #f7f7f8;
+  --muted: #64666e;
+  --border: #e8e9ec;
+  --subtle: #f2f3f5;
+  --chart-primary: #313640;
+  --chart-secondary: #9299a7;
 }
-
 .dark {
   color-scheme: dark;
-  --background: #111111;
-  --foreground: #ededeb;
-  --surface: #191919;
-  --muted: #aaa9a5;
-  --border: #30302f;
-  --subtle: #202020;
-  --chart-primary: #ededeb;
-  --chart-secondary: #aaa9a5;
+  --background: #151618;
+  --foreground: #ededef;
+  --surface: #1b1c1f;
+  --sidebar: #111214;
+  --muted: #a5a7ae;
+  --border: #2a2c31;
+  --subtle: #24262b;
+  --chart-primary: #e1e4eb;
+  --chart-secondary: #818999;
 }
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
+  --color-sidebar: var(--sidebar);
   --color-muted: var(--subtle);
   --color-border: var(--border);
+  --color-input: var(--border);
   --color-subtle: var(--subtle);
   --color-primary: var(--foreground);
   --color-primary-foreground: var(--background);
   --color-card: var(--surface);
+  --color-card-foreground: var(--foreground);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--foreground);
+  --color-accent: var(--subtle);
+  --color-accent-foreground: var(--foreground);
+  --color-secondary: var(--subtle);
+  --color-secondary-foreground: var(--foreground);
+  --color-ring: var(--foreground);
   --color-muted-foreground: var(--muted);
-  --font-sans: Arial, Helvetica, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "SFMono-Regular", Consolas, monospace;
 }
-
 * {
   box-sizing: border-box;
 }
 html {
   min-width: 320px;
+  scroll-padding-top: 90px;
 }
 body {
   margin: 0;
@@ -58,11 +66,87 @@ body {
 }
 :focus-visible {
   outline: 2px solid var(--foreground);
-  outline-offset: 5px;
+  outline-offset: 4px;
 }
-
-/* Keep one semantic filter form across breakpoints. Native details stays usable
-   on mobile; desktop exposes its contents even when the disclosure is closed. */
+button,
+a,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+button:not(:disabled),
+[role="button"] {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+summary {
+  cursor: pointer;
+}
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+.page-title {
+  font-size: clamp(1.65rem, 2.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.045em;
+}
+.page-subtitle {
+  margin-top: 0.65rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.panel-heading {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.eyebrow {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.orvio-chart {
+  --color-gray-500: var(--chart-secondary);
+  --color-gray-900: var(--chart-primary);
+  --color-gray-200: var(--border);
+  --color-gray-800: var(--border);
+  --color-gray-950: var(--surface);
+  --color-gray-50: var(--surface);
+  font-size: 11px;
+}
+.orvio-chart .recharts-cartesian-axis-tick-value {
+  fill: var(--muted);
+}
+.orvio-chart .recharts-cartesian-grid line {
+  stroke: var(--border);
+  stroke-dasharray: 3 4;
+}
+.orvio-chart .recharts-tooltip-wrapper {
+  z-index: 10;
+}
+.chart-table th,
+.chart-table td {
+  padding: 0.6rem 0.75rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.chart-table th:first-child,
+.chart-table td:first-child {
+  text-align: left;
+}
+.chart-table tbody tr + tr {
+  border-top: 1px solid var(--border);
+}
 @media (min-width: 1024px) {
   .formation-filters::details-content {
     content-visibility: visible;
@@ -71,20 +155,6 @@ body {
     display: block;
   }
 }
-
-/* A shared visual treatment for source components; no separate library theme. */
-.orvio-chart {
-  --color-gray-500: var(--chart-secondary);
-  --color-gray-900: var(--chart-primary);
-  --color-gray-200: var(--border);
-  --color-gray-800: var(--border);
-}
-
-/* Recharts 3 renders tick text outside the axis group's fill utilities. */
-.orvio-chart .recharts-cartesian-axis-tick-value {
-  fill: var(--muted);
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

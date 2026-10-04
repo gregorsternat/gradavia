@@ -12,8 +12,9 @@ const query = z.object({
   campagne: campaign.nullable(),
   q: z.string(),
   page: z.number().int().min(1).max(999999),
+  tri: z.enum(["nom", "capacite", "candidatures", "admis", "acces"]),
 });
-const source = z.object({
+export const campaignSourceSchema = z.object({
   campaign,
   releaseId: z.uuid(),
   datasetId: z.string().min(1),
@@ -23,8 +24,34 @@ const source = z.object({
   modifiedAt: z.iso.datetime().nullable(),
   fields: z.array(z.string()),
 });
+export const formationId = z.string().regex(/^[0-9a-f-]{36}:[1-9]\d*$/);
+export const metric = z
+  .object({
+    value: z.number().finite().nonnegative().nullable(),
+    state: z.enum(["observed", "missing", "suppressed", "invalid"]),
+    sourceField: z.string(),
+  })
+  .refine(
+    (item) => (item.state === "observed") === (item.value !== null),
+    "Inconsistent metric state",
+  );
+export const metrics = z.object({
+  capacity: metric,
+  applications: metric,
+  offers: metric,
+  admitted: metric,
+  accessRate: metric,
+  femaleShare: metric,
+  scholarshipShare: metric,
+  generalBacShare: metric,
+  technologyBacShare: metric,
+  vocationalBacShare: metric,
+});
+const source = campaignSourceSchema;
 const formation = z.object({
-  id: z.string().regex(/^[0-9a-f-]{36}:[1-9]\d*$/),
+  id: formationId,
+  sourceFormationId: nullableText,
+  metrics,
   title: z.string(),
   establishment: nullableText,
   city: nullableText,
@@ -100,3 +127,58 @@ export type Facets = z.infer<typeof facets>;
 export type ExplorerData = z.infer<typeof data>;
 export type ExplorerResult =
   z.infer<typeof explorerResponse> | { status: "unavailable" };
+
+export const detailResponse = z.object({
+  status: z.literal("ready"),
+  data: z
+    .object({
+      source,
+      formation,
+      definitions: z.array(
+        z.object({
+          key: z.string(),
+          field: z.string(),
+          label: z.string(),
+          unit: z.string(),
+          description: z.string(),
+        }),
+      ),
+      history: z.array(
+        z.object({
+          campaign,
+          formationId: formationId.nullable(),
+          source,
+          metrics: metrics.nullable(),
+          continuity: z.enum([
+            "same-source-identity",
+            "changed-description",
+            "ambiguous",
+            "missing",
+          ]),
+        }),
+      ),
+      notices: z.array(z.string()),
+    })
+    .refine(
+      (value) => value.formation.id.startsWith(`${value.source.releaseId}:`),
+      "Inconsistent formation identity",
+    ),
+});
+export type Metric = z.infer<typeof metric>;
+export type FormationMetrics = z.infer<typeof metrics>;
+export type MetricKey = keyof FormationMetrics;
+export type FormationDetail = z.infer<typeof detailResponse>["data"];
+export type DetailResult =
+  | z.infer<typeof detailResponse>
+  | { status: "not-found" }
+  | { status: "unavailable" };
+
+/** The App Router can retain percent-encoded dynamic segments during client navigation. */
+export function decodeFormationRouteId(segment: string): string | null {
+  try {
+    const decoded = decodeURIComponent(segment);
+    return formationId.safeParse(decoded).success ? decoded : null;
+  } catch {
+    return null;
+  }
+}
