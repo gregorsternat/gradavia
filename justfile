@@ -121,5 +121,11 @@ cf-api-deploy:
     env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u GRADAVIA_API_DATABASE_URL pnpm --filter @gradavia/api-worker cf:deploy
 
 # Publish the built website and its custom domains after the API is ready.
-cf-web-deploy: cf-build
+cf-web-publish:
     env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u GRADAVIA_API_DATABASE_URL -u GRADAVIA_API_URL pnpm --filter @gradavia/web cf:deploy
+
+cf-web-deploy: cf-build cf-web-publish
+
+# Verify the public Cloudflare-to-database path without database credentials.
+cf-smoke:
+    node scripts/cloudflare-smoke.mjs

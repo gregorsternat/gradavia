@@ -126,6 +126,39 @@ Verification evidence is recorded in the
 `ea72f0af-50f3-4a22-8700-c1d2edb29d69`. Both workers.dev URLs and preview URLs are
 disabled; only the web Worker owns custom domains.
 
+## Automatic main releases
+
+The GitHub Actions `CI` workflow verifies pull requests and pushes to `main`.
+Only a successful main push can enter the `Deploy production` job. Pull requests
+never receive the deployment token or publish Workers.
+
+The production job builds and dry-runs both Workers and the Linux container
+before publishing. Releases share a non-cancelling concurrency group with `queue: max` so a new
+push cannot interrupt the API/website pair or replace a pending release. Immediately before publishing, the
+job checks that its commit is still the current main revision; superseded runs
+skip publication. Main verification is grouped by commit so an old rerun cannot
+cancel verification of a newer main commit. The private API is published first, followed by the prebuilt
+website. The final browser smoke requires real positive formation results and a
+formation detail with provenance, in addition to health and canonical routing.
+
+GitHub Actions needs one repository or `production` environment secret:
+`CLOUDFLARE_API_TOKEN`. Use a dedicated token scoped to this Cloudflare account
+with Workers Scripts Edit and Containers Edit, plus Workers Routes Edit scoped
+to `gradavia.com`. The account and zone IDs are already in Wrangler configuration.
+Do not grant unrelated KV, R2, D1 or Pages permissions. The production database
+credential remains in the API Worker's existing secret; do not copy it to GitHub.
+
+The token is supplied only to the publishing step. Verification and image/web
+builds do not receive it. GitHub's `production` environment links to the site and
+records deployment outcomes. Failed smoke checks retain sanitized status and a
+public-page screenshot for seven days. A failed release does not automatically
+roll back either Worker; inspect the job and use the rollback procedure below.
+Migrations and ingestion remain explicit operations outside this workflow.
+
+Follow the [continuous deployment plan](exec-plans/active/cloudflare-continuous-deployment.md)
+for activation and live-run evidence. After setup, pushing or merging into main
+is sufficient; no local Wrangler login or manual publishing command is needed.
+
 ## Release checks
 
 1. Run `just verify` and the Cloudflare-specific build/dry-run checks.

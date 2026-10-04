@@ -98,4 +98,4 @@ Run commands through `mise exec --` if mise is not activated in your shell.
 | `scripts`, `tests`  | Diagnostics and executable guardrails                              |
 | `docs`              | Product, data contract, decisions, plans, verification evidence    |
 
-Start with [architecture](ARCHITECTURE.md), the [documentation index](docs/index.md), and [AGENTS.md](AGENTS.md). The [deployment guide](docs/deployment.md) covers the Cloudflare website and private Rust Container. The public website is [gradavia.com](https://gradavia.com); live verification is recorded in [quality status](docs/quality.md).
+Start with [architecture](ARCHITECTURE.md), the [documentation index](docs/index.md), and [AGENTS.md](AGENTS.md). The [deployment guide](docs/deployment.md) covers the Cloudflare website and private Rust Container. The public website is [gradavia.com](https://gradavia.com). GitHub Actions verifies main pushes before deploying the API and website; setup and release evidence are recorded in the deployment guide and [quality status](docs/quality.md).

@@ -324,6 +324,8 @@ test("landing search and preview remain usable at a 320 pixel width", async ({
   const preview = page.getByRole("region", {
     name: "Aperçu de l’observatoire",
   });
+  // Wait for the client-rendered preview before using its accordion control.
+  await expect(preview.locator(".recharts-surface")).toBeVisible();
   await preview.getByRole("button", { name: "Voir les valeurs" }).click();
   await expect(
     preview.getByRole("table", {

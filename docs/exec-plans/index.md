@@ -6,7 +6,8 @@ Keep brief work brief; use a plan when several boundaries change together.
 
 ## Active
 
-None.
+- [Cloudflare continuous deployment](active/cloudflare-continuous-deployment.md):
+  verified main pushes publish the production API and website.
 
 ## Completed
 

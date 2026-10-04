@@ -455,3 +455,36 @@ one-instance limit is not a monetary cap. See the
 Evidence: `.artifacts/landing-alignment/verify.log`, `browser-rerun.log`, and
 screenshots in `.artifacts/landing-alignment/output/playwright/`.
 No remote CI or deployment was performed.
+
+## Continuous deployment preparation (2026-10-05)
+
+- The CI workflow now gates production publication on full verification of a main
+  push. Pull requests cannot deploy. Verification is grouped by main SHA so old
+  reruns cannot cancel a newer revision; production jobs queue without cancelling
+  an active API/web pair and check the current main SHA before publishing.
+- Both releases are built before mutation. The API publishes before the prebuilt
+  web Worker. Only that publishing step receives `CLOUDFLARE_API_TOKEN`; the
+  runtime database credential stays in Cloudflare. GitHub secret metadata confirms
+  that the owner supplied the token; its value was not read or logged.
+- The live public smoke passed with 14,252 formations, a real formation detail and
+  provenance, health 200, canonical 308 preserving the query, and gallery 404.
+  It retries bounded propagation/cold starts and records sanitized diagnostics.
+- Two earlier main CI failures (runs `37220586933` and `37221950500`) were isolated
+  to pre-hydration keyboard/click actions in existing browser tests. Trace
+  snapshots showed chart placeholders before the action and SVGs afterward. The
+  affected tests now await the client-rendered charts, following the suite's
+  existing convention, without fixed sleeps, retries or product changes.
+- Final `CI=true E2E_PORT=3360 mise exec -- just verify` passed: static checks,
+  Rust/TypeScript suites, PostgreSQL 18 contracts, credential-free builds, 76
+  development browser cases, 74 production cases and 12 state cases. Two
+  development-gallery cases were intentionally skipped in production.
+- Independent static review found no blockers. Focused Prettier, ESLint and diff
+  checks passed. Actionlint 1.7.12 requires a narrowly scoped ignore for the newer
+  `queue` key; its remaining checks pass. The queue syntax is supported by the
+  [current GitHub workflow reference](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idconcurrency).
+
+Evidence: `.artifacts/cloudflare-ci/verify.log`, prior failure logs/traces under
+`.artifacts/cloudflare-ci/run-*`, and `.artifacts/cloudflare/smoke/result.json`.
+These are pre-merge checks; actual CI, merge and production release outcomes are
+recorded by the repository's [GitHub Actions runs](https://github.com/gregorsternat/gradavia/actions/workflows/ci.yml).
+A stored secret or local smoke does not establish a successful GitHub deployment.
