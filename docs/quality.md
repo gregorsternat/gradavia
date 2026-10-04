@@ -656,3 +656,10 @@ The release smoke exposed an implicit five-second detail assertion deadline:
 measured public detail/provenance readiness was 6.4–7.4 seconds with no page error.
 That assertion now waits for the expected result within a bounded 30-second
 budget; provenance and subsequent complete-snapshot checks remain required.
+
+A subsequent CI trace caught an early mobile navigation click toggling the
+desktop state while the responsive external-store snapshot was still hydrating.
+The source-owned sidebar trigger now waits for hydration and activation reads
+the actual viewport. A deterministic browser regression holds JavaScript until
+the disabled server-rendered trigger is observed, then verifies its first
+activation on desktop and mobile after hydration.
