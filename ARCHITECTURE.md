@@ -130,10 +130,16 @@ browser harness remove database credentials from the web process environment.
 
 ## Hosting boundary
 
-Cloudflare Workers is the planned website deployment target; the Rust service
-needs a separate compatible host. No API hosting provider has been selected. This milestone uses
-official Next.js locally and in CI. Adapter choice, runtime compatibility,
-bindings, hosting/CDN caching, secrets, and deployment are deferred to the hosting milestone.
+The Cloudflare deployment uses Workers for the official Next.js production
+output through OpenNext. The web Worker calls a private service binding to a second Worker, which runs the
+existing Axum/SQLx binary in a Cloudflare Container. The API Worker has no public
+route. Only the container receives its runtime database secret; image and web
+builds remain credential-free. Ordinary local development and CI still run
+official Next.js and the Rust binary directly.
+
+The initial container count is bounded and idle shutdown is configured.
+`gradavia.com` is the canonical web domain. See [deployment](docs/deployment.md)
+for account prerequisites, production credentials and verified release evidence.
 See [decisions](docs/decisions.md) and [data contract](docs/data-contract.md).
 
 ## Client state and visualization

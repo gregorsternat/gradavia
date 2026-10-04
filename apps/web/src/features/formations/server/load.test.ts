@@ -1,6 +1,13 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 vi.mock("server-only", () => ({}));
-import { loadExplorer, loadFormation, loadFormationSelection } from "./load";
+vi.mock("@opennextjs/cloudflare", () => ({ getCloudflareContext: vi.fn() }));
+import { getCloudflareContext } from "@opennextjs/cloudflare";
+import {
+  loadExplorer,
+  loadFormation,
+  loadFormationSelection,
+  readApi,
+} from "./load";
 
 const ready = () => ({
   status: "ready",
@@ -95,6 +102,153 @@ describe("formation HTTP client boundary", () => {
     expect(console.error).toHaveBeenCalledWith("Formation API unavailable.");
   });
 
+  test("uses the private service binding without an API URL or public fetch", async () => {
+    vi.stubEnv("GRADAVIA_API_TRANSPORT", "service-binding");
+    vi.stubEnv("GRADAVIA_API_URL", "https://untrusted.test");
+    const publicFetch = vi.fn();
+    const serviceFetch = vi.fn().mockResolvedValue(Response.json(ready()));
+    vi.stubGlobal("fetch", publicFetch);
+    vi.mocked(getCloudflareContext).mockReturnValue({
+      env: {
+        GRADAVIA_API_TRANSPORT: "service-binding",
+        GRADAVIA_API: { fetch: serviceFetch, connect: vi.fn() },
+      } as CloudflareEnv,
+      cf: undefined,
+      ctx: {},
+    });
+
+    expect((await loadExplorer({ q: "école & droit" })).status).toBe("ready");
+    const request = serviceFetch.mock.calls[0]![0] as Request;
+    const url = new URL(request.url);
+    expect(url.origin).toBe("https://gradavia-api.internal");
+    expect(url.pathname).toBe("/v1/formations");
+    expect(url.searchParams.get("q")).toBe("école & droit");
+    expect(request.headers.get("accept")).toBe("application/json");
+    expect(request.cache).toBe("no-store");
+    expect(request.redirect).toBe("manual");
+    expect(publicFetch).not.toHaveBeenCalled();
+  });
+
+  test.each([300, 301, 302, 303, 307, 308, 399])(
+    "rejects a service-binding %i redirect before reading its body",
+    async (status) => {
+      vi.stubEnv("GRADAVIA_API_TRANSPORT", "service-binding");
+      const response = Response.json(ready(), {
+        status,
+        headers: { Location: "https://untrusted.test/private" },
+      });
+      const readBody = vi.spyOn(response.body!, "getReader");
+      const cancelBody = vi.spyOn(response.body!, "cancel");
+      const publicFetch = vi.fn();
+      const serviceFetch = vi.fn().mockResolvedValue(response);
+      vi.stubGlobal("fetch", publicFetch);
+      vi.mocked(getCloudflareContext).mockReturnValue({
+        env: {
+          GRADAVIA_API_TRANSPORT: "service-binding",
+          GRADAVIA_API: { fetch: serviceFetch, connect: vi.fn() },
+        } as CloudflareEnv,
+        cf: undefined,
+        ctx: {},
+      });
+
+      await expect(readApi("/v1/formations")).rejects.toThrow(
+        "API unavailable",
+      );
+      expect(serviceFetch).toHaveBeenCalledTimes(1);
+      expect((serviceFetch.mock.calls[0]![0] as Request).redirect).toBe(
+        "manual",
+      );
+      expect(publicFetch).not.toHaveBeenCalled();
+      expect(readBody).not.toHaveBeenCalled();
+      expect(cancelBody).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith("API request failed.", {
+        stage: "response",
+        errorName: "Error",
+      });
+    },
+  );
+
+  test("fails closed when the service binding or configured transport is invalid", async () => {
+    const publicFetch = vi.fn();
+    vi.stubGlobal("fetch", publicFetch);
+    vi.stubEnv("GRADAVIA_API_TRANSPORT", "service-binding");
+    vi.mocked(getCloudflareContext).mockReturnValue({
+      env: {} as CloudflareEnv,
+      cf: undefined,
+      ctx: {},
+    });
+    expect(await loadExplorer({})).toEqual({ status: "unavailable" });
+    vi.mocked(getCloudflareContext).mockImplementation(() => {
+      throw new Error("private runtime detail");
+    });
+    expect(await loadExplorer({})).toEqual({ status: "unavailable" });
+    vi.stubEnv("GRADAVIA_API_TRANSPORT", "unsupported");
+    expect(await loadExplorer({})).toEqual({ status: "unavailable" });
+    expect(publicFetch).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalledWith("Formation API unavailable.");
+  });
+
+  test("reports fixed failure stages without exposing errors or configuration", async () => {
+    const failure = async (stage: string, errorName: string) => {
+      vi.mocked(console.error).mockClear();
+      await expect(readApi("/v1/formations")).rejects.toThrow(
+        "API unavailable",
+      );
+      expect(console.error).toHaveBeenCalledExactlyOnceWith(
+        "API request failed.",
+        {
+          stage,
+          errorName,
+        },
+      );
+    };
+
+    vi.stubEnv("GRADAVIA_API_TRANSPORT", "secret-invalid-transport");
+    await failure("configuration", "Error");
+    vi.stubEnv("GRADAVIA_API_TRANSPORT", "service-binding");
+    vi.mocked(getCloudflareContext).mockImplementation(() => {
+      throw new TypeError("private context detail");
+    });
+    await failure("context", "TypeError");
+    vi.stubEnv("GRADAVIA_API_TRANSPORT", undefined);
+    vi.stubEnv("GRADAVIA_API_URL", "private-invalid-origin");
+    await failure("origin", "TypeError");
+
+    vi.stubEnv("GRADAVIA_API_TRANSPORT", "service-binding");
+    const serviceFetch = vi.fn();
+    vi.mocked(getCloudflareContext).mockReturnValue({
+      env: {
+        GRADAVIA_API_TRANSPORT: "service-binding",
+        GRADAVIA_API: { fetch: serviceFetch, connect: vi.fn() },
+      } as CloudflareEnv,
+      cf: undefined,
+      ctx: {},
+    });
+    vi.stubGlobal(
+      "Request",
+      class {
+        constructor() {
+          throw new TypeError("private request detail");
+        }
+      },
+    );
+    await failure("request", "TypeError");
+    vi.unstubAllGlobals();
+
+    const privateError = new Error("private upstream detail");
+    privateError.name = "private-error-name";
+    serviceFetch.mockRejectedValueOnce(privateError);
+    await failure("fetch", "UnknownError");
+    serviceFetch.mockResolvedValueOnce(new Response("private upstream body"));
+    await failure("response", "Error");
+    serviceFetch.mockResolvedValueOnce(
+      new Response("{private-invalid-json", {
+        headers: { "content-type": "application/json" },
+      }),
+    );
+    await failure("body", "SyntaxError");
+  });
+
   test("maps upstream errors, malformed payloads and inconsistent pagination to retry state", async () => {
     const inconsistent = ready();
     inconsistent.data.total = 1;
@@ -127,7 +281,10 @@ describe("formation HTTP client boundary", () => {
         .mocked(console.error)
         .mock.calls.every(
           (args) =>
-            args.length === 1 && args[0] === "Formation API unavailable.",
+            (args.length === 1 && args[0] === "Formation API unavailable.") ||
+            (args.length === 2 &&
+              args[0] === "API request failed." &&
+              Object.keys(args[1]).sort().join(",") === "errorName,stage"),
         ),
     ).toBe(true);
   });

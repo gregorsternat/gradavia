@@ -6,9 +6,12 @@ Keep brief work brief; use a plan when several boundaries change together.
 
 ## Active
 
-No active implementation plan.
+None.
 
 ## Completed
+
+- [Cloudflare deployment](completed/cloudflare-deployment.md): live website,
+  private Rust container, isolated production data and verified custom domains.
 
 - [Rename Gradavia](completed/rename-gradavia.md): product, packages, runtime
   configuration, GitHub and Neon names with existing data compatibility.

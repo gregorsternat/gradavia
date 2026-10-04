@@ -9,6 +9,7 @@ test("the web process only receives the API origin, never database credentials",
   const keys = [
     "DATABASE_URL",
     "DATABASE_URL_UNPOOLED",
+    "GRADAVIA_API_DATABASE_URL",
     "TEST_DATABASE_URL",
     "GRADAVIA_TEST_DATABASE_URL",
     "GRADAVIA_DATA_ENV_FILE",

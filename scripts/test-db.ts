@@ -8,6 +8,7 @@ import { createNodeClient } from "../packages/db/src/node";
 import { migrateDatabase } from "../packages/db/src/migrate";
 import { testFormationReads } from "./test-formations-db";
 import { createTestDatabase } from "./test-postgres";
+import { testApiReaderRole } from "./test-api-reader-role";
 
 const artifacts = path.resolve(
   process.env.ARTIFACTS_DIR ?? ".artifacts",
@@ -51,6 +52,9 @@ try {
 
   phase = "formation-explorer-contract";
   await testFormationReads(url);
+
+  phase = "api-reader-privileges";
+  await testApiReaderRole(url);
 
   phase = "raw-ingestion-contract";
   const ingestion = spawnSync(
@@ -184,6 +188,7 @@ try {
       "node-connectivity",
       "real-migrations",
       "formation-explorer-contract",
+      "api-reader-privileges",
       "raw-ingestion-contract",
       "migration-apply",
       "migration-idempotency",

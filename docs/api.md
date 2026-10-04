@@ -3,8 +3,10 @@
 The standalone `gradavia-api` binary uses Axum and SQLx. Next.js calls it from a
 server-only module; the browser receives rendered pages and has no database or
 API credentials. The service currently exposes public source-backed formation and aggregate admissions data. It has no write routes, ingestion trigger, authentication or CORS layer.
-Public deployment, network exposure and least-privilege database roles remain
-part of the hosting milestone.
+The Cloudflare deployment places it behind a private Worker service binding and
+injects a dedicated reader credential into its container. The adapter accepts
+only GET/HEAD API and health requests and sanitizes container startup failures.
+See [deployment](deployment.md) for provisioning and current publication status.
 
 ## Run
 
@@ -18,6 +20,12 @@ For independent processes, use `just api` and `just dev-web`. The latter needs
 operating behind a deployment proxy. The API alone receives `DATABASE_URL` (the
 pooled Neon URL). The collector and migrations retain their direct connection.
 Build a standalone release binary with `cargo build --release --locked -p gradavia-api`.
+
+On Cloudflare, `GRADAVIA_API_TRANSPORT=service-binding` selects the private
+`GRADAVIA_API` binding. A missing binding fails closed without falling back to a
+public URL. Local development keeps the HTTP origin above. The container proxy
+allows 17 seconds including cold start, inside the frontend's 18-second deadline;
+an unavailable instance returns a sanitized 503 with a five-second retry hint.
 
 ## Endpoints
 

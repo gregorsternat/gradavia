@@ -44,7 +44,7 @@ api:
     cargo run --locked -p gradavia-api
 
 dev-web:
-    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u TEST_DATABASE_URL -u GRADAVIA_TEST_DATABASE_URL -u ORVIO_TEST_DATABASE_URL pnpm dev
+    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u GRADAVIA_API_DATABASE_URL -u GRADAVIA_DATA_ENV_FILE -u TEST_DATABASE_URL -u GRADAVIA_TEST_DATABASE_URL -u ORVIO_TEST_DATABASE_URL pnpm dev
 
 # Fast checks; these are the same commands used in CI.
 check:
@@ -76,7 +76,7 @@ test: test-unit test-db test-e2e
 
 # Verify that build steps never need live database credentials.
 build:
-    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u GRADAVIA_API_URL pnpm build
+    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u GRADAVIA_API_DATABASE_URL -u GRADAVIA_DATA_ENV_FILE -u GRADAVIA_API_URL pnpm build
     cargo build --workspace --locked
 
 # Read-only checks against the explicitly configured development database.
@@ -95,3 +95,31 @@ format:
     cargo fmt --all
 
 verify: check test
+
+# Build the Cloudflare website without database credentials or a live API.
+cf-build:
+    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u GRADAVIA_API_DATABASE_URL -u GRADAVIA_API_URL -u GRADAVIA_DATA_ENV_FILE pnpm --filter @gradavia/web cf:build
+
+# Validate both Worker bundles without publishing them.
+cf-check: cf-build
+    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u GRADAVIA_API_DATABASE_URL pnpm --filter @gradavia/web cf:dry-run
+    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u GRADAVIA_API_DATABASE_URL pnpm --filter @gradavia/api-worker cf:dry-run
+
+# Build the Linux image used by Cloudflare Containers; no secrets enter its context.
+cf-api-image:
+    docker build --platform linux/amd64 --file Dockerfile.api --tag gradavia-api:local .
+
+# Upload the private API first; requires Workers Paid and Wrangler authentication.
+cf-api-secret:
+    node scripts/cloudflare-api-secret.mjs
+
+[positional-arguments]
+provision-api-reader *args:
+    pnpm exec tsx scripts/provision-api-reader.ts "$@"
+
+cf-api-deploy:
+    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u GRADAVIA_API_DATABASE_URL pnpm --filter @gradavia/api-worker cf:deploy
+
+# Publish the built website and its custom domains after the API is ready.
+cf-web-deploy: cf-build
+    env -u DATABASE_URL -u DATABASE_URL_UNPOOLED -u GRADAVIA_API_DATABASE_URL -u GRADAVIA_API_URL pnpm --filter @gradavia/web cf:deploy
