@@ -38,7 +38,14 @@ test("explorer is accessible with provenance and bounded list and card views", a
       exact: true,
     })
     .click();
-  await expect(page.getByText(/Fixtures synthétiques/)).toBeVisible();
+  await expect(
+    page
+      .getByRole("region", {
+        name: "Source et périmètre · Parcoursup 2025",
+        exact: true,
+      })
+      .getByText(/Fixtures synthétiques/),
+  ).toBeVisible();
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   expect(
     await page.evaluate(
@@ -295,7 +302,7 @@ test("favorites persist through reload and can be removed from the saved page", 
     .click();
   await expect(
     page.getByRole("heading", {
-      name: "Votre prochaine formation se trouve peut-être ici.",
+      name: "Aucune formation enregistrée",
     }),
   ).toBeVisible();
 });
@@ -332,7 +339,7 @@ test("selections saved before the rename survive and new empty selections take p
   await page.reload();
   await expect(
     page.getByRole("heading", {
-      name: "Votre prochaine formation se trouve peut-être ici.",
+      name: "Aucune formation enregistrée",
     }),
   ).toBeVisible();
   expect(

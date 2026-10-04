@@ -9,6 +9,13 @@ specialty-pair explorer for general baccalaureate graduates. The interface uses
 source-owned beUI controls, Tremor charts and Motion with monochrome light/dark
 themes. All product data comes through a standalone Rust read API.
 
+The expanded workspace adds a synchronized formation map, apprenticeship and APB
+explorers, source-defined profile comparisons, named preparation lists, a personal
+budget calculator, and an analysis workshop with reproducible exports. Two-campaign
+comparisons use conservative matched records; public datasets and runnable notebooks
+retain source versions and missing-value states. See the
+[feature coverage](docs/feature-coverage.md) for exact scope and deferred requests.
+
 The manual collector retains 14 official APB/Parcoursup source datasets and
 immutable source releases. The UI distinguishes published zeros, missing and
 suppressed values and keeps source context available beside the indicators.

@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { BouncyAccordion } from "@/components/motion/bouncy-accordion";
 import { Tooltip } from "@/components/motion/tooltip";
-import { Button } from "@/components/motion/button/base";
+import { Button, ButtonLink } from "@/components/motion/button/base";
 import { number, type SourcesResult } from "../domain/overview";
 
 const sourceFamilies: Record<string, string> = {
@@ -81,6 +81,14 @@ export function Sources({ result }: { result: SourcesResult }) {
         <p className="page-subtitle">
           Sources publiques, définitions et périmètre de l’observatoire.
         </p>
+        <ButtonLink
+          href="/donnees"
+          variant="secondary"
+          size="sm"
+          className="mt-4"
+        >
+          API publique et notebooks
+        </ButtonLink>
       </div>
       <div className="mb-10 grid gap-4 md:grid-cols-3">
         {[

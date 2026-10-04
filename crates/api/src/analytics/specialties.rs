@@ -10,6 +10,7 @@ use sqlx::{PgPool, Row};
 use std::collections::BTreeMap;
 
 pub const DATASET_ID: &str = "fr-esr-parcoursup-enseignements-de-specialite-bacheliers-generaux-3";
+pub mod inverse;
 
 #[derive(Clone, Debug, Serialize)]
 pub struct Pair {

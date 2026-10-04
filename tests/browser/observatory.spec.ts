@@ -154,7 +154,7 @@ test("source inventory distinguishes imported data and explains indicator bounda
   );
   await expect(
     page.getByRole("button", { name: "Import publié", exact: true }),
-  ).toHaveCount(9);
+  ).toHaveCount(11);
   await expect(page.getByRole("main")).toContainText("Fixtures synthétiques");
   const access = page.getByRole("button", {
     name: "Taux d’accès",

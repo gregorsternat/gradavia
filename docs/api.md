@@ -29,15 +29,18 @@ an unavailable instance returns a sanitized 503 with a five-second retry hint.
 
 ## Endpoints
 
-| Method and path           | Meaning                                                                                              |
-| ------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `GET /v1/formations/{id}` | Detail of an immutable formation record, indicators, definitions and qualified history               |
-| `GET /v1/overview`        | One campaign overview, distribution, coverage and independently sourced campaign observations        |
-| `GET /v1/sources`         | Availability and provenance of all 14 registered datasets                                            |
-| `GET /v1/specialties`     | 2025 specialty pairs, national observations, formation groups and formation drill-down               |
-| `GET /v1/formations`      | One explorer response: campaigns, selected source, normalized query, rows, total, facets and notices |
-| `GET /health/live`        | Process liveness; no database connection                                                             |
-| `GET /health/ready`       | Database connectivity (`SELECT 1`); not freshness, completeness or schema readiness                  |
+| Method and path                 | Meaning                                                                                              |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `GET /v1/formations/{id}`       | Detail of an immutable formation record, indicators, definitions and qualified history               |
+| `GET /v1/overview`              | One campaign overview, distribution, coverage and independently sourced campaign observations        |
+| `GET /v1/sources`               | Availability and provenance of all 14 registered datasets                                            |
+| `GET /v1/specialties`           | 2025 specialty pairs, national observations, formation groups and formation drill-down               |
+| `GET /v1/specialties/inverse`   | Published 2025 specialty-pair observations for one national group and formation label                |
+| `GET /v1/atlas`                 | Complete bounded snapshot for one reviewed family, campaign and retained release                     |
+| `GET /v1/atlas/formations/{id}` | Enriched immutable record from Parcoursup, apprenticeship or APB                                     |
+| `GET /v1/formations`            | One explorer response: campaigns, selected source, normalized query, rows, total, facets and notices |
+| `GET /health/live`              | Process liveness; no database connection                                                             |
+| `GET /health/ready`             | Database connectivity (`SELECT 1`); not freshness, completeness or schema readiness                  |
 
 All responses use JSON and `Cache-Control: no-store`. Health success is
 `{"status":"ok"}`. There is no persistent response cache hiding source publication.
@@ -263,3 +266,123 @@ an invented total and are explained. Observation IDs and duplicate rows retain
 source row identity. Pair discovery is bounded at 500 level-0 rows; a selected
 pair is bounded at 5,000 source rows. Excessive or malformed source structures
 fail with the ordinary sanitized 503 response.
+
+### Inverse specialty exploration
+
+`GET /v1/specialties/inverse?formation=<opaque national scope ID>` selects the
+same reviewed 2025 specialty dataset. `formation` is the JSON-serialized tuple
+`[regroupement_de_formations, formation]`, URL-encoded by the caller. It is an
+opaque national scope identifier, not a formation-record or campus ID. The first
+query value is used, bounded to 1,600 Unicode characters; the whole query remains
+limited to 16,384 bytes.
+
+```text
+{ status: "ready", data: {
+  source: CampaignSource,
+  query: {formation: string},
+  formations: [{id: string, group: string, label: string}],
+  rows: [{id: "release UUID:row number", group: string, formation: string,
+          pair: Pair, applications: MetricValue, offers: MetricValue,
+          accepted: MetricValue}],
+  notices: string[], requestNotices: string[]
+}}
+```
+
+The catalog contains distinct published level-2 group/formation labels, bounded
+at 2,000 entries. No scope is implicitly selected; an unknown value is cleared
+with a request notice. For an explicitly selected scope, every published pair
+row is retained, bounded at 1,000 source rows, including duplicate multiplicity
+and exact value states. Both bounds fail explicitly with sanitized 503 rather
+than truncating. No source publication returns `{status:"empty"}`. Only national
+formation labels are available; there is no reviewed campus correspondence,
+and groups, formations or aggregation levels must not be added together.
+
+## Atlas snapshots and enriched records
+
+`GET /v1/atlas?famille=parcoursup&campagne=2025&version=<release UUID>`
+returns a complete, bounded snapshot for linked maps and analysis. `famille`
+accepts `parcoursup` (default), `apprentissage`, or `apb`. These select separate
+reviewed source families; they never merge records or silently replace an
+unavailable family. Without a campaign, the latest campaign in the selected
+release set is used. An explicitly unavailable campaign or retained version is
+404; malformed values are 400. Repeated parameters use the first value and the
+16,384-byte query bound applies.
+
+An omitted `version` captures the current publication pointer. An explicit
+version selects that immutable retained release, including after it stops being
+current; it must belong to the requested family and campaign. No retained release
+means 404 rather than a fallback to current data. An unimported family without an
+explicit campaign/version returns `{status:"empty"}`.
+
+```text
+{ status: "ready", data: {
+  source: CampaignSource, campaigns: number[],
+  family: "parcoursup" | "apprentissage" | "apb",
+  items: [{id, sourceFormationId, establishmentId, title, establishment,
+           city, department, region, type, status, selectivity,
+           latitude: number | null, longitude: number | null,
+           metrics: Record<AtlasMetricKey, number | null>,
+           states: Partial<Record<AtlasMetricKey, "missing" | "suppressed" | "invalid">>}],
+  definitions: Definition[], coverage: Coverage[], notices: string[]
+}}
+```
+
+`AtlasMetricKey` comprises the ten formation metrics plus `localShare`. Observed
+values, including zero, have no `states` entry. Every null has exactly one
+non-observed state. Definitions carry the field, unit and population once per
+snapshot. Coordinates accept the regular source’s numeric geo object and the
+apprenticeship source’s strictly parsed `latitude, longitude` text. Both must
+contain finite latitude and longitude in their valid ranges; an invalid or incomplete pair becomes two
+nulls. No city coordinates, formation IDs, rates or individual predictions are
+invented. APB uses `lib_dep` and `lib_reg`, `p_acc_boursier` and
+`p_acc_academies`; its denominators remain distinct from Parcoursup.
+
+The source projection reads at most 30,001 rows and fails with sanitized 503
+above 30,000, never returning a partial dataset. Results retain source row order
+and duplicate multiplicity. At most four in-memory snapshot entries, with at most 60,000 cached rows in total, reuse
+calculations only after each request has recaptured source publication and
+provenance. The atlas loader alone permits up to 32 MiB; all other API responses
+retain the 2 MiB limit. Timeouts and read-only transactions remain unchanged.
+
+`GET /v1/atlas/formations/{id}` reads one retained record from any of these three
+families. It returns `{status:"ready",data:{source,family,item,metrics,
+definitions,rankGroups,history,notices}}`. `item` uses the compact snapshot shape;
+`metrics` uses full `MetricValue` entries for reviewed mentions, candidate and
+admitted profiles, geographical origin, published admission milestones and
+apprenticeship statuses. Definitions identify phase and denominator differences.
+`rankGroups` contains `{label,field,rank:MetricValue}`. Historical observations
+have `{source,campaign,formationId,continuity,metrics,rankGroups}` with the same
+conservative formation+establishment match as ordinary details. APB has no
+formation identifier and consequently no invented record history. Missing and
+ambiguous historical matches carry no metrics or ranks.
+
+## Public reuse endpoint
+
+The website exposes `GET /api/v1/datasets` as a read-only proxy to the reviewed
+atlas snapshot, without exposing the Rust service or database credentials.
+`famille`, `campagne` and `version` follow the atlas contract. `format` is `json`
+(default), `csv`, or `metadata`. Invalid formats or malformed selectors return
+400; missing versions/campaigns return 404 and unavailable/oversized reads 503.
+An unimported family returns the explicit empty result. Other methods are not
+implemented. Public GET responses allow cross-origin reads without credentials.
+
+JSON retains the compact snapshot and adds metadata with schema version,
+definitions, coverage, original source URL, license, limits and pinned export
+URLs. CSV uses UTF-8, semicolon separators, a column for each metric's exact
+state, source campaign/dataset/release/license columns, and spreadsheet formula
+neutralization. Its `Link` header points to the matching version-pinned metadata
+response. CSV does not substitute zeros for absent values. Both source rows and
+duplicate multiplicity are retained.
+
+Current reads and all errors use `Cache-Control: no-store`. Only a returned
+snapshot whose family, explicit campaign and requested release match validation
+can receive immutable caching. In a pinned public JSON response `campaigns`
+contains only the selected campaign so later publication discovery cannot change
+that response. The source row and definition semantics remain those of API v1.
+
+`/donnees` documents the public endpoint and links to source-pinned JSON, CSV and
+metadata when publication is available. Downloadable Python and R companions at
+`/notebooks/gradavia.ipynb` and `/notebooks/gradavia.R` capture the received release,
+check identity/missingness/coverage, calculate a covered capacity sum and save
+provenance with the JSON. Python uses only its standard library; R requires
+`jsonlite`. They perform no database access or arbitrary server-side queries.

@@ -272,6 +272,13 @@ function ReadyExplorer({
     <main id="contenu" className="min-w-0 flex-1 py-8" aria-busy={pending}>
       <ExplorerHeader>
         <div className="flex gap-2">
+          <ButtonLink
+            href={`/carte?campagne=${data.source.campaign}`}
+            variant="secondary"
+            size="sm"
+          >
+            Carte et critères
+          </ButtonLink>
           <ShareButton />
           <ExportButton
             rows={data.formations.map((formation) => ({

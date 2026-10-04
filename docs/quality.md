@@ -560,3 +560,63 @@ Evidence: `.artifacts/cloudflare-ci/main-result.json`, `deploy-job.log`,
 commit is the workflow's requested revision; the deploy logs establish the Worker
 versions actually published. GitHub Actions is the source for later release
 outcomes. No database migration, data refresh or automatic rollback was added.
+
+## Expanded exploration and preparation
+
+Observed locally on 2026-10-05 (Asia/Shanghai). The
+[coverage register](feature-coverage.md) records all 80 requests separately:
+28 delivered, 33 implemented with explicit bounds and 19 deferred. This does not
+claim 61 fully completed original specifications.
+
+- Live read-only Rust atlas responses contained 14,252 Parcoursup 2025 records,
+  11,536 apprenticeship 2025 records and 8,749 APB 2017 records. Parcoursup had
+  14,214 valid coordinates; apprenticeship had 11,421 and 115 absent coordinates.
+  APB does not receive invented coordinates or cross-source identifiers.
+- Uncompressed snapshot bodies measured approximately 9.3 MB, 10.2 MB and 6.6 MB
+  respectively. The 30,000-record cap fails explicitly; it does not sample.
+  These local API measurements are not a Cloudflare memory-limit proof.
+- The public JSON, CSV and metadata routes were exercised against the configured
+  read-only API. All five Python notebook cells ran against those real HTTP
+  responses and reproduced 769,351 observed places in 14,252 Parcoursup records.
+  The R companion was reviewed but not executed because no R runtime is installed.
+- Real browser inspection at 1440px and 390px covered the full atlas, literal
+  searches, radius selection, regular/apprenticeship comparison, scatter and
+  histogram views, light/dark themes and keyboard controls. No console errors
+  were observed in the inspected live journeys. Synthetic browser tests remain
+  separate from this live-source evidence; map tiles are mocked only in tests.
+- Review found and corrected URL/state divergence after internal navigation and
+  browser history changes. The affected map, inverse-specialty, analysis and
+  evolution views now derive their controls directly from the URL. Regression
+  journeys exercise return navigation and history restoration.
+- Browser review also corrected a Leaflet radius-bounds error, normalized source
+  city spacing, improved explicit city selection, fixed Tremor legend semantics
+  and made histogram axes readable in dark mode. Failure evidence is retained.
+- `just cf-check` passed the OpenNext build, both Worker dry runs and the Rust
+  container image build. The compressed web Worker bundle measured 2,390.95 KiB.
+- A local workerd preview using the real built Worker and a read-only loopback
+  API binding served all three complete source snapshots, plus 14,079 Parcoursup
+  2024 records. Coverage and states reconciled; retained-version metadata,
+  immutable caching and invalid selectors passed. Interactive analysis for both
+  current families, modality comparison and the 2024–2025 evolution loaded and
+  hydrated without observed browser or application errors.
+- In that local runtime, compressed HTML bodies measured 1,227,176 bytes for the
+  complete Parcoursup analysis, 903,897 for apprenticeship, 12,270 for modality
+  comparison and 594,121 for two-campaign evolution. Observed page loads ranged
+  from 2.18 to 4.37 seconds. Local workerd does not prove production memory limits
+  or deployment success; the production smoke now checks a complete atlas and
+  its hydrated analysis against the same pinned version.
+
+Evidence: `.artifacts/atlas/payload-measurements.json`,
+`.artifacts/atlas/public-api-live.json`,
+`.artifacts/atlas/notebook-validation/executed.ipynb`,
+`.artifacts/final-ui/`, `.artifacts/cloudflare-preview/result.json`,
+`.artifacts/cloudflare-preview/trace.zip`, `.artifacts/expanded/cf-check.log`, and
+`.artifacts/expanded/verify.log`.
+
+Final `CI=true E2E_PORT=3492 mise exec -- just verify` passed: formatting, lint,
+TypeScript and architecture/documentation checks, Rust formatting/Clippy,
+92 TypeScript tests, 7 Node checks, 32 Rust tests, disposable PostgreSQL 18
+contracts and credential-free builds. Browser results were 114 development,
+112 production and 12 unavailable/empty/unconfigured cases passed, with two
+intended production gallery skips. Remote CI, merge and deployment are separate
+states; their observed results belong to the associated PR and workflow run.

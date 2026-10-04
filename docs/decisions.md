@@ -203,3 +203,28 @@ Bound the initial container count and allow idle shutdown. A cold container and
 suspended Neon compute can delay the first request; verify that complete path
 before claiming production readiness. Account activation and deployment are
 separate from the checked-in configuration; see [deployment](deployment.md).
+
+## 017 — One retained atlas per analytical population
+
+The Rust API publishes a bounded, validated projection of one immutable source
+release and campaign, with explicit Parcoursup, apprenticeship and APB adapters.
+The existing paginated formation API remains available for lightweight search.
+Maps and linked analytical views need the complete selected population; silently
+sampling a page would change totals, distributions and geographic coverage.
+The atlas rejects campaigns larger than 30,000 rows rather than truncating them.
+
+Next.js consumes validated JSON, never SQL or database clients. Two-campaign
+views resolve identity and exclusions on the server and send compact paired
+values instead of two complete snapshots. The public dataset endpoint exposes
+fixed selectors and formats through this boundary, with full provenance and
+formula-safe CSV; arbitrary SQL and new personal-data storage are out of scope.
+
+## 018 — Local preparation and explicit assumptions
+
+Named lists, notes, checklists, saved analyses and budget scenarios remain in the
+browser with versioned validation, bounded storage and explicit failure states.
+Selection sharing includes immutable IDs by default; including personal notes or
+checklists is a separate choice. Budget values are entered by the user and totals
+require every input, including explicit zeros. No city cost, career outcome,
+individual admission score or official deadline is manufactured from admissions
+counts. External enrichments require documented source and join review first.

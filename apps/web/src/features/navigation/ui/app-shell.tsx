@@ -10,6 +10,10 @@ import {
   ChartNoAxesCombined,
   Compass,
   Database,
+  FlaskConical,
+  BriefcaseBusiness,
+  Archive,
+  Wallet,
   GitCompareArrows,
   Heart,
   Map,
@@ -58,6 +62,30 @@ const destinations = [
     keywords: ["lycée", "doublette", "bac général", "profil"],
   },
   {
+    href: "/carte",
+    label: "Carte",
+    icon: Map,
+    keywords: ["proximité", "rayon", "ville", "intérêts"],
+  },
+  {
+    href: "/apprentissage",
+    label: "Apprentissage",
+    icon: BriefcaseBusiness,
+    keywords: ["alternance", "contrat"],
+  },
+  {
+    href: "/analyses",
+    label: "Atelier d’analyse",
+    icon: FlaskConical,
+    keywords: ["graphiques", "distribution", "statistiques", "export"],
+  },
+  {
+    href: "/archives",
+    label: "Archives APB",
+    icon: Archive,
+    keywords: ["historique", "admission post-bac"],
+  },
+  {
     href: "/territoires",
     label: "Territoires",
     icon: Map,
@@ -74,6 +102,12 @@ const destinations = [
     label: "Mes favoris",
     icon: Heart,
     keywords: ["enregistrées", "sauvegarder"],
+  },
+  {
+    href: "/budget",
+    label: "Budget étudiant",
+    icon: Wallet,
+    keywords: ["coût", "logement", "scénarios"],
   },
 ];
 
@@ -95,9 +129,41 @@ function ShellContents({ children }: { children: ReactNode }) {
     : ([
         ...destinations,
         { href: "/sources", label: "Données & méthode" },
+        { href: "/donnees", label: "API et notebooks" },
+        { href: "/evolutions", label: "Évolutions" },
+        { href: "/modalites", label: "Comparer les modalités" },
+        { href: "/decouvrir", label: "À vous d’estimer" },
         { href: "/dev/ui", label: "Composants" },
       ].find((item) => item.href === pathname)?.label ?? "Gradavia");
   const commands = [
+    {
+      id: "discovery",
+      label: "À vous d’estimer · découvrir les données",
+      icon: Telescope,
+      group: "Explorer",
+      onSelect: () => router.push("/decouvrir"),
+    },
+    {
+      id: "exports",
+      label: "API publique et notebooks",
+      icon: Database,
+      group: "Analyser",
+      onSelect: () => router.push("/donnees"),
+    },
+    {
+      id: "evolutions",
+      label: "Comparer les campagnes",
+      icon: ChartNoAxesCombined,
+      group: "Analyser",
+      onSelect: () => router.push("/evolutions"),
+    },
+    {
+      id: "modalites",
+      label: "Comparer hors apprentissage et apprentissage",
+      icon: GitCompareArrows,
+      group: "Préparer",
+      onSelect: () => router.push("/modalites"),
+    },
     ...destinations.map((item) => ({
       id: item.href,
       label: item.label,

@@ -90,7 +90,7 @@ export async function readApi(
         const { done, value } = await reader.read();
         if (done) break;
         bytes += value.byteLength;
-        if (bytes > RESPONSE_LIMIT)
+        if (bytes > (path === "/v1/atlas" ? 32 * 1024 * 1024 : RESPONSE_LIMIT))
           throw new Error("API response exceeds limit");
         body += decoder.decode(value, { stream: true });
       }

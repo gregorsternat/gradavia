@@ -1,3 +1,4 @@
+import { atlasFixtures } from "../tests/fixtures/atlas";
 import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { createNodeClient } from "../packages/db/src/node";
@@ -24,6 +25,7 @@ export async function seedFormations(connection: string) {
   try {
     await client.query("BEGIN");
     const fixtures = [
+      ...atlasFixtures(),
       ...fixtureCampaigns.map((campaign) => ({
         campaign,
         datasetId: fixtureDataset(campaign),
