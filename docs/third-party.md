@@ -81,6 +81,14 @@ Local integration patches:
   Its deferred initial focus respects focus already moved inside the panel.
   The trigger stays disabled until hydration; activation reads the current
   viewport so an early mobile click cannot toggle the server's desktop state.
+  A production probe at `a9dd950` subsequently observed an initial `focus()`
+  call on a connected, non-inert dialog while its computed CSS visibility was
+  still hidden. Focus stayed on the trigger and was not attempted again when
+  the dialog became visible; Escape worked after focus was placed inside it.
+  Initial focus now waits for the panel to have a rendered box and visible CSS.
+  The pending frame is cancelled on close/unmount and respects a control already
+  focused inside the panel, without a fixed delay. Causal traces and regression
+  evidence are recorded in [quality](quality.md).
 - A local `useClientReady` external-store snapshot keeps DOM portal markup out
   of server rendering and initial hydration. Number ticker arming derives from
   the existing one-shot intersection state. Existing helpers are not replaced.

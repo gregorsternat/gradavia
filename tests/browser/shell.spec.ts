@@ -137,15 +137,115 @@ test("navigation waits for hydration before accepting its first activation", asy
     await expect(trigger).toBeEnabled();
     await trigger.click();
     if (isMobile) {
-      await expect(
-        page.getByRole("dialog", { name: "Navigation principale" }),
-      ).toBeVisible();
+      const navigation = page.getByRole("dialog", {
+        name: "Navigation principale",
+      });
+      await expect(navigation).toBeVisible();
+      await expect
+        .poll(() =>
+          navigation.evaluate((panel) =>
+            panel.contains(document.activeElement),
+          ),
+        )
+        .toBe(true);
+      await page.keyboard.press("Escape");
+      await expect(navigation).toBeHidden();
+      await expect(trigger).toBeFocused();
     } else {
       await expect(trigger).toHaveAttribute("aria-expanded", "false");
     }
   } finally {
     hydrate();
   }
+});
+
+for (const reducedMotion of ["reduce", "no-preference"] as const) {
+  test(`mobile navigation waits for visible content before moving focus (${reducedMotion})`, async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(!isMobile, "The mobile navigation is a modal dialog.");
+    await page.emulateMedia({ reducedMotion });
+    await page.goto("/observatoire");
+    const trigger = page.getByRole("button", {
+      name: "Afficher ou masquer la navigation",
+    });
+    await expect(trigger).toBeEnabled();
+    const hiddenOpening = await page.addStyleTag({
+      content: `
+        [role="dialog"][data-mobile="true"][data-state="expanded"],
+        [role="dialog"][data-mobile="true"][data-state="expanded"] * {
+          visibility: hidden !important;
+        }
+      `,
+    });
+    const navigation = page.locator('[role="dialog"][data-mobile="true"]');
+    await trigger.click();
+    await expect(navigation).toHaveAttribute("aria-hidden", "false");
+    await expect(navigation).toHaveCSS("visibility", "hidden");
+    // The opening effect locks the body and schedules focus on the next frame.
+    // Keep the panel hidden across that frame, then let it become focusable.
+    await expect(page.locator("body")).toHaveCSS("position", "fixed");
+    await page.evaluate(
+      () =>
+        new Promise<void>((resolve) => {
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+        }),
+    );
+    await expect(trigger).toBeFocused();
+    await hiddenOpening.evaluate((style) => style.remove());
+    await expect(navigation).toBeVisible();
+    await expect
+      .poll(() =>
+        navigation.evaluate((panel) => panel.contains(document.activeElement)),
+      )
+      .toBe(true);
+    await page.keyboard.press("Escape");
+    await expect(navigation).toBeHidden();
+    await expect(trigger).toBeFocused();
+  });
+}
+
+test("mobile navigation cancels deferred focus when closed before becoming visible", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(!isMobile, "The mobile navigation is a modal dialog.");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/observatoire");
+  const trigger = page.getByRole("button", {
+    name: "Afficher ou masquer la navigation",
+  });
+  await expect(trigger).toBeEnabled();
+  const hiddenOpening = await page.addStyleTag({
+    content: `
+      [role="dialog"][data-mobile="true"][data-state="expanded"],
+      [role="dialog"][data-mobile="true"][data-state="expanded"] * {
+        visibility: hidden !important;
+      }
+    `,
+  });
+  const navigation = page.locator('[role="dialog"][data-mobile="true"]');
+  await trigger.click();
+  await expect(navigation).toHaveAttribute("aria-hidden", "false");
+  await expect(page.locator("body")).toHaveCSS("position", "fixed");
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      }),
+  );
+  await page.keyboard.press("Control+b");
+  await expect(navigation).toHaveAttribute("aria-hidden", "true");
+  await expect(page.locator("body")).not.toHaveCSS("position", "fixed");
+  await hiddenOpening.evaluate((style) => style.remove());
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      }),
+  );
+  await expect(trigger).toBeFocused();
 });
 
 test("navigation collapses on desktop and behaves as a modal on mobile", async ({
