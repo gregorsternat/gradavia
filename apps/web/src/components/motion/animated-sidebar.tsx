@@ -328,10 +328,9 @@ function MobileSidebar({
   const mounted = useClientReady();
   // The sheet is mounted for as long as the viewport is mobile, so it hides
   // itself while closed rather than sitting there transparent and interactive.
-  // Opening shows it in the same commit that starts the slide — a delayed show
-  // would run the focus effect below against a still-hidden panel, and focus()
-  // on a hidden element is ignored. Closing waits for the slide to finish, and
-  // the panel's own exit tells us when that is: no duration to keep in sync.
+  // Opening removes this visibility gate in the same commit as the slide.
+  // Initial layout can still briefly hide the panel, so focus also checks its
+  // actual CSS visibility. Closing waits for the panel's own exit to finish.
   const [hidden, setHidden] = useState(!context.openMobile);
   // The completion callback fires for the open slide too, and it reads state
   // from whenever motion settles: a ref keeps it on the current one.
@@ -347,7 +346,7 @@ function MobileSidebar({
   }, [context.openMobile]);
 
   useEffect(() => {
-    if (!context.openMobile) return;
+    if (!mounted || !context.openMobile) return;
 
     const body = document.body;
     const scrollY = window.scrollY;
@@ -365,14 +364,26 @@ function MobileSidebar({
     body.style.right = "0";
     body.style.overflow = "hidden";
 
-    const focusFrame = requestAnimationFrame(() => {
+    let focusFrame: number;
+    const focusVisiblePanel = () => {
       const panel = panelRef.current;
       // A fast keyboard user may already have chosen a control before this
       // opening frame runs. Initial focus must not overwrite that choice.
-      if (!panel || panel.contains(document.activeElement)) return;
+      if (!panel || panel.inert || panel.contains(document.activeElement))
+        return;
+      // Browsers ignore focus while layout still leaves the open panel hidden.
+      // Follow its actual visibility instead of guessing a transition duration.
+      if (
+        !panel.getClientRects().length ||
+        getComputedStyle(panel).visibility !== "visible"
+      ) {
+        focusFrame = requestAnimationFrame(focusVisiblePanel);
+        return;
+      }
       const firstFocusable = tabbableElements(panel)[0];
       (firstFocusable ?? panel).focus({ preventScroll: true });
-    });
+    };
+    focusFrame = requestAnimationFrame(focusVisiblePanel);
 
     return () => {
       cancelAnimationFrame(focusFrame);
@@ -384,7 +395,7 @@ function MobileSidebar({
       window.scrollTo(0, scrollY);
       context.triggerRef.current?.focus({ preventScroll: true });
     };
-  }, [context.openMobile, context.triggerRef]);
+  }, [context.openMobile, context.triggerRef, mounted]);
 
   if (!mounted) return null;
 

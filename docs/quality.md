@@ -682,3 +682,61 @@ correction, it and the original analysis-values case passed 20 repeated
 desktop/mobile executions. The regression runs in both development and production
 suites. The failing trace and frame captures are retained under `.artifacts/expanded/ci-main-aa5/` and
 `.artifacts/expanded/main-aa5-tab-*.jpg`.
+
+## Published first-activation checks and mobile focus finding (2026-10-05)
+
+The main workflow at `a9dd9508ea00c729f18f404170fb47272aa4ba03`
+([run 37243910084](https://github.com/gregorsternat/gradavia/actions/runs/37243910084))
+completed successfully. The current-main check, private API and prebuilt website
+publication, and public production smoke all completed successfully without
+being skipped. Independent production checks ran only after publication was
+confirmed for this commit.
+
+- The independent public harness passed all 18 checks: complete snapshots and
+  coverage states for Parcoursup, apprenticeship and APB; the previous Parcoursup
+  campaign; retained-version metadata; invalid and absent-version responses;
+  hydrated analysis views; the Lyon city picker and radius controls; and
+  modality/evolution views. The observed source counts were 14,252, 11,536,
+  8,749 and 14,079 respectively. No page errors were recorded.
+- A separate 390×844 analysis check held 19 JavaScript chunks and observed the
+  server-rendered Distribution tab disabled. Its first click after hydration
+  selected Distribution, updated the URL and exposed the values table. The End
+  key selected and focused Quality and updated the URL. No page or console
+  errors were recorded; mobile screenshots were inspected.
+- The corresponding navigation check confirmed the disabled server-rendered
+  trigger and successful first mobile opening, with desktop state unchanged.
+  Its subsequent Escape assertion failed. A second bounded observation found
+  focus still outside the dialog after 25 seconds, before sending any Escape.
+
+A separate instrumented observation identified the focus failure. At 1,661 ms
+after navigation, the product called `HTMLElement.focus()` on the connected
+dialog with `inert=false` and `aria-hidden=false`, while its computed CSS
+`visibility` was still `hidden`. Focus remained on the navigation trigger before
+and after the call. At 1,717 ms the dialog was visible, but no second natural
+focus call occurred during the following eight-second observation. The document
+was visible and animation-frame callbacks executed. This establishes a focus
+attempt before CSS visibility, rather than an absent panel or a callback that
+never ran. Explicitly focusing the dialog's home link then pressing Escape
+closed the dialog and restored trigger focus. Escape is handled inside the
+dialog, so its keyboard test requires focus there. The diagnostic captured no
+page or console errors.
+
+The correction schedules initial focus only once the panel has a rendered box
+and visible CSS, cancels on close or unmount, and preserves a control already
+focused inside it. It uses an observable condition rather than a fixed delay.
+Deterministic regressions held the open panel hidden through its opening frames:
+both motion-preference variants failed before the correction. After the fix,
+35 development browser executions passed across five desktop/mobile repetitions,
+with 15 intentional desktop exclusions for mobile-only cases. These also cover
+delayed JavaScript, automatic initial focus, Escape, focus restoration and closing
+before visibility. Logs and traces are retained in
+`.artifacts/expanded/sidebar-focus-before*` and
+`.artifacts/expanded/sidebar-focus-after*`.
+
+Evidence is retained under `.artifacts/expanded-production/`: `result.json` and
+`trace.zip` for the broad check; `analysis-first-activation-result.json`, its
+trace and screenshots; and `focus-diagnosis-result.json`, its trace and
+screenshots for the actual focus calls and before/after state. The first failed
+Escape attempt is preserved in `history/a9dd950-readiness-first-attempt/`.
+Previous production evidence is preserved separately in `history/`. These were
+read-only public checks with no database, workflow or deployment mutation.
