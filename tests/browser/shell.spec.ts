@@ -193,7 +193,9 @@ for (const reducedMotion of ["reduce", "no-preference"] as const) {
         }),
     );
     await expect(trigger).toBeFocused();
-    await hiddenOpening.evaluate((style) => style.remove());
+    await hiddenOpening.evaluate((style) => {
+      style.parentNode?.removeChild(style);
+    });
     await expect(navigation).toBeVisible();
     await expect
       .poll(() =>
@@ -238,7 +240,9 @@ test("mobile navigation cancels deferred focus when closed before becoming visib
   await page.keyboard.press("Control+b");
   await expect(navigation).toHaveAttribute("aria-hidden", "true");
   await expect(page.locator("body")).not.toHaveCSS("position", "fixed");
-  await hiddenOpening.evaluate((style) => style.remove());
+  await hiddenOpening.evaluate((style) => {
+    style.parentNode?.removeChild(style);
+  });
   await page.evaluate(
     () =>
       new Promise<void>((resolve) => {
