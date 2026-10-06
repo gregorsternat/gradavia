@@ -10,6 +10,10 @@ No active execution plan.
 
 ## Completed
 
+- [Search discovery and page identity](completed/seo-foundation.md): canonical
+  metadata, source-backed sitemaps, crawlable formation/campaign navigation and
+  verified indexation policy.
+
 - [Expanded exploration and preparation](completed/expanded-exploration.md):
   geographic exploration, preparation lists, budget scenarios, source-backed
   analysis, historical comparison and reproducible public exports.

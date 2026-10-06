@@ -43,15 +43,30 @@ test("empty, unconfigured and unavailable API states support retry", async ({
       : "Les formations sont temporairement indisponibles.";
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(message);
   await expect(page.getByRole("article")).toHaveCount(0);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+    "content",
+    "noindex, follow",
+  );
   await page.getByRole("link", { name: "Réessayer" }).click();
   await expect(page).toHaveURL(/campagne=2018&q=droit$/);
-  if (process.env.E2E_STATE === "unavailable")
-    await expect(page.getByRole("status")).toHaveText(
-      "Chargement des formations…",
-    );
   // The client permits 18 seconds for a bounded upstream read, including retry.
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(message, {
     timeout: 20_000,
   });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+});
+
+test("source failure does not publish a successful empty discovery sitemap", async ({
+  request,
+}) => {
+  const response = await request.get("/sitemap-formations.xml");
+  if (process.env.E2E_STATE === "empty") {
+    expect(response.status()).toBe(200);
+    expect(await response.text()).not.toContain("<loc>");
+  } else {
+    expect(response.status()).toBe(503);
+    expect(response.headers()["retry-after"]).toBe("300");
+    expect(response.headers()["cache-control"]).toBe("no-store");
+  }
+  expect((await request.get("/sitemap.xml")).status()).toBe(200);
 });

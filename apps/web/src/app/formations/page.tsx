@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { explorerMetadata } from "@/features/seo/domain/metadata";
 import { loadExplorer } from "@/features/formations/server/load";
 import { FormationExplorer } from "@/features/formations/ui/explorer";
 import {
@@ -7,11 +7,13 @@ import {
   type SearchParams,
 } from "@/features/formations/domain/explorer";
 
-export const metadata: Metadata = {
-  title: "Explorer les formations Parcoursup",
-  description:
-    "Recherchez les formations Parcoursup par campagne, territoire et type de formation, à partir des données publiques d’admission.",
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  return explorerMetadata(await loadExplorer(await searchParams));
+}
 
 export default async function FormationsPage({
   searchParams,

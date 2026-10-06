@@ -148,7 +148,7 @@ test("filters combine, pagination is stable and new searches reset the page", as
   page,
 }) => {
   await page.goto("/formations?vue=cartes");
-  await page.getByRole("button", { name: "Suivante", exact: true }).click();
+  await page.getByRole("link", { name: "Suivante", exact: true }).click();
   await expect(page.getByText("Page 2 sur 2")).toBeVisible();
   await expect(page.getByRole("article")).toHaveCount(6);
   await openFilters(page);
@@ -194,6 +194,11 @@ test("campaign changes reset the search and explain historical gaps", async ({
       name: "Licence - Droit — Droit — Parcours européen",
     }),
   ).toBeVisible();
+  await expect(page).toHaveTitle(/Parcoursup 2018/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://gradavia.com/formations?campagne=2018",
+  );
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
 

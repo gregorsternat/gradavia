@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/features/seo/domain/metadata";
 import type { SearchParams } from "@/features/formations/domain/explorer";
 import { parseSelectionIds } from "@/features/formations/domain/selection";
 import { loadFormationSelection } from "@/features/formations/server/load";
 import { ComparisonPageView } from "@/features/formations/ui/selection-pages";
 
-export const metadata: Metadata = { title: "Comparer les formations" };
+export const metadata = pageMetadata("/comparer");
 export default async function ComparisonPage({
   searchParams,
 }: {

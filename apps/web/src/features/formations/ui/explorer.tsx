@@ -103,6 +103,12 @@ function ReadyExplorer({
   const view = selectedView ?? (mobile ? "cartes" : "liste");
   const activeFilters = FILTER_KEYS.filter((key) => data.query[key]);
   const pages = Math.max(1, Math.ceil(data.total / PAGE_SIZE));
+  const paginationUrl = (page: number) => {
+    const url = explorerUrl(data.query, page);
+    return selectedView === null
+      ? url
+      : `${url}${url.includes("?") ? "&" : "?"}vue=${selectedView}`;
+  };
   const navigate = (query = draft, page = 1, nextView = view) => {
     if (pending) return;
     const url = new URL(explorerUrl(query, page), "https://gradavia.invalid");
@@ -487,34 +493,126 @@ function ReadyExplorer({
           </>
         )}
       </Tabs>
+      {view === "liste" && data.formations.length > 0 && (
+        <details className="mt-4 rounded-xl border border-border px-4 py-3 text-sm">
+          <summary className="cursor-pointer text-muted-foreground">
+            Toutes les formations de cette page ({data.formations.length})
+          </summary>
+          <ul className="mt-4 grid gap-4 sm:grid-cols-2">
+            {data.formations.map((formation) => (
+              <li key={formation.id} className="min-w-0">
+                <Link
+                  href={formationUrl(formation.id)}
+                  prefetch={false}
+                  className="font-medium underline underline-offset-4"
+                >
+                  {formation.title}
+                </Link>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {[formation.establishment, formation.city]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+      <nav
+        aria-label="Campagnes Parcoursup"
+        className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-muted-foreground"
+      >
+        <span>Campagnes disponibles :</span>
+        {data.campaigns.map((campaign) => (
+          <Link
+            key={campaign}
+            href={`/formations?campagne=${campaign}`}
+            prefetch={false}
+            aria-current={
+              campaign === data.source.campaign ? "page" : undefined
+            }
+            className="underline underline-offset-4 hover:text-foreground"
+          >
+            {campaign}
+          </Link>
+        ))}
+      </nav>
       {pages > 1 && (
         <nav
           aria-label="Pagination des formations"
           className="mt-5 flex items-center justify-between gap-2"
         >
-          <Button
-            variant="secondary"
-            size="sm"
-            className="rounded-lg"
-            disabled={data.query.page <= 1 || pending}
-            onClick={() => navigate(data.query, data.query.page - 1)}
-          >
-            <ArrowLeft className="size-3.5" />
-            Précédente
-          </Button>
+          {data.query.page <= 1 ? (
+            <Button
+              variant="secondary"
+              size="sm"
+              className="rounded-lg"
+              disabled
+            >
+              <ArrowLeft className="size-3.5" />
+              Précédente
+            </Button>
+          ) : (
+            <ButtonLink
+              variant="secondary"
+              size="sm"
+              className="rounded-lg"
+              href={paginationUrl(data.query.page - 1)}
+              rel="prev"
+              aria-disabled={pending || undefined}
+              onClick={(event) => {
+                if (
+                  event.metaKey ||
+                  event.ctrlKey ||
+                  event.shiftKey ||
+                  event.altKey
+                )
+                  return;
+                event.preventDefault();
+                navigate(data.query, data.query.page - 1);
+              }}
+            >
+              <ArrowLeft className="size-3.5" />
+              Précédente
+            </ButtonLink>
+          )}
           <p className="text-xs tabular-nums text-muted-foreground">
             Page {data.query.page} sur {formatCount(pages)}
           </p>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="rounded-lg"
-            disabled={data.query.page >= pages || pending}
-            onClick={() => navigate(data.query, data.query.page + 1)}
-          >
-            Suivante
-            <ArrowRight className="size-3.5" />
-          </Button>
+          {data.query.page >= pages ? (
+            <Button
+              variant="secondary"
+              size="sm"
+              className="rounded-lg"
+              disabled
+            >
+              Suivante
+              <ArrowRight className="size-3.5" />
+            </Button>
+          ) : (
+            <ButtonLink
+              variant="secondary"
+              size="sm"
+              className="rounded-lg"
+              href={paginationUrl(data.query.page + 1)}
+              rel="next"
+              aria-disabled={pending || undefined}
+              onClick={(event) => {
+                if (
+                  event.metaKey ||
+                  event.ctrlKey ||
+                  event.shiftKey ||
+                  event.altKey
+                )
+                  return;
+                event.preventDefault();
+                navigate(data.query, data.query.page + 1);
+              }}
+            >
+              Suivante
+              <ArrowRight className="size-3.5" />
+            </ButtonLink>
+          )}
         </nav>
       )}
       <div className="mt-7 flex flex-wrap items-start justify-between gap-3">

@@ -1,4 +1,6 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/features/seo/domain/metadata";
+import { websiteStructuredData } from "@/features/seo/domain/structured-data";
+import { StructuredData } from "@/features/seo/ui/structured-data";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { loadOverview } from "@/features/observatory/server/load";
@@ -8,11 +10,7 @@ import {
   PreviewLoading,
 } from "@/features/landing/ui/overview-preview";
 
-export const metadata: Metadata = {
-  title: { absolute: "Gradavia — Votre orientation, les données en main" },
-  description:
-    "Explorez les formations Parcoursup, comparez les admissions et gardez vos favoris. Un observatoire indépendant, en accès libre, fondé sur les données publiques.",
-};
+export const metadata = pageMetadata("/");
 
 async function Preview() {
   return <OverviewPreview result={await loadOverview()} />;
@@ -29,12 +27,15 @@ export default async function Home({
     redirect(`/observatoire?campagne=${legacyCampaign}`);
   }
   return (
-    <LandingPage
-      preview={
-        <Suspense fallback={<PreviewLoading />}>
-          <Preview />
-        </Suspense>
-      }
-    />
+    <>
+      <StructuredData data={websiteStructuredData} />
+      <LandingPage
+        preview={
+          <Suspense fallback={<PreviewLoading />}>
+            <Preview />
+          </Suspense>
+        }
+      />
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/features/seo/domain/metadata";
 import { loadAtlas } from "@/features/atlas/server/load";
 import { fold } from "@/features/atlas/domain/exploration";
 import type { AtlasData } from "@/features/atlas/domain/api-contract";
@@ -9,9 +9,7 @@ import {
   type ModalityChoice,
 } from "@/features/atlas/ui/modality-comparison";
 
-export const metadata: Metadata = {
-  title: "Comparer formation classique et apprentissage",
-};
+export const metadata = pageMetadata("/modalites");
 export default async function ModalityPage({
   searchParams,
 }: {

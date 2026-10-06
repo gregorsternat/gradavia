@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { readApi } from "@/features/formations/server/load";
 import { formationId } from "@/features/formations/domain/api-contract";
 import type { SearchParams } from "@/features/formations/domain/explorer";
@@ -28,7 +29,9 @@ export async function loadAtlas(
   }
 }
 
-export async function loadAtlasDetail(id: string): Promise<AtlasDetailResult> {
+export const loadAtlasDetail = cache(async function loadAtlasDetail(
+  id: string,
+): Promise<AtlasDetailResult> {
   if (!formationId.safeParse(id).success) return { status: "not-found" };
   try {
     const response = await readApi(
@@ -41,4 +44,4 @@ export async function loadAtlasDetail(id: string): Promise<AtlasDetailResult> {
   } catch {
     return { status: "unavailable" };
   }
-}
+});

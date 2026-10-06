@@ -2,15 +2,16 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Providers } from "@/components/providers";
 import { AppShell } from "@/features/navigation/ui/app-shell";
+import { SITE_URL, pages } from "@/features/seo/domain/metadata";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Gradavia — L’observatoire de l’orientation",
+    default: "Gradavia — Formations et statistiques Parcoursup",
     template: "%s · Gradavia",
   },
-  description:
-    "Explorez les données publiques de Parcoursup, comparez les formations et construisez votre sélection. Capacités, admissions et taux d’accès, avec leurs sources.",
+  description: pages["/"].description,
 };
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

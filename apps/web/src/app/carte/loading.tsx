@@ -1,1 +1,1 @@
-export { default } from "../formations/loading";
+export { default } from "@/features/formations/ui/loading";
