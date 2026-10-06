@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/features/seo/domain/metadata";
 import type { SearchParams } from "@/features/formations/domain/explorer";
 import {
   FAVORITES_PAGE_SIZE,
@@ -8,7 +8,7 @@ import {
 import { loadFormationSelection } from "@/features/formations/server/load";
 import { FavoritesPageView } from "@/features/formations/ui/selection-pages";
 
-export const metadata: Metadata = { title: "Mes favoris" };
+export const metadata = pageMetadata("/favoris");
 export default async function FavoritesPage({
   searchParams,
 }: {

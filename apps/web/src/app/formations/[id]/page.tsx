@@ -1,4 +1,9 @@
-import type { Metadata } from "next";
+import { createMetadata } from "@/features/seo/domain/metadata";
+import {
+  detailMetadata,
+  detailStructuredData,
+} from "@/features/seo/domain/structured-data";
+import { StructuredData } from "@/features/seo/ui/structured-data";
 import { notFound } from "next/navigation";
 import { loadFormation } from "@/features/formations/server/load";
 import { FormationDetailView } from "@/features/formations/ui/detail";
@@ -8,7 +13,28 @@ import { formationUrl } from "@/features/formations/domain/metrics";
 import { loadAtlas, loadAtlasDetail } from "@/features/atlas/server/load";
 import { peerSummary } from "@/features/atlas/domain/exploration";
 
-export const metadata: Metadata = { title: "Formation · Parcoursup" };
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const id = decodeFormationRouteId((await params).id);
+  if (!id) notFound();
+  const result = await loadFormation(id);
+  if (result.status === "not-found") notFound();
+  if (result.status !== "ready")
+    return createMetadata({
+      title: "Formation temporairement indisponible",
+      description: "Les données de cette formation n’ont pas pu être chargées.",
+      path: formationUrl(id),
+      noIndex: true,
+    });
+  return detailMetadata(
+    result.data.formation,
+    result.data.source,
+    "parcoursup",
+  );
+}
 export default async function FormationPage({
   params,
 }: {
@@ -45,14 +71,23 @@ export default async function FormationPage({
     }),
   ]);
   return (
-    <FormationDetailView
-      detail={result.data}
-      enriched={enriched.status === "ready" ? enriched.data : undefined}
-      peers={
-        enriched.status === "ready" && atlas.status === "ready"
-          ? peerSummary(atlas.data.items, enriched.data.item)
-          : undefined
-      }
-    />
+    <>
+      <StructuredData
+        data={detailStructuredData(
+          result.data.formation,
+          result.data.source,
+          "parcoursup",
+        )}
+      />
+      <FormationDetailView
+        detail={result.data}
+        enriched={enriched.status === "ready" ? enriched.data : undefined}
+        peers={
+          enriched.status === "ready" && atlas.status === "ready"
+            ? peerSummary(atlas.data.items, enriched.data.item)
+            : undefined
+        }
+      />
+    </>
   );
 }

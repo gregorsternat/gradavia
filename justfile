@@ -64,6 +64,15 @@ test-db:
     cargo build --locked -p gradavia-api
     pnpm test:db
 
+# Focused browser checks against the same disposable harness as the full suite.
+[positional-arguments]
+test-browser *args:
+    pnpm exec playwright test "$@"
+
+# Serve disposable fixture data for manual browser inspection; stop with Ctrl-C.
+test-browser-server:
+    pnpm exec tsx scripts/e2e-server.ts
+
 test-e2e: build
     pnpm test:e2e
     E2E_PRODUCTION=1 pnpm test:e2e

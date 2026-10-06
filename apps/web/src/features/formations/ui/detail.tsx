@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { Breadcrumbs } from "@/features/seo/ui/breadcrumbs";
+import { detailBreadcrumbs } from "@/features/seo/domain/structured-data";
 import { DetailInsights } from "@/features/atlas/ui/detail-insights";
 import type { AtlasDetail } from "@/features/atlas/domain/api-contract";
 import type { peerSummary } from "@/features/atlas/domain/exploration";
@@ -199,6 +201,7 @@ export function FormationDetailView({
   const numerical = volumeData.some((row) => row.Effectif !== null);
   return (
     <main id="contenu" className="min-w-0 flex-1 py-8">
+      <Breadcrumbs items={detailBreadcrumbs(formation, source, "parcoursup")} />
       <Link
         href={`/formations?campagne=${source.campaign}`}
         className="mb-6 inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground"

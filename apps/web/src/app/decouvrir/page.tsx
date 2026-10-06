@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/features/seo/domain/metadata";
 import type { SearchParams } from "@/features/formations/domain/explorer";
 import { loadAtlas } from "@/features/atlas/server/load";
 import { sourceQuiz } from "@/features/discovery/domain/quiz";
 import { Quiz } from "@/features/discovery/ui/quiz";
 import { DataUnavailable } from "@/features/observatory/ui/shared";
 
-export const metadata: Metadata = { title: "À votre avis ?" };
+export const metadata = pageMetadata("/decouvrir");
 export default async function Page({
   searchParams,
 }: {

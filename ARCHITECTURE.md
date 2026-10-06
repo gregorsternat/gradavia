@@ -175,6 +175,14 @@ See [decisions](docs/decisions.md) and [data contract](docs/data-contract.md).
 
 ## Client state and visualization
 
+`features/seo` owns public page identity, structured data and discovery sitemaps.
+Pure metadata and XML rules stay under `domain`; sitemap loading uses the existing
+server-only atlas client. Metadata and formation rendering share request-scoped
+React-cached reads, including through the Cloudflare service binding. No database
+or ingestion responsibility moves into Next.js. The root sitemap index is
+independent of data availability; family sitemaps fail explicitly with HTTP 503.
+See [search discovery](docs/seo.md) for canonical and indexation policy.
+
 Shared beUI sources remain under `components/motion`; Tremor chart sources and
 licenses remain under `components/charts/tremor`. `features/navigation/ui`
 owns the responsive app shell and command palette. `features/observatory`

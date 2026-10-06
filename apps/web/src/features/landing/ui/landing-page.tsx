@@ -115,7 +115,7 @@ export function LandingPage({ preview }: { preview: ReactNode }) {
           </h1>
           <LandingReveal delay={0.28} distance={22}>
             <p className={styles.heroCopy}>
-              Explorez les formations, comparez les admissions.
+              Explorez les formations Parcoursup, comparez les admissions.
               <br className="hidden sm:block" /> Les données publiques pour
               éclairer vos choix.
             </p>

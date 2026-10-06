@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { z } from "zod";
 import {
@@ -121,7 +122,7 @@ export async function readApi(
   }
 }
 
-export async function loadExplorer(
+export const loadExplorer = cache(async function loadExplorer(
   params: SearchParams,
 ): Promise<ExplorerResult> {
   try {
@@ -151,9 +152,11 @@ export async function loadExplorer(
     console.error("Formation API unavailable.");
     return { status: "unavailable" };
   }
-}
+});
 
-export async function loadFormation(id: string): Promise<DetailResult> {
+export const loadFormation = cache(async function loadFormation(
+  id: string,
+): Promise<DetailResult> {
   if (!formationId.safeParse(id).success) return { status: "not-found" };
   try {
     const response = await readApi(`/v1/formations/${encodeURIComponent(id)}`);
@@ -173,7 +176,7 @@ export async function loadFormation(id: string): Promise<DetailResult> {
     console.error("Formation API unavailable.");
     return { status: "unavailable" };
   }
-}
+});
 
 export async function loadFormationSelection(
   ids: string[],

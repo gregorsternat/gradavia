@@ -1,14 +1,17 @@
-import type { Metadata } from "next";
+import type { SearchParams } from "@/features/formations/domain/explorer";
+import { pageMetadata } from "@/features/seo/domain/metadata";
 import { Suspense } from "react";
 import { loadOverview } from "@/features/observatory/server/load";
 import { Overview } from "@/features/observatory/ui/overview";
 import ObservatoryLoading from "@/features/observatory/ui/loading";
 
-export const metadata: Metadata = {
-  title: "Vue d’ensemble",
-  description:
-    "Explorez les formations, les places proposées et les admissions Parcoursup par campagne, avec les sources et leur couverture.",
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  return pageMetadata("/observatoire", await searchParams);
+}
 
 type ObservatoryProps = {
   searchParams: Promise<{ campagne?: string }>;

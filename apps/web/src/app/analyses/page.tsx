@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/features/seo/domain/metadata";
 import type { SearchParams } from "@/features/formations/domain/explorer";
 import { loadAtlas } from "@/features/atlas/server/load";
 import { AnalysisWorkbench } from "@/features/analysis/ui/workbench";
 
-export const metadata: Metadata = { title: "Atelier d’analyse" };
+export const metadata = pageMetadata("/analyses");
 export default async function Page({
   searchParams,
 }: {

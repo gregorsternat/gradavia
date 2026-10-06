@@ -2,6 +2,54 @@
 
 This document records observed evidence, not intended capabilities.
 
+## Search discovery verification (2026-10-05)
+
+Observed locally in worktree `1e0e`, based on `d3ab365`, for the
+[search discovery implementation](seo.md):
+
+- A read-only public baseline returned HTTP 200 for the homepage and 404 for
+  `/sitemap.xml`. The homepage had no canonical, Open Graph or JSON-LD markup;
+  Cloudflare's robots preamble did not advertise a sitemap.
+- `just verify` passed: formatting, lint, TypeScript, architecture/docs, Clippy,
+  104 Vitest cases, Node guardrails, Rust tests, disposable PostgreSQL 18 integration
+  and credential-free production builds. Both lockfiles remain unchanged.
+- Browser verification passed 131 development cases (three expected exclusions),
+  129 production cases (five expected exclusions), and six cases each for
+  unconfigured, empty and unavailable production sources: 278 passing executions.
+  Exclusions cover mobile-only navigation checks on desktop and the development
+  gallery in production.
+- New cases inspect actual crawler HTML for unique titles, descriptions,
+  canonical URLs, social tags and safe JSON-LD. They follow every advertised
+  sitemap family and compare the actual detail canonical with its advertised URL.
+- The JavaScript-disabled browser opens the ordinary 25-link formation directory,
+  follows a detail, traverses pagination and opens the historical 2018 campaign.
+  An initial failure exposed streaming loading boundaries whose completed content
+  stayed hidden without JavaScript; removing those boundaries on formation routes
+  fixed the failure without changing the map's existing loading state.
+- A production regression observed 2018 content with a 2024 title. After disabling
+  speculative prefetch on the added discovery links, twenty repeated production
+  campaign checks passed, followed by the complete verification suite. The final
+  regression checks both the selected campaign's title and canonical URL.
+- Sitemap unit cases include the maximum 30,000 records, non-consecutive retained
+  IDs, correct family routes, XML escaping and explicit failures without cached
+  empty output. Real unavailable-source routes return 503 with a retry instruction;
+  intentionally empty sources return an empty XML sitemap. The observed production
+  Next.js response preserves the one-hour shared-cache policy.
+- Real Chromium screenshots were inspected at 1440×1000 and 390×844 for the new
+  directory, breadcrumbs and campaign links. Keyboard Tab/Enter opened a formation.
+  Final production inspection recorded no horizontal overflow or console errors.
+  The generated social preview is a visually inspected 1200×630 PNG.
+- `just cf-build` passed and produced the OpenNext Worker without live data or
+  credentials. No production deployment, remote CI, indexing or ranking gain is
+  established by these local checks.
+
+Evidence is retained in `.artifacts/seo/verify.log`, `cloudflare-build.log`,
+`metadata-repeat.log`, `metadata-race-results/`, `final-browser-inspection.json`,
+the rendered screenshots and `sitemap-response.headers`. Earlier failed runs
+remain in separate logs; the development HMR failures captured during editing are
+separate from the final stable-source run. Search Console ownership, sitemap
+submission and production measurements remain SEO-001.
+
 ## Foundation verification (before raw ingestion)
 
 Observed locally on 2026-10-03 (Asia/Shanghai), using the pinned toolchain.

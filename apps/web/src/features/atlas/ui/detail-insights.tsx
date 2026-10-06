@@ -1,5 +1,8 @@
 "use client";
 
+import { Breadcrumbs } from "@/features/seo/ui/breadcrumbs";
+import { detailBreadcrumbs } from "@/features/seo/domain/structured-data";
+
 import Link from "next/link";
 import { useState } from "react";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
@@ -378,6 +381,9 @@ export function AtlasDetailView({
 }) {
   return (
     <main id="contenu" className="py-8">
+      <Breadcrumbs
+        items={detailBreadcrumbs(detail.item, detail.source, detail.family)}
+      />
       <Link
         href={`/carte?famille=${detail.family}&campagne=${detail.source.campaign}`}
         className="text-xs text-muted-foreground hover:underline"

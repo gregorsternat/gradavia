@@ -228,3 +228,19 @@ checklists is a separate choice. Budget values are entered by the user and total
 require every input, including explicit zeros. No city cost, career outcome,
 individual admission score or official deadline is manufactured from admissions
 counts. External enrichments require documented source and join review first.
+
+## 019 — Discover published records without an independent SEO database
+
+Canonical page identity and indexation rules belong to the web application's
+pure SEO feature. Formation metadata uses the same validated, request-cached Rust
+response as the visible detail. Sitemaps consume complete, bounded atlas snapshots
+and expose actual immutable record IDs; they do not create new database tables,
+derive sequential IDs or couple builds to production data. Separate family files
+keep the current 30,000-record contract below sitemap protocol limits.
+
+Publish the latest campaign of each family initially, preserving historical
+campaign navigation and detail identity. Native result links and pagination make
+discovery independent of virtualized tables and browser JavaScript. Exclude
+arbitrary filtered states and local preparation tools from indexing, while keeping
+robots access available for crawlers to observe that policy. Sitemap publication,
+Google indexing and ranking changes are distinct states; see [search discovery](seo.md).
