@@ -48,6 +48,38 @@ Evidence is `.artifacts/ci-fix/verify-final.log` and
 remain separate outcomes established by their GitHub Actions runs and public
 checks.
 
+## Public formation navigation readiness (2026-10-07)
+
+The main workflow at `b601d5c` ([run 37596586619](https://github.com/gregorsternat/gradavia/actions/runs/37596586619))
+passed repository verification in 29 minutes 16 seconds and published both
+Workers. Its public smoke then exhausted six attempts at formation detail and
+provenance. The retained screenshot still shows the explorer: the URL assertion
+used Playwright's implicit five-second deadline before the existing 30-second
+detail assertion could run.
+
+A real Chrome navigation successfully rendered the expected formation, title
+and canonical. Its resource timing records a 5.984-second detail navigation
+request, exceeding that early assertion's budget without a browser runtime
+error. The URL assertion now uses the same bounded 30-second public readiness
+budget as the detail. All URL, provenance, snapshot and analysis checks remain
+required, and the existing six-attempt policy is unchanged.
+
+`mise exec -- just cf-smoke` with the corrected deadline passed against public
+production on attempt six: 14,252 formation results, the selected detail with
+provenance, and a complete 14,252-record snapshot and hydrated analysis. Evidence
+is `.artifacts/ci-fix/main-smoke-failure/`,
+`.artifacts/ci-fix/live-browser/navigation-timing.txt`,
+`.artifacts/ci-fix/public-smoke-navigation.log` and
+`.artifacts/cloudflare/smoke/result.json`. The prior failed release run remains
+separate from verification of the subsequent workflow run.
+
+`CI=true E2E_PORT=3514 mise exec -- just verify` also passed static, unit,
+PostgreSQL 18 and credential-free build checks, followed by 278 browser
+executions with eight expected exclusions. Evidence is
+`.artifacts/ci-fix/verify-smoke-fix.log`. Live Chrome inspection at 1440×1000 and
+390×844 confirmed the detail's visible metrics and mobile layout without
+horizontal overflow; keyboard Enter on the return link opened the explorer.
+
 ## Search discovery verification (2026-10-05)
 
 Observed locally in worktree `1e0e`, based on `d3ab365`, for the
