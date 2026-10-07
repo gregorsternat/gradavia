@@ -15,7 +15,8 @@ export default defineConfig({
   forbidOnly: Boolean(process.env.CI),
   retries: 0,
   workers: process.env.CI ? 2 : undefined,
-  timeout: 30_000,
+  // Development journeys also include route compilation and client startup.
+  timeout: production ? 30_000 : 60_000,
   // Development routes compile on first navigation; production stays at 5s.
   expect: { timeout: production ? 5_000 : 15_000 },
   outputDir: `${artifacts}/results`,
