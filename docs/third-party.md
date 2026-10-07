@@ -127,6 +127,9 @@ Local integration patches:
   its default product labels are French. Navigation, checkbox, table and tabs'
   accessibility labels are French.
   Opening the palette by button or shortcut closes the mobile navigation first.
+  Its automatically focused search field explicitly overrides the global focus
+  outline so the palette header remains borderless; the caret and active result
+  retain their existing keyboard feedback.
 - Virtual tables expose their accessible name, total row count and row indices,
   and their scroll region is keyboard focusable. TanStack Virtual explicitly
   opts out of React Compiler memoization at its call site.

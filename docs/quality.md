@@ -788,3 +788,32 @@ screenshots for the actual focus calls and before/after state. The first failed
 Escape attempt is preserved in `history/a9dd950-readiness-first-attempt/`.
 Previous production evidence is preserved separately in `history/`. These were
 read-only public checks with no database, workflow or deployment mutation.
+
+## Quick search focus outline (2026-10-07)
+
+The global, unlayered `:focus-visible` rule overrode the command palette input's
+Tailwind `outline-none` utility, producing a rectangular outline on automatic
+focus. The input now explicitly suppresses that outline in its focus-visible
+state; focus behavior and the global rule for other controls are unchanged.
+
+Local headed Chromium inspection at 1440×1000 and 390×844 confirmed the borderless
+field in light and dark themes, opening by button and Cmd+K, Tab containment,
+arrow-key selection, Escape dismissal and desktop opener-focus restoration.
+Mobile button opening also passed with reduced motion, and typing `budget` then
+pressing Enter navigated to `/budget`. Computed `outline-style` changed from
+`solid` to `none` while the combobox retained focus. Mobile had no horizontal
+page overflow. Screenshots and CLI snapshots are under `.artifacts/quick-search/`.
+
+This visual check used the dataset-independent shell; the unavailable API logged
+its expected request failure. Motion emitted its reduced-motion diagnostic.
+These local checks do not establish remote CI or deployment.
+
+`WRANGLER_SEND_METRICS=false CI=true E2E_PORT=3512 mise exec -- just verify`
+passed static checks, TypeScript/Rust unit tests, disposable PostgreSQL 18
+contracts, credential-free builds, 121 development and 119 production browser
+cases, and 12 application-state cases. The existing mobile-only navigation and
+development-only gallery exclusions account for three development and five
+production skips. The palette keyboard journey passed on both viewports in both
+suites. The verification log is `.artifacts/quick-search/verify.log`; metrics were
+disabled after an earlier Wrangler type-generation command stalled on a network
+request.
