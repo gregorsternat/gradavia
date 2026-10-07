@@ -391,9 +391,9 @@ const ChartTooltip = ({
           // base
           "rounded-md border text-sm shadow-md",
           // border color
-          "border-gray-200 dark:border-gray-800",
+          "border-border",
           // background color
-          "bg-white dark:bg-gray-950",
+          "bg-surface",
         )}
       >
         <div className={cx("border-b border-inherit px-4 py-2")}>
@@ -402,7 +402,7 @@ const ChartTooltip = ({
               // base
               "font-medium",
               // text color
-              "text-gray-900 dark:text-gray-50",
+              "text-foreground",
             )}
           >
             {label}
@@ -427,7 +427,7 @@ const ChartTooltip = ({
                     // base
                     "whitespace-nowrap text-right",
                     // text color
-                    "text-gray-700 dark:text-gray-300",
+                    "text-muted-foreground",
                   )}
                 >
                   {category}
@@ -438,7 +438,7 @@ const ChartTooltip = ({
                   // base
                   "whitespace-nowrap text-right font-medium tabular-nums",
                   // text color
-                  "text-gray-900 dark:text-gray-50",
+                  "text-foreground",
                 )}
               >
                 {valueFormatter(value)}
