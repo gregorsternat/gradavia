@@ -80,6 +80,34 @@ executions with eight expected exclusions. Evidence is
 390×844 confirmed the detail's visible metrics and mobile layout without
 horizontal overflow; keyboard Enter on the return link opened the explorer.
 
+## Landing preview interaction readiness (2026-10-07)
+
+The PR workflow at `829aa9e` ([run 37604154822](https://github.com/gregorsternat/gradavia/actions/runs/37604154822))
+exposed an early mobile activation of the landing preview's values accordion.
+The trace has no client-rendered chart before the pointer action; the first
+retained SVG appears during that action. The accordion remained collapsed, so
+the following table assertion failed after 15 seconds without a browser runtime
+error. Its source, campaign, denominator and partial-coverage assertions had
+already passed.
+
+The interaction now awaits the visible client-rendered chart, matching the
+existing 320-pixel preview journey. Source, campaign, coverage, metric switching
+and keyboard assertions remain unchanged, as do timeouts and zero retries.
+Five desktop/mobile repetitions passed all ten development and ten production
+executions. Evidence is `.artifacts/ci-fix/pr-829aa9e/`,
+`.artifacts/ci-fix/landing-readiness-repeat.log` and
+`.artifacts/ci-fix/landing-readiness-repeat-production.log`.
+
+`CI=true E2E_PORT=3517 mise exec -- just verify` passed static checks, 104
+TypeScript cases, Node/Rust suites, disposable PostgreSQL 18 contracts and
+credential-free builds. All 278 browser executions passed, with eight expected
+exclusions. Evidence is `.artifacts/ci-fix/verify-landing-final.log`.
+
+The corresponding main [run 37604300101](https://github.com/gregorsternat/gradavia/actions/runs/37604300101)
+passed full verification, published both Workers and passed the corrected public
+smoke. Those publish and smoke steps completed successfully, without a stale-main
+skip. Product code is unchanged by this additional test synchronization.
+
 ## Search discovery verification (2026-10-05)
 
 Observed locally in worktree `1e0e`, based on `d3ab365`, for the

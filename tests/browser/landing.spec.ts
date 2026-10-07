@@ -207,6 +207,8 @@ test("landing preview preserves source, campaign and partial coverage when switc
   );
   await expect(preview).toContainText("Périmètre variable selon les campagnes");
   await expect(preview).toContainText("Certaines sommes sont partielles");
+  // The server-rendered values can precede the accordion's client handlers.
+  await expect(preview.locator(".recharts-surface")).toBeVisible();
   await preview.getByRole("button", { name: "Voir les valeurs" }).click();
   const places = preview.getByRole("table", {
     name: "Places proposées par campagne et couverture",
