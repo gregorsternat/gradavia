@@ -39,6 +39,7 @@ import {
 import { CommandPalette } from "@/components/motion/command-palette";
 import { Button } from "@/components/motion/button/base";
 import { ThemeSelect } from "@/components/theme-select";
+import { LogoMark } from "@/components/logo-mark";
 import { Wordmark } from "@/components/wordmark";
 import { useFormationSelection } from "@/features/formations/ui/selection-provider";
 
@@ -201,19 +202,13 @@ function ShellContents({ children }: { children: ReactNode }) {
               <Wordmark />
             ) : (
               <Link href="/" aria-label="Gradavia, accueil">
-                <Telescope className="size-5" />
+                <LogoMark size={20} />
               </Link>
             )}
-            {isMobile ? (
+            {isMobile && (
               <AnimatedSidebarClose aria-label="Fermer la navigation">
                 <X className="size-4" />
               </AnimatedSidebarClose>
-            ) : (
-              open && (
-                <span className="rounded-md border border-border/70 px-1.5 py-0.5 text-[9px] font-medium tracking-wider text-muted-foreground">
-                  BÊTA
-                </span>
-              )
             )}
           </div>
         </AnimatedSidebarHeader>
