@@ -16,9 +16,14 @@ comparisons use conservative matched records; public datasets and runnable noteb
 retain source versions and missing-value states. See the
 [feature coverage](docs/feature-coverage.md) for exact scope and deferred requests.
 
-The manual collector retains 14 official APB/Parcoursup source datasets and
-immutable source releases. The UI distinguishes published zeros, missing and
-suppressed values and keeps source context available beside the indicators.
+The manual collector registers 14 official APB/Parcoursup source datasets and
+retains immutable source releases when imports succeed. The UI distinguishes
+published zeros, missing and suppressed values and keeps source context available beside the indicators.
+
+Current source includes the Gradavia G identity, crawlable formation pages,
+canonical metadata and source-backed sitemaps. There is no fixed feature roadmap:
+work is selected by the owner as needed. See [product direction](docs/product.md)
+and [quality status](docs/quality.md) for scope, verification and remaining limits.
 
 ## Start locally
 
@@ -97,6 +102,7 @@ Run commands through `mise exec --` if mise is not activated in your shell.
 
 | Path                | Responsibility                                                     |
 | ------------------- | ------------------------------------------------------------------ |
+| `apps/api-worker`   | Private Cloudflare Worker and Rust Container lifecycle             |
 | `apps/web`          | Next.js observatory, French UI, server-side HTTP client            |
 | `packages/db`       | Drizzle schema, SQL migrations, database adapters                  |
 | `crates/api`        | Standalone Axum/SQLx read service; see [API contract](docs/api.md) |
@@ -104,5 +110,8 @@ Run commands through `mise exec --` if mise is not activated in your shell.
 | `crates/aggregator` | Ingestion CLI and I/O adapters                                     |
 | `scripts`, `tests`  | Diagnostics and executable guardrails                              |
 | `docs`              | Product, data contract, decisions, plans, verification evidence    |
+
+The [repository workflow](docs/harness.md) maps each concern to its authoritative
+document and explains the executable guardrails.
 
 Start with [architecture](ARCHITECTURE.md), the [documentation index](docs/index.md), and [AGENTS.md](AGENTS.md). The [deployment guide](docs/deployment.md) covers the Cloudflare website and private Rust Container. The public website is [gradavia.com](https://gradavia.com). GitHub Actions verifies main pushes before deploying the API and website; setup and release evidence are recorded in the deployment guide and [quality status](docs/quality.md).

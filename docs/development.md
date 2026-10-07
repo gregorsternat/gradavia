@@ -48,27 +48,29 @@ not need to change; `origin` points to `gregorsternat/gradavia`.
 
 ## Neon development
 
-Project: [gradavia, Frankfurt](https://console.neon.tech/app/projects/morning-firefly-45046041).
-PostgreSQL major version: 18.
+Development uses a Neon branch selected explicitly for the checkout. Verify the
+intended project/branch before migrations or ingestion; a directory name, an old
+plan or a successful `db-check` does not establish the target or its data state.
+Keep credentials in the ignored root `.env.local` and never print their values.
 
-- Production: `br-tiny-leaf-b1dh585q`.
-- Development: `br-hidden-grass-b1z6hk64`, created from production.
-- Development compute: 0.25–1 CU, suspension after 300 seconds of inactivity.
+The project and branch identifiers in the [deployment guide](deployment.md) and
+[verification archive](quality/history-through-2026-10-07.md) are dated setup
+observations. Early ingestion used `development-raw-ingestion-cc59` and explorer
+work used `development-formation-explorer-fdf3`. They are historical references,
+not guaranteed available or populated environments for a new worktree. In
+particular, the original default branch named `production` must not be confused
+with the separately provisioned `gradavia-production` application branch.
 
-The imported datasets live on `development-raw-ingestion-cc59`
-(`br-wild-surf-b13o7v3x`). The formation explorer worktree uses
-`development-formation-explorer-fdf3` (`br-square-pine-b1qud6l4`), copied from that
-populated branch. The original `development` branch does not contain the import. A successful
-`db-check` confirms connectivity, not schema or data availability. To preview
-against an existing populated development configuration without replacing the
-root environment, run `GRADAVIA_DATA_ENV_FILE=/absolute/path/to/.env.local just dev`.
+To preview an explicitly selected populated development configuration without
+replacing the root environment, run
+`GRADAVIA_DATA_ENV_FILE=/absolute/path/to/.env.local just dev`.
 The supervisor reads only its `DATABASE_URL` for the API child and removes both
 connection strings and the selection path from the web environment. Missing or
 unreadable explicit files fail safely instead of falling back to another DB.
 This setting does not affect migrations, ingestion or `db-check`.
 
-Use the development branch for daily work. Branches contain independent data and
-schema history after creation. For simultaneous schema work, use a separate
+Use an isolated development branch for daily work. Branches contain independent
+data and schema history after creation. For simultaneous schema work, use a separate
 Neon branch per feature/worktree and its own local connection strings.
 
 ## Migrations
@@ -133,6 +135,19 @@ container/CLI logs before container cleanup. CI uploads this directory with
 Open a trace with `pnpm exec playwright show-trace <trace.zip>`. Retained
 artifacts are local or CI evidence; do not include credentials or private data
 in test fixtures. A passing health request does not prove dataset freshness.
+
+For a shell that loads while data fails, inspect each level separately:
+
+1. `/api/health` checks the Next.js process; Rust `/health/live` checks its process.
+2. Rust `/health/ready` checks database readiness, not a published campaign.
+3. Rust `/v1/formations?page=1` checks the actual product read path. Distinguish
+   an empty published inventory from an unavailable schema or upstream service.
+4. `just ingest status` inspects configured import state. `just dev` never applies
+   migrations or refreshes datasets. Verify the intended isolated database target
+   before deliberately running either write operation.
+
+See the [API contract](api.md) for statuses and sanitized diagnostics. Historical
+source counts in documentation are not expected values for every Neon branch.
 
 ## Delivery
 

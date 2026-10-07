@@ -6,6 +6,18 @@ with no account requirement, a restrained monochrome interface and useful
 interactive visualizations. The source and meaning of every number matter more
 than producing a ranking or predicting an individual's admission.
 
+## Current direction
+
+As confirmed by the owner on 2026-10-07, there is no fixed priority order or
+committed roadmap. The owner chooses what to work on when returning to the
+project. Supported journeys below describe the implementation; the coverage
+register and feasibility notes retain ideas and limits, not promised releases.
+An execution plan becomes active when a concrete task is selected.
+
+Gradavia is the current public identity. The UI uses the shared G mark and no
+longer displays the sidebar BÊTA badge. The public site is `gradavia.com`;
+source changes on main still require their own CI/publication/smoke evidence.
+
 ## Supported journeys
 
 | Surface              | User job                                                                  | Scope                                                              |

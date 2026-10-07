@@ -10,6 +10,9 @@ No active execution plan.
 
 ## Completed
 
+- [Current project documentation](completed/documentation-refresh.md): current
+  context, on-demand product direction, guardrail inventory and archived evidence.
+
 - [Search discovery and page identity](completed/seo-foundation.md): canonical
   metadata, source-backed sitemaps, crawlable formation/campaign navigation and
   verified indexation policy.

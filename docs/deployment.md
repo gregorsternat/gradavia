@@ -44,13 +44,18 @@ the instance count.
 
 ## Production database
 
-Production uses Neon project `morning-firefly-45046041`, branch
+The following inventory was verified at initial provisioning on 2026-10-05. It
+is a recovery reference, not a live inventory or a default for every checkout.
+Recheck the branch, endpoint and role before a production operation; independent
+worktrees do not inherit the provisioning checkout's environment or archives.
+
+Production was provisioned in Neon project `morning-firefly-45046041`, branch
 `gradavia-production` (`br-mute-flower-b1nbhbx7`), endpoint
 `ep-soft-surf-b1o2bgoj`. Compute is fixed at 0.25 CU and suspends after 300 seconds
 of inactivity. It was cloned from the populated `development` branch; the
 original development and empty default `production` root were preserved.
 
-The initial copy contains 14 registered datasets, 13 published releases and
+The initial copy contained 14 registered datasets, 13 published releases and
 199,655 raw records. Release pointers, fingerprints, campaigns and counts match
 the source branch. Cartography has no published release; its copied ingestion
 journal does not represent a running production importer. Future development
@@ -59,9 +64,10 @@ imports do not automatically update this independent production branch.
 The SQL-created `gradavia_api` role can SELECT only the three source tables.
 Its actual pooled login and rejection of a harmless write were verified, even
 after overriding the read-only transaction default. It has no administrative
-attributes, ownership or role memberships. Only its pooled credential is retained
-in the ignored, mode-600 root `.env.local`; the temporary administrator
-environment used for provisioning was removed.
+attributes, ownership or role memberships. At provisioning, only its pooled
+credential was retained in that checkout's
+ignored, mode-600 root `.env.local`; the temporary administrator environment was
+removed. This does not establish credentials in another checkout.
 
 ## Verification and deployment
 
@@ -158,8 +164,10 @@ Migrations and ingestion remain explicit operations outside this workflow.
 Follow the [continuous deployment plan](exec-plans/completed/cloudflare-continuous-deployment.md)
 for activation and live-run evidence. The first automatic
 [main release](https://github.com/gregorsternat/gradavia/actions/runs/37226070152)
-completed successfully on 2026-10-05. Pushing or merging into main is sufficient;
-no local Wrangler login or manual publishing command is needed.
+completed successfully on 2026-10-05. Pushing or merging into main triggers this
+pipeline; publication still depends
+on successful verification, current-main selection and successful publish steps.
+No local Wrangler login or manual publishing command is needed for that path.
 
 ## Release checks
 

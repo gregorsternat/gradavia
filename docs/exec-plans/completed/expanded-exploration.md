@@ -94,7 +94,7 @@ features share a surface.
   both themes and complete populations. The built Worker was also exercised in
   local workerd against the real read-only API, including all three families,
   paired campaigns, interactive analysis and modality comparison.
-- [Quality evidence](../../quality.md#expanded-exploration-and-preparation)
+- [Quality evidence](../../quality/history-through-2026-10-07.md#expanded-exploration-and-preparation)
   separates local checks, runtime evidence and deployment. Evidence and failure
   traces remain under the ignored `.artifacts` directory.
 - Final `just verify` passed static checks, 92 TypeScript and 7 Node tests,
