@@ -2,10 +2,17 @@
 
 Use this index to find the source of truth for each concern.
 
+Start with [product scope](product.md) and [architecture](../ARCHITECTURE.md).
+Use [repository workflow](harness.md) for change/verification practices and
+[quality status](quality.md) for current coverage. Historical results are retained
+in the [verification archive](quality/history-through-2026-10-07.md); they are not
+an assertion about the current deployment or database contents.
+
 | Document                                            | Purpose                                                                |
 | --------------------------------------------------- | ---------------------------------------------------------------------- |
 | [Architecture](../ARCHITECTURE.md)                  | Module boundaries and runtime interfaces                               |
-| [Product](product.md)                               | Audience, scope, and feature order                                     |
+| [Product](product.md)                               | Audience, supported journeys and on-demand product direction           |
+| [Repository workflow](harness.md)                   | Context ownership, executable guardrails and documentation maintenance |
 | [Development](development.md)                       | Setup, environments, migration and test procedures                     |
 | [Deployment](deployment.md)                         | Cloudflare runtime, credentials, release checks and operations         |
 | [Search discovery](seo.md)                          | Canonical URLs, sitemaps, indexation policy and Search Console rollout |
@@ -22,5 +29,5 @@ Use this index to find the source of truth for each concern.
 | [Execution plans](exec-plans/index.md)              | Active/completed plans and technical debt                              |
 
 Repository documentation is versioned with code. `just check` checks entry
-points and relative links offline. Semantic accuracy and external references
-still require review.
+points, local link targets, top-level index membership and AGENTS length offline.
+Anchor validity, semantic accuracy and external references still require review.

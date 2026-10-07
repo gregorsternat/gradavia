@@ -13,7 +13,7 @@ flowchart LR
   Server --> UI[React observatory]
 ```
 
-The executable data path is now a manual Rust collector: official JSONL exports,
+The executable data path starts with a manual Rust collector: official JSONL exports,
 immutable local archives, schema validation and atomic publication to PostgreSQL.
 The Rust API reads published Parcoursup releases and computes reviewed indicators,
 aggregate observations, specialty destinations and source coverage.
@@ -31,6 +31,7 @@ selection and read aggregation belong in the API. Scheduling remains deferred.
 | `features/*/domain`               | Pure URL/presentation rules and HTTP response validation  | Network, persistence                    |
 | `features/*/server`, `src/server` | Server-only HTTP calls and upstream failure handling      | Client component state                  |
 | `components`                      | Shared primitives and vendored UI                         | Feature-specific database queries       |
+| `apps/api-worker`                 | Private service binding and Container lifecycle           | Public data API, ingestion, migrations  |
 | `packages/db`                     | Schema, migrations, connection adapters                   | Product UI or Rust domain rules         |
 | `crates/core`                     | Validated domain values and pure calculations             | SQLx, HTTP, async runtimes, filesystem  |
 | `crates/api`                      | Axum routes, SQLx read repositories, formation read rules | Rendering, ingestion, schema migrations |
@@ -70,6 +71,17 @@ Static analysis does not replace review of side effects or data semantics.
   specialty dataset. National, group and formation levels stay separate.
 - `/sources` reads the 14-source inventory and explains metric definitions,
   population differences, history limits and local selection persistence.
+- `/carte`, `/apprentissage` and `/archives` load separate family snapshots
+  from `/v1/atlas`; `/atlas/[id]` reads their immutable record details.
+- `/analyses` and `/decouvrir` use a retained atlas; `/evolutions` captures two
+  campaigns with qualified matching. `/modalites` compares independently chosen
+  regular/apprenticeship records without asserting course equivalence.
+- `/specialites/inverse` consumes `/v1/specialties/inverse` within the reviewed
+  2025 population. `/budget` stores user-entered scenarios in the browser.
+- `/donnees` exposes download/notebook entry points; `/api/v1/datasets` is the
+  bounded public HTTP export facade over the private Rust atlas service.
+- `/robots.txt` and `/sitemap.xml` expose the search-discovery policy and root
+  sitemap index; the four child sitemaps are documented in [SEO](docs/seo.md).
 - The Rust service provides `/health/live` and `/health/ready`. See the
   [HTTP contract](docs/api.md) for schemas, errors, timeouts and deployment limits.
 - `GET /api/health` reports application liveness without opening a database.

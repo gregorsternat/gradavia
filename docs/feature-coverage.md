@@ -124,12 +124,14 @@ not proof of an unchanged course, and no view predicts individual admission.
 | 79  | Scrolling editorial stories    | Deferred  | No specific investigated narrative with independently checked claims, scene sequence and editorial evidence was produced. The analysis and quiz pages are not labelled as a completed story system.                                                                                                                                                       |
 | 80  | Exportable/embeddable charts   | Bounded   | `/analyses`: standalone SVG with source, campaign and complete embedded JSON metadata; all scatter points, with explicitly bounded group/matrix previews. No PNG renderer, live hosted embed or auto-refresh contract.                                                                                                                                    |
 
-## Follow-up order
+## Possible follow-ups, without priority
 
-The next source-backed increments are a retained CNOUS restaurant overlay and
+Potential source-backed increments include a retained CNOUS restaurant overlay and
 commune-coded rent references with editable assumptions. Course/career links
 first need the Onisep correspondence; outcomes should begin as source-native
 InserSup/InserJeunes exploration before any admissions attachment. Travel routing,
 student mobility and education-desert measures require their own populations and
 geographic contracts. Revision comparison needs an explicit release-to-release
-identity strategy. These are future work, not hidden parts of this delivery.
+identity strategy. These are possibilities, not an ordered or committed roadmap.
+The owner confirmed on 2026-10-07 that tasks are chosen when working on the
+project. See [product direction](product.md#current-direction).

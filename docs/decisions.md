@@ -3,7 +3,7 @@
 ## 001 — A small monorepo
 
 pnpm workspaces for TypeScript, Cargo workspaces for Rust, and just for shared
-commands. No additional task graph service is needed for two JS packages and
+commands. No additional task graph service is needed for three JS packages and
 three crates. Versions and lockfiles make local and CI behavior reproducible.
 
 ## 002 — Next.js reads, Rust ingests (superseded by 010)
@@ -20,8 +20,9 @@ connections; the collector and migrations use direct connections. `pg` serves
 local tooling/tests, and Neon HTTP remains a connectivity diagnostic only.
 
 Development uses Neon branches; local tests and GitHub Actions use disposable
-PostgreSQL 18. CI requires no Neon secrets. Least-privilege deployment roles
-remain tracked before hosting.
+PostgreSQL 18. CI requires no Neon secrets. The dedicated production reader is
+documented in [deployment](deployment.md); separating migration and ingestion
+roles remains DB-001 before those operations are automated.
 
 ## 004 — Source-owned visual components
 
@@ -30,14 +31,13 @@ source provenance. This allows small compatibility and accessibility fixes.
 Tailwind 4 tokens unify their appearance. Motion respects reduced motion.
 The gallery makes integration observable without inventing product metrics.
 
-## 005 — Defer the Workers adapter
+## 005 — Defer the Workers adapter (superseded by 016)
 
-Cloudflare Workers is the intended host. The
-[current Cloudflare Next.js guide](https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/)
-recommends vinext for new apps and also documents OpenNext. This does not select
-a replacement runtime for Gradavia yet. The hosting milestone will verify official
-Next.js compatibility, adapter maturity, database transport, caching, and tests
-before choosing and documenting an adapter.
+At the foundation milestone, adapter selection was deferred until official
+Next.js compatibility, database transport, caching and browser behavior could be
+verified. Decision 016 resolved that deferral: the current deployment uses
+OpenNext for Next.js and a private Cloudflare Container for the Rust API.
+The original deferral is retained as history, not a pending hosting decision.
 
 ## 006 — Repository knowledge and executable feedback
 
@@ -50,6 +50,9 @@ Checks enforce import direction, pure-domain dependencies, documentation links,
 types, formatting, and behavior. They cannot prove statistical validity,
 documentation truth, or full accessibility. Reviews remain necessary.
 No automatic merge or recurring agent workflow is introduced.
+See [repository workflow](harness.md) for the current guardrail inventory and
+documentation upkeep rules. [Quality](quality.md) summarizes current coverage;
+its linked archive preserves historical verification without implying freshness.
 
 ## 007 — Compatible ESLint major
 

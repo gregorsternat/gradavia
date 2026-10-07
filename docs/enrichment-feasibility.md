@@ -37,9 +37,9 @@ also warns against treating these maps as a general rent time series. Manual
 budget inputs are usable now; automatic city estimates require this separate
 source contract.
 
-## Calendar decision for the current date
+## Calendar evidence at the 2026-10-05 review
 
-The [official page](https://www.parcoursup.gouv.fr/calendrier) currently describes
+At that review, the [official page](https://www.parcoursup.gouv.fr/calendrier) described
 the **2026** procedure: applications opened on January 19, the general wish
 deadline was March 12, confirmation April 1, main admissions June 2–July 11,
 and complementary admissions ended September 10. It also documents exceptions,
@@ -64,7 +64,7 @@ receiving institution. No versioned, nationwide graph of guaranteed transitions
 was verified. A contextual official-links panel is feasible now; claiming that
 a particular saved formation grants access to a particular next program is not.
 
-## Evidence limits and next bounded imports
+## Evidence limits and possible bounded imports
 
 Official metadata for InserSup and InserJeunes was read live, including schema
 and license. Onisep's current data.gouv catalogs were readable, but direct
@@ -72,9 +72,14 @@ opendata.onisep.fr requests returned errors in this environment; payload export
 and XML schema compatibility remain unverified. Catalog presence is not proof
 that a source has been imported or matched.
 
-The most direct next integrations are a retained CNOUS restaurant overlay and
+Possible integrations include a retained CNOUS restaurant overlay and
 a commune-coded rent-reference import. Occupation/course links require the
 Onisep correspondence first; employment, salary and completion should initially
 be explored at their published grain. Every import needs provenance, versioned
 validation, missing-value handling, coverage reconciliation and review before
 being attached to admissions records.
+
+These research options have no committed delivery order. The owner chooses the
+next task when working on Gradavia; see [product direction](product.md#current-direction).
+External-source availability and calendar details must be rechecked when an
+integration is selected. They were not refreshed during the 2026-10-07 doc review.

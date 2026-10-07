@@ -9,6 +9,7 @@ This file is a map. Keep detailed rules and evidence in the linked documents.
 - [Documentation index](docs/index.md): product, data, design, decisions.
 - [Execution plans](docs/exec-plans/index.md): active work and known debt.
 - [Quality status](docs/quality.md): what has actually been verified.
+- [Repository workflow](docs/harness.md): guardrails, evidence and documentation upkeep.
 
 ## Implementation rules
 
