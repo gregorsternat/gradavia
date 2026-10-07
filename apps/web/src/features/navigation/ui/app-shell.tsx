@@ -205,16 +205,10 @@ function ShellContents({ children }: { children: ReactNode }) {
                 <LogoMark size={20} />
               </Link>
             )}
-            {isMobile ? (
+            {isMobile && (
               <AnimatedSidebarClose aria-label="Fermer la navigation">
                 <X className="size-4" />
               </AnimatedSidebarClose>
-            ) : (
-              open && (
-                <span className="rounded-md border border-border/70 px-1.5 py-0.5 text-[9px] font-medium tracking-wider text-muted-foreground">
-                  BÊTA
-                </span>
-              )
             )}
           </div>
         </AnimatedSidebarHeader>
