@@ -1,6 +1,6 @@
 # Verification status
 
-Reviewed on 2026-10-07 (Asia/Shanghai) against checkout `9f99df9`.
+Reviewed on 2026-10-07 (Asia/Shanghai) against the updated base `cac11ff`.
 This page summarizes coverage and outstanding limits. Detailed past results live
 in the [historical verification log](quality/history-through-2026-10-07.md).
 A checked-in implementation, a local pass, remote CI, publication and production
@@ -25,10 +25,10 @@ for follow-up triggers.
 
 ## Evidence at this refresh
 
-The checkout includes the SEO foundation, the shared G mark, the palette input
-focus correction, browser-readiness fixes and removal of the sidebar BÊTA badge.
-These are established by source and local Git history through `9f99df9`, not by
-assuming every recent main commit has reached production.
+The updated base includes the SEO foundation, shared G mark, palette input focus
+correction, browser-readiness fixes, removal of the sidebar BÊTA badge and the
+chart-tooltip semantic-color correction. Source and local history establish these
+changes through `cac11ff`; production state is recorded separately below.
 
 The archived 2026-10-07 landing-readiness and branding checks record full local
 verification with 131 development, 129 production and 18 data-state browser
@@ -55,12 +55,20 @@ disposable PostgreSQL 18 contracts and credential-free builds. Chromium passed
 131 development, 129 production and six cases in each of the three production
 data states (278 executions, eight intended exclusions).
 
+The updated base also contains the chart-tooltip correction from `cac11ff`; its
+original verification record is preserved in the [historical log](quality/history-through-2026-10-07.md#chart-tooltip-contrast-2026-10-07).
+
 Evidence: `.artifacts/docs-refresh/verify.log`. Final documentation formatting,
 local links/fragments and `git diff --check` passed. The historical log was checked
 against the original: only its introduction and relocated relative links changed.
-Application code, workflows and lockfiles are unchanged. No new manual visual
-review, Cloudflare build or deployment was performed for this documentation-only
-change. See the [completed plan](exec-plans/completed/documentation-refresh.md).
+The documentation refresh introduced no application, workflow or lockfile
+changes. The incoming base includes the separately reviewed chart-tooltip fix.
+After integrating the `cac11ff` base, `mise exec -- just check` passed and
+`E2E_PORT=3534 mise exec -- just test-browser tests/browser/observatory.spec.ts tests/browser/formations.spec.ts`
+passed all 34 development Chromium cases, covering overview charts and formation
+history in desktop/mobile. This was a focused post-merge check; the main workflow
+for `cac11ff` was still running when last inspected. No new manual visual review,
+Cloudflare build or deployment was performed for the documentation-only change. See the [completed plan](exec-plans/completed/documentation-refresh.md).
 
 ## Reading and adding evidence
 

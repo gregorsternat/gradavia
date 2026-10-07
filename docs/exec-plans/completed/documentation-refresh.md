@@ -2,8 +2,7 @@
 
 ## Objective
 
-Refresh the repository's entry points against the implementation at `9f99df9`
-on 2026-10-07 (Asia/Shanghai). Keep the short-map approach described in
+Refresh the repository's entry points against the implementation at `9f99df9`, then conflict integration with updated `main` at `cac11ff`, on 2026-10-07 (Asia/Shanghai). Keep the short-map approach described in
 [Harness engineering](https://openai.com/index/harness-engineering/) and make
 current contracts, historical evidence and deferred work easy to distinguish.
 
@@ -42,8 +41,11 @@ current contracts, historical evidence and deferred work easy to distinguish.
   PostgreSQL 18 contracts, credential-free builds and 278 browser executions
   (131 development, 129 production, 18 data-state; eight intended exclusions).
 - Final formatting, documentation links/fragments and diff checks passed. The
-  archived quality body matches the original after relative-link relocation.
-  No application, workflow or lockfile change was introduced.
+  archived quality body matches the original after relative-link relocation; the
+  incoming `main` chart-tooltip evidence was preserved in that archive.
+- After the merge, `mise exec -- just check` passed and 34 targeted Chromium
+  desktop/mobile cases passed for the observatory and formation routes.
+- No unrelated refactor was introduced; the incoming base was preserved.
 
 ## Evidence and limits
 
