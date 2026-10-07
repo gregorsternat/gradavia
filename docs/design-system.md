@@ -7,6 +7,13 @@ compact navigation, generous breathing room and clear numeric hierarchy. System
 fonts keep the application independent of network font downloads. Light and dark
 themes share semantic tokens; the default follows the system preference.
 
+The brand mark is a filled G with a rounded left side and a stepped inner return,
+drawn in a 24×24 viewBox. The shared `LogoMark` component supplies the wordmark,
+collapsed navigation and social preview. The favicon carries the same path with
+system-aware light/dark colors; keep its geometry synchronized with the component.
+Interface marks inherit the foreground color. The visible name and home-link
+accessible label identify the brand, so adjacent SVG marks remain decorative.
+
 `apps/web/src/app/globals.css` defines background, foreground, surface, subtle
 background, border, muted text and chart colors. Panels use quiet borders and
 rounded corners; avoid stacked separators, decorative headings and repeated

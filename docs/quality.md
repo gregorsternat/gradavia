@@ -2,6 +2,31 @@
 
 This document records observed evidence, not intended capabilities.
 
+## Brand mark replacement (2026-10-07)
+
+Observed locally in worktree `061a`:
+
+- The approved G mark is shared by the landing header/footer, expanded/collapsed
+  navigation, mobile menu and generated social preview. The favicon and shared
+  component exactly match the approved SVG path; the previous circle/chart mark
+  is absent from application source.
+- `just verify` passed: formatting, lint, types, architecture/docs, Clippy,
+  unit tests, PostgreSQL 18 integration, production builds and 278 passing browser
+  executions (131 development, 129 production and six per unavailable-data state).
+  Existing exclusions remain unchanged; neither lockfile changed.
+- Real Chromium review against the production fixture harness at 1440×1000 and
+  390×844 covered both themes, header/footer and expanded/collapsed/mobile
+  navigation. The landing has no horizontal overflow at either width. Visible
+  keyboard focus and Enter navigation to the homepage work in collapsed desktop
+  navigation and the mobile menu.
+- The served favicon retains its system-aware light/dark colors. The generated
+  1200×630 social PNG was visually inspected with the new mark beside the name.
+
+Evidence: `.artifacts/logo-rollout/verify.log`, `manual-final.log`,
+`opengraph.png` and screenshots under `output/playwright/` in that directory.
+These are local checks with disposable fixture data; no remote CI, merge or
+deployment is established by this change.
+
 ## Browser verification budgets (2026-10-07)
 
 The main workflow at `a29c374` ([run 37515974752](https://github.com/gregorsternat/gradavia/actions/runs/37515974752))
