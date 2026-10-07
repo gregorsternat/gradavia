@@ -70,6 +70,24 @@ history in desktop/mobile. This was a focused post-merge check; the main workflo
 for `cac11ff` was still running when last inspected. No new manual visual review,
 Cloudflare build or deployment was performed for the documentation-only change. See the [completed plan](exec-plans/completed/documentation-refresh.md).
 
+## Navigation simplification validation
+
+On 2026-10-07 (Asia/Shanghai), the navigation diff against `6f14ab0` passed
+`WRANGLER_SEND_METRICS=false CI=true E2E_PORT=3544 mise exec -- just verify`:
+110 TypeScript tests, Node/Rust suites, disposable PostgreSQL 18 contracts,
+credential-free builds, and 290 Chromium executions (137 development, 135
+production and 18 production data-state cases; eight intended exclusions).
+
+Real-browser inspection covered desktop/mobile, light/dark, keyboard section and
+palette navigation, the mobile menu, favorites/comparison counts and the grouped
+screens using synthetic fixtures. Earlier failures exposed missing palette aliases,
+active-link prefetch interference with campaign metadata and a premature reload
+in a new test; the final run passes after those repairs. Details, evidence paths
+and remaining browser/source boundaries are in the
+[completed plan](exec-plans/completed/navigation-simplification.md).
+No live dataset audit, remote CI result, merge or deployment is established by
+these local checks.
+
 ## Reading and adding evidence
 
 - Keep this page a current summary. Put detailed investigations and historical

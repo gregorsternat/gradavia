@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useCallback, useState } from "react";
+import { Suspense, useCallback, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -10,17 +10,11 @@ import {
   ChartNoAxesCombined,
   Compass,
   Database,
-  FlaskConical,
-  BriefcaseBusiness,
-  Archive,
-  Wallet,
   GitCompareArrows,
   Heart,
-  Map,
   PanelLeft,
   Search,
   GraduationCap,
-  Telescope,
   X,
 } from "lucide-react";
 import {
@@ -41,76 +35,21 @@ import { Button } from "@/components/motion/button/base";
 import { ThemeSelect } from "@/components/theme-select";
 import { LogoMark } from "@/components/logo-mark";
 import { Wordmark } from "@/components/wordmark";
+import { navigationGroup, navigationGroups } from "../domain/navigation";
+import { SectionNavigation } from "./section-navigation";
 import { useFormationSelection } from "@/features/formations/ui/selection-provider";
 
-const destinations = [
-  {
-    href: "/observatoire",
-    label: "Vue d’ensemble",
-    icon: ChartNoAxesCombined,
-    keywords: ["accueil", "observatoire", "statistiques"],
-  },
-  {
-    href: "/formations",
-    label: "Formations",
-    icon: Compass,
-    keywords: ["rechercher", "parcoursup", "explorer"],
-  },
-  {
-    href: "/specialites",
-    label: "Spécialités du bac",
-    icon: GraduationCap,
-    keywords: ["lycée", "doublette", "bac général", "profil"],
-  },
-  {
-    href: "/carte",
-    label: "Carte",
-    icon: Map,
-    keywords: ["proximité", "rayon", "ville", "intérêts"],
-  },
-  {
-    href: "/apprentissage",
-    label: "Apprentissage",
-    icon: BriefcaseBusiness,
-    keywords: ["alternance", "contrat"],
-  },
-  {
-    href: "/analyses",
-    label: "Atelier d’analyse",
-    icon: FlaskConical,
-    keywords: ["graphiques", "distribution", "statistiques", "export"],
-  },
-  {
-    href: "/archives",
-    label: "Archives APB",
-    icon: Archive,
-    keywords: ["historique", "admission post-bac"],
-  },
-  {
-    href: "/territoires",
-    label: "Territoires",
-    icon: Map,
-    keywords: ["région", "géographie", "villes"],
-  },
-  {
-    href: "/comparer",
-    label: "Comparer",
-    icon: GitCompareArrows,
-    keywords: ["comparaison", "sélection"],
-  },
-  {
-    href: "/favoris",
-    label: "Mes favoris",
-    icon: Heart,
-    keywords: ["enregistrées", "sauvegarder"],
-  },
-  {
-    href: "/budget",
-    label: "Budget étudiant",
-    icon: Wallet,
-    keywords: ["coût", "logement", "scénarios"],
-  },
+const icons = [
+  Compass,
+  GraduationCap,
+  GitCompareArrows,
+  Heart,
+  ChartNoAxesCombined,
+  Database,
 ];
+const destinations = navigationGroups
+  .slice(0, 5)
+  .map((group, index) => ({ ...group, icon: icons[index]! }));
 
 function ShellContents({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -125,67 +64,31 @@ function ShellContents({ children }: { children: ReactNode }) {
     },
     [isMobile, setOpenMobile],
   );
-  const title = pathname.startsWith("/formations/")
-    ? "Fiche formation"
-    : ([
-        ...destinations,
-        { href: "/sources", label: "Données & méthode" },
-        { href: "/donnees", label: "API et notebooks" },
-        { href: "/evolutions", label: "Évolutions" },
-        { href: "/modalites", label: "Comparer les modalités" },
-        { href: "/decouvrir", label: "À vous d’estimer" },
-        { href: "/dev/ui", label: "Composants" },
-      ].find((item) => item.href === pathname)?.label ?? "Gradavia");
+  const group = navigationGroup(pathname);
+  const title =
+    pathname.startsWith("/formations/") || pathname.startsWith("/atlas/")
+      ? "Fiche formation"
+      : (navigationGroups
+          .flatMap((item) => item.pages)
+          .find((item) => item.href === pathname)?.label ??
+        (pathname === "/dev/ui" ? "Composants" : "Gradavia"));
   const commands = [
-    {
-      id: "discovery",
-      label: "À vous d’estimer · découvrir les données",
-      icon: Telescope,
-      group: "Explorer",
-      onSelect: () => router.push("/decouvrir"),
-    },
-    {
-      id: "exports",
-      label: "API publique et notebooks",
-      icon: Database,
-      group: "Analyser",
-      onSelect: () => router.push("/donnees"),
-    },
-    {
-      id: "evolutions",
-      label: "Comparer les campagnes",
-      icon: ChartNoAxesCombined,
-      group: "Analyser",
-      onSelect: () => router.push("/evolutions"),
-    },
-    {
-      id: "modalites",
-      label: "Comparer hors apprentissage et apprentissage",
-      icon: GitCompareArrows,
-      group: "Préparer",
-      onSelect: () => router.push("/modalites"),
-    },
-    ...destinations.map((item) => ({
-      id: item.href,
-      label: item.label,
-      icon: item.icon,
-      keywords: item.keywords,
-      group: "Explorer",
-      onSelect: () => router.push(item.href),
-    })),
-    {
-      id: "sources",
-      label: "Données & méthode",
-      icon: Database,
-      group: "Comprendre",
-      onSelect: () => router.push("/sources"),
-    },
+    ...navigationGroups.flatMap((group, index) =>
+      group.pages.map((page) => ({
+        id: page.href,
+        label: page.label,
+        icon: icons[index],
+        keywords: [...page.keywords, group.label],
+        group: group.label,
+        onSelect: () => router.push(page.href),
+      })),
+    ),
     {
       id: "definition",
       label: "Comprendre le taux d’accès",
       icon: BookOpen,
       keywords: ["indicateurs", "chiffres", "définition"],
-      group: "Comprendre",
+      group: "Données & méthode",
       onSelect: () => router.push("/sources#indicateurs"),
     },
   ];
@@ -230,7 +133,7 @@ function ShellContents({ children }: { children: ReactNode }) {
           <nav aria-label="Explorer Gradavia">
             {(open || isMobile) && (
               <p className="mb-2 px-3 text-[10px] font-medium tracking-[.08em] text-muted-foreground uppercase">
-                Observatoire
+                Explorer
               </p>
             )}
             <AnimatedSidebarMenu className="gap-1">
@@ -239,7 +142,7 @@ function ShellContents({ children }: { children: ReactNode }) {
                   <AnimatedSidebarMenuButton
                     href={href}
                     icon={<Icon className="size-[17px]" strokeWidth={1.65} />}
-                    isActive={pathname.startsWith(href)}
+                    isActive={group?.href === href}
                     className="min-h-10 rounded-lg text-[13px] font-normal"
                     badge={
                       href === "/favoris" && favorites.length
@@ -261,7 +164,7 @@ function ShellContents({ children }: { children: ReactNode }) {
             <AnimatedSidebarMenuItem>
               <AnimatedSidebarMenuButton
                 href="/sources"
-                isActive={pathname === "/sources"}
+                isActive={group?.href === "/sources"}
                 icon={<Database className="size-[17px]" strokeWidth={1.65} />}
                 className="text-[13px] font-normal"
               >
@@ -303,6 +206,9 @@ function ShellContents({ children }: { children: ReactNode }) {
           )}
         </header>
         <div className="page-frame mx-auto max-w-[1480px] px-4 pb-14 sm:px-8 lg:px-10">
+          <Suspense>
+            <SectionNavigation />
+          </Suspense>
           {children}
         </div>
       </div>

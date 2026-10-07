@@ -1,5 +1,6 @@
 "use client";
 
+import { FormationNavigation } from "@/features/navigation/ui/formation-navigation";
 import { useState, useSyncExternalStore, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -278,13 +279,6 @@ function ReadyExplorer({
     <main id="contenu" className="min-w-0 flex-1 py-8" aria-busy={pending}>
       <ExplorerHeader>
         <div className="flex gap-2">
-          <ButtonLink
-            href={`/carte?campagne=${data.source.campaign}`}
-            variant="secondary"
-            size="sm"
-          >
-            Carte et critères
-          </ButtonLink>
           <ShareButton />
           <ExportButton
             rows={data.formations.map((formation) => ({
@@ -295,6 +289,7 @@ function ReadyExplorer({
           />
         </div>
       </ExplorerHeader>
+      <FormationNavigation campaign={data.source.campaign} />
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -646,6 +641,7 @@ export function FormationExplorer({
   return (
     <main id="contenu" className="flex-1 py-8">
       <ExplorerHeader />
+      <FormationNavigation />
       <section className="rounded-xl border border-border bg-surface px-6 py-20 text-center">
         <GraduationCap className="mx-auto mb-5 size-8 text-muted-foreground" />
         <h2 className="text-xl font-medium">

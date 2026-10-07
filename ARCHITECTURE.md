@@ -197,7 +197,15 @@ See [search discovery](docs/seo.md) for canonical and indexation policy.
 
 Shared beUI sources remain under `components/motion`; Tremor chart sources and
 licenses remain under `components/charts/tremor`. `features/navigation/ui`
-owns the responsive app shell and command palette. `features/observatory`
+owns the responsive app shell, command palette, secondary section navigation and
+formation scope/view controls. `features/navigation/domain` owns the route groups
+and conservative list/map URL conversion. Five primary groups retain the existing
+route addresses; `/favoris` is the entry to Mon projet and `/sources` owns the
+methodology, exports and APB archive destinations. Legacy `/carte?famille=apb`
+links redirect to `/archives` with their query intact. Apprenticeship list/map
+views share the atlas snapshot and criteria; paginated Parcoursup search accepts
+only compatible campaign/search/type/region/status filters and mapped sorts.
+Its latest-release reader does not accept atlas release IDs. `features/observatory`
 separates overview/source contracts, server loading and interactive charts.
 `features/specialties` owns the distinct specialty population and UI.
 `features/landing/ui` owns the homepage composition and preview. The shared

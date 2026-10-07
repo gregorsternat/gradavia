@@ -373,3 +373,46 @@ test("health reports app liveness without database credentials", async ({
   expect(response.status()).toBe(200);
   expect(await response.json()).toEqual({ status: "ok" });
 });
+
+test("five destinations retain tool access, active groups and keyboard navigation", async ({
+  page,
+  isMobile,
+}) => {
+  await page.goto("/budget");
+  await openNavigation(page, isMobile);
+  const primary = page.getByRole("navigation", { name: "Explorer Gradavia" });
+  await expect(primary.getByRole("link")).toHaveCount(5);
+  await expect(
+    primary.getByRole("link", { name: "Mon projet" }),
+  ).toHaveAttribute("aria-current", "page");
+  if (isMobile) await page.keyboard.press("Escape");
+  const project = page.getByRole("navigation", { name: "Dans Mon projet" });
+  await project.getByRole("link", { name: "Mes favoris" }).focus();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/favoris$/);
+  await expect(
+    page.getByRole("button", { name: "Nouvelle liste" }),
+  ).toBeVisible();
+  await page.keyboard.press("Control+k");
+  const palette = page.getByRole("dialog", { name: "Recherche rapide" });
+  await palette.getByRole("combobox").fill("Archives APB");
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/archives$/);
+  await expect(
+    page
+      .getByRole("navigation", { name: "Dans Données & méthode" })
+      .getByRole("link", { name: "Archives APB" }),
+  ).toHaveAttribute("aria-current", "page");
+  await page.goto("/analyses");
+  const section = page.getByRole("button", {
+    name: "Rubrique de l’observatoire",
+  });
+  await section.click();
+  await page.getByRole("option", { name: "À vous d’estimer" }).click();
+  await expect(page).toHaveURL(/\/decouvrir$/);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+});

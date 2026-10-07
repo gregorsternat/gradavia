@@ -25,6 +25,24 @@ sheet with an explicit close button. The Cmd/Ctrl+K palette, navigation and them
 selector use the same shared primitives. Formation search defaults to cards on
 mobile and a table on desktop; an explicit URL view overrides that default.
 
+Primary navigation exposes Formations, Spécialités du bac, Comparer, Mon projet
+and Observatoire; Données & méthode remains in the footer. The palette indexes
+every existing tool under these same groups. Mes favoris remains the first
+secondary link in Mon projet, alongside Budget; its existing list selector and
+preparation actions stay in place. Observatoire uses a labelled section selector
+instead of another row of tabs above the analysis workshop. Other secondary
+routes use ordinary links with `aria-current`.
+
+Formation search has an explicit scope selector (hors apprentissage or
+apprentissage) and List/Map representation links. The existing table/cards
+format choice remains within the regular list. Compatible filters cross the
+regular list/map boundary; active incompatible constraints show a notice and a
+disclosure explains supported transfers and release differences. A scope change
+keeps only the search text and chooses that source's latest campaign. APB is an
+explicit methodology destination, not an equivalent admissions scope. The atlas
+retains geographic filters in apprenticeship list mode but does not apply the
+transient visible-map-bounds filter while the map is hidden.
+
 The homepage uses the same tokens and wordmark in an independent layout with a
 compact sticky header, a large two-line heading, a source-backed product preview
 and widely spaced sections. Borders group actual surfaces rather than divide
