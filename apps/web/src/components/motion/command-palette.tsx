@@ -268,7 +268,7 @@ export function CommandPalette({
                     }
                     aria-autocomplete="list"
                     className={cn(
-                      "h-12 flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none",
+                      "h-12 flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:outline-none!",
                       // The palette focuses this field the moment it opens, and iOS
                       // zooms the page in on a focused field under 16px: the fixed
                       // overlay is magnified off-center — clipped leading edge, half
