@@ -2,7 +2,7 @@
 
 This document records observed evidence, not intended capabilities.
 
-## Analysis navigation CI budget (2026-10-07)
+## Analysis navigation and CI budgets (2026-10-07)
 
 The main workflow at `a29c374` ([run 37515974752](https://github.com/gregorsternat/gradavia/actions/runs/37515974752))
 failed the desktop analysis history journey's global 30-second deadline, so
@@ -14,7 +14,16 @@ journey's recorded actions spanned 31.2 seconds with no browser runtime error.
 Only this multi-route journey receives a 60-second development budget to include
 cold Next.js compilation. Production retains the default 30-second budget, and
 individual assertion deadlines, all history/filter checks and zero retries are
-preserved. No product code or deployment gate is changed.
+preserved.
+
+The first PR verification ([run 37585728803](https://github.com/gregorsternat/gradavia/actions/runs/37585728803))
+confirmed the history journey passed on Linux in 32.7 seconds on desktop and
+12.2 seconds on mobile. All 131 development cases passed; the production desktop
+history case passed in 8.0 seconds. GitHub then cancelled the job during the
+production suite with the annotation `The job has exceeded the maximum execution
+time of 25m0s`. The verification job now has 35 minutes to finish its complete
+development, production and data-state suites. Its checks and the deployment
+dependency remain required; no product code is changed.
 
 Five desktop/mobile repetitions passed all ten development executions. Failure
 evidence is retained under `.artifacts/ci-fix/main-a29c374/`; the focused result is

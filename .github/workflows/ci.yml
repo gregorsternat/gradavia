@@ -12,7 +12,7 @@ jobs:
   verify:
     name: Verify repository
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     concurrency:
       group: ci-verify-${{ github.event_name == 'push' && github.sha || github.ref }}
       cancel-in-progress: true
