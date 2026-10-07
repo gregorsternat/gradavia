@@ -2,6 +2,52 @@
 
 This document records observed evidence, not intended capabilities.
 
+## Browser verification budgets (2026-10-07)
+
+The main workflow at `a29c374` ([run 37515974752](https://github.com/gregorsternat/gradavia/actions/runs/37515974752))
+failed the desktop analysis history journey's global 30-second deadline, so
+production deployment was skipped. Its retained trace records 17.4 seconds for
+the initial development analysis navigation and 5.2 seconds for the first
+formation navigation. Filtering and history assertions succeeded; the full
+journey's recorded actions spanned 31.2 seconds with no browser runtime error.
+
+The first PR verification ([run 37585728803](https://github.com/gregorsternat/gradavia/actions/runs/37585728803))
+confirmed the history journey passed on Linux in 32.7 seconds on desktop and
+12.2 seconds on mobile. All 131 development cases passed; the production desktop
+history case passed in 8.0 seconds. GitHub then cancelled the job during the
+production suite with the annotation `The job has exceeded the maximum execution
+time of 25m0s`. The verification job now has 35 minutes to finish its complete
+development, production and data-state suites. Its checks and the deployment
+dependency remain required; no product code is changed.
+
+The next PR verification ([run 37588802785](https://github.com/gregorsternat/gradavia/actions/runs/37588802785))
+exposed the same 30-second development deadline in the analysis export/reload and
+named-list synchronization journeys. The export trace spent 17.6 seconds on its
+first navigation, 3.7 seconds waiting for the drawn chart and 2.6 seconds on
+reload. Its export and persistence assertions succeeded. The list trace passed
+notes, progress, accessibility and cross-tab synchronization checks before the
+deadline expired during tab closure; its subsequent print assertions also
+succeeded. Neither trace recorded a browser runtime error.
+
+Development browser journeys now share a 60-second budget in the Playwright
+configuration, including compilation, startup and multi-page interactions.
+Production retains its 30-second budget. Individual assertion deadlines remain
+15 seconds in development and five seconds in production; retries remain zero.
+
+Failure evidence is retained under `.artifacts/ci-fix/main-a29c374/` and
+`.artifacts/ci-fix/pr-94f80a3/`.
+
+Final `CI=true E2E_PORT=3513 mise exec -- just verify` passed static checks, 104
+TypeScript cases, Node/Rust suites, disposable PostgreSQL 18 contracts and
+credential-free builds. Browser results were 131 development, 129 production
+and six cases each for unconfigured, empty and unavailable production sources:
+278 passing executions with the eight expected exclusions. Five desktop/mobile
+repetitions of each of the three affected journeys also passed all 30 executions.
+Evidence is `.artifacts/ci-fix/verify-final.log` and
+`.artifacts/ci-fix/journeys-repeat-final.log`. Remote CI, merge and deployment
+remain separate outcomes established by their GitHub Actions runs and public
+checks.
+
 ## Search discovery verification (2026-10-05)
 
 Observed locally in worktree `1e0e`, based on `d3ab365`, for the
