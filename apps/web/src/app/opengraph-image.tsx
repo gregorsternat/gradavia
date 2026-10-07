@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { LogoMark } from "@/components/logo-mark";
 
 export const alt =
   "Gradavia — Les données publiques pour éclairer votre orientation";
@@ -27,9 +28,12 @@ export default function Image() {
           alignItems: "center",
         }}
       >
-        <span style={{ fontSize: 36, fontWeight: 700, letterSpacing: -2 }}>
-          gradavia
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <LogoMark size={40} color="#171717" />
+          <span style={{ fontSize: 36, fontWeight: 700, letterSpacing: -2 }}>
+            gradavia
+          </span>
+        </div>
         <span style={{ fontSize: 20, color: "#606060" }}>
           L’observatoire de Parcoursup
         </span>

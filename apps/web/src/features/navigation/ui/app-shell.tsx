@@ -39,6 +39,7 @@ import {
 import { CommandPalette } from "@/components/motion/command-palette";
 import { Button } from "@/components/motion/button/base";
 import { ThemeSelect } from "@/components/theme-select";
+import { LogoMark } from "@/components/logo-mark";
 import { Wordmark } from "@/components/wordmark";
 import { useFormationSelection } from "@/features/formations/ui/selection-provider";
 
@@ -201,7 +202,7 @@ function ShellContents({ children }: { children: ReactNode }) {
               <Wordmark />
             ) : (
               <Link href="/" aria-label="Gradavia, accueil">
-                <Telescope className="size-5" />
+                <LogoMark size={20} />
               </Link>
             )}
             {isMobile ? (
