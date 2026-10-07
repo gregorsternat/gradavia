@@ -76,7 +76,9 @@ try {
       await first.getByRole("link", { name: "Voir la formation" }).click();
 
       stage = "formation detail and provenance";
-      await expect(page).toHaveURL(/\/formations\/[^/?]+/);
+      await expect(page).toHaveURL(/\/formations\/[^/?]+/, {
+        timeout: 30_000,
+      });
       // The retained detail and its atlas enrichment stream after navigation.
       // Wait for that result within the public readiness budget, rather than
       // Playwright's implicit five-second assertion timeout.

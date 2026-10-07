@@ -27,6 +27,112 @@ Evidence: `.artifacts/logo-rollout/verify.log`, `manual-final.log`,
 These are local checks with disposable fixture data; no remote CI, merge or
 deployment is established by this change.
 
+## Browser verification budgets (2026-10-07)
+
+The main workflow at `a29c374` ([run 37515974752](https://github.com/gregorsternat/gradavia/actions/runs/37515974752))
+failed the desktop analysis history journey's global 30-second deadline, so
+production deployment was skipped. Its retained trace records 17.4 seconds for
+the initial development analysis navigation and 5.2 seconds for the first
+formation navigation. Filtering and history assertions succeeded; the full
+journey's recorded actions spanned 31.2 seconds with no browser runtime error.
+
+The first PR verification ([run 37585728803](https://github.com/gregorsternat/gradavia/actions/runs/37585728803))
+confirmed the history journey passed on Linux in 32.7 seconds on desktop and
+12.2 seconds on mobile. All 131 development cases passed; the production desktop
+history case passed in 8.0 seconds. GitHub then cancelled the job during the
+production suite with the annotation `The job has exceeded the maximum execution
+time of 25m0s`. The verification job now has 35 minutes to finish its complete
+development, production and data-state suites. Its checks and the deployment
+dependency remain required; no product code is changed.
+
+The next PR verification ([run 37588802785](https://github.com/gregorsternat/gradavia/actions/runs/37588802785))
+exposed the same 30-second development deadline in the analysis export/reload and
+named-list synchronization journeys. The export trace spent 17.6 seconds on its
+first navigation, 3.7 seconds waiting for the drawn chart and 2.6 seconds on
+reload. Its export and persistence assertions succeeded. The list trace passed
+notes, progress, accessibility and cross-tab synchronization checks before the
+deadline expired during tab closure; its subsequent print assertions also
+succeeded. Neither trace recorded a browser runtime error.
+
+Development browser journeys now share a 60-second budget in the Playwright
+configuration, including compilation, startup and multi-page interactions.
+Production retains its 30-second budget. Individual assertion deadlines remain
+15 seconds in development and five seconds in production; retries remain zero.
+
+Failure evidence is retained under `.artifacts/ci-fix/main-a29c374/` and
+`.artifacts/ci-fix/pr-94f80a3/`.
+
+Final `CI=true E2E_PORT=3513 mise exec -- just verify` passed static checks, 104
+TypeScript cases, Node/Rust suites, disposable PostgreSQL 18 contracts and
+credential-free builds. Browser results were 131 development, 129 production
+and six cases each for unconfigured, empty and unavailable production sources:
+278 passing executions with the eight expected exclusions. Five desktop/mobile
+repetitions of each of the three affected journeys also passed all 30 executions.
+Evidence is `.artifacts/ci-fix/verify-final.log` and
+`.artifacts/ci-fix/journeys-repeat-final.log`. Remote CI, merge and deployment
+remain separate outcomes established by their GitHub Actions runs and public
+checks.
+
+## Public formation navigation readiness (2026-10-07)
+
+The main workflow at `b601d5c` ([run 37596586619](https://github.com/gregorsternat/gradavia/actions/runs/37596586619))
+passed repository verification in 29 minutes 16 seconds and published both
+Workers. Its public smoke then exhausted six attempts at formation detail and
+provenance. The retained screenshot still shows the explorer: the URL assertion
+used Playwright's implicit five-second deadline before the existing 30-second
+detail assertion could run.
+
+A real Chrome navigation successfully rendered the expected formation, title
+and canonical. Its resource timing records a 5.984-second detail navigation
+request, exceeding that early assertion's budget without a browser runtime
+error. The URL assertion now uses the same bounded 30-second public readiness
+budget as the detail. All URL, provenance, snapshot and analysis checks remain
+required, and the existing six-attempt policy is unchanged.
+
+`mise exec -- just cf-smoke` with the corrected deadline passed against public
+production on attempt six: 14,252 formation results, the selected detail with
+provenance, and a complete 14,252-record snapshot and hydrated analysis. Evidence
+is `.artifacts/ci-fix/main-smoke-failure/`,
+`.artifacts/ci-fix/live-browser/navigation-timing.txt`,
+`.artifacts/ci-fix/public-smoke-navigation.log` and
+`.artifacts/cloudflare/smoke/result.json`. The prior failed release run remains
+separate from verification of the subsequent workflow run.
+
+`CI=true E2E_PORT=3514 mise exec -- just verify` also passed static, unit,
+PostgreSQL 18 and credential-free build checks, followed by 278 browser
+executions with eight expected exclusions. Evidence is
+`.artifacts/ci-fix/verify-smoke-fix.log`. Live Chrome inspection at 1440×1000 and
+390×844 confirmed the detail's visible metrics and mobile layout without
+horizontal overflow; keyboard Enter on the return link opened the explorer.
+
+## Landing preview interaction readiness (2026-10-07)
+
+The PR workflow at `829aa9e` ([run 37604154822](https://github.com/gregorsternat/gradavia/actions/runs/37604154822))
+exposed an early mobile activation of the landing preview's values accordion.
+The trace has no client-rendered chart before the pointer action; the first
+retained SVG appears during that action. The accordion remained collapsed, so
+the following table assertion failed after 15 seconds without a browser runtime
+error. Its source, campaign, denominator and partial-coverage assertions had
+already passed.
+
+The interaction now awaits the visible client-rendered chart, matching the
+existing 320-pixel preview journey. Source, campaign, coverage, metric switching
+and keyboard assertions remain unchanged, as do timeouts and zero retries.
+Five desktop/mobile repetitions passed all ten development and ten production
+executions. Evidence is `.artifacts/ci-fix/pr-829aa9e/`,
+`.artifacts/ci-fix/landing-readiness-repeat.log` and
+`.artifacts/ci-fix/landing-readiness-repeat-production.log`.
+
+`CI=true E2E_PORT=3517 mise exec -- just verify` passed static checks, 104
+TypeScript cases, Node/Rust suites, disposable PostgreSQL 18 contracts and
+credential-free builds. All 278 browser executions passed, with eight expected
+exclusions. Evidence is `.artifacts/ci-fix/verify-landing-final.log`.
+
+The corresponding main [run 37604300101](https://github.com/gregorsternat/gradavia/actions/runs/37604300101)
+passed full verification, published both Workers and passed the corrected public
+smoke. Those publish and smoke steps completed successfully, without a stale-main
+skip. Product code is unchanged by this additional test synchronization.
+
 ## Search discovery verification (2026-10-05)
 
 Observed locally in worktree `1e0e`, based on `d3ab365`, for the
