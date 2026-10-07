@@ -920,6 +920,30 @@ Escape attempt is preserved in `history/a9dd950-readiness-first-attempt/`.
 Previous production evidence is preserved separately in `history/`. These were
 read-only public checks with no database, workflow or deployment mutation.
 
+## Chart tooltip contrast (2026-10-07)
+
+A local Chromium reproduction confirmed that the chart palette's gray-50 surface
+mapping made default tooltip titles and values invisible in dark mode. Area,
+bar, line and donut tooltips now use semantic surface, border and text tokens.
+
+Real browser checks with disposable fixture data covered all four chart types in
+light and dark themes at 1440×1000 and 390×844. Every tooltip paragraph exceeded
+4.5:1 contrast: titles and values measured 14.57:1 in dark mode and 16.10:1 in
+light mode; category labels measured 7.09:1 and 5.73:1 respectively. Keyboard
+activation of the formation history tab passed in both viewports and themes.
+Screenshots were inspected; no browser console errors were observed.
+
+`CI=true E2E_PORT=3518 mise exec -- just verify` passed formatting, lint, types,
+architecture/documentation checks, Rust checks, unit tests, disposable PostgreSQL
+18 integration, credential-free builds and browser tests: 131 development,
+129 production and 18 unavailable/empty/unconfigured cases. Three desktop cases
+for mobile-only behavior and two production gallery cases were intentionally
+skipped.
+
+Evidence: `.artifacts/chart-tooltip/verify.log`, `inspection.log` and screenshots under
+`.artifacts/chart-tooltip/output/playwright/`. Remote CI and deployment were
+not performed.
+
 ## Quick search focus outline (2026-10-07)
 
 The global, unlayered `:focus-visible` rule overrode the command palette input's

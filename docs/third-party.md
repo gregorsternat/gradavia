@@ -216,6 +216,9 @@ cover the multi-series legend.
 BarChart axis labels carry a local `gradavia-axis-label` class so scoped theme
 styles preserve readable contrast in both themes; current Recharts no longer
 adds its former label class when a custom class is supplied.
+All four chart tooltips use semantic surface, border, foreground and muted text
+tokens. This prevents the scoped gray palette's surface override from also
+coloring dark-mode tooltip titles and values with their background color.
 
 ## Landing page reuse (2026-10-05)
 
