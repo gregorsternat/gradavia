@@ -2,6 +2,32 @@
 
 This document records observed evidence, not intended capabilities.
 
+## Analysis navigation CI budget (2026-10-07)
+
+The main workflow at `a29c374` ([run 37515974752](https://github.com/gregorsternat/gradavia/actions/runs/37515974752))
+failed the desktop analysis history journey's global 30-second deadline, so
+production deployment was skipped. Its retained trace records 17.4 seconds for
+the initial development analysis navigation and 5.2 seconds for the first
+formation navigation. Filtering and history assertions succeeded; the full
+journey's recorded actions spanned 31.2 seconds with no browser runtime error.
+
+Only this multi-route journey receives a 60-second development budget to include
+cold Next.js compilation. Production retains the default 30-second budget, and
+individual assertion deadlines, all history/filter checks and zero retries are
+preserved. No product code or deployment gate is changed.
+
+Five desktop/mobile repetitions passed all ten development executions. Failure
+evidence is retained under `.artifacts/ci-fix/main-a29c374/`; the focused result is
+`.artifacts/ci-fix/analysis-navigation-repeat.log`.
+
+`CI=true E2E_PORT=3511 mise exec -- just verify` passed static checks, 104
+TypeScript cases, Node/Rust suites, disposable PostgreSQL 18 contracts and
+credential-free builds. Browser results were 131 development, 129 production
+and six cases each for unconfigured, empty and unavailable production sources:
+278 passing executions with the eight expected exclusions. Evidence is
+`.artifacts/ci-fix/verify.log`. Remote CI, merge and deployment remain separate
+outcomes established by their GitHub Actions runs and public checks.
+
 ## Search discovery verification (2026-10-05)
 
 Observed locally in worktree `1e0e`, based on `d3ab365`, for the

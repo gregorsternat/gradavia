@@ -5,6 +5,8 @@ import { expect, test } from "./fixtures";
 test("analysis URL restores filters on history traversal and clears them on bare-route navigation", async ({
   page,
 }) => {
+  // This multi-route journey includes cold Next.js compilation in development.
+  if (process.env.E2E_PRODUCTION !== "1") test.setTimeout(60_000);
   await page.goto("/analyses");
   const search = page.getByRole("textbox", {
     name: "Formation ou établissement",
