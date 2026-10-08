@@ -56,6 +56,9 @@ test("keyboard users can skip to the content and change the appearance", async (
   isMobile,
 }) => {
   await page.goto("/observatoire");
+  await expect(
+    page.getByRole("button", { name: "Campagne d’admission", exact: true }),
+  ).toBeEnabled();
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("link", { name: "Aller au contenu" }),
@@ -386,13 +389,16 @@ test("five destinations retain tool access, active groups and keyboard navigatio
     primary.getByRole("link", { name: "Mon projet" }),
   ).toHaveAttribute("aria-current", "page");
   if (isMobile) await page.keyboard.press("Escape");
+  await expect(
+    page.getByRole("textbox", { name: "Ville", exact: true }).first(),
+  ).toBeEnabled();
   const project = page.getByRole("tablist", { name: "Dans Mon projet" });
   await project.getByRole("tab", { name: "Favoris", exact: true }).focus();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/favoris$/);
   await expect(
     page.getByRole("button", { name: "Nouvelle liste" }),
-  ).toBeVisible();
+  ).toBeEnabled();
   await page.keyboard.press("Control+k");
   const palette = page.getByRole("dialog", { name: "Recherche rapide" });
   await palette.getByRole("combobox").fill("Archives APB");

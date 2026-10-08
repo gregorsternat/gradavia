@@ -1,7 +1,7 @@
 # Verification status
 
-Reviewed on 2026-10-08 (Asia/Shanghai), including the workspace-navigation local
-diff on `e0ce3a3`. Earlier evidence below retains its own tested revisions.
+Reviewed on 2026-10-09 (Asia/Shanghai), including the workspace-review local
+diff on `8aeef8b`. Earlier evidence below retains its own tested revisions.
 This page summarizes coverage and outstanding limits. Detailed past results live
 in the [historical verification log](quality/history-through-2026-10-07.md).
 A checked-in implementation, a local pass, remote CI, publication and production
@@ -150,6 +150,28 @@ scrollable tab bars, visible keyboard focus and activation. Evidence lives under
 `mobile-analyse.png`. See the [completed plan](exec-plans/completed/persistent-workspaces.md)
 for implementation scope. No production data, remote CI or publication was verified
 by this work; Safari/Firefox and manual screen-reader limits remain UI-001.
+
+## Workspace review corrections (2026-10-09)
+
+`CI=true E2E_PORT=3540 mise exec -- just verify` passed for the local diff on
+`8aeef8b`: code/documentation checks, 115 TypeScript tests, Node/Rust suites,
+disposable PostgreSQL 18 contracts and credential-free production build. Chromium
+passed 171 development, 169 production and 18 production data-state executions
+(358 total, eight intended exclusions).
+
+New browser tests reproduce and cover inactive print styles, shared-list retry
+recovery without losing another panel's draft, and campaign changes during a
+pending read followed by List/Map navigation. All six new executions failed before
+the fixes and pass afterward. Desktop/mobile Chromium print screenshots were
+visually inspected. Existing keyboard and workspace tests now await observable
+client readiness when testing History navigation; native no-JavaScript journeys
+remain separate.
+
+Evidence: `.artifacts/workspace-review/verify.log`, targeted logs and print images
+under `focused-results`. Earlier failures and their resolution are documented in
+the [completed plan](exec-plans/completed/persistent-workspaces.md#pr-31-review-follow-up)
+and retained alongside the final log. This is local validation; remote CI and
+publication are not established by it.
 
 ## Reading and adding evidence
 

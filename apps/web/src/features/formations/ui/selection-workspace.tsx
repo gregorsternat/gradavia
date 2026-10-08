@@ -1,5 +1,9 @@
 "use client";
-import { usePanelHash, PanelMain } from "@/features/workspace/ui/navigation";
+import {
+  usePanelHash,
+  usePanelActive,
+  PanelMain,
+} from "@/features/workspace/ui/navigation";
 
 import {
   useEffect,
@@ -343,9 +347,12 @@ function PrintDossier({
   name: string;
   comparison: SavedFormation[];
 }) {
+  const active = usePanelActive();
   return (
     <section id="selection-dossier" className="hidden print:block">
-      <style>{`@media print { body * { visibility: hidden !important; } #selection-dossier, #selection-dossier * { visibility: visible !important; } #selection-dossier { position: absolute; inset: 0; display: block !important; padding: 20px; color: #111; background: white; font-size: 11px; } #selection-dossier article { break-inside: avoid; } #selection-dossier a { overflow-wrap: anywhere; } @page { margin: 15mm; } }`}</style>
+      {active && (
+        <style>{`@media print { body * { visibility: hidden !important; } #selection-dossier, #selection-dossier * { visibility: visible !important; } #selection-dossier { position: absolute; inset: 0; display: block !important; padding: 20px; color: #111; background: white; font-size: 11px; } #selection-dossier article { break-inside: avoid; } #selection-dossier a { overflow-wrap: anywhere; } @page { margin: 15mm; } }`}</style>
+      )}
       <h1 className="text-2xl font-semibold">{name}</h1>
       <p className="mt-2">{rows.length} formations · Dossier Gradavia</p>
       <p className="mt-2">

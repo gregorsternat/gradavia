@@ -70,3 +70,43 @@ CLI traces are retained under `.artifacts/workspace-tabs`.
 This work does not add global persistence, unify the formation readers, change
 published data, or publish the application. Remote CI and deployment are separate
 from local fixture verification.
+
+## PR #31 review follow-up
+
+The review of `8aeef8b` identified three reproduced regressions: inactive
+favorites print CSS blanked Budget output, shared-list retries refreshed only
+server props while the retained entry stayed stale, and representation links
+replaced an explicitly requested campaign with an earlier payload's campaign.
+
+- Mount global print styles only while their favorites/budget panel is active.
+- Route scoped `refresh()` through the existing entry invalidation/read facade.
+  Standalone views retain Next refresh behavior; inactive panels cannot refresh.
+- Use source campaign/version defaults only for an unchanged loaded context and
+  only when the corresponding parameter is absent.
+
+All three browser regressions failed on both desktop and mobile before the fixes,
+then passed (six executions). Budget print screenshots were visually inspected at
+both widths. Evidence is under `.artifacts/workspace-review` (`before.log`,
+`before-results`, `focused.log`, `focused-results`). The first full run then
+exposed ten failures in local-favorite synchronization because the new retry
+callback changed router identity on every workspace render. The callback is now
+stable and all sixteen targeted favorite/share/regression executions pass
+(`stable-refresh.log`); the failed full-run evidence is retained in
+`verify-before-stable-refresh.log` and `unstable-refresh-results`. A second full
+run exposed two existing tests activating native links before hydration, bypassing
+the intended facade interception or keyboard listener. Network traces confirm
+document navigation. These tests now wait for enabled controls; all four targeted
+executions pass (`readiness.log`, with failures retained in
+`verify-before-readiness.log` and `readiness-results`). The skip-link/theme test
+also waits for client readiness before its first keyboard action; its preceding
+failure is retained in `verify-before-skip-readiness.log`. The same native-link
+fallback affected the project cache test (`verify-before-tab-readiness.log`).
+Workspace interaction tests now share an opening helper that waits for roving
+keyboard focus to initialize; no-JavaScript tests retain native navigation.
+
+On 2026-10-09 (Asia/Shanghai), final `CI=true E2E_PORT=3540 mise exec -- just verify`
+passed for the local diff on `8aeef8b`: all code/documentation checks, 115 TypeScript
+tests, Node/Rust suites, PostgreSQL 18 contracts and the production build. Chromium
+passed 171 development, 169 production and 18 production data-state executions
+(358 total, eight intended exclusions). Final evidence: `.artifacts/workspace-review/verify.log`.
+Remote CI and publication are separate from this local result.

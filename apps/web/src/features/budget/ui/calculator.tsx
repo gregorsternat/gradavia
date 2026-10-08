@@ -1,5 +1,5 @@
 "use client";
-import { PanelMain } from "@/features/workspace/ui/navigation";
+import { PanelMain, usePanelActive } from "@/features/workspace/ui/navigation";
 
 import { useState, useSyncExternalStore } from "react";
 import { Plus, Printer, Save, X } from "lucide-react";
@@ -45,6 +45,7 @@ function snapshot() {
 }
 
 export function BudgetCalculator() {
+  const active = usePanelActive();
   const stored = useSyncExternalStore(subscribe, snapshot, () => null);
   const [draft, setDraft] = useState<BudgetScenario[] | null>(null);
   const [notice, setNotice] = useState("");
@@ -263,7 +264,9 @@ export function BudgetCalculator() {
         remboursements ne sont pas déduits. Les durées de deux scénarios peuvent
         différer.
       </p>
-      <style>{`@media print { body * { visibility: hidden; } .budget-print, .budget-print * { visibility: visible; } .budget-print { position: absolute; top: 0; left: 0; width: 100%; padding: 16px; } .budget-controls, .budget-controls * { display: none !important; } .budget-print section { break-inside: avoid; } }`}</style>
+      {active && (
+        <style>{`@media print { body * { visibility: hidden; } .budget-print, .budget-print * { visibility: visible; } .budget-print { position: absolute; top: 0; left: 0; width: 100%; padding: 16px; } .budget-controls, .budget-controls * { display: none !important; } .budget-print section { break-inside: avoid; } }`}</style>
+      )}
     </PanelMain>
   );
 }

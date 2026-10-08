@@ -54,7 +54,7 @@ function PanelBoundary({
   entry: Entry;
   active: boolean;
   navigate: (href: string, replace?: boolean) => void;
-  retry: () => void;
+  retry: (id: PanelId) => void;
   initialView?: ViewId | "message";
 }) {
   const waiting =
@@ -63,6 +63,7 @@ function PanelBoundary({
     () => new URLSearchParams(entry.search),
     [entry.search],
   );
+  const refresh = useCallback(() => retry(id), [id, retry]);
   const context = useMemo(
     () => ({
       panel: id,
@@ -71,8 +72,9 @@ function PanelBoundary({
       pending: waiting && !entry.failed,
       hash: entry.hash,
       navigate,
+      refresh,
     }),
-    [id, params, active, waiting, entry.failed, entry.hash, navigate],
+    [id, params, active, waiting, entry.failed, entry.hash, navigate, refresh],
   );
   return (
     <PanelNavigationProvider value={context}>
@@ -89,7 +91,11 @@ function PanelBoundary({
           {entry.failed && (
             <div role="alert" className="panel my-4 p-4">
               <p>Les données sont temporairement indisponibles.</p>
-              <button type="button" className="mt-2 underline" onClick={retry}>
+              <button
+                type="button"
+                className="mt-2 underline"
+                onClick={refresh}
+              >
                 Réessayer
               </button>
             </div>
@@ -174,6 +180,25 @@ export function Workspace({
   useEffect(() => {
     cachePayload(cache.current, initialPanel, initialSearch, initialPayload);
   }, [initialPanel, initialSearch, initialPayload]);
+
+  // Keep panel routers stable: feature effects depend on router identity while
+  // reconciling saved selections with their loaded URL parameters.
+  const retry = useCallback((id: PanelId) => {
+    const entry = latest.current.entries[id];
+    if (!entry || latest.current.active !== id) return;
+    cache.current.delete(resourceKey(id, new URLSearchParams(entry.search)));
+    setState((current) => ({
+      ...current,
+      entries: {
+        ...current.entries,
+        [id]: {
+          ...current.entries[id]!,
+          loadedKey: undefined,
+          failed: false,
+        },
+      },
+    }));
+  }, []);
 
   const activate = useCallback(
     (href: string, replace = false, fromHistory = false) => {
@@ -400,22 +425,28 @@ export function Workspace({
     let params = new URLSearchParams(remembered?.search);
     if (space.path === "/formations") {
       const current = new URLSearchParams(entry.search);
+      // Only resolve implicit defaults from data matching the requested context.
+      // A pending read still displays the previous payload while its URL changes.
       if (
         (entry.payload?.kind === "atlas" ||
           entry.payload?.kind === "formations") &&
-        entry.payload.result.status === "ready"
+        entry.payload.result.status === "ready" &&
+        entry.loadedKey === resourceKey(state.active, current)
       ) {
-        current.set(
-          "campagne",
-          String(entry.payload.result.data.source.campaign),
-        );
-        if (state.active.startsWith("apprentissage"))
+        if (!current.has("campagne"))
+          current.set(
+            "campagne",
+            String(entry.payload.result.data.source.campaign),
+          );
+        if (state.active.startsWith("apprentissage") && !current.has("version"))
           current.set("version", entry.payload.result.data.source.releaseId);
       }
       if (
         (remembered?.payload?.kind === "atlas" ||
           remembered?.payload?.kind === "formations") &&
-        remembered.payload.result.status === "ready"
+        remembered.payload.result.status === "ready" &&
+        remembered.loadedKey === resourceKey(id, params) &&
+        !params.has("campagne")
       )
         params.set(
           "campagne",
@@ -603,24 +634,7 @@ export function Workspace({
                 entry={state.entries[id]!}
                 active={state.active === id}
                 navigate={activate}
-                retry={() => {
-                  const key = resourceKey(
-                    id,
-                    new URLSearchParams(state.entries[id]!.search),
-                  );
-                  cache.current.delete(key);
-                  setState((current) => ({
-                    ...current,
-                    entries: {
-                      ...current.entries,
-                      [id]: {
-                        ...current.entries[id]!,
-                        loadedKey: undefined,
-                        failed: false,
-                      },
-                    },
-                  }));
-                }}
+                retry={retry}
               />
             )}
           </TabsContent>

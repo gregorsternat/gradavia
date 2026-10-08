@@ -1,9 +1,22 @@
+import type { Page } from "@playwright/test";
 import { expect, test } from "./fixtures";
+
+async function openWorkspace(page: Page, path: string) {
+  await page.goto(path);
+  // Wait for roving keyboard focus before exercising client-side navigation.
+  await expect(
+    page
+      .getByRole("tablist")
+      .first()
+      .getByRole("tab", { selected: false })
+      .first(),
+  ).toHaveAttribute("tabindex", "-1");
+}
 
 test("project tabs preserve drafts, use native history and avoid repeated reads", async ({
   page,
 }) => {
-  await page.goto("/favoris");
+  await openWorkspace(page, "/favoris");
   const requests: string[] = [];
   page.on("request", (request) => {
     if (request.url().includes("/api/workspace/")) requests.push(request.url());
@@ -31,7 +44,7 @@ test("project tabs preserve drafts, use native history and avoid repeated reads"
 });
 
 test("keyboard focus does not load an unactivated tab", async ({ page }) => {
-  await page.goto("/favoris");
+  await openWorkspace(page, "/favoris");
   await expect(
     page.getByRole("button", { name: "Liste de formations" }),
   ).toBeEnabled();
@@ -54,7 +67,7 @@ test("legacy tools redirect to their rendered, shareable panel", async ({
   const response = await request.get("/budget", { maxRedirects: 0 });
   expect(response.status()).toBe(308);
   expect(response.headers().location).toBe("/favoris?onglet=budget");
-  await page.goto("/budget");
+  await openWorkspace(page, "/budget");
   await expect(
     page.getByRole("tab", { name: "Budget", exact: true }),
   ).toHaveAttribute("aria-selected", "true");
@@ -67,7 +80,10 @@ test("legacy tools redirect to their rendered, shareable panel", async ({
 test("a failed first panel load leaves other tabs usable and can be retried", async ({
   page,
 }) => {
-  await page.goto("/favoris");
+  await openWorkspace(page, "/favoris");
+  await expect(
+    page.getByRole("button", { name: "Liste de formations" }),
+  ).toBeEnabled();
   await page.route("**/api/workspace/budget*", (route) =>
     route.fulfill({
       status: 200,
@@ -113,7 +129,7 @@ for (const [path, tabs] of [
     page.on("request", (request) => {
       if (request.url().includes("/api/workspace/")) reads.push(request.url());
     });
-    await page.goto(path);
+    await openWorkspace(page, path);
     await expect(page.locator("main h1").first()).toBeVisible();
     expect(reads).toEqual([]);
     const activate = async (name: string) => {
@@ -202,9 +218,9 @@ test("historical routes retain their complete queries and fragments", async ({
     ])
       expect(target.searchParams.get(key!)).toBe(value);
   }
-  await page.goto("/budget#scenario");
+  await openWorkspace(page, "/budget#scenario");
   await expect(page).toHaveURL(/\/favoris\?onglet=budget#scenario$/);
-  await page.goto("/comparer?onglet=inconnu&ids=");
+  await openWorkspace(page, "/comparer?onglet=inconnu&ids=");
   await expect(
     page.getByRole("tab", { name: "Ma sélection", exact: true }),
   ).toHaveAttribute("aria-selected", "true");
@@ -269,7 +285,7 @@ test("server-rendered tabs retain native destinations and tool-specific metadata
 test("slow obsolete responses cannot overwrite a newer panel context", async ({
   page,
 }) => {
-  await page.goto("/observatoire");
+  await openWorkspace(page, "/observatoire");
   let release!: () => void;
   const barrier = new Promise<void>((resolve) => {
     release = resolve;
@@ -319,7 +335,7 @@ test("slow obsolete responses cannot overwrite a newer panel context", async ({
 test("the default list campaign and sort retain pagination, drafts and scroll across the map", async ({
   page,
 }) => {
-  await page.goto("/formations?page=2");
+  await openWorkspace(page, "/formations?page=2");
   const reads: string[] = [];
   page.on("request", (request) => {
     if (request.url().includes("/api/workspace/")) reads.push(request.url());
@@ -352,7 +368,7 @@ test("a selected formation does not reset the map camera on return", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/formations?onglet=carte");
+  await openWorkspace(page, "/formations?onglet=carte");
   const map = page.locator(".leaflet-container:visible");
   await expect(map.locator("canvas")).toBeVisible();
   await page
@@ -389,7 +405,7 @@ test("budget code is downloaded only when that tool is first activated", async (
     )
       scripts.push(response.text().catch(() => ""));
   });
-  await page.goto("/favoris");
+  await openWorkspace(page, "/favoris");
   await expect(
     page.getByRole("button", { name: "Liste de formations" }),
   ).toBeEnabled();
@@ -401,4 +417,139 @@ test("budget code is downloaded only when that tool is first activated", async (
     page.getByRole("textbox", { name: "Nom du scénario" }).first(),
   ).toBeVisible();
   expect((await Promise.all(scripts)).join("\n")).toContain("Nom du scénario");
+});
+
+test("printing uses only the active project panel after visiting both tools", async ({
+  page,
+}, testInfo) => {
+  await openWorkspace(page, "/favoris");
+  await expect(
+    page.getByRole("button", { name: "Liste de formations" }),
+  ).toBeEnabled();
+  await page.getByRole("tab", { name: "Budget", exact: true }).click();
+  const budget = page.locator(".budget-print");
+  await budget
+    .getByRole("textbox", { name: "Ville", exact: true })
+    .first()
+    .fill("Lyon");
+  await page.emulateMedia({ media: "print" });
+  await expect(budget.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(
+    budget.getByRole("region", { name: "Scénario 1", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator("#selection-dossier")).toBeHidden();
+  await page.screenshot({
+    path: testInfo.outputPath("budget-after-favorites-print.png"),
+    fullPage: true,
+  });
+  await page.emulateMedia({ media: "screen" });
+  await page.getByRole("tab", { name: "Favoris", exact: true }).click();
+  await page.emulateMedia({ media: "print" });
+  await expect(page.locator("#selection-dossier")).toBeVisible();
+  await expect(page.locator("#selection-dossier h1")).toBeVisible();
+  await expect(budget).toBeHidden();
+});
+
+test("shared-list retry refreshes the active entry without losing another panel draft", async ({
+  page,
+}) => {
+  await openWorkspace(page, "/formations?q=Droit+01&vue=cartes");
+  const href = await page
+    .getByRole("link", { name: "Licence - Droit 01", exact: true })
+    .getAttribute("href");
+  const id = decodeURIComponent(href!.split("/").at(-1)!);
+  await openWorkspace(page, "/favoris?onglet=budget");
+  const draft = page
+    .getByRole("textbox", { name: "Ville", exact: true })
+    .first();
+  await draft.fill("Brouillon conservé");
+  let reads = 0;
+  await page.route("**/api/workspace/favoris?*", async (route) => {
+    reads++;
+    if (reads === 1) {
+      await route.fulfill({
+        json: {
+          kind: "favoris",
+          results: [{ id, result: { status: "unavailable" } }],
+        },
+      });
+    } else await route.continue();
+  });
+  const shared = `/favoris?${new URLSearchParams({ partage: "1", ids: id })}`;
+  // A native History destination must resolve inside the mounted workspace.
+  await page.evaluate((url) => window.history.pushState(null, "", url), shared);
+  const favorites = page.locator("#favoris-contenu");
+  await expect(
+    favorites.getByText("Aucune formation disponible", { exact: true }),
+  ).toBeVisible();
+  const originalHeading = await favorites.locator("h1").elementHandle();
+  await favorites
+    .getByRole("button", { name: "Réessayer", exact: true })
+    .click();
+  await expect(
+    favorites.getByRole("link", { name: "Licence - Droit 01", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator("main").getByRole("alert")).toHaveCount(0);
+  expect(reads).toBe(2);
+  expect(
+    await originalHeading!.evaluate((element) => element.isConnected),
+  ).toBe(true);
+  await page.getByRole("tab", { name: "Budget", exact: true }).click();
+  await expect(draft).toHaveValue("Brouillon conservé");
+  await page.getByRole("tab", { name: "Favoris", exact: true }).click();
+  await expect(
+    favorites.getByRole("link", { name: "Licence - Droit 01", exact: true }),
+  ).toBeVisible();
+  expect(reads).toBe(2);
+});
+
+test("switching representations during a campaign read preserves the requested year", async ({
+  page,
+}) => {
+  await openWorkspace(page, "/formations?campagne=2025");
+  let release!: () => void;
+  const barrier = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route(
+    "**/api/workspace/formations?*campagne=2018*",
+    async (route) => {
+      const response = await route.fetch();
+      await barrier;
+      await route.fulfill({ response });
+    },
+  );
+  try {
+    await page
+      .getByRole("button", { name: "Campagne d’admission", exact: true })
+      .click();
+    await page
+      .getByRole("option", { name: "Campagne 2018", exact: true })
+      .click();
+    await expect(page).toHaveURL(/campagne=2018/);
+    await expect(
+      page.locator('[role="tabpanel"]:visible > div[aria-busy]'),
+    ).toHaveAttribute("aria-busy", "true");
+    const tabs = page.getByRole("tablist", {
+      name: "Dans Formations",
+      exact: true,
+    });
+    await tabs.getByRole("tab", { name: "Carte", exact: true }).click();
+    await expect(page).toHaveURL(/campagne=2018.*onglet=carte/);
+    await expect(
+      page.getByRole("textbox", { name: "Rechercher dans la carte" }),
+    ).toBeVisible();
+    await tabs.getByRole("tab", { name: "Liste", exact: true }).click();
+    await expect(page).toHaveURL(/campagne=2018/);
+    release();
+    await expect(
+      page.locator('[role="tabpanel"]:visible > div[aria-busy]'),
+    ).toHaveAttribute("aria-busy", "false");
+    await expect(
+      page.getByRole("button", { name: "Campagne d’admission", exact: true }),
+    ).toContainText("2018");
+    await expect(page).toHaveTitle(/Parcoursup 2018/);
+  } finally {
+    release();
+  }
 });

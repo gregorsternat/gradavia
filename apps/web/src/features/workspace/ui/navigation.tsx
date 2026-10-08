@@ -21,6 +21,7 @@ export type PanelNavigation = {
   pending: boolean;
   hash: string;
   navigate: (href: string, replace?: boolean) => void;
+  refresh: () => void;
 };
 const Context = createContext<PanelNavigation | null>(null);
 export const PanelNavigationProvider = Context.Provider;
@@ -49,6 +50,11 @@ export function useRouter() {
   return useMemo(
     () => ({
       ...router,
+      refresh: () => {
+        if (context) {
+          if (context.active) context.refresh();
+        } else router.refresh();
+      },
       push: (href: string, options?: { scroll?: boolean }) => {
         if (context) {
           if (context.active) context.navigate(href);

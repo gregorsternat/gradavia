@@ -74,7 +74,10 @@ state until leaving the workspace. Scoped navigation prevents hidden panels from
 reading another panel's URL or changing browser history. Native links still work
 without JavaScript. Same-space activation uses History; the active URL and
 back/forward traversal select the displayed panel and its query. Only existing
-favorites and budget stores persist beyond this visit.
+favorites and budget stores persist beyond this visit. Panel `refresh()` invalidates
+and reloads only that entry through the read facade, preserving other drafts.
+Global print styles are installed only by the active panel. A pending result
+cannot supply campaign/version defaults for a newer requested context.
 
 Overview/territories and sources/downloads reuse the same data keys. Latest
 panel results and a bounded in-memory request cache prevent repeated reads;
