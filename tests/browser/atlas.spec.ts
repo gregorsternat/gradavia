@@ -239,16 +239,25 @@ test("list and map share compatible filters while apprenticeship keeps its snaps
       exact: true,
     }),
   ).toBeVisible();
+  const locate = page.getByRole("button", {
+    name: "Localiser BTS - Informatique en apprentissage",
+    exact: true,
+  });
+  await expect(locate).toHaveCount(0);
   await views.getByRole("link", { name: "Carte", exact: true }).click();
   await expect(page.locator(".leaflet-container canvas")).toBeVisible();
+  await expect(locate).toBeVisible();
+  await locate.click();
   const release = new URL(page.url()).searchParams.get("version");
   expect(release).toBeTruthy();
   await views.getByRole("link", { name: "Liste", exact: true }).click();
   await expect(page).toHaveURL(/vue=liste/);
   await expect(page.locator(".leaflet-container")).toHaveCount(0);
   expect(new URL(page.url()).searchParams.get("version")).toBe(release);
+  await expect(locate).toHaveCount(0);
   await page.reload();
   await expect(page.locator(".leaflet-container")).toHaveCount(0);
+  await expect(locate).toHaveCount(0);
   await expect(
     page.getByRole("textbox", { name: "Rechercher dans la carte" }),
   ).toHaveValue("BTS");

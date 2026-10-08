@@ -88,6 +88,16 @@ and remaining browser/source boundaries are in the
 No live dataset audit, remote CI result, merge or deployment is established by
 these local checks.
 
+On 2026-10-08 (Asia/Shanghai), the PR review follow-up diff against `3f0a2fc`
+passed the same full `just verify` command: 115 TypeScript cases and the same
+290 Chromium executions, with eight intended exclusions. Regression tests
+first reproduced the five missing palette aliases and the inactive List
+location actions, then passed after their correction. Real-browser desktop/mobile
+inspection confirmed the List/Map action visibility and all five palette queries,
+including Ctrl+K and Escape. Evidence: `.artifacts/navigation-review/verify.log`
+and the follow-up section of the completed plan above. No live data audit or
+deployment was performed.
+
 ## Reading and adding evidence
 
 - Keep this page a current summary. Put detailed investigations and historical

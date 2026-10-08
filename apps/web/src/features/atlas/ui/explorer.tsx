@@ -574,7 +574,7 @@ function ReadyExplorer({
                   >
                     {row.title}
                   </Link>
-                  {hasCoordinates(row) && (
+                  {showMap && hasCoordinates(row) && (
                     <Button
                       variant="ghost"
                       size="icon"

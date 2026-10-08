@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { searchCommands } from "../../../lib/command-search";
 import {
   navigationGroup,
   navigationGroups,
@@ -108,4 +109,23 @@ describe("representation and source boundaries", () => {
     );
     expect(scopeUrl(params, "parcoursup", "carte")).toBe("/carte?q=BTS");
   });
+});
+
+describe("legacy command palette aliases", () => {
+  it.each([
+    ["intérêts", ["/carte"]],
+    ["sauvegarder", ["/favoris"]],
+    ["bac général", ["/specialites"]],
+    ["villes", ["/territoires"]],
+    ["statistiques", ["/observatoire", "/analyses"]],
+  ] as const)(
+    "keeps the existing destinations searchable with %s",
+    (query, destinations) => {
+      const commands = navigationGroups.flatMap((group) =>
+        group.pages.map((page) => ({ ...page, group: group.label })),
+      );
+      const matches = searchCommands(commands, query).map((page) => page.href);
+      expect(matches).toEqual(expect.arrayContaining([...destinations]));
+    },
+  );
 });

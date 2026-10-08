@@ -11,7 +11,7 @@ export const navigationGroups = [
       {
         href: "/carte",
         label: "Carte des formations",
-        keywords: ["proximité", "ville", "rayon"],
+        keywords: ["proximité", "ville", "rayon", "intérêts"],
       },
       {
         href: "/apprentissage",
@@ -27,7 +27,7 @@ export const navigationGroups = [
       {
         href: "/specialites",
         label: "Spécialités du bac",
-        keywords: ["lycée", "doublette", "profil"],
+        keywords: ["lycée", "doublette", "profil", "bac général"],
       },
       {
         href: "/specialites/inverse",
@@ -64,7 +64,14 @@ export const navigationGroups = [
       {
         href: "/favoris",
         label: "Mes favoris",
-        keywords: ["listes", "préparation", "notes", "dossier", "enregistrées"],
+        keywords: [
+          "listes",
+          "préparation",
+          "notes",
+          "dossier",
+          "enregistrées",
+          "sauvegarder",
+        ],
       },
       {
         href: "/budget",
@@ -85,7 +92,7 @@ export const navigationGroups = [
       {
         href: "/territoires",
         label: "Territoires",
-        keywords: ["région", "géographie"],
+        keywords: ["région", "géographie", "villes"],
       },
       {
         href: "/evolutions",
@@ -95,7 +102,7 @@ export const navigationGroups = [
       {
         href: "/analyses",
         label: "Atelier d’analyse",
-        keywords: ["graphiques", "distribution", "export"],
+        keywords: ["graphiques", "distribution", "export", "statistiques"],
       },
       {
         href: "/decouvrir",

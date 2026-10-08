@@ -76,3 +76,30 @@ schema, API contracts, selection storage formats or dependencies changed. No new
 navigation debt remains. Existing Safari/Firefox and manual screen-reader limits
 remain UI-001 in the technical debt register. Remote CI and publication are
 separate observations; this change does not merge or deploy itself.
+
+## PR review follow-up (2026-10-08, Asia/Shanghai)
+
+Both reported regressions were reproduced against `3f0a2fc`: location buttons
+remained rendered without the map, and five historical palette queries lost
+existing destinations. The fix gates location actions on the same map visibility
+condition and restores the missing keywords. It introduces no new navigation or
+localization behavior.
+
+Regression tests use the real palette matcher for interests, saving, general-bac,
+cities and statistics aliases, including both statistical destinations. The
+existing desktop/mobile apprenticeship journey now asserts that a geolocated
+record has no location button in List, regains it in Map, and loses it again
+after returning to List and reloading. Before the fix, five unit cases and both
+browser variants failed as expected.
+
+The follow-up diff against `3f0a2fc` passed
+`WRANGLER_SEND_METRICS=false CI=true E2E_PORT=3544 mise exec -- just verify`:
+115 TypeScript cases, Node/Rust suites, disposable PostgreSQL 18 contracts,
+credential-free builds and 290 Chromium executions (137 development, 135
+production and 18 data-state cases; eight intended exclusions). Real-browser
+inspection at 1440-pixel desktop and 390-pixel mobile widths confirmed the hidden
+List actions and the available Map action. The palette was opened with Ctrl+K,
+all five historical queries found their destinations, and Escape dismissed it.
+Evidence is kept under `.artifacts/navigation-review/`, including `verify.log`
+and before-fix failures. These synthetic fixtures do not establish live data
+coverage; remote CI, merge and deployment remain separate observations.
