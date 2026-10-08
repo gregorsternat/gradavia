@@ -51,6 +51,38 @@ test("theme follows the system and preserves an explicit selection", async ({
   await expect(page.locator("html")).toHaveClass(/dark/);
 });
 
+test("theme controls wait for hydration before changing a saved preference", async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.addInitScript(() => localStorage.setItem("theme", "light"));
+  let hydrate!: () => void;
+  const hydration = new Promise<void>((resolve) => {
+    hydrate = resolve;
+  });
+  await page.route("**/_next/static/**/*.js", async (route) => {
+    await hydration;
+    await route.continue();
+  });
+  try {
+    await page.goto("/", { waitUntil: "commit" });
+    const system = page.getByRole("radio", { name: "Système", exact: true });
+    await expect(system).toBeDisabled();
+    await expect(page.locator("html")).toHaveClass(/light/);
+    hydrate();
+    await expect(system).toBeEnabled();
+    await system.click();
+    await expect(system).toBeChecked();
+    await expect(page.locator("html")).toHaveClass(/dark/);
+    expect(await page.evaluate(() => localStorage.getItem("theme"))).toBe(
+      "system",
+    );
+  } finally {
+    hydrate();
+    await page.unrouteAll({ behavior: "wait" });
+  }
+});
+
 test("keyboard users can skip to the content and change the appearance", async ({
   page,
   isMobile,

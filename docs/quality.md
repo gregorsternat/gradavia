@@ -1,7 +1,7 @@
 # Verification status
 
-Reviewed on 2026-10-09 (Asia/Shanghai), including the workspace-review local
-diff on `8aeef8b`. Earlier evidence below retains its own tested revisions.
+Reviewed on 2026-10-09 (Asia/Shanghai), including the CI follow-up local
+diff on `8f08c19`. Earlier evidence below retains its own tested revisions.
 This page summarizes coverage and outstanding limits. Detailed past results live
 in the [historical verification log](quality/history-through-2026-10-07.md).
 A checked-in implementation, a local pass, remote CI, publication and production
@@ -188,3 +188,23 @@ publication are not established by it.
 - Use the [historical log](quality/history-through-2026-10-07.md) for foundation,
   ingestion, observatory, deployment, expanded exploration, SEO and UI evidence.
   Recheck the relevant path before promoting historical evidence to current status.
+
+### PR #31 CI follow-up (2026-10-09)
+
+[CI run 37806978985](https://github.com/gregorsternat/gradavia/actions/runs/37806978985)
+failed three development browser executions on `8f08c19`: rapid comparison
+removals on both widths and theme restoration on desktop. Controlled delayed
+responses and JavaScript downloads reproduced both causes before the fixes.
+Current comparison IDs now govern retained content and subsequent actions;
+theme controls wait for client readiness. Eight focused executions passed after
+the corrections, including keyboard operation.
+
+The full local `CI=true E2E_PORT=3540 mise exec -- just verify` then passed:
+formatting, lint, types, architecture/docs, Clippy, 115 TypeScript tests,
+Node/Rust suites, disposable PostgreSQL 18 contracts and credential-free build.
+Chromium passed 173 development, 171 production and 18 data-state executions
+(362 total, eight intended exclusions). Evidence: `.artifacts/ci-workspace/verify.log`;
+regression failures, focused results and desktop/mobile visual inspection are
+retained in the same directory. A preliminary formatting check caught generated
+CLI snapshots outside the ignored artifact directory; they were moved before the
+successful full run. Remote CI and publication are not established by this local pass.

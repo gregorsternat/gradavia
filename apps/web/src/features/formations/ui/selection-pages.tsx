@@ -66,7 +66,7 @@ function EmptySelection({ type }: { type: "comparison" | "favorites" }) {
 }
 
 export function ComparisonPageView({
-  results,
+  results: loadedResults,
   ids,
   explicit,
 }: {
@@ -83,6 +83,8 @@ export function ComparisonPageView({
     if (!explicit && localIds)
       router.replace(selectionUrl(localIds.split(",")));
   }, [explicit, localIds, router]);
+  // A retained payload may still contain formations removed from the current URL.
+  const results = loadedResults.filter(({ id }) => ids.includes(id));
   const details = readyDetails(results);
   const campaigns = new Set(details.map((detail) => detail.source.campaign));
   const compatible = campaigns.size <= 1;

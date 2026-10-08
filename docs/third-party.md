@@ -140,7 +140,9 @@ Local integration patches:
   Radio groups and tabs have
   roving keyboard focus; tabs identify their associated panels. Radio items offer
   an optional segment presentation for the theme and metric selectors, retaining
-  the source component's shared indicator and keyboard model. Number ticker
+  the source component's shared indicator and keyboard model. Theme selection
+  uses the existing client-ready guard to disable radios until hydration attaches
+  their handlers and restores the saved preference. Number ticker
   precision is explicit for fractional published rates.
   Tab panels can omit inactive viewport-dependent children while retaining their
   semantic panel IDs, avoiding zero-size measurements from hidden charts.

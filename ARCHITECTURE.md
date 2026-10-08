@@ -77,7 +77,9 @@ back/forward traversal select the displayed panel and its query. Only existing
 favorites and budget stores persist beyond this visit. Panel `refresh()` invalidates
 and reloads only that entry through the read facade, preserving other drafts.
 Global print styles are installed only by the active panel. A pending result
-cannot supply campaign/version defaults for a newer requested context.
+cannot supply campaign/version defaults for a newer requested context. Comparison
+actions use the current requested IDs and filter retained data to those IDs, so
+consecutive removals remain effective while earlier reads are pending.
 
 Overview/territories and sources/downloads reuse the same data keys. Latest
 panel results and a bounded in-memory request cache prevent repeated reads;

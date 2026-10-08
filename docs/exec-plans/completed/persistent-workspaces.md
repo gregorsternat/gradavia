@@ -110,3 +110,35 @@ tests, Node/Rust suites, PostgreSQL 18 contracts and the production build. Chrom
 passed 171 development, 169 production and 18 production data-state executions
 (358 total, eight intended exclusions). Final evidence: `.artifacts/workspace-review/verify.log`.
 Remote CI and publication are separate from this local result.
+
+## PR #31 CI follow-up
+
+CI run `37806978985` on `8f08c19` failed three development browser executions:
+rapid comparison removals on desktop/mobile and saved theme restoration on desktop.
+The previous local pass did not establish remote reliability.
+
+Comparison actions received the last loaded IDs while a newer read was pending.
+A second removal could therefore reintroduce the first removed formation. The
+panel now receives current requested IDs and filters retained results before
+rendering cards, charts, tables and exports. Theme radios use the existing
+client-ready guard so they cannot accept a click before hydration restores the
+saved preference and attaches event handlers.
+
+The shared-comparison journey now holds the first removal response until the
+second has completed, checks immediate removal and verifies that the late response
+does not restore removed rows. A new theme journey holds JavaScript downloads,
+checks disabled controls, then restores the saved theme and switches to the system
+preference. Both regressions failed on desktop/mobile before the fixes (four
+executions); eight focused comparison, theme and keyboard executions then passed.
+Evidence: `.artifacts/ci-workspace/before.log` and `focused.log`, with isolated
+browser traces beneath `before/` and `focused/`. Manual Chromium inspection covered
+the comparison after consecutive removals and theme keyboard controls at desktop
+and mobile widths; screenshots are retained in the same evidence directory.
+
+Final local `CI=true E2E_PORT=3540 mise exec -- just verify` passed on 2026-10-09
+for the diff on `8f08c19`: all checks, unit/database suites, build and 362 Chromium
+executions (173 development, 171 production, 18 data states; eight intended
+exclusions). Evidence: `.artifacts/ci-workspace/verify.log`. A preliminary check
+stopped at formatting because CLI snapshots were outside `.artifacts`; those
+snapshots were moved and documentation formatted before the successful full run.
+Remote CI and deployment remain separate observations.

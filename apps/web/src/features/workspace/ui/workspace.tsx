@@ -106,7 +106,7 @@ function PanelBoundary({
               panel={id}
               payload={entry.payload}
               params={
-                waiting && (id === "selection" || id === "favoris")
+                waiting && id === "favoris"
                   ? new URLSearchParams(entry.loadedSearch)
                   : params
               }
