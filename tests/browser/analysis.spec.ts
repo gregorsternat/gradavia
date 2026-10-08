@@ -13,6 +13,7 @@ test("analysis URL restores filters on history traversal and clears them on bare
     name: "Formations de l’analyse",
     exact: true,
   });
+  await expect(search).toBeEnabled();
   await search.focus();
   await search.pressSequentially("Systèmes");
   await expect(search).toBeFocused();
@@ -33,7 +34,7 @@ test("analysis URL restores filters on history traversal and clears them on bare
     .getByRole("combobox")
     .fill("Atelier d’analyse");
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/analyses$/);
+  await expect(page).toHaveURL(/\/observatoire\?onglet=analyses$/);
   await expect(search).toHaveValue("");
   await expect(table).toHaveAttribute("aria-rowcount", "32");
   await page.goBack();
@@ -41,7 +42,7 @@ test("analysis URL restores filters on history traversal and clears them on bare
   await expect(search).toHaveValue("Systèmes");
   await expect(table).toHaveAttribute("aria-rowcount", "2");
   await page.goForward();
-  await expect(page).toHaveURL(/\/analyses$/);
+  await expect(page).toHaveURL(/\/observatoire\?onglet=analyses$/);
   await expect(search).toHaveValue("");
 });
 
@@ -214,6 +215,7 @@ test("source quiz reveals real denominators and links to the pinned analysis", a
   const slider = page.getByRole("slider", {
     name: "Votre estimation en pourcentage",
   });
+  await expect(slider).toBeEnabled();
   await slider.focus();
   await page.keyboard.press("Home");
   await expect(slider).toHaveAttribute("aria-valuenow", "0");

@@ -2,6 +2,7 @@
 // beui.dev/components/motion/bouncy-accordion
 
 import { motion, type Transition } from "motion/react";
+import { useClientReady } from "@/lib/hooks/use-client-ready";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { ChevronDown } from "lucide-react";
 import {
@@ -127,6 +128,7 @@ function BouncyAccordionRow({
   classNames?: BouncyAccordionClassNames;
   onToggle: () => void;
 }) {
+  const ready = useClientReady();
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState(0);
 
@@ -174,7 +176,7 @@ function BouncyAccordionRow({
         <button
           id={triggerId}
           type="button"
-          disabled={item.disabled}
+          disabled={item.disabled || !ready}
           aria-expanded={open}
           aria-controls={contentId}
           onClick={onToggle}

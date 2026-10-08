@@ -1,8 +1,9 @@
+import { PanelMain } from "@/features/workspace/ui/navigation";
 import { Loader } from "@/components/motion/loader";
 
 export default function ObservatoryLoading() {
   return (
-    <main
+    <PanelMain
       id="contenu"
       tabIndex={-1}
       className="py-8"
@@ -37,6 +38,6 @@ export default function ObservatoryLoading() {
         />
         <span aria-hidden="true">Chargement des données…</span>
       </div>
-    </main>
+    </PanelMain>
   );
 }

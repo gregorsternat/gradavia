@@ -66,7 +66,7 @@ describe("complete source-owned sitemaps", () => {
     expect(index.match(/<loc>/g)).toHaveLength(4);
     const xml = sitemapXml(publicPagePaths());
     for (const excluded of [
-      "/favoris",
+      "/favoris</loc>",
       "/comparer",
       "/analyses",
       "/dev/",

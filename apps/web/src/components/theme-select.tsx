@@ -28,6 +28,7 @@ export function ThemeSelect() {
         <Tooltip key={value} content={label}>
           <RadioGroupItem
             value={value}
+            disabled={!ready}
             label={label}
             variant="segment"
             className="size-8 min-h-8 px-0"

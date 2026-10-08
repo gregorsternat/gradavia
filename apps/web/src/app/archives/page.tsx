@@ -1,26 +1,15 @@
-import { pageMetadata } from "@/features/seo/domain/metadata";
-import { loadAtlas } from "@/features/atlas/server/load";
-import { AtlasExplorer } from "@/features/atlas/ui/explorer";
-import { parseExploration } from "@/features/atlas/domain/exploration";
+import { permanentRedirect } from "next/navigation";
 import type { SearchParams } from "@/features/formations/domain/explorer";
+import {
+  canonicalHref,
+  searchString,
+} from "@/features/workspace/domain/registry";
 
-export async function generateMetadata({
+export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  return pageMetadata("/archives", await searchParams);
-}
-export default async function ArchivesPage({
-  searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) {
-  const params = { ...(await searchParams), famille: "apb" };
-  return (
-    <AtlasExplorer
-      result={await loadAtlas(params)}
-      initialQuery={parseExploration(params)}
-    />
-  );
+  const query = searchString(await searchParams);
+  permanentRedirect(canonicalHref(`/archives${query ? `?${query}` : ""}`));
 }

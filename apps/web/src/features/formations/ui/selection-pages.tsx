@@ -1,8 +1,9 @@
 "use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 
 import { useEffect, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter } from "@/features/workspace/ui/navigation";
+import Link from "@/features/workspace/ui/navigation";
 import { ArrowRight, Bookmark, GitCompareArrows, Plus, X } from "lucide-react";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import { Table, type TableColumn } from "@/components/motion/table";
@@ -65,7 +66,7 @@ function EmptySelection({ type }: { type: "comparison" | "favorites" }) {
 }
 
 export function ComparisonPageView({
-  results,
+  results: loadedResults,
   ids,
   explicit,
 }: {
@@ -82,6 +83,8 @@ export function ComparisonPageView({
     if (!explicit && localIds)
       router.replace(selectionUrl(localIds.split(",")));
   }, [explicit, localIds, router]);
+  // A retained payload may still contain formations removed from the current URL.
+  const results = loadedResults.filter(({ id }) => ids.includes(id));
   const details = readyDetails(results);
   const campaigns = new Set(details.map((detail) => detail.source.campaign));
   const compatible = campaigns.size <= 1;
@@ -130,7 +133,7 @@ export function ComparisonPageView({
     [metricLabels[metric]]: observedMetric(detail.formation.metrics, metric),
   }));
   return (
-    <main id="contenu" className="min-w-0 flex-1 py-8" aria-busy={pending}>
+    <PanelMain id="contenu" className="min-w-0 flex-1 py-8" aria-busy={pending}>
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="mb-2 text-xs text-muted-foreground">Votre sélection</p>
@@ -366,7 +369,7 @@ export function ComparisonPageView({
           ) : null}
         </>
       )}
-    </main>
+    </PanelMain>
   );
 }
 

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/features/workspace/ui/navigation";
 import type { Breadcrumb } from "../domain/structured-data";
 
 export function Breadcrumbs({ items }: { items: Breadcrumb[] }) {

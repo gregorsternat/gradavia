@@ -1,6 +1,7 @@
 "use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/features/workspace/ui/navigation";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import {
@@ -206,7 +207,7 @@ export function DataUnavailable({
   title: string;
 }) {
   return (
-    <main id="contenu" tabIndex={-1} className="py-8">
+    <PanelMain id="contenu" tabIndex={-1} className="py-8">
       <h1 className="page-title">{title}</h1>
       <div className="panel mt-8 flex min-h-80 flex-col items-center justify-center p-8 text-center">
         <Database
@@ -231,7 +232,7 @@ export function DataUnavailable({
           <RefreshCw className="size-3.5" /> Réessayer
         </ButtonLink>
       </div>
-    </main>
+    </PanelMain>
   );
 }
 export function DownloadButton({

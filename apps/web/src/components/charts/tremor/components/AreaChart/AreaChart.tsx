@@ -4,6 +4,8 @@
 
 "use client";
 
+import { ResponsiveContainer } from "@/components/charts/responsive-container";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import React from "react";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
 import {
@@ -14,7 +16,6 @@ import {
   Line,
   AreaChart as RechartsAreaChart,
   Legend as RechartsLegend,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
@@ -500,6 +501,7 @@ interface AreaChartProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
   (props, ref) => {
+    const reduce = useReducedMotion();
     const {
       data = [],
       categories = [],
@@ -740,7 +742,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
             </YAxis>
             <Tooltip
               wrapperStyle={{ outline: "none" }}
-              isAnimationActive={true}
+              isAnimationActive={!reduce}
               animationDuration={100}
               cursor={{ stroke: "#d1d5db", strokeWidth: 1 }}
               offset={20}

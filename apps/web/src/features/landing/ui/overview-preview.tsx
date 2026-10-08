@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import Link from "next/link";
+import Link from "@/features/workspace/ui/navigation";
 import {
   ArrowRight,
   ArrowUpRight,

@@ -1,3 +1,4 @@
+import { canonicalHref } from "../../workspace/domain/registry";
 import type { Metadata } from "next";
 import type { SearchParams } from "../../formations/domain/explorer";
 import { explorerUrl, FILTER_KEYS } from "../../formations/domain/explorer";
@@ -121,7 +122,7 @@ export function createMetadata({
   path: string;
   noIndex?: boolean;
 }): Metadata {
-  const url = absoluteUrl(path);
+  const url = absoluteUrl(canonicalHref(path));
   const socialTitle = `${title} · ${SITE_NAME}`;
   return {
     title,

@@ -33,7 +33,7 @@ test("evolution URL restores settings on history traversal and resets bare-route
     .getByRole("combobox")
     .fill("Comparer les campagnes");
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/evolutions$/);
+  await expect(page).toHaveURL(/\/observatoire\?onglet=evolutions$/);
   await expect(measure).toContainText("Places");
   await expect(mode).toContainText("Effectifs");
   await page.goBack();
@@ -41,7 +41,7 @@ test("evolution URL restores settings on history traversal and resets bare-route
   await expect(measure).toContainText("Candidatures");
   await expect(mode).toContainText("Indice base 100");
   await page.goForward();
-  await expect(page).toHaveURL(/\/evolutions$/);
+  await expect(page).toHaveURL(/\/observatoire\?onglet=evolutions$/);
   await expect(measure).toContainText("Places");
   await expect(mode).toContainText("Effectifs");
 });

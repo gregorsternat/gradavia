@@ -1,13 +1,7 @@
 "use client";
 // beui.dev/components/motion/range-slider
 
-import {
-  animate,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useTransform,
-} from "motion/react";
+import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import {
   type PointerEvent,
   useCallback,
@@ -18,6 +12,8 @@ import {
   useState,
 } from "react";
 
+import { useClientReady } from "@/lib/hooks/use-client-ready";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { SPRING_GLIDE } from "@/lib/ease";
 import {
   type SliderOptions,
@@ -88,8 +84,13 @@ export function InlineSlider({
   format = String,
   showTicks = true,
   className,
-  ...options
+  ...inputOptions
 }: InlineSliderProps) {
+  const ready = useClientReady();
+  const options = {
+    ...inputOptions,
+    disabled: inputOptions.disabled || !ready,
+  };
   const reduce = useReducedMotion();
   const step = options.step && options.step > 0 ? options.step : 1;
   const precision =

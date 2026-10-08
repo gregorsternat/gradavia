@@ -51,6 +51,14 @@ keyboard-accessible theme choices and a skip link. Mobile search defaults to
 cards; desktop defaults to a table. Explicit view choice is retained in the URL.
 Tables, chart details and CSV exports provide exact values alongside graphics.
 
+Six workspaces retain their visited tools in memory: `/formations`, `/specialites`,
+`/comparer`, `/favoris`, `/observatoire` and `/sources`. Their tabs use `onglet`
+(the default is omitted); Formations additionally uses `famille=apprentissage`.
+Changing tools preserves drafts, filters and reading position without a server
+navigation. The active URL remains shareable, including native links without
+JavaScript. Legacy routes permanently redirect to the corresponding tab.
+Personal notes and budget assumptions retain their existing sharing rules.
+
 ## Formation search
 
 Search ignores case and French accents and matches all entered words across

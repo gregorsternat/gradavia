@@ -3,6 +3,7 @@
 
 import { Check, ChevronDown } from "lucide-react";
 import { motion, type Transition, type Variants } from "motion/react";
+import { useClientReady } from "@/lib/hooks/use-client-ready";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import {
   createContext,
@@ -94,10 +95,12 @@ export function Select({
   open: openProp,
   defaultOpen = false,
   onOpenChange,
-  disabled = false,
+  disabled: disabledProp = false,
   className,
   children,
 }: SelectProps) {
+  const ready = useClientReady();
+  const disabled = disabledProp || !ready;
   const reduce = useReducedMotion() ?? false;
   const baseId = useId();
   const rootRef = useRef<HTMLDivElement>(null);

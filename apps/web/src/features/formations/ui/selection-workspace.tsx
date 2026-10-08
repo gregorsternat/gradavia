@@ -1,4 +1,9 @@
 "use client";
+import {
+  usePanelHash,
+  usePanelActive,
+  PanelMain,
+} from "@/features/workspace/ui/navigation";
 
 import {
   useEffect,
@@ -6,8 +11,8 @@ import {
   useSyncExternalStore,
   useTransition,
 } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter } from "@/features/workspace/ui/navigation";
+import Link from "@/features/workspace/ui/navigation";
 import {
   ArrowLeft,
   ArrowRight,
@@ -342,9 +347,12 @@ function PrintDossier({
   name: string;
   comparison: SavedFormation[];
 }) {
+  const active = usePanelActive();
   return (
     <section id="selection-dossier" className="hidden print:block">
-      <style>{`@media print { body * { visibility: hidden !important; } #selection-dossier, #selection-dossier * { visibility: visible !important; } #selection-dossier { position: absolute; inset: 0; display: block !important; padding: 20px; color: #111; background: white; font-size: 11px; } #selection-dossier article { break-inside: avoid; } #selection-dossier a { overflow-wrap: anywhere; } @page { margin: 15mm; } }`}</style>
+      {active && (
+        <style>{`@media print { body * { visibility: hidden !important; } #selection-dossier, #selection-dossier * { visibility: visible !important; } #selection-dossier { position: absolute; inset: 0; display: block !important; padding: 20px; color: #111; background: white; font-size: 11px; } #selection-dossier article { break-inside: avoid; } #selection-dossier a { overflow-wrap: anywhere; } @page { margin: 15mm; } }`}</style>
+      )}
       <h1 className="text-2xl font-semibold">{name}</h1>
       <p className="mt-2">{rows.length} formations · Dossier Gradavia</p>
       <p className="mt-2">
@@ -475,11 +483,13 @@ export function FavoritesWorkspace({
   const [includeNotes, setIncludeNotes] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
   const [shareLink, setShareLink] = useState("");
-  const hash = useSyncExternalStore(
+  const panelHash = usePanelHash();
+  const globalHash = useSyncExternalStore(
     subscribeHash,
     () => window.location.hash,
     () => "",
   );
+  const hash = panelHash ?? globalHash;
   const sharedContent = readSharedList(hash, ids);
   const sharedHydrated = useSyncExternalStore(
     emptySubscribe,
@@ -578,7 +588,7 @@ export function FavoritesWorkspace({
   const ready = shared || localIds === loadedIds;
   return (
     <>
-      <main
+      <PanelMain
         id="contenu"
         className="min-w-0 flex-1 py-8 print:hidden"
         aria-busy={pending}
@@ -960,7 +970,7 @@ export function FavoritesWorkspace({
           </>
         )}
         <ComparisonTray />
-      </main>
+      </PanelMain>
       <PrintDossier
         rows={rows}
         notes={notes}

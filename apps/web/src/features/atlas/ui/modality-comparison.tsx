@@ -1,4 +1,5 @@
 "use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 import { Input } from "@/components/motion/input";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import { BouncyAccordion } from "@/components/motion/bouncy-accordion";
@@ -51,7 +52,7 @@ export function ModalityComparison({
     `/modalites?${new URLSearchParams({ ...params, [key]: id })}`;
   const rows = fields.map((key) => ({ key, label: labels[key] }));
   return (
-    <main id="contenu" className="py-8">
+    <PanelMain id="contenu" className="py-8">
       <h1 className="text-3xl font-semibold tracking-tight">
         Comparer les modalités
       </h1>
@@ -213,6 +214,6 @@ export function ModalityComparison({
         <SourceDisclosure source={classic.source} />
         <SourceDisclosure source={apprentice.source} />
       </div>
-    </main>
+    </PanelMain>
   );
 }

@@ -4,6 +4,8 @@
 
 "use client";
 
+import { ResponsiveContainer } from "@/components/charts/responsive-container";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import React from "react";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
 import {
@@ -13,7 +15,6 @@ import {
   Line,
   Legend as RechartsLegend,
   LineChart as RechartsLineChart,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
@@ -498,6 +499,7 @@ interface LineChartProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
   (props, ref) => {
+    const reduce = useReducedMotion();
     const {
       data = [],
       categories = [],
@@ -694,7 +696,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
             </YAxis>
             <Tooltip
               wrapperStyle={{ outline: "none" }}
-              isAnimationActive={true}
+              isAnimationActive={!reduce}
               animationDuration={100}
               cursor={{ stroke: "#d1d5db", strokeWidth: 1 }}
               offset={20}

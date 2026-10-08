@@ -43,6 +43,15 @@ test("named lists retain notes and progress across reloads and synchronize tabs"
   await page
     .getByRole("textbox", { name: "Notes pour Licence - Droit 01" })
     .fill("Vérifier le contenu des cours");
+  await page.getByRole("tab", { name: "Budget", exact: true }).click();
+  await page.getByRole("tab", { name: "Favoris", exact: true }).click();
+  await expect(editor).toHaveAttribute("open", "");
+  await expect(
+    page.getByRole("textbox", { name: "Notes pour Licence - Droit 01" }),
+  ).toHaveValue("Vérifier le contenu des cours");
+  expect(decodeURIComponent(page.url())).not.toContain(
+    "Vérifier le contenu des cours",
+  );
   await page
     .getByRole("textbox", { name: "Nouvelle démarche pour Licence - Droit 01" })
     .fill("Contacter la formation");
@@ -142,7 +151,10 @@ test("sharing excludes notes by default and imports an explicit annotated copy",
   const shared = await recipient.newPage();
   await shared.goto(annotated);
   await expect(
-    shared.getByRole("main").getByText("Une question privée", { exact: true }),
+    shared
+      .getByRole("main")
+      .getByText("Une question privée", { exact: true })
+      .filter({ visible: true }),
   ).toBeVisible();
   await shared
     .getByRole("button", { name: "Enregistrer cette liste", exact: true })

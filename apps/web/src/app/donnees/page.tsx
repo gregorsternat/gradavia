@@ -1,8 +1,15 @@
-import { pageMetadata } from "@/features/seo/domain/metadata";
-import { loadSources } from "@/features/observatory/server/load";
-import { DataAccess } from "@/features/atlas/ui/data-access";
-export const metadata = pageMetadata("/donnees");
-export const dynamic = "force-dynamic";
-export default async function Page() {
-  return <DataAccess result={await loadSources()} />;
+import { permanentRedirect } from "next/navigation";
+import type { SearchParams } from "@/features/formations/domain/explorer";
+import {
+  canonicalHref,
+  searchString,
+} from "@/features/workspace/domain/registry";
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const query = searchString(await searchParams);
+  permanentRedirect(canonicalHref(`/donnees${query ? `?${query}` : ""}`));
 }

@@ -1,14 +1,15 @@
-import { pageMetadata } from "@/features/seo/domain/metadata";
+import { permanentRedirect } from "next/navigation";
 import type { SearchParams } from "@/features/formations/domain/explorer";
-import { loadAtlas } from "@/features/atlas/server/load";
-import { AnalysisWorkbench } from "@/features/analysis/ui/workbench";
+import {
+  canonicalHref,
+  searchString,
+} from "@/features/workspace/domain/registry";
 
-export const metadata = pageMetadata("/analyses");
 export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  const params = await searchParams;
-  return <AnalysisWorkbench result={await loadAtlas(params)} />;
+  const query = searchString(await searchParams);
+  permanentRedirect(canonicalHref(`/analyses${query ? `?${query}` : ""}`));
 }

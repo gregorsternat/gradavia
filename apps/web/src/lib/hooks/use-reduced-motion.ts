@@ -1,6 +1,9 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { createContext, useContext, useSyncExternalStore } from "react";
+
+const MotionActivity = createContext(true);
+export const MotionActivityProvider = MotionActivity.Provider;
 
 const mediaQuery = "(prefers-reduced-motion: reduce)";
 const serverSnapshot = () => false;
@@ -14,5 +17,11 @@ function subscribe(listener: () => void) {
 
 /** Keep initial markup deterministic, then react to the user's motion setting. */
 export function useReducedMotion() {
-  return useSyncExternalStore(subscribe, clientSnapshot, serverSnapshot);
+  const active = useContext(MotionActivity);
+  const reduced = useSyncExternalStore(
+    subscribe,
+    clientSnapshot,
+    serverSnapshot,
+  );
+  return reduced || !active;
 }

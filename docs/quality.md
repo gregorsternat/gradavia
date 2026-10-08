@@ -1,6 +1,7 @@
 # Verification status
 
-Reviewed on 2026-10-07 (Asia/Shanghai) against the updated base `cac11ff`.
+Reviewed on 2026-10-09 (Asia/Shanghai), including the CI follow-up local
+diff on `8f08c19`. Earlier evidence below retains its own tested revisions.
 This page summarizes coverage and outstanding limits. Detailed past results live
 in the [historical verification log](quality/history-through-2026-10-07.md).
 A checked-in implementation, a local pass, remote CI, publication and production
@@ -98,6 +99,80 @@ including Ctrl+K and Escape. Evidence: `.artifacts/navigation-review/verify.log`
 and the follow-up section of the completed plan above. No live data audit or
 deployment was performed.
 
+## GitHub repository link validation (2026-10-08)
+
+On 2026-10-08 (Asia/Shanghai), `CI=true E2E_PORT=3542 mise exec -- just verify`
+completed successfully with the repository-link diff on base `d8acc7a`: formatting, lint, types,
+architecture/docs, Clippy, 115 TypeScript cases, Node/Rust suites, disposable
+PostgreSQL 18 contracts and credential-free builds. Chromium passed 137 development,
+135 production and six cases in each production data state (290 executions,
+eight intended exclusions). Unrelated workspace-navigation changes were introduced
+concurrently in this checkout after the checks/build began; this run does not
+establish validation of their latest state. An initial typecheck rejected a Lucide
+brand-icon import; the final implementation uses the source-owned Octicons SVG instead.
+The web TypeScript check was repeated after those concurrent edits and passed;
+evidence: `.artifacts/github-link/final-types.log`.
+
+Real-browser inspection covered the homepage footer and expanded/collapsed
+application sidebar at 1280×900, the mobile navigation at 390×844 and the homepage
+footer at 320×740, in light/dark themes. The repository link has visible keyboard
+focus, a French accessible name, a 40px target, the expected repository URL and
+`target="_blank"` with `noopener noreferrer`. The narrow homepage had no horizontal
+overflow. Evidence: `.artifacts/github-link/verify.log`, `desktop-page.jpg`,
+`desktop-footer.jpg` and `mobile-footer.jpg` in the same directory.
+
+The authenticated GitHub inspection found the destination private; the owner plans
+to make it public. Anonymous access and publication of this diff remain unverified.
+No deployment was performed.
+
+## Persistent workspace validation (2026-10-08)
+
+`CI=true E2E_PORT=3540 mise exec -- just verify` passed for the local workspace
+navigation diff on `e0ce3a3`, based on merged PR #29: formatting, lint, types,
+architecture/docs, Clippy, 115 TypeScript tests, Node/Rust suites, real disposable
+PostgreSQL 18 contracts and credential-free builds. Chromium passed 165 development,
+163 production and six cases in each of three production data states: 346
+executions with eight intended exclusions.
+
+The suite checks all workspace panel pairs, preserved state and map camera,
+History traversal, deep links, legacy parameters/fragments, SSR without JavaScript,
+SEO, keyboard access, request reuse, stale responses and failure recovery. Network
+inspection confirms that Budget JavaScript is downloaded on first activation,
+not with the initial Favoris page. The initial run after separating tool bundles
+exposed ten readiness failures; these were fixed and the focused fourteen-case
+follow-up and final full run passed. This final result supersedes those failed
+attempts for the final code, without treating the earlier attempts as passes.
+
+Real Chromium inspection covered desktop territories and mobile quiz/analysis,
+scrollable tab bars, visible keyboard focus and activation. Evidence lives under
+`.artifacts/workspace-tabs`: `verify.log`, `readiness.log`, `code-loading.log`,
+`verification-notes.md`, `desktop-territoires.png`, `mobile-estimer.png` and
+`mobile-analyse.png`. See the [completed plan](exec-plans/completed/persistent-workspaces.md)
+for implementation scope. No production data, remote CI or publication was verified
+by this work; Safari/Firefox and manual screen-reader limits remain UI-001.
+
+## Workspace review corrections (2026-10-09)
+
+`CI=true E2E_PORT=3540 mise exec -- just verify` passed for the local diff on
+`8aeef8b`: code/documentation checks, 115 TypeScript tests, Node/Rust suites,
+disposable PostgreSQL 18 contracts and credential-free production build. Chromium
+passed 171 development, 169 production and 18 production data-state executions
+(358 total, eight intended exclusions).
+
+New browser tests reproduce and cover inactive print styles, shared-list retry
+recovery without losing another panel's draft, and campaign changes during a
+pending read followed by List/Map navigation. All six new executions failed before
+the fixes and pass afterward. Desktop/mobile Chromium print screenshots were
+visually inspected. Existing keyboard and workspace tests now await observable
+client readiness when testing History navigation; native no-JavaScript journeys
+remain separate.
+
+Evidence: `.artifacts/workspace-review/verify.log`, targeted logs and print images
+under `focused-results`. Earlier failures and their resolution are documented in
+the [completed plan](exec-plans/completed/persistent-workspaces.md#pr-31-review-follow-up)
+and retained alongside the final log. This is local validation; remote CI and
+publication are not established by it.
+
 ## Reading and adding evidence
 
 - Keep this page a current summary. Put detailed investigations and historical
@@ -113,3 +188,23 @@ deployment was performed.
 - Use the [historical log](quality/history-through-2026-10-07.md) for foundation,
   ingestion, observatory, deployment, expanded exploration, SEO and UI evidence.
   Recheck the relevant path before promoting historical evidence to current status.
+
+### PR #31 CI follow-up (2026-10-09)
+
+[CI run 37806978985](https://github.com/gregorsternat/gradavia/actions/runs/37806978985)
+failed three development browser executions on `8f08c19`: rapid comparison
+removals on both widths and theme restoration on desktop. Controlled delayed
+responses and JavaScript downloads reproduced both causes before the fixes.
+Current comparison IDs now govern retained content and subsequent actions;
+theme controls wait for client readiness. Eight focused executions passed after
+the corrections, including keyboard operation.
+
+The full local `CI=true E2E_PORT=3540 mise exec -- just verify` then passed:
+formatting, lint, types, architecture/docs, Clippy, 115 TypeScript tests,
+Node/Rust suites, disposable PostgreSQL 18 contracts and credential-free build.
+Chromium passed 173 development, 171 production and 18 data-state executions
+(362 total, eight intended exclusions). Evidence: `.artifacts/ci-workspace/verify.log`;
+regression failures, focused results and desktop/mobile visual inspection are
+retained in the same directory. A preliminary formatting check caught generated
+CLI snapshots outside the ignored artifact directory; they were moved before the
+successful full run. Remote CI and publication are not established by this local pass.

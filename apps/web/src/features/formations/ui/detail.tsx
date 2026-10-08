@@ -1,4 +1,5 @@
 "use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 
 import { useState } from "react";
 import { Breadcrumbs } from "@/features/seo/ui/breadcrumbs";
@@ -6,7 +7,7 @@ import { detailBreadcrumbs } from "@/features/seo/domain/structured-data";
 import { DetailInsights } from "@/features/atlas/ui/detail-insights";
 import type { AtlasDetail } from "@/features/atlas/domain/api-contract";
 import type { peerSummary } from "@/features/atlas/domain/exploration";
-import Link from "next/link";
+import Link from "@/features/workspace/ui/navigation";
 import { ArrowLeft, ArrowUpRight, Building2, Info, MapPin } from "lucide-react";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import {
@@ -200,7 +201,7 @@ export function FormationDetailView({
   }));
   const numerical = volumeData.some((row) => row.Effectif !== null);
   return (
-    <main id="contenu" className="min-w-0 flex-1 py-8">
+    <PanelMain id="contenu" className="min-w-0 flex-1 py-8">
       <Breadcrumbs items={detailBreadcrumbs(formation, source, "parcoursup")} />
       <Link
         href={`/formations?campagne=${source.campaign}`}
@@ -534,6 +535,6 @@ export function FormationDetailView({
         </TabsContent>
       </Tabs>
       <ComparisonTray />
-    </main>
+    </PanelMain>
   );
 }

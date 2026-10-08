@@ -1,7 +1,8 @@
 "use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 import { useTransition } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { useRouter, useSearchParams } from "@/features/workspace/ui/navigation";
+import Link from "@/features/workspace/ui/navigation";
 import { ArrowLeft, ArrowUpRight, Download } from "lucide-react";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import {
@@ -115,7 +116,7 @@ function ReadyInverse({
     })),
   ];
   return (
-    <main id="contenu" className="min-w-0 flex-1 py-8" aria-busy={pending}>
+    <PanelMain id="contenu" className="min-w-0 flex-1 py-8" aria-busy={pending}>
       <div className="mb-7 flex flex-wrap items-start justify-between gap-4">
         <div>
           <Link
@@ -192,7 +193,7 @@ function ReadyInverse({
                 value={indicator}
                 onChange={(value) => {
                   const next = value as SpecialtyIndicator;
-                  window.history.replaceState(
+                  router.replaceState(
                     null,
                     "",
                     inverseUrl(data.query.formation, next),
@@ -303,7 +304,7 @@ function ReadyInverse({
           },
         ]}
       />
-    </main>
+    </PanelMain>
   );
 }
 export function InverseSpecialties({
@@ -316,7 +317,7 @@ export function InverseSpecialties({
   if (result.status === "ready")
     return <ReadyInverse data={result.data} initialIndicator={indicator} />;
   return (
-    <main id="contenu" className="py-8">
+    <PanelMain id="contenu" className="py-8">
       <h1 className="text-3xl font-semibold tracking-tight">
         Spécialités par formation
       </h1>
@@ -332,6 +333,6 @@ export function InverseSpecialties({
       >
         Réessayer
       </ButtonLink>
-    </main>
+    </PanelMain>
   );
 }

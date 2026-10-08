@@ -1,5 +1,6 @@
+import { PanelMain } from "@/features/workspace/ui/navigation";
 import type { ReactNode } from "react";
-import Link from "next/link";
+import Link from "@/features/workspace/ui/navigation";
 import {
   ArrowDown,
   ArrowRight,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 import { Wordmark } from "@/components/wordmark";
 import { ThemeSelect } from "@/components/theme-select";
+import { GitHubLink } from "@/components/github-link";
 import { ButtonLink } from "@/components/motion/button/base";
 import {
   LandingQuestions,
@@ -87,7 +89,7 @@ export function LandingPage({ preview }: { preview: ReactNode }) {
           </nav>
         </div>
       </header>
-      <main id="contenu" tabIndex={-1}>
+      <PanelMain id="contenu" tabIndex={-1}>
         <section
           aria-labelledby="landing-title"
           className={`${styles.container} ${styles.section} ${styles.hero}`}
@@ -255,7 +257,7 @@ export function LandingPage({ preview }: { preview: ReactNode }) {
             </LandingReveal>
           </div>
         </section>
-      </main>
+      </PanelMain>
       <footer className={`${styles.container} ${styles.footer}`}>
         <Wordmark />
         <nav
@@ -272,7 +274,10 @@ export function LandingPage({ preview }: { preview: ReactNode }) {
             Données & méthode
           </Link>
         </nav>
-        <ThemeSelect />
+        <div className="flex items-center gap-3">
+          <GitHubLink />
+          <ThemeSelect />
+        </div>
       </footer>
     </div>
   );

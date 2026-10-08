@@ -21,6 +21,7 @@ import {
   useMemo,
   useState,
   type ReactNode,
+  type MouseEvent,
 } from "react";
 import { EASE_OUT } from "@/lib/ease";
 import { cn } from "@/lib/utils";
@@ -32,6 +33,7 @@ type Ctx = {
   setValue: (v: string) => void;
   layoutId: string;
   variant: Variant;
+  activationMode: "automatic" | "manual";
 };
 
 const TabsCtx = createContext<Ctx | null>(null);
@@ -57,6 +59,7 @@ export function Tabs({
   value,
   onValueChange,
   variant = "pill",
+  activationMode = "automatic",
   children,
   className,
 }: {
@@ -64,6 +67,7 @@ export function Tabs({
   value?: string;
   onValueChange?: (v: string) => void;
   variant?: Variant;
+  activationMode?: "automatic" | "manual";
   children: ReactNode;
   className?: string;
 }) {
@@ -80,8 +84,8 @@ export function Tabs({
     [controlled, onValueChange],
   );
   const contextValue = useMemo(
-    () => ({ value: current, setValue, layoutId, variant }),
-    [current, layoutId, setValue, variant],
+    () => ({ value: current, setValue, layoutId, variant, activationMode }),
+    [current, layoutId, setValue, variant, activationMode],
   );
   return (
     <MotionConfig transition={reduce ? { duration: 0 } : transition}>
@@ -108,12 +112,14 @@ export function TabsList({
   children,
   className,
   wrapperClassName,
+  "aria-label": ariaLabel,
 }: {
   children: ReactNode;
   className?: string;
   wrapperClassName?: string;
+  "aria-label"?: string;
 }) {
-  const { variant, value } = useTabs();
+  const { variant, value, activationMode } = useTabs();
   const reduce = useReducedMotion();
   const rootRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -336,12 +342,13 @@ export function TabsList({
         <div
           ref={listRef}
           role="tablist"
+          aria-label={ariaLabel}
           onKeyDown={(event) => {
             if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key))
               return;
             const tabs = Array.from(
               event.currentTarget.querySelectorAll<HTMLButtonElement>(
-                '[role="tab"]:not(:disabled)',
+                '[role="tab"]:not(:disabled):not([aria-disabled="true"])',
               ),
             );
             if (!tabs.length) return;
@@ -354,7 +361,7 @@ export function TabsList({
                   ? tabs.length - 1
                   : (at + (event.key === "ArrowLeft" ? -1 : 1) + tabs.length) %
                     tabs.length;
-            tabs[next]?.click();
+            if (activationMode === "automatic") tabs[next]?.click();
             tabs[next]?.focus();
           }}
           className={cn(listClasses[variant], "w-max", className)}
@@ -396,12 +403,14 @@ export function TabsTrigger({
   className,
   indicatorClassName,
   disabled = false,
+  href,
 }: {
   value: string;
   children: ReactNode;
   className?: string;
   indicatorClassName?: string;
   disabled?: boolean;
+  href?: string;
 }) {
   const { value: current, setValue, layoutId, variant } = useTabs();
   const ready = useClientReady();
@@ -414,17 +423,41 @@ export function TabsTrigger({
     active ? "inset(0)" : "inset(0 100% 0 0)",
   );
 
+  const Tag = href ? "a" : "button";
+  const activate = (event: MouseEvent<HTMLElement>) => {
+    if (
+      href &&
+      (event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        event.button !== 0)
+    )
+      return;
+    if (href && !ready && !disabled) return;
+    event.preventDefault();
+    if (!unavailable) setValue(value);
+  };
+
   if (variant === "underline") {
     return (
-      <button
-        type="button"
+      <Tag
+        type={href ? undefined : "button"}
+        href={href}
         role="tab"
         id={`${layoutId}-tab-${value}`}
         aria-controls={`${layoutId}-panel-${value}`}
-        tabIndex={active && !unavailable ? 0 : -1}
-        disabled={unavailable}
+        tabIndex={(active || (href && !ready)) && !disabled ? 0 : -1}
+        disabled={href ? undefined : unavailable}
+        aria-disabled={(href ? disabled : unavailable) || undefined}
         aria-selected={active}
-        onClick={() => setValue(value)}
+        onClick={activate}
+        onKeyDown={(event) => {
+          if (href && event.key === " ") {
+            event.preventDefault();
+            if (!unavailable) setValue(value);
+          }
+        }}
         className={cn(
           "relative isolate px-3 pb-2.5 pt-1 -mb-px text-sm font-medium transition-colors min-h-[44px] inline-flex items-center whitespace-nowrap shrink-0",
           "disabled:pointer-events-none disabled:opacity-50",
@@ -445,7 +478,7 @@ export function TabsTrigger({
             )}
           />
         ) : null}
-      </button>
+      </Tag>
     );
   }
 
@@ -466,16 +499,24 @@ export function TabsTrigger({
           )}
         />
       ) : null}
-      <button
-        type="button"
+      <Tag
+        type={href ? undefined : "button"}
+        href={href}
         role="tab"
         id={`${layoutId}-tab-${value}`}
         aria-controls={`${layoutId}-panel-${value}`}
-        tabIndex={active && !unavailable ? 0 : -1}
-        disabled={unavailable}
+        tabIndex={(active || (href && !ready)) && !disabled ? 0 : -1}
+        disabled={href ? undefined : unavailable}
+        aria-disabled={(href ? disabled : unavailable) || undefined}
         aria-selected={active}
         data-tabs-value={value}
-        onClick={() => setValue(value)}
+        onClick={activate}
+        onKeyDown={(event) => {
+          if (href && event.key === " ") {
+            event.preventDefault();
+            if (!unavailable) setValue(value);
+          }
+        }}
         className={cn(
           "relative z-10 inline-flex items-center justify-center whitespace-nowrap bg-transparent px-3.5 py-1.5 text-sm font-medium outline-none",
           "text-muted-foreground hover:text-foreground",
@@ -494,7 +535,7 @@ export function TabsTrigger({
         >
           {children}
         </span>
-      </button>
+      </Tag>
     </div>
   );
 }
@@ -514,34 +555,21 @@ export function TabsContent({
   const { value: current, layoutId } = useTabs();
   const reduce = useReducedMotion();
   const active = current === value;
-  // Keep inactive panel IDs for their tabs' aria-controls. Static content can
-  // remain in the HTML; viewport-dependent children opt out while hidden.
-  if (!active) {
-    return (
-      <div
-        hidden
-        role="tabpanel"
-        id={`${layoutId}-panel-${value}`}
-        aria-labelledby={`${layoutId}-tab-${value}`}
-        className={className}
-      >
-        {keepMounted ? children : null}
-      </div>
-    );
-  }
+  // A stable host preserves child state across activation. Viewport-dependent
+  // children can still opt out while their parent retains their domain state.
   return (
     <motion.div
-      key={value}
+      hidden={!active}
       role="tabpanel"
       id={`${layoutId}-panel-${value}`}
       aria-labelledby={`${layoutId}-tab-${value}`}
-      tabIndex={0}
-      initial={{ opacity: 1, y: reduce ? 0 : 4 }}
+      tabIndex={active ? 0 : -1}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.18, ease: EASE_OUT }}
+      transition={{ duration: reduce ? 0 : 0.18, ease: EASE_OUT }}
       className={cn("mt-4", className)}
     >
-      {children}
+      {active || keepMounted ? children : null}
     </motion.div>
   );
 }
