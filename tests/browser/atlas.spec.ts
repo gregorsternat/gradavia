@@ -92,14 +92,15 @@ test("map filters follow internal navigation and browser history", async ({
   await search.pressSequentially("Systèmes numériques");
   await expect(search).toHaveValue("Systèmes numériques");
   const filtered = page.url();
-  const navigation = page.getByRole("link", { name: "Carte", exact: true });
+  const navigation = page
+    .getByRole("navigation", { name: "Explorer Gradavia" })
+    .getByRole("link", { name: "Formations", exact: true });
   if (!(await navigation.isVisible()))
     await page
       .getByRole("button", { name: "Afficher ou masquer la navigation" })
       .click();
   await navigation.click();
-  await expect(page).toHaveURL(/\/carte$/);
-  await expect(search).toHaveValue("");
+  await expect(page).toHaveURL(/\/formations$/);
   await page.goBack();
   await expect(page).toHaveURL(filtered);
   await expect(search).toHaveValue("Systèmes numériques");
@@ -205,4 +206,72 @@ test("cross-modality comparison pins each publication and preserves suppression"
     "scrollWidth",
     await page.locator("body").evaluate((element) => element.clientWidth),
   );
+});
+
+test("list and map share compatible filters while apprenticeship keeps its snapshot", async ({
+  page,
+}) => {
+  await page.goto("/formations?campagne=2025&q=BTS&type=BTS&tri=capacite");
+  const views = page.getByRole("navigation", {
+    name: "Affichage des formations",
+  });
+  await views.getByRole("link", { name: "Carte", exact: true }).focus();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(
+    /\/carte\?campagne=2025&q=BTS&type=BTS&tri=capacity$/,
+  );
+  await expect(
+    page.getByRole("textbox", { name: "Rechercher dans la carte" }),
+  ).toHaveValue("BTS");
+  await views.getByRole("link", { name: "Liste", exact: true }).click();
+  await expect(page).toHaveURL(
+    /\/formations\?campagne=2025&q=BTS&type=BTS&tri=capacite$/,
+  );
+  await page.getByRole("button", { name: "Périmètre des formations" }).click();
+  await page
+    .getByRole("option", { name: "Apprentissage", exact: true })
+    .click();
+  await expect(page).toHaveURL(/\/apprentissage\?q=BTS&vue=liste$/);
+  await expect(page.locator(".leaflet-container")).toHaveCount(0);
+  await expect(
+    page.getByRole("link", {
+      name: "BTS - Informatique en apprentissage",
+      exact: true,
+    }),
+  ).toBeVisible();
+  const locate = page.getByRole("button", {
+    name: "Localiser BTS - Informatique en apprentissage",
+    exact: true,
+  });
+  await expect(locate).toHaveCount(0);
+  await views.getByRole("link", { name: "Carte", exact: true }).click();
+  await expect(page.locator(".leaflet-container canvas")).toBeVisible();
+  await expect(locate).toBeVisible();
+  await locate.click();
+  const release = new URL(page.url()).searchParams.get("version");
+  expect(release).toBeTruthy();
+  await views.getByRole("link", { name: "Liste", exact: true }).click();
+  await expect(page).toHaveURL(/vue=liste/);
+  await expect(page.locator(".leaflet-container")).toHaveCount(0);
+  expect(new URL(page.url()).searchParams.get("version")).toBe(release);
+  await expect(locate).toHaveCount(0);
+  await page.reload();
+  await expect(page.locator(".leaflet-container")).toHaveCount(0);
+  await expect(locate).toHaveCount(0);
+  await expect(
+    page.getByRole("textbox", { name: "Rechercher dans la carte" }),
+  ).toHaveValue("BTS");
+});
+
+test("legacy APB map links retain their filters under methodology", async ({
+  page,
+}) => {
+  await page.goto("/carte?famille=apb&campagne=2017&q=BTS");
+  await expect(page).toHaveURL(/\/archives\?famille=apb&campagne=2017&q=BTS$/);
+  await expect(
+    page.getByRole("navigation", { name: "Dans Données & méthode" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("textbox", { name: "Rechercher dans la carte" }),
+  ).toHaveValue("BTS");
 });

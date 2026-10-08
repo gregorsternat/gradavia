@@ -1,7 +1,8 @@
 "use client";
 
+import { FormationNavigation } from "@/features/navigation/ui/formation-navigation";
 import { useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight, MapPin, SlidersHorizontal, Search, X } from "lucide-react";
 import { Button, ButtonLink } from "@/components/motion/button/base";
@@ -57,6 +58,7 @@ function ReadyExplorer({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const showMap = data.family !== "apb" && searchParams.get("vue") !== "liste";
   const query = useMemo(
     () =>
       searchParams
@@ -88,13 +90,13 @@ function ReadyExplorer({
   const visible = useMemo(
     () =>
       sortItems(
-        visibleOnly && bounds
+        showMap && visibleOnly && bounds
           ? filterItems(filtered, { ...query, reference: "" }, center, bounds)
           : filtered,
         query,
         center,
       ),
-    [filtered, query, visibleOnly, bounds, center],
+    [filtered, query, showMap, visibleOnly, bounds, center],
   );
   const plotted = filtered.filter(hasCoordinates).length;
   const selected = data.items.find((row) => row.id === selectedId);
@@ -107,7 +109,8 @@ function ReadyExplorer({
     window.history.replaceState(
       null,
       "",
-      explorationUrl(data, next, window.location.pathname),
+      explorationUrl(data, next, window.location.pathname) +
+        (searchParams.get("vue") === "liste" ? "&vue=liste" : ""),
     );
   };
   const facet = (key: "type" | "region" | "status") =>
@@ -193,7 +196,12 @@ function ReadyExplorer({
           </ButtonLink>
         </div>
       </div>
-      <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_160px_180px]">
+      <FormationNavigation
+        campaign={data.source.campaign}
+        family={data.family}
+        release={data.source.releaseId}
+      />
+      <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_180px]">
         <Input
           aria-label="Rechercher dans la carte"
           placeholder="Formation, établissement, ville…"
@@ -206,20 +214,13 @@ function ReadyExplorer({
           label="Campagne de la carte"
           value={String(data.source.campaign)}
           onChange={(campagne) =>
-            router.push(`/carte?famille=${data.family}&campagne=${campagne}`)
+            router.push(
+              `${data.family === "apb" ? "/archives" : data.family === "apprentissage" ? "/apprentissage" : "/carte"}?campagne=${campagne}${searchParams.get("vue") === "liste" ? "&vue=liste" : ""}`,
+            )
           }
           options={data.campaigns.map((year) => ({
             value: String(year),
             label: `Campagne ${year}`,
-          }))}
-        />
-        <SelectField
-          label="Périmètre des formations"
-          value={data.family}
-          onChange={(famille) => router.push(`/carte?famille=${famille}`)}
-          options={Object.entries(familyLabels).map(([value, label]) => ({
-            value,
-            label,
           }))}
         />
       </div>
@@ -498,9 +499,9 @@ function ReadyExplorer({
         </details>
       )}
       <div
-        className={`grid items-start gap-5 ${data.family !== "apb" ? "xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,1fr)]" : ""}`}
+        className={`grid items-start gap-5 ${showMap ? "xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,1fr)]" : ""}`}
       >
-        {data.family !== "apb" && (
+        {showMap && (
           <section className="min-w-0 xl:sticky xl:top-20">
             <FormationMap
               items={filtered}
@@ -540,7 +541,7 @@ function ReadyExplorer({
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-sm font-medium">
               {formatCount(visible.length)} résultats
-              {visibleOnly ? " dans la zone" : ""}
+              {showMap && visibleOnly ? " dans la zone" : ""}
             </h2>
             <SelectField
               label="Ordre des résultats de la carte"
@@ -573,7 +574,7 @@ function ReadyExplorer({
                   >
                     {row.title}
                   </Link>
-                  {hasCoordinates(row) && (
+                  {showMap && hasCoordinates(row) && (
                     <Button
                       variant="ghost"
                       size="icon"
@@ -649,6 +650,14 @@ export function AtlasExplorer({
   result: AtlasResult;
   initialQuery: ExplorationQuery;
 }) {
+  const pathname = usePathname();
+  const search = useSearchParams();
+  const family =
+    pathname === "/archives"
+      ? "apb"
+      : pathname === "/apprentissage"
+        ? "apprentissage"
+        : (search.get("famille") ?? "parcoursup");
   if (result.status === "ready")
     return (
       <ReadyExplorer
@@ -659,6 +668,7 @@ export function AtlasExplorer({
     );
   return (
     <main id="contenu" className="py-12">
+      <FormationNavigation family={family} />
       <h1 className="text-2xl font-semibold">
         {result.status === "not-found"
           ? "Cette version n’est pas disponible."

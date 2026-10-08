@@ -10,6 +10,9 @@ No active execution plan.
 
 ## Completed
 
+- [Navigation simplification](completed/navigation-simplification.md): five primary
+  destinations, secondary navigation and compatible List/Map context.
+
 - [Current project documentation](completed/documentation-refresh.md): current
   context, on-demand product direction, guardrail inventory and archived evidence.
 

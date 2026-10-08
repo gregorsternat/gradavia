@@ -247,3 +247,24 @@ discovery independent of virtualized tables and browser JavaScript. Exclude
 arbitrary filtered states and local preparation tools from indexing, while keeping
 robots access available for crawlers to observe that policy. Sitemap publication,
 Google indexing and ranking changes are distinct states; see [search discovery](seo.md).
+
+## 020 — Group navigation by user intention without merging data scopes
+
+Five primary destinations organize search, specialty exploration, comparison,
+local preparation and statistical analysis. Existing route URLs remain usable;
+secondary links and the command palette retain every tool. Mon projet reuses the
+favorites/list workspace and budget without adding a project entity or account.
+Observatoire uses a section selector to avoid stacking navigation tabs over the
+workshop's visualization tabs. Sources, definitions, exports and APB archives
+belong to the utility group.
+
+List/Map are representations; apprenticeship is a source scope. Regular search
+and atlas readers keep their separate contracts: transfer only shared filters
+and equivalent sort keys, disclose dropped constraints and the latest-release
+boundary. Apprenticeship List/Map retain a single atlas version and criteria.
+Changing source scope resets campaign, taxonomy and release, keeping only search
+text. Geographic formation search and territorial aggregate statistics remain
+separate tasks. No metric definition, persistence schema or API contract changes. Secondary and
+representation links disable automatic prefetching, avoiding background snapshot
+loads and prefetching the active search URL; production browser tests cover
+campaign metadata updates as well as the visible results.
