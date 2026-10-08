@@ -3,7 +3,7 @@
 import { useRef, useState, type ReactNode } from "react";
 import { motion, useInView } from "motion/react";
 import { ArrowRight, Search } from "lucide-react";
-import Link from "next/link";
+import Link from "@/features/workspace/ui/navigation";
 import { Button } from "@/components/motion/button/base";
 import { Input } from "@/components/motion/input";
 import { BouncyAccordion } from "@/components/motion/bouncy-accordion";

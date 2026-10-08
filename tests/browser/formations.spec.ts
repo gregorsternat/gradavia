@@ -104,7 +104,7 @@ test("pending searches and sorting retain criteria when the view is changed imme
   const sortGate = new Promise<void>((resolve) => {
     releaseSort = resolve;
   });
-  await page.route("**/formations?**", async (route) => {
+  await page.route("**/api/workspace/formations?**", async (route) => {
     const params = new URL(route.request().url()).searchParams;
     if (params.get("q") === "ecole etampes")
       await (params.get("tri") === "capacite" ? sortGate : searchGate);
@@ -113,7 +113,10 @@ test("pending searches and sorting retain criteria when the view is changed imme
   try {
     await page.getByRole("searchbox").fill("ecole etampes");
     await page.getByRole("button", { name: "Rechercher", exact: true }).click();
-    await expect(page.getByRole("main")).toHaveAttribute("aria-busy", "true");
+    await expect(page.locator("#formations-contenu")).toHaveAttribute(
+      "aria-busy",
+      "true",
+    );
     await expect(page.getByRole("tab", { name: "Vue cartes" })).toBeDisabled();
     await expect(
       page.getByRole("button", { name: "Trier les formations" }),
@@ -126,7 +129,10 @@ test("pending searches and sorting retain criteria when the view is changed imme
     expect(new URL(page.url()).searchParams.get("q")).toBe("ecole etampes");
 
     await selectOption(page, "Trier les formations", "Places · Décroissant");
-    await expect(page.getByRole("main")).toHaveAttribute("aria-busy", "true");
+    await expect(page.locator("#formations-contenu")).toHaveAttribute(
+      "aria-busy",
+      "true",
+    );
     await expect(page.getByRole("tab", { name: "Vue liste" })).toBeDisabled();
     const changeToList = page.getByRole("tab", { name: "Vue liste" }).click();
     releaseSort();

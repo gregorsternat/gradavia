@@ -1,5 +1,6 @@
 "use client";
-import Link from "next/link";
+import { PanelMain } from "@/features/workspace/ui/navigation";
+import Link from "@/features/workspace/ui/navigation";
 import {
   ArrowUpRight,
   Database,
@@ -75,7 +76,7 @@ const definitions = [
 ];
 export function Sources({ result }: { result: SourcesResult }) {
   return (
-    <main id="contenu" tabIndex={-1} className="py-6 sm:py-8">
+    <PanelMain id="contenu" tabIndex={-1} className="py-6 sm:py-8">
       <div className="mb-9">
         <h1 className="page-title">Données & méthode</h1>
         <p className="page-subtitle">
@@ -271,6 +272,6 @@ export function Sources({ result }: { result: SourcesResult }) {
           </Link>
         </div>
       </section>
-    </main>
+    </PanelMain>
   );
 }

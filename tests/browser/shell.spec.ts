@@ -102,7 +102,7 @@ test("command palette searches pages and restores keyboard focus", async ({
   await input.fill("territoires");
   await expect(dialog.getByRole("option")).toHaveCount(1);
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/territoires$/);
+  await expect(page).toHaveURL(/\/observatoire\?onglet=territoires$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Territoires",
   );
@@ -386,8 +386,8 @@ test("five destinations retain tool access, active groups and keyboard navigatio
     primary.getByRole("link", { name: "Mon projet" }),
   ).toHaveAttribute("aria-current", "page");
   if (isMobile) await page.keyboard.press("Escape");
-  const project = page.getByRole("navigation", { name: "Dans Mon projet" });
-  await project.getByRole("link", { name: "Mes favoris" }).focus();
+  const project = page.getByRole("tablist", { name: "Dans Mon projet" });
+  await project.getByRole("tab", { name: "Favoris", exact: true }).focus();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/favoris$/);
   await expect(
@@ -397,19 +397,17 @@ test("five destinations retain tool access, active groups and keyboard navigatio
   const palette = page.getByRole("dialog", { name: "Recherche rapide" });
   await palette.getByRole("combobox").fill("Archives APB");
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/archives$/);
+  await expect(page).toHaveURL(/\/sources\?onglet=archives$/);
   await expect(
     page
-      .getByRole("navigation", { name: "Dans Données & méthode" })
-      .getByRole("link", { name: "Archives APB" }),
-  ).toHaveAttribute("aria-current", "page");
+      .getByRole("tablist", { name: "Dans Données & méthode" })
+      .getByRole("tab", { name: "Archives APB" }),
+  ).toHaveAttribute("aria-selected", "true");
   await page.goto("/analyses");
-  const section = page.getByRole("button", {
-    name: "Rubrique de l’observatoire",
-  });
-  await section.click();
-  await page.getByRole("option", { name: "À vous d’estimer" }).click();
-  await expect(page).toHaveURL(/\/decouvrir$/);
+  await page
+    .getByRole("tab", { name: "À vous d’estimer", exact: true })
+    .click();
+  await expect(page).toHaveURL(/\/observatoire\?onglet=decouvrir$/);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

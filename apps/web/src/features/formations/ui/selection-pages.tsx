@@ -1,8 +1,9 @@
 "use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 
 import { useEffect, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter } from "@/features/workspace/ui/navigation";
+import Link from "@/features/workspace/ui/navigation";
 import { ArrowRight, Bookmark, GitCompareArrows, Plus, X } from "lucide-react";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import { Table, type TableColumn } from "@/components/motion/table";
@@ -130,7 +131,7 @@ export function ComparisonPageView({
     [metricLabels[metric]]: observedMetric(detail.formation.metrics, metric),
   }));
   return (
-    <main id="contenu" className="min-w-0 flex-1 py-8" aria-busy={pending}>
+    <PanelMain id="contenu" className="min-w-0 flex-1 py-8" aria-busy={pending}>
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="mb-2 text-xs text-muted-foreground">Votre sélection</p>
@@ -366,7 +367,7 @@ export function ComparisonPageView({
           ) : null}
         </>
       )}
-    </main>
+    </PanelMain>
   );
 }
 

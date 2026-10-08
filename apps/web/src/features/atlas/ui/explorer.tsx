@@ -1,9 +1,13 @@
 "use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 
-import { FormationNavigation } from "@/features/navigation/ui/formation-navigation";
 import { useMemo, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
+import {
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "@/features/workspace/ui/navigation";
+import Link from "@/features/workspace/ui/navigation";
 import { ArrowRight, MapPin, SlidersHorizontal, Search, X } from "lucide-react";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import { Input } from "@/components/motion/input";
@@ -57,6 +61,7 @@ function ReadyExplorer({
   initialQuery: ExplorationQuery;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const showMap = data.family !== "apb" && searchParams.get("vue") !== "liste";
   const query = useMemo(
@@ -106,10 +111,10 @@ function ReadyExplorer({
     const next = { ...query, ...patch };
     if (patch.radius !== undefined) setRadiusInput(String(patch.radius));
     setLimit(20);
-    window.history.replaceState(
+    router.replaceState(
       null,
       "",
-      explorationUrl(data, next, window.location.pathname) +
+      explorationUrl(data, next, pathname) +
         (searchParams.get("vue") === "liste" ? "&vue=liste" : ""),
     );
   };
@@ -171,7 +176,7 @@ function ReadyExplorer({
     </fieldset>
   );
   return (
-    <main id="contenu" className="min-w-0 flex-1 py-8">
+    <PanelMain id="contenu" className="min-w-0 flex-1 py-8">
       <div className="mb-7 flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-[-0.045em]">
@@ -196,11 +201,6 @@ function ReadyExplorer({
           </ButtonLink>
         </div>
       </div>
-      <FormationNavigation
-        campaign={data.source.campaign}
-        family={data.family}
-        release={data.source.releaseId}
-      />
       <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_180px]">
         <Input
           aria-label="Rechercher dans la carte"
@@ -639,7 +639,7 @@ function ReadyExplorer({
       <div className="mt-8">
         <SourceDisclosure source={data.source} />
       </div>
-    </main>
+    </PanelMain>
   );
 }
 
@@ -667,8 +667,7 @@ export function AtlasExplorer({
       />
     );
   return (
-    <main id="contenu" className="py-12">
-      <FormationNavigation family={family} />
+    <PanelMain id="contenu" className="py-12">
       <h1 className="text-2xl font-semibold">
         {result.status === "not-found"
           ? "Cette version n’est pas disponible."
@@ -679,6 +678,6 @@ export function AtlasExplorer({
       <ButtonLink href="/carte" variant="secondary" className="mt-6">
         Revenir à la carte
       </ButtonLink>
-    </main>
+    </PanelMain>
   );
 }

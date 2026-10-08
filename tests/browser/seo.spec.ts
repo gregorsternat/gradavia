@@ -36,9 +36,13 @@ test("robots and all advertised sitemaps expose the complete published fixture c
       expect(seen.has(entry)).toBe(false);
       seen.add(entry);
     }
-    expect(urls.some((entry) => /favoris|comparer|localhost/.test(entry))).toBe(
-      false,
-    );
+    expect(
+      urls.some(
+        (entry) =>
+          /comparer|localhost/.test(entry) ||
+          entry === "https://gradavia.com/favoris",
+      ),
+    ).toBe(false);
   }
 });
 

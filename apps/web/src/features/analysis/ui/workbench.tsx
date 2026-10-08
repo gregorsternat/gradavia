@@ -1,8 +1,9 @@
 "use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 
 import { useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { useRouter, useSearchParams } from "@/features/workspace/ui/navigation";
+import Link from "@/features/workspace/ui/navigation";
 import {
   ArrowDownToLine,
   ArrowUpRight,
@@ -132,7 +133,7 @@ function recordHref(data: AtlasData, row: AtlasItem) {
 export function AnalysisWorkbench({ result }: { result: AtlasResult }) {
   if (result.status !== "ready")
     return (
-      <main id="contenu" tabIndex={-1} className="py-8">
+      <PanelMain id="contenu" tabIndex={-1} className="py-8">
         <h1 className="page-title">Atelier d’analyse</h1>
         <div className="panel mt-8 flex min-h-80 flex-col items-center justify-center gap-4 p-8 text-center">
           <Database className="size-8 text-muted-foreground" />
@@ -156,7 +157,7 @@ export function AnalysisWorkbench({ result }: { result: AtlasResult }) {
             ))}
           </div>
         </div>
-      </main>
+      </PanelMain>
     );
   return (
     <Workspace
@@ -235,7 +236,7 @@ function Workspace({ data }: { data: AtlasData }) {
       next.minimum = null;
       next.maximum = null;
     }
-    window.history.replaceState(null, "", analysisHref(next, data));
+    router.replaceState(null, "", analysisHref(next, data));
   };
   const sourceChange = (key: "famille" | "campagne", value: string) => {
     const params = new URLSearchParams({
@@ -356,7 +357,7 @@ function Workspace({ data }: { data: AtlasData }) {
     );
 
   return (
-    <main id="contenu" tabIndex={-1} className="min-w-0 py-8">
+    <PanelMain id="contenu" tabIndex={-1} className="min-w-0 py-8">
       <div className="flex flex-wrap items-start justify-between gap-5">
         <div>
           <h1 className="page-title">Atelier d’analyse</h1>
@@ -377,7 +378,7 @@ function Workspace({ data }: { data: AtlasData }) {
                 );
                 setCopyState("Lien copié, version de source incluse.");
               } catch {
-                window.history.replaceState(null, "", href);
+                router.replaceState(null, "", href);
                 setCopyState(
                   "Copiez l’adresse de cette page pour partager cette version.",
                 );
@@ -1113,7 +1114,7 @@ function Workspace({ data }: { data: AtlasData }) {
           },
         ]}
       />
-    </main>
+    </PanelMain>
   );
 }
 function EmptyMetric() {

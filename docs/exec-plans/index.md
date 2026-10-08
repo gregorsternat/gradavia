@@ -6,7 +6,8 @@ Keep brief work brief; use a plan when several boundaries change together.
 
 ## Active
 
-No active execution plan.
+- [Persistent workspace tabs](active/persistent-workspaces.md): preserve tool state
+  and load panels on demand within each primary destination.
 
 ## Completed
 

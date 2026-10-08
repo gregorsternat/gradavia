@@ -1,5 +1,16 @@
 # Third-party source components
 
+## GitHub repository mark (2026-10-08)
+
+Source: Primer Octicons
+[`mark-github-16.svg`](https://github.com/primer/octicons/blob/97825f832c98f817867f770d084c08e3edc6f78c/icons/mark-github-16.svg).
+License: [MIT](licenses/octicons.txt).
+
+The path is copied unchanged into `apps/web/src/components/github-link.tsx`.
+Local integration uses an 18px decorative SVG with `currentColor`, a shared beUI
+icon link, a French accessible name and native tooltip, and a new-tab repository
+destination. No icon package or runtime dependency is added.
+
 ## beUI
 
 Source: [beUI](https://beui.dev/) and

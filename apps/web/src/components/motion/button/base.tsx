@@ -13,6 +13,7 @@ import {
 } from "react";
 import { EASE_OUT, SPRING_PRESS } from "@/lib/ease";
 import { useHoverCapable } from "@/lib/hooks/use-hover-capable";
+import { canonicalHref } from "@/features/workspace/domain/registry";
 import { cn } from "@/lib/utils";
 
 export type ButtonVariant = "primary" | "secondary" | "ghost" | "outline";
@@ -180,6 +181,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
           className,
         )}
         {...rest}
+        href={rest.href ? canonicalHref(rest.href) : undefined}
       >
         {children}
       </motion.a>

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/features/workspace/ui/navigation";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { SelectField } from "@/features/formations/ui/shared";
 import { navigationGroup } from "../domain/navigation";

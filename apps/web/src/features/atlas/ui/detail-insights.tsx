@@ -1,9 +1,10 @@
 "use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 
 import { Breadcrumbs } from "@/features/seo/ui/breadcrumbs";
 import { detailBreadcrumbs } from "@/features/seo/domain/structured-data";
 
-import Link from "next/link";
+import Link from "@/features/workspace/ui/navigation";
 import { useState } from "react";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
 import { Table, type TableColumn } from "@/components/motion/table";
@@ -380,7 +381,7 @@ export function AtlasDetailView({
   peers?: Peers;
 }) {
   return (
-    <main id="contenu" className="py-8">
+    <PanelMain id="contenu" className="py-8">
       <Breadcrumbs
         items={detailBreadcrumbs(detail.item, detail.source, detail.family)}
       />
@@ -432,6 +433,6 @@ export function AtlasDetailView({
       <div className="mt-7">
         <SourceDisclosure source={detail.source} />
       </div>
-    </main>
+    </PanelMain>
   );
 }

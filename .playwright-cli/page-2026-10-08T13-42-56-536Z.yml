@@ -1,0 +1,488 @@
+- generic [active] [ref=e1]:
+  - link "Aller au contenu" [ref=e2] [cursor=pointer]:
+    - /url: "#contenu"
+  - generic [ref=e3]:
+    - complementary "Navigation principale" [ref=e4]:
+      - generic [ref=e5]:
+        - link "Gradavia, accueil" [ref=e8] [cursor=pointer]:
+          - /url: /
+          - text: gradavia
+        - generic [ref=e11]:
+          - button "Ouvrir la recherche rapide" [ref=e12] [cursor=pointer]:
+            - generic [ref=e16]: Recherche rapide
+            - generic [ref=e17]: ⌘ K
+          - navigation "Explorer Gradavia" [ref=e18]:
+            - paragraph [ref=e19]: Explorer
+            - list [ref=e20]:
+              - listitem [ref=e21]:
+                - link "Formations" [ref=e23] [cursor=pointer]:
+                  - /url: /formations
+              - listitem [ref=e30]:
+                - link "Spécialités du bac" [ref=e32] [cursor=pointer]:
+                  - /url: /specialites
+              - listitem [ref=e38]:
+                - link "Comparer" [ref=e40] [cursor=pointer]:
+                  - /url: /comparer
+              - listitem [ref=e50]:
+                - link "Mon projet" [ref=e52] [cursor=pointer]:
+                  - /url: /favoris
+              - listitem [ref=e57]:
+                - link "Observatoire" [ref=e59] [cursor=pointer]:
+                  - /url: /observatoire
+        - generic [ref=e64]:
+          - list [ref=e65]:
+            - listitem [ref=e66]:
+              - link "Données & méthode" [ref=e68] [cursor=pointer]:
+                - /url: /sources
+          - generic [ref=e75]:
+            - link "Code source sur GitHub (nouvel onglet)" [ref=e76] [cursor=pointer]:
+              - /url: https://github.com/gregorsternat/gradavia
+            - radiogroup "Apparence" [ref=e79]:
+              - radio "Système" [checked] [ref=e81] [cursor=pointer]
+              - radio "Clair" [ref=e86] [cursor=pointer]
+              - radio "Sombre" [ref=e94] [cursor=pointer]
+    - generic [ref=e97]:
+      - banner [ref=e98]:
+        - generic [ref=e99]:
+          - button "Afficher ou masquer la navigation" [disabled] [expanded] [ref=e100]
+          - generic [ref=e103]: Gradavia
+          - generic [aria-hidden] [ref=e104]: /
+          - generic [ref=e105]: Carte
+      - main [ref=e107]:
+        - generic [ref=e109]:
+          - button "Périmètre des formations" [ref=e110] [cursor=pointer]
+          - listbox [aria-hidden]:
+            - generic:
+              - option [selected]: Hors apprentissage
+              - option: Apprentissage
+        - generic [ref=e115]:
+          - tablist "Dans Formations" [ref=e118]:
+            - tab "Liste" [disabled] [ref=e120] [cursor=pointer]:
+              - text: Liste
+              - generic [aria-hidden]: Liste
+            - tab "Carte" [disabled] [selected] [ref=e123] [cursor=pointer]:
+              - text: Carte
+              - generic [aria-hidden]: Carte
+          - paragraph [ref=e124]: Les critères communs suivent le changement de vue. Les critères propres à chaque vue sont conservés et restent inactifs dans l’autre vue. La liste hors apprentissage utilise la dernière publication ; une version archivée de la carte reste propre à la carte.
+          - tabpanel "Carte" [ref=e125]:
+            - generic [ref=e127]:
+              - generic [ref=e128]:
+                - generic [ref=e129]:
+                  - heading "Explorer la carte" [level=1] [ref=e130]
+                  - paragraph [ref=e131]: Parcoursup · Campagne 2025
+                - generic [ref=e132]:
+                  - button "Partager" [ref=e134] [cursor=pointer]
+                  - link "Analyser" [ref=e138] [cursor=pointer]:
+                    - /url: /observatoire?famille=parcoursup&campagne=2025&version=7d6db84d-4b16-48ea-90e2-d7bb64e5437e&onglet=analyses
+              - generic [ref=e141]:
+                - textbox "Rechercher dans la carte" [ref=e144]:
+                  - /placeholder: Formation, établissement, ville…
+                - generic [ref=e145]:
+                  - button "Campagne de la carte" [ref=e146] [cursor=pointer]
+                  - listbox [aria-hidden]:
+                    - generic:
+                      - option [selected]: Campagne 2025
+                      - option: Campagne 2024
+                      - option: Campagne 2023
+                      - option: Campagne 2022
+                      - option: Campagne 2021
+                      - option: Campagne 2020
+                      - option: Campagne 2019
+                      - option: Campagne 2018
+              - generic [ref=e151]:
+                - generic [ref=e152]:
+                  - button "Domaine d’intérêt" [ref=e153] [cursor=pointer]
+                  - listbox [aria-hidden]:
+                    - generic:
+                      - option [selected]: Tous les centres d’intérêt
+                      - option: Informatique et numérique
+                      - option: Environnement et vivant
+                      - option: Santé et accompagnement
+                      - option: Arts et création
+                      - option: Sciences et recherche
+                      - option: Industrie et construction
+                      - option: Société et échanges
+                - generic [ref=e158]:
+                  - button "Type dans la carte" [ref=e159] [cursor=pointer]
+                  - listbox [aria-hidden]:
+                    - generic:
+                      - option [selected]: Tous les types
+                      - option: Autre formation
+                      - option: BTS
+                      - option: Licence
+                - generic [ref=e164]:
+                  - button "Région dans la carte" [ref=e165] [cursor=pointer]
+                  - listbox [aria-hidden]:
+                    - generic:
+                      - option [selected]: Toutes les régions
+                      - option: Auvergne-Rhône-Alpes
+                      - option: Ile-de-France
+              - generic [ref=e172]:
+                - button "Proximité et critères" [ref=e173] [cursor=pointer]
+                - generic [ref=e182]:
+                  - generic [ref=e183]:
+                    - generic [ref=e184]:
+                      - paragraph [ref=e185]: Autour d’une ville
+                      - generic [ref=e186]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - combobox [disabled]
+                    - generic [ref=e187]:
+                      - generic [ref=e188]:
+                        - generic [aria-hidden]:
+                          - generic: Rayon
+                          - generic: 50 km
+                        - slider [ref=e189] [cursor=pointer]
+                      - spinbutton [ref=e192]: "50"
+                  - paragraph [ref=e193]: Distance à vol d’oiseau depuis un établissement repère publié dans la ville, sans estimation du temps de trajet.
+                  - generic [ref=e194]:
+                    - group [ref=e195]:
+                      - generic [ref=e196]: Places
+                      - generic [ref=e197]:
+                        - spinbutton [ref=e200]
+                        - spinbutton [ref=e203]
+                    - group [ref=e204]:
+                      - generic [ref=e205]: Taux d’accès (%)
+                      - generic [ref=e206]:
+                        - spinbutton [ref=e209]
+                        - spinbutton [ref=e212]
+                    - group [ref=e213]:
+                      - generic [ref=e214]: Candidatures
+                      - generic [ref=e215]:
+                        - spinbutton [ref=e218]
+                        - spinbutton [ref=e221]
+                  - generic [ref=e222]:
+                    - button [ref=e223] [cursor=pointer]:
+                      - generic [ref=e224]: Statut dans la carte
+                    - listbox [aria-hidden]:
+                      - generic:
+                        - option [selected]: Tous les statuts
+                        - option: Privé sous contrat d'association
+                        - option: Public
+                  - generic [ref=e228]:
+                    - generic:
+                      - generic [aria-hidden]:
+                        - generic: Proximité
+                        - generic: "0"
+                      - slider [disabled]
+                    - generic [ref=e229]:
+                      - generic [aria-hidden]:
+                        - generic: Petites promotions
+                        - generic: "0"
+                      - slider [ref=e230] [cursor=pointer]
+                  - paragraph [ref=e231]: Le tri personnel favorise une distance et une capacité plus faibles selon vos poids. Une valeur non publiée ne reçoit aucun point. Ce tri ne mesure ni la qualité ni les chances d’admission.
+                  - button [ref=e232] [cursor=pointer]: Réinitialiser les critères
+              - status [ref=e234]:
+                - strong [ref=e235]: 31 formations
+                - text: 6 537 places publiées · 30/31 lignes
+              - group [ref=e236]:
+                - generic "Périmètre et limites" [ref=e237] [cursor=pointer]
+              - generic [ref=e238]:
+                - generic [ref=e239]:
+                  - generic [ref=e240]:
+                    - region "Carte des formations. Flèches pour déplacer, plus et moins pour zoomer. Les mêmes formations sont accessibles dans la liste." [ref=e241]
+                    - status [ref=e242]: Chargement de la carte…
+                  - generic [ref=e243]:
+                    - paragraph [ref=e244]: 31 localisées · 0 sans coordonnées
+                    - generic [ref=e245] [cursor=pointer]:
+                      - checkbox "Limiter la liste à la zone visible" [ref=e246]
+                      - generic [ref=e247]: Limiter la liste à la zone visible
+                - region "Formations de la carte" [ref=e248]:
+                  - generic [ref=e249]:
+                    - heading "31 résultats" [level=2] [ref=e250]
+                    - generic [ref=e251]:
+                      - button "Ordre des résultats de la carte" [ref=e252] [cursor=pointer]
+                      - listbox [aria-hidden]:
+                        - generic:
+                          - option [selected]: Intitulé
+                          - option: Plus de places
+                          - option: Plus de candidatures
+                          - option: Mes priorités
+                  - generic [ref=e257]:
+                    - article [ref=e258]:
+                      - generic [ref=e259]:
+                        - link "Autre formation - 100%_réussite!" [ref=e260] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A31
+                        - button "Localiser Autre formation - 100%_réussite!" [ref=e261] [cursor=pointer]
+                      - paragraph [ref=e265]: Université de démonstration
+                      - paragraph [ref=e266]: Lyon
+                      - generic [ref=e267]:
+                        - paragraph [ref=e268]:
+                          - text: Places non publiées
+                          - generic [ref=e269]: Accès 42,5 %
+                        - generic [ref=e270]:
+                          - 'button "Ajouter aux favoris : Autre formation - 100%_réussite!" [ref=e272] [cursor=pointer]'
+                          - 'button "Comparer : Autre formation - 100%_réussite!" [ref=e276] [cursor=pointer]'
+                    - article [ref=e284]:
+                      - generic [ref=e285]:
+                        - link "BTS - Systèmes numériques" [ref=e286] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A30
+                        - button "Localiser BTS - Systèmes numériques" [ref=e287] [cursor=pointer]
+                      - paragraph [ref=e291]: Université de démonstration
+                      - paragraph [ref=e292]: Lyon
+                      - generic [ref=e293]:
+                        - paragraph [ref=e294]:
+                          - text: 32 places
+                          - generic [ref=e295]: Accès 65,7 %
+                        - generic [ref=e296]:
+                          - 'button "Ajouter aux favoris : BTS - Systèmes numériques" [ref=e298] [cursor=pointer]'
+                          - 'button "Comparer : BTS - Systèmes numériques" [ref=e302] [cursor=pointer]'
+                    - article [ref=e310]:
+                      - generic [ref=e311]:
+                        - link "Licence - Droit 01" [ref=e312] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A1
+                        - button "Localiser Licence - Droit 01" [ref=e313] [cursor=pointer]
+                      - paragraph [ref=e317]: Université de démonstration
+                      - paragraph [ref=e318]: Lyon
+                      - generic [ref=e319]:
+                        - paragraph [ref=e320]:
+                          - text: 170 places
+                          - generic [ref=e321]: Accès 42,5 %
+                        - generic [ref=e322]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 01" [ref=e324] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 01" [ref=e328] [cursor=pointer]'
+                    - article [ref=e336]:
+                      - generic [ref=e337]:
+                        - link "Licence - Droit 02" [ref=e338] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A2
+                        - button "Localiser Licence - Droit 02" [ref=e339] [cursor=pointer]
+                      - paragraph [ref=e343]: Université de démonstration
+                      - paragraph [ref=e344]: Lyon
+                      - generic [ref=e345]:
+                        - paragraph [ref=e346]:
+                          - text: 175 places
+                          - generic [ref=e347]: Accès 43,5 %
+                        - generic [ref=e348]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 02" [ref=e350] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 02" [ref=e354] [cursor=pointer]'
+                    - article [ref=e362]:
+                      - generic [ref=e363]:
+                        - link "Licence - Droit 03" [ref=e364] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A3
+                        - button "Localiser Licence - Droit 03" [ref=e365] [cursor=pointer]
+                      - paragraph [ref=e369]: Université de démonstration
+                      - paragraph [ref=e370]: Lyon
+                      - generic [ref=e371]:
+                        - paragraph [ref=e372]: 180 places
+                        - generic [ref=e373]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 03" [ref=e375] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 03" [ref=e379] [cursor=pointer]'
+                    - article [ref=e387]:
+                      - generic [ref=e388]:
+                        - link "Licence - Droit 04" [ref=e389] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A4
+                        - button "Localiser Licence - Droit 04" [ref=e390] [cursor=pointer]
+                      - paragraph [ref=e394]: Université de démonstration
+                      - paragraph [ref=e395]: Lyon
+                      - generic [ref=e396]:
+                        - paragraph [ref=e397]: 185 places
+                        - generic [ref=e398]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 04" [ref=e400] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 04" [ref=e404] [cursor=pointer]'
+                    - article [ref=e412]:
+                      - generic [ref=e413]:
+                        - link "Licence - Droit 05" [ref=e414] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A5
+                        - button "Localiser Licence - Droit 05" [ref=e415] [cursor=pointer]
+                      - paragraph [ref=e419]: Université de démonstration
+                      - paragraph [ref=e420]: Lyon
+                      - generic [ref=e421]:
+                        - paragraph [ref=e422]:
+                          - text: 190 places
+                          - generic [ref=e423]: Accès 46,5 %
+                        - generic [ref=e424]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 05" [ref=e426] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 05" [ref=e430] [cursor=pointer]'
+                    - article [ref=e438]:
+                      - generic [ref=e439]:
+                        - link "Licence - Droit 06" [ref=e440] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A6
+                        - button "Localiser Licence - Droit 06" [ref=e441] [cursor=pointer]
+                      - paragraph [ref=e445]: Université de démonstration
+                      - paragraph [ref=e446]: Lyon
+                      - generic [ref=e447]:
+                        - paragraph [ref=e448]:
+                          - text: 195 places
+                          - generic [ref=e449]: Accès 47,5 %
+                        - generic [ref=e450]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 06" [ref=e452] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 06" [ref=e456] [cursor=pointer]'
+                    - article [ref=e464]:
+                      - generic [ref=e465]:
+                        - link "Licence - Droit 07" [ref=e466] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A7
+                        - button "Localiser Licence - Droit 07" [ref=e467] [cursor=pointer]
+                      - paragraph [ref=e471]: Université de démonstration
+                      - paragraph [ref=e472]: Lyon
+                      - generic [ref=e473]:
+                        - paragraph [ref=e474]:
+                          - text: 200 places
+                          - generic [ref=e475]: Accès 48,5 %
+                        - generic [ref=e476]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 07" [ref=e478] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 07" [ref=e482] [cursor=pointer]'
+                    - article [ref=e490]:
+                      - generic [ref=e491]:
+                        - link "Licence - Droit 08" [ref=e492] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A8
+                        - button "Localiser Licence - Droit 08" [ref=e493] [cursor=pointer]
+                      - paragraph [ref=e497]: Université de démonstration
+                      - paragraph [ref=e498]: Lyon
+                      - generic [ref=e499]:
+                        - paragraph [ref=e500]:
+                          - text: 205 places
+                          - generic [ref=e501]: Accès 49,5 %
+                        - generic [ref=e502]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 08" [ref=e504] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 08" [ref=e508] [cursor=pointer]'
+                    - article [ref=e516]:
+                      - generic [ref=e517]:
+                        - link "Licence - Droit 09" [ref=e518] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A9
+                        - button "Localiser Licence - Droit 09" [ref=e519] [cursor=pointer]
+                      - paragraph [ref=e523]: Université de démonstration
+                      - paragraph [ref=e524]: Lyon
+                      - generic [ref=e525]:
+                        - paragraph [ref=e526]:
+                          - text: 210 places
+                          - generic [ref=e527]: Accès 50,5 %
+                        - generic [ref=e528]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 09" [ref=e530] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 09" [ref=e534] [cursor=pointer]'
+                    - article [ref=e542]:
+                      - generic [ref=e543]:
+                        - link "Licence - Droit 10" [ref=e544] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A10
+                        - button "Localiser Licence - Droit 10" [ref=e545] [cursor=pointer]
+                      - paragraph [ref=e549]: Université de démonstration
+                      - paragraph [ref=e550]: Lyon
+                      - generic [ref=e551]:
+                        - paragraph [ref=e552]:
+                          - text: 215 places
+                          - generic [ref=e553]: Accès 51,5 %
+                        - generic [ref=e554]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 10" [ref=e556] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 10" [ref=e560] [cursor=pointer]'
+                    - article [ref=e568]:
+                      - generic [ref=e569]:
+                        - link "Licence - Droit 11" [ref=e570] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A11
+                        - button "Localiser Licence - Droit 11" [ref=e571] [cursor=pointer]
+                      - paragraph [ref=e575]: Université de démonstration
+                      - paragraph [ref=e576]: Lyon
+                      - generic [ref=e577]:
+                        - paragraph [ref=e578]:
+                          - text: 220 places
+                          - generic [ref=e579]: Accès 52,5 %
+                        - generic [ref=e580]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 11" [ref=e582] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 11" [ref=e586] [cursor=pointer]'
+                    - article [ref=e594]:
+                      - generic [ref=e595]:
+                        - link "Licence - Droit 12" [ref=e596] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A12
+                        - button "Localiser Licence - Droit 12" [ref=e597] [cursor=pointer]
+                      - paragraph [ref=e601]: Université de démonstration
+                      - paragraph [ref=e602]: Lyon
+                      - generic [ref=e603]:
+                        - paragraph [ref=e604]:
+                          - text: 225 places
+                          - generic [ref=e605]: Accès 53,5 %
+                        - generic [ref=e606]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 12" [ref=e608] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 12" [ref=e612] [cursor=pointer]'
+                    - article [ref=e620]:
+                      - generic [ref=e621]:
+                        - link "Licence - Droit 13" [ref=e622] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A13
+                        - button "Localiser Licence - Droit 13" [ref=e623] [cursor=pointer]
+                      - paragraph [ref=e627]: Université de démonstration
+                      - paragraph [ref=e628]: Lyon
+                      - generic [ref=e629]:
+                        - paragraph [ref=e630]:
+                          - text: 230 places
+                          - generic [ref=e631]: Accès 54,5 %
+                        - generic [ref=e632]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 13" [ref=e634] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 13" [ref=e638] [cursor=pointer]'
+                    - article [ref=e646]:
+                      - generic [ref=e647]:
+                        - link "Licence - Droit 14" [ref=e648] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A14
+                        - button "Localiser Licence - Droit 14" [ref=e649] [cursor=pointer]
+                      - paragraph [ref=e653]: Université de démonstration
+                      - paragraph [ref=e654]: Lyon
+                      - generic [ref=e655]:
+                        - paragraph [ref=e656]:
+                          - text: 235 places
+                          - generic [ref=e657]: Accès 55,5 %
+                        - generic [ref=e658]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 14" [ref=e660] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 14" [ref=e664] [cursor=pointer]'
+                    - article [ref=e672]:
+                      - generic [ref=e673]:
+                        - link "Licence - Droit 15" [ref=e674] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A15
+                        - button "Localiser Licence - Droit 15" [ref=e675] [cursor=pointer]
+                      - paragraph [ref=e679]: Université de démonstration
+                      - paragraph [ref=e680]: Lyon
+                      - generic [ref=e681]:
+                        - paragraph [ref=e682]:
+                          - text: 240 places
+                          - generic [ref=e683]: Accès 56,5 %
+                        - generic [ref=e684]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 15" [ref=e686] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 15" [ref=e690] [cursor=pointer]'
+                    - article [ref=e698]:
+                      - generic [ref=e699]:
+                        - link "Licence - Droit 16" [ref=e700] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A16
+                        - button "Localiser Licence - Droit 16" [ref=e701] [cursor=pointer]
+                      - paragraph [ref=e705]: Université de démonstration
+                      - paragraph [ref=e706]: Lyon
+                      - generic [ref=e707]:
+                        - paragraph [ref=e708]:
+                          - text: 245 places
+                          - generic [ref=e709]: Accès 57,5 %
+                        - generic [ref=e710]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 16" [ref=e712] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 16" [ref=e716] [cursor=pointer]'
+                    - article [ref=e724]:
+                      - generic [ref=e725]:
+                        - link "Licence - Droit 17" [ref=e726] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A17
+                        - button "Localiser Licence - Droit 17" [ref=e727] [cursor=pointer]
+                      - paragraph [ref=e731]: Université de démonstration
+                      - paragraph [ref=e732]: Lyon
+                      - generic [ref=e733]:
+                        - paragraph [ref=e734]:
+                          - text: 250 places
+                          - generic [ref=e735]: Accès 58,5 %
+                        - generic [ref=e736]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 17" [ref=e738] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 17" [ref=e742] [cursor=pointer]'
+                    - article [ref=e750]:
+                      - generic [ref=e751]:
+                        - link "Licence - Droit 18" [ref=e752] [cursor=pointer]:
+                          - /url: /formations/7d6db84d-4b16-48ea-90e2-d7bb64e5437e%3A18
+                        - button "Localiser Licence - Droit 18" [ref=e753] [cursor=pointer]
+                      - paragraph [ref=e757]: Université de démonstration
+                      - paragraph [ref=e758]: Lyon
+                      - generic [ref=e759]:
+                        - paragraph [ref=e760]:
+                          - text: 255 places
+                          - generic [ref=e761]: Accès 59,5 %
+                        - generic [ref=e762]:
+                          - 'button "Ajouter aux favoris : Licence - Droit 18" [ref=e764] [cursor=pointer]'
+                          - 'button "Comparer : Licence - Droit 18" [ref=e768] [cursor=pointer]'
+                  - button "Afficher 20 formations de plus" [ref=e776] [cursor=pointer]
+              - generic [ref=e780]:
+                - button "Source et périmètre · Parcoursup 2025" [ref=e781] [cursor=pointer]
+                - generic [ref=e788]:
+                  - paragraph [ref=e789]: Producteur de démonstration · Hors apprentissage · Fixtures synthétiques
+                  - paragraph [ref=e790]: "Collecte du 3 oct. 2026. Mise à jour source : non renseignée."
+                  - paragraph [ref=e791]: Un enregistrement correspond à une formation, un établissement et une campagne. Les candidatures ne représentent pas des personnes uniques.
+                  - link [ref=e792] [cursor=pointer]:
+                    - /url: https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-parcoursup/
+                    - text: Consulter le jeu de données

@@ -1,4 +1,5 @@
 "use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 
 import { useState, useSyncExternalStore } from "react";
 import { Plus, Printer, Save, X } from "lucide-react";
@@ -62,7 +63,7 @@ export function BudgetCalculator() {
     totals: budgetTotals(scenario),
   }));
   return (
-    <main id="contenu" className="budget-print min-w-0 py-8">
+    <PanelMain id="contenu" className="budget-print min-w-0 py-8">
       <div className="mb-7 flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">
@@ -263,6 +264,6 @@ export function BudgetCalculator() {
         différer.
       </p>
       <style>{`@media print { body * { visibility: hidden; } .budget-print, .budget-print * { visibility: visible; } .budget-print { position: absolute; top: 0; left: 0; width: 100%; padding: 16px; } .budget-controls, .budget-controls * { display: none !important; } .budget-print section { break-inside: avoid; } }`}</style>
-    </main>
+    </PanelMain>
   );
 }

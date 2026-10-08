@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
+import Link from "@/features/workspace/ui/navigation";
 import { ArrowDownToLine, ArrowUpRight, Braces, FileCode2 } from "lucide-react";
 import { ButtonLink } from "@/components/motion/button/base";
 import type { SourcesResult } from "@/features/observatory/domain/overview";
@@ -28,7 +30,7 @@ const families = [
 ];
 export function DataAccess({ result }: { result: SourcesResult }) {
   return (
-    <main id="contenu" tabIndex={-1} className="py-6 sm:py-8">
+    <PanelMain id="contenu" tabIndex={-1} className="py-6 sm:py-8">
       <header className="mb-9">
         <h1 className="page-title">Réutiliser les données</h1>
         <p className="page-subtitle">
@@ -214,6 +216,6 @@ export function DataAccess({ result }: { result: SourcesResult }) {
           dépassée. Les réponses d’erreur ne sont pas mises en cache.
         </p>
       </section>
-    </main>
+    </PanelMain>
   );
 }

@@ -1,22 +1,13 @@
-import { pageMetadata } from "@/features/seo/domain/metadata";
 import type { SearchParams } from "@/features/formations/domain/explorer";
-import { parseSelectionIds } from "@/features/formations/domain/selection";
-import { loadFormationSelection } from "@/features/formations/server/load";
-import { ComparisonPageView } from "@/features/formations/ui/selection-pages";
+import {
+  WorkspacePage,
+  workspaceMetadata,
+} from "@/features/workspace/server/page";
 
-export const metadata = pageMetadata("/comparer");
-export default async function ComparisonPage({
-  searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) {
-  const params = await searchParams;
-  const ids = parseSelectionIds(params.ids);
-  return (
-    <ComparisonPageView
-      results={await loadFormationSelection(ids)}
-      ids={ids}
-      explicit={params.ids !== undefined}
-    />
-  );
+type Props = { searchParams: Promise<SearchParams> };
+export async function generateMetadata({ searchParams }: Props) {
+  return workspaceMetadata("/comparer", await searchParams);
+}
+export default async function Page({ searchParams }: Props) {
+  return <WorkspacePage path="/comparer" params={await searchParams} />;
 }

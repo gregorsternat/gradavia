@@ -1,4 +1,5 @@
 "use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight, RotateCcw } from "lucide-react";
@@ -26,7 +27,7 @@ export function Quiz({
   const question = questions[index];
   if (!question) return null;
   return (
-    <main id="contenu" tabIndex={-1} className="mx-auto max-w-4xl py-8">
+    <PanelMain id="contenu" tabIndex={-1} className="mx-auto max-w-4xl py-8">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="page-title">À votre avis ?</h1>
@@ -155,6 +156,6 @@ export function Quiz({
         <p>{source.license} · Une seule campagne, hors apprentissage.</p>
         <p className="break-all">Version {source.releaseId}</p>
       </footer>
-    </main>
+    </PanelMain>
   );
 }

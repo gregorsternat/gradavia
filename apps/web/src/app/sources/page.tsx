@@ -1,8 +1,13 @@
-import { pageMetadata } from "@/features/seo/domain/metadata";
-import { loadSources } from "@/features/observatory/server/load";
-import { Sources } from "@/features/observatory/ui/sources";
-export const metadata = pageMetadata("/sources");
-export const dynamic = "force-dynamic";
-export default async function Page() {
-  return <Sources result={await loadSources()} />;
+import type { SearchParams } from "@/features/formations/domain/explorer";
+import {
+  WorkspacePage,
+  workspaceMetadata,
+} from "@/features/workspace/server/page";
+
+type Props = { searchParams: Promise<SearchParams> };
+export async function generateMetadata({ searchParams }: Props) {
+  return workspaceMetadata("/sources", await searchParams);
+}
+export default async function Page({ searchParams }: Props) {
+  return <WorkspacePage path="/sources" params={await searchParams} />;
 }

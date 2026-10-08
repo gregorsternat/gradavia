@@ -1,4 +1,5 @@
 "use client";
+import { usePanelHash, PanelMain } from "@/features/workspace/ui/navigation";
 
 import {
   useEffect,
@@ -6,8 +7,8 @@ import {
   useSyncExternalStore,
   useTransition,
 } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter } from "@/features/workspace/ui/navigation";
+import Link from "@/features/workspace/ui/navigation";
 import {
   ArrowLeft,
   ArrowRight,
@@ -475,11 +476,13 @@ export function FavoritesWorkspace({
   const [includeNotes, setIncludeNotes] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
   const [shareLink, setShareLink] = useState("");
-  const hash = useSyncExternalStore(
+  const panelHash = usePanelHash();
+  const globalHash = useSyncExternalStore(
     subscribeHash,
     () => window.location.hash,
     () => "",
   );
+  const hash = panelHash ?? globalHash;
   const sharedContent = readSharedList(hash, ids);
   const sharedHydrated = useSyncExternalStore(
     emptySubscribe,
@@ -578,7 +581,7 @@ export function FavoritesWorkspace({
   const ready = shared || localIds === loadedIds;
   return (
     <>
-      <main
+      <PanelMain
         id="contenu"
         className="min-w-0 flex-1 py-8 print:hidden"
         aria-busy={pending}
@@ -960,7 +963,7 @@ export function FavoritesWorkspace({
           </>
         )}
         <ComparisonTray />
-      </main>
+      </PanelMain>
       <PrintDossier
         rows={rows}
         notes={notes}

@@ -25,6 +25,11 @@ sheet with an explicit close button. The Cmd/Ctrl+K palette, navigation and them
 selector use the same shared primitives. Formation search defaults to cards on
 mobile and a table on desktop; an explicit URL view overrides that default.
 
+A monochrome GitHub icon links to the project repository beside the appearance
+selector in the homepage footer and application sidebar footer. It stays available
+when the desktop sidebar collapses and inside the mobile navigation. Its accessible
+name and native tooltip identify the source code and announce a new tab.
+
 Primary navigation exposes Formations, Spécialités du bac, Comparer, Mon projet
 and Observatoire; Données & méthode remains in the footer. The palette indexes
 every existing tool under these same groups. Mes favoris remains the first

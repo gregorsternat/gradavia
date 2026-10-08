@@ -1,38 +1,13 @@
-import { explorerMetadata } from "@/features/seo/domain/metadata";
-import { loadExplorer } from "@/features/formations/server/load";
-import { FormationExplorer } from "@/features/formations/ui/explorer";
+import type { SearchParams } from "@/features/formations/domain/explorer";
 import {
-  explorerUrl,
-  parseQuery,
-  type SearchParams,
-} from "@/features/formations/domain/explorer";
+  WorkspacePage,
+  workspaceMetadata,
+} from "@/features/workspace/server/page";
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) {
-  return explorerMetadata(await loadExplorer(await searchParams));
+type Props = { searchParams: Promise<SearchParams> };
+export async function generateMetadata({ searchParams }: Props) {
+  return workspaceMetadata("/formations", await searchParams);
 }
-
-export default async function FormationsPage({
-  searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) {
-  const params = await searchParams;
-  const query = parseQuery(params);
-  return (
-    <FormationExplorer
-      result={await loadExplorer(params)}
-      retryUrl={explorerUrl(query, query.page)}
-      initialView={
-        params.vue === "cartes"
-          ? "cartes"
-          : params.vue === "liste"
-            ? "liste"
-            : undefined
-      }
-    />
-  );
+export default async function Page({ searchParams }: Props) {
+  return <WorkspacePage path="/formations" params={await searchParams} />;
 }

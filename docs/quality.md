@@ -98,6 +98,32 @@ including Ctrl+K and Escape. Evidence: `.artifacts/navigation-review/verify.log`
 and the follow-up section of the completed plan above. No live data audit or
 deployment was performed.
 
+## GitHub repository link validation (2026-10-08)
+
+On 2026-10-08 (Asia/Shanghai), `CI=true E2E_PORT=3542 mise exec -- just verify`
+completed successfully with the repository-link diff on base `d8acc7a`: formatting, lint, types,
+architecture/docs, Clippy, 115 TypeScript cases, Node/Rust suites, disposable
+PostgreSQL 18 contracts and credential-free builds. Chromium passed 137 development,
+135 production and six cases in each production data state (290 executions,
+eight intended exclusions). Unrelated workspace-navigation changes were introduced
+concurrently in this checkout after the checks/build began; this run does not
+establish validation of their latest state. An initial typecheck rejected a Lucide
+brand-icon import; the final implementation uses the source-owned Octicons SVG instead.
+The web TypeScript check was repeated after those concurrent edits and passed;
+evidence: `.artifacts/github-link/final-types.log`.
+
+Real-browser inspection covered the homepage footer and expanded/collapsed
+application sidebar at 1280×900, the mobile navigation at 390×844 and the homepage
+footer at 320×740, in light/dark themes. The repository link has visible keyboard
+focus, a French accessible name, a 40px target, the expected repository URL and
+`target="_blank"` with `noopener noreferrer`. The narrow homepage had no horizontal
+overflow. Evidence: `.artifacts/github-link/verify.log`, `desktop-page.jpg`,
+`desktop-footer.jpg` and `mobile-footer.jpg` in the same directory.
+
+The authenticated GitHub inspection found the destination private; the owner plans
+to make it public. Anonymous access and publication of this diff remain unverified.
+No deployment was performed.
+
 ## Reading and adding evidence
 
 - Keep this page a current summary. Put detailed investigations and historical
