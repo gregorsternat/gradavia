@@ -5,6 +5,7 @@ import { useReducedMotion } from "motion/react";
 import { useTheme } from "next-themes";
 import * as Leaflet from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { usePanelActive } from "@/features/workspace/ui/navigation";
 import { Button } from "@/components/motion/button/base";
 import type { AtlasItem } from "../domain/api-contract";
 import { hasCoordinates, type GeoBounds } from "../domain/exploration";
@@ -34,6 +35,13 @@ export function FormationMap({
   const [ready, setReady] = useState(0);
   const [failed, setFailed] = useState(false);
   const reduce = useReducedMotion();
+  const active = usePanelActive();
+  useEffect(() => {
+    const map = instance.current?.map;
+    if (!map) return;
+    if (active) map.invalidateSize({ animate: false });
+    else map.stop();
+  }, [active, ready]);
   const { resolvedTheme } = useTheme();
   useEffect(() => {
     handlers.current = { onSelect, onBounds };
@@ -77,9 +85,10 @@ export function FormationMap({
           });
         };
         map.on("moveend", update);
-        observer = new ResizeObserver(() =>
-          map.invalidateSize({ animate: false }),
-        );
+        observer = new ResizeObserver(() => {
+          if (element.current?.clientWidth && element.current.clientHeight)
+            map.invalidateSize({ animate: false });
+        });
         observer.observe(element.current);
         setReady((generation) => generation + 1);
         update();
@@ -144,13 +153,20 @@ export function FormationMap({
         { animate: false, padding: [24, 24], maxZoom: 13 },
       );
   }, [center, radius, ready]);
+  const selected = items.find(
+    (row) => row.id === selectedId && hasCoordinates(row),
+  );
+  const latitude = selected?.latitude;
+  const longitude = selected?.longitude;
   useEffect(() => {
-    const selected = items.find((row) => row.id === selectedId);
-    if (selected && hasCoordinates(selected) && instance.current)
-      instance.current.map.panTo([selected.latitude, selected.longitude], {
-        animate: !reduce,
-      });
-  }, [selectedId, items, reduce]);
+    if (
+      typeof latitude === "number" &&
+      typeof longitude === "number" &&
+      instance.current
+    )
+      instance.current.map.panTo([latitude, longitude], { animate: !reduce });
+    // Recreated item arrays on tab activation must not recenter a panned map.
+  }, [selectedId, latitude, longitude, ready, reduce]);
   return (
     <div className="relative isolate overflow-hidden rounded-xl border border-border bg-subtle">
       <div

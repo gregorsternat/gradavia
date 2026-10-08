@@ -2,6 +2,7 @@
 // beui.dev/components/motion/button
 
 import { AnimatePresence, type HTMLMotionProps, motion } from "motion/react";
+import { useClientReady } from "@/lib/hooks/use-client-ready";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import {
   forwardRef,
@@ -72,6 +73,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) {
+    const ready = useClientReady();
+    const disabled = rest.disabled || (!ready && Boolean(rest.onClick));
     const reduce = useReducedMotion();
     const canHover = useHoverCapable();
     const [ripples, setRipples] = useState<Ripple[]>([]);
@@ -102,8 +105,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <motion.button
         ref={ref}
         type="button"
-        tabIndex={rest.disabled ? -1 : 0}
-        whileTap={reduce || rest.disabled ? undefined : { scale: pressScale }}
+        tabIndex={disabled ? -1 : 0}
+        whileTap={reduce || disabled ? undefined : { scale: pressScale }}
         whileHover={reduce || !canHover ? undefined : { scale: 1.02 }}
         transition={SPRING_PRESS}
         onPointerDown={handlePointerDown}
@@ -117,6 +120,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           className,
         )}
         {...rest}
+        disabled={disabled}
       >
         {ripple ? (
           <span className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">

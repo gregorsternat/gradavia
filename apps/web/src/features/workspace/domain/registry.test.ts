@@ -71,4 +71,22 @@ describe("workspace navigation", () => {
     expect(next.get("departement")).toBe("Rhône");
     expect(panelHref("carte", map)).toContain("onglet=carte");
   });
+  it("preserves implicit default sorts and handles historical apprenticeship list links", () => {
+    expect(
+      representationParams("carte", "formations", query(), query("page=2")).get(
+        "page",
+      ),
+    ).toBe("2");
+    expect(
+      representationParams("formations", "carte", query("tri=toString")).has(
+        "tri",
+      ),
+    ).toBe(false);
+    expect(resourceKey("formations", query("tri=nom&page=1"))).toBe(
+      resourceKey("formations", query()),
+    );
+    expect(
+      canonicalHref("/carte?famille=apprentissage&vue=liste&version=old"),
+    ).toBe("/formations?famille=apprentissage&version=old");
+  });
 });

@@ -386,3 +386,16 @@ metadata when publication is available. Downloadable Python and R companions at
 check identity/missingness/coverage, calculate a covered capacity sum and save
 provenance with the JSON. Python uses only its standard library; R requires
 `jsonlite`. They perform no database access or arbitrary server-side queries.
+
+## Web workspace facade
+
+`GET /api/workspace/[panel]` is served by Next.js for the application's persistent
+panels. Panel IDs are allowlisted in `features/workspace/domain/registry.ts`;
+unknown IDs return 404 and query strings over 16 KiB return 400. Feature loaders
+apply their existing field, identity, campaign and result-size bounds. Responses
+use `private, no-store` and `X-Robots-Tag: noindex`; feature unavailable/empty/not-found
+states remain explicit. The browser receives feature projections only, never a
+Rust service credential, database connection or arbitrary upstream proxy.
+
+This UI contract is not a new public dataset API. `/api/v1/datasets` retains its
+existing export contract and limits.

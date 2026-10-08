@@ -32,17 +32,18 @@ name and native tooltip identify the source code and announce a new tab.
 
 Primary navigation exposes Formations, Spécialités du bac, Comparer, Mon projet
 and Observatoire; Données & méthode remains in the footer. The palette indexes
-every existing tool under these same groups. Mes favoris remains the first
-secondary link in Mon projet, alongside Budget; its existing list selector and
-preparation actions stay in place. Observatoire uses a labelled section selector
-instead of another row of tabs above the analysis workshop. Other secondary
-routes use ordinary links with `aria-current`.
+every existing tool under these same groups. Each group uses persistent tabs;
+Mon projet starts with Favoris alongside Budget. Observatoire exposes its five
+tools as a scrollable tab row. Tabs have native shareable destinations, manual
+keyboard activation (arrows/Home/End focus, Enter/Space activate), and stable
+panel containers. Only the visible panel participates in keyboard navigation.
+The workspace owns one main landmark; embedded tools use uniquely named sections.
 
 Formation search has an explicit scope selector (hors apprentissage or
-apprentissage) and List/Map representation links. The existing table/cards
+apprentissage) and List/Map representation tabs. The existing table/cards
 format choice remains within the regular list. Compatible filters cross the
-regular list/map boundary; active incompatible constraints show a notice and a
-disclosure explains supported transfers and release differences. A scope change
+regular list/map boundary; view-only constraints are retained separately and a notice explains that they
+are inactive in the other view, including the retained-release difference. A scope change
 keeps only the search text and chooses that source's latest campaign. APB is an
 explicit methodology destination, not an equivalent admissions scope. The atlas
 retains geographic filters in apprenticeship list mode but does not apply the

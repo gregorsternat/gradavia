@@ -1,11 +1,10 @@
 "use client";
 import {
-  cloneElement,
   createElement,
+  lazy,
   useEffect,
   useState,
   type ComponentType,
-  type ReactElement,
 } from "react";
 import type { PanelPayload } from "../server/load";
 import type { PanelId } from "../domain/registry";
@@ -13,17 +12,25 @@ import { presentation } from "../domain/presentation";
 import { viewLoaders, type ViewId } from "./views";
 
 type ViewComponent = ComponentType<Record<string, unknown>>;
+// React lazy keeps SSR for the requested view without Next's speculative chunk
+// preloads. No server entry statically imports all tool client references.
+const initialViews = Object.fromEntries(
+  Object.entries(viewLoaders).map(([view, load]) => [
+    view,
+    lazy(async () => ({
+      default: (await load()) as ViewComponent,
+    })),
+  ]),
+);
 export function Panel({
   panel,
   payload,
   params,
-  initialContent,
   initialView,
 }: {
   panel: PanelId;
   payload: PanelPayload;
   params: URLSearchParams;
-  initialContent?: ReactElement;
   initialView?: ViewId | "message";
 }) {
   const descriptor = presentation(panel, payload, params);
@@ -52,8 +59,8 @@ export function Panel({
   }, [view, initialView, loaded?.view, attempt]);
   if (descriptor.view === "message")
     return <p className="py-12">{descriptor.message}</p>;
-  if (view === initialView && initialContent)
-    return cloneElement(initialContent, {
+  if (view === initialView)
+    return createElement(initialViews[view]!, {
       ...descriptor.props,
       key: descriptor.key,
     });

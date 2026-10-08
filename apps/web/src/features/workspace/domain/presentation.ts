@@ -8,13 +8,14 @@ import {
 import { parseIndicator } from "../../specialties/domain/explorer";
 import { parseExploration } from "../../atlas/domain/exploration";
 import type { PanelPayload } from "../server/load";
-import type { PanelId } from "./registry";
+import { paramRecord, type PanelId } from "./registry";
 import type { ViewId, viewLoaders } from "../ui/views";
 export type Presentation =
   | {
       [K in ViewId]: {
         view: K;
-        props: ComponentProps<Awaited<ReturnType<(typeof viewLoaders)[K]>>> & object;
+        props: ComponentProps<Awaited<ReturnType<(typeof viewLoaders)[K]>>> &
+          object;
         key?: string;
       };
     }[ViewId]
@@ -24,7 +25,7 @@ export function presentation(
   payload: PanelPayload,
   params: URLSearchParams,
 ): Presentation {
-  const query = Object.fromEntries(params);
+  const query = paramRecord(params);
   switch (payload.kind) {
     case "formations":
       return {
@@ -105,7 +106,7 @@ export function presentation(
             view: "ModalityComparison",
             props: {
               ...payload.result,
-              params: { ...payload.result.params, ...query },
+              params: { campagne: payload.result.params.campagne, ...query },
             },
           }
         : {

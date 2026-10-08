@@ -47,6 +47,7 @@ test("campaign selection is keyboard accessible and changes the retained data", 
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/observatoire");
   const campaign = page.getByRole("button", { name: "Campagne d’admission" });
+  await expect(campaign).toBeEnabled();
   await campaign.focus();
   await page.keyboard.press("ArrowDown");
   await expect(

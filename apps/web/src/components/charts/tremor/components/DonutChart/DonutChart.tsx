@@ -4,14 +4,9 @@
 
 "use client";
 
+import { ResponsiveContainer } from "@/components/charts/responsive-container";
 import React from "react";
-import {
-  Pie,
-  PieChart as ReChartsDonutChart,
-  ResponsiveContainer,
-  Sector,
-  Tooltip,
-} from "recharts";
+import { Pie, PieChart as ReChartsDonutChart, Sector, Tooltip } from "recharts";
 
 import {
   AvailableChartColors,

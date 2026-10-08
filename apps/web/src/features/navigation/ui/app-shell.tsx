@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useCallback, useState } from "react";
+import { Suspense, useCallback, useState } from "react";
 import Link, { navigateInWorkspace } from "@/features/workspace/ui/navigation";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
@@ -56,11 +56,16 @@ const destinations = navigationGroups
   .slice(0, 5)
   .map((group, index) => ({ ...group, icon: icons[index]! }));
 
+function PanelTitle({ fallback }: { fallback: string }) {
+  const pathname = usePathname();
+  const search = useSearchParams();
+  const panel = resolvePanel(pathname, search);
+  return panel ? panels[panel].label : fallback;
+}
+
 function ShellContents({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const search = useSearchParams();
-  const activePanel = resolvePanel(pathname, search);
   const { favorites, comparison } = useFormationSelection();
   const { open, isMobile, setOpenMobile } = useAnimatedSidebar();
   const [commandOpen, setCommandOpen] = useState(false);
@@ -75,12 +80,10 @@ function ShellContents({ children }: { children: ReactNode }) {
   const title =
     pathname.startsWith("/formations/") || pathname.startsWith("/atlas/")
       ? "Fiche formation"
-      : activePanel
-        ? panels[activePanel].label
-        : (navigationGroups
-            .flatMap((item) => item.pages)
-            .find((item) => item.href === pathname)?.label ??
-          (pathname === "/dev/ui" ? "Composants" : "Gradavia"));
+      : (navigationGroups
+          .flatMap((item) => item.pages)
+          .find((item) => item.href === pathname)?.label ??
+        (pathname === "/dev/ui" ? "Composants" : "Gradavia"));
   const commands = [
     ...navigationGroups.flatMap((group, index) =>
       group.pages.map((page) => ({
@@ -238,7 +241,11 @@ function ShellContents({ children }: { children: ReactNode }) {
             <span aria-hidden="true" className="hidden text-border sm:inline">
               /
             </span>
-            <span className="truncate font-medium">{title}</span>
+            <span className="truncate font-medium">
+              <Suspense fallback={title}>
+                <PanelTitle fallback={title} />
+              </Suspense>
+            </span>
           </div>
           {pathname !== "/formations" && (
             <Link

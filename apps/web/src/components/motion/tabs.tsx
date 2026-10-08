@@ -85,7 +85,7 @@ export function Tabs({
   );
   const contextValue = useMemo(
     () => ({ value: current, setValue, layoutId, variant, activationMode }),
-    [current, layoutId, setValue, variant],
+    [current, layoutId, setValue, variant, activationMode],
   );
   return (
     <MotionConfig transition={reduce ? { duration: 0 } : transition}>
@@ -434,6 +434,7 @@ export function TabsTrigger({
         event.button !== 0)
     )
       return;
+    if (href && !ready && !disabled) return;
     event.preventDefault();
     if (!unavailable) setValue(value);
   };
@@ -446,9 +447,9 @@ export function TabsTrigger({
         role="tab"
         id={`${layoutId}-tab-${value}`}
         aria-controls={`${layoutId}-panel-${value}`}
-        tabIndex={active && !unavailable ? 0 : -1}
+        tabIndex={(active || (href && !ready)) && !disabled ? 0 : -1}
         disabled={href ? undefined : unavailable}
-        aria-disabled={unavailable || undefined}
+        aria-disabled={(href ? disabled : unavailable) || undefined}
         aria-selected={active}
         onClick={activate}
         onKeyDown={(event) => {
@@ -504,9 +505,9 @@ export function TabsTrigger({
         role="tab"
         id={`${layoutId}-tab-${value}`}
         aria-controls={`${layoutId}-panel-${value}`}
-        tabIndex={active && !unavailable ? 0 : -1}
+        tabIndex={(active || (href && !ready)) && !disabled ? 0 : -1}
         disabled={href ? undefined : unavailable}
-        aria-disabled={unavailable || undefined}
+        aria-disabled={(href ? disabled : unavailable) || undefined}
         aria-selected={active}
         data-tabs-value={value}
         onClick={activate}

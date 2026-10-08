@@ -21,6 +21,21 @@ Breadcrumb labels and paths come from the same helper as the displayed navigatio
 Source text is escaped against script termination. There are no invented ratings,
 admission predictions or Course rich-result promises.
 
+## Workspace addresses
+
+Tool identity now uses a workspace root and `onglet`, for example
+`/observatoire?onglet=territoires` and `/favoris?onglet=budget`. Historical tool
+paths permanently redirect before rendering a loading boundary. Tool metadata,
+canonical links and the public-page sitemap use the registry's destination.
+The selected tool is rendered on the server and its tabs have native anchors.
+
+Indexation still belongs to the tool: Budget remains public even though Favoris
+is private, and the analysis/quiz panels remain noindex under the public
+observatory. Semantic panel selectors are retained in canonical addresses;
+filters retain their previous noindex rules. The browser updates metadata when
+switching panels without a server navigation. Formation detail identities and
+ordinary indexable pagination are unchanged.
+
 ## Indexation policy
 
 | Content                                                                 | Policy                                                                   |
@@ -120,3 +135,9 @@ Primary documentation reviewed on 2026-10-05:
 The pinned Next.js package's metadata, robots, Open Graph and JSON-LD guides were
 also checked locally before implementation. Actual indexing and ranking evidence
 belongs in Search Console; [quality status](quality.md) records local verification.
+
+Legacy workspace redirects run before rendering in `src/proxy.ts`, so nested
+loading boundaries cannot turn a permanent redirect into a streamed 200 response.
+Workspace entry pages wait for their requested initial panel rather than hiding
+its HTML behind a JavaScript-dependent loading boundary. In-panel loading applies
+to subsequent client reads only.

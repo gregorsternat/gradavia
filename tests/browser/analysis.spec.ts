@@ -13,6 +13,7 @@ test("analysis URL restores filters on history traversal and clears them on bare
     name: "Formations de l’analyse",
     exact: true,
   });
+  await expect(search).toBeEnabled();
   await search.focus();
   await search.pressSequentially("Systèmes");
   await expect(search).toBeFocused();
@@ -214,6 +215,7 @@ test("source quiz reveals real denominators and links to the pinned analysis", a
   const slider = page.getByRole("slider", {
     name: "Votre estimation en pourcentage",
   });
+  await expect(slider).toBeEnabled();
   await slider.focus();
   await page.keyboard.press("Home");
   await expect(slider).toHaveAttribute("aria-valuenow", "0");

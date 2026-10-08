@@ -1,6 +1,7 @@
 # Verification status
 
-Reviewed on 2026-10-07 (Asia/Shanghai) against the updated base `cac11ff`.
+Reviewed on 2026-10-08 (Asia/Shanghai), including the workspace-navigation local
+diff on `e0ce3a3`. Earlier evidence below retains its own tested revisions.
 This page summarizes coverage and outstanding limits. Detailed past results live
 in the [historical verification log](quality/history-through-2026-10-07.md).
 A checked-in implementation, a local pass, remote CI, publication and production
@@ -123,6 +124,32 @@ overflow. Evidence: `.artifacts/github-link/verify.log`, `desktop-page.jpg`,
 The authenticated GitHub inspection found the destination private; the owner plans
 to make it public. Anonymous access and publication of this diff remain unverified.
 No deployment was performed.
+
+## Persistent workspace validation (2026-10-08)
+
+`CI=true E2E_PORT=3540 mise exec -- just verify` passed for the local workspace
+navigation diff on `e0ce3a3`, based on merged PR #29: formatting, lint, types,
+architecture/docs, Clippy, 115 TypeScript tests, Node/Rust suites, real disposable
+PostgreSQL 18 contracts and credential-free builds. Chromium passed 165 development,
+163 production and six cases in each of three production data states: 346
+executions with eight intended exclusions.
+
+The suite checks all workspace panel pairs, preserved state and map camera,
+History traversal, deep links, legacy parameters/fragments, SSR without JavaScript,
+SEO, keyboard access, request reuse, stale responses and failure recovery. Network
+inspection confirms that Budget JavaScript is downloaded on first activation,
+not with the initial Favoris page. The initial run after separating tool bundles
+exposed ten readiness failures; these were fixed and the focused fourteen-case
+follow-up and final full run passed. This final result supersedes those failed
+attempts for the final code, without treating the earlier attempts as passes.
+
+Real Chromium inspection covered desktop territories and mobile quiz/analysis,
+scrollable tab bars, visible keyboard focus and activation. Evidence lives under
+`.artifacts/workspace-tabs`: `verify.log`, `readiness.log`, `code-loading.log`,
+`verification-notes.md`, `desktop-territoires.png`, `mobile-estimer.png` and
+`mobile-analyse.png`. See the [completed plan](exec-plans/completed/persistent-workspaces.md)
+for implementation scope. No production data, remote CI or publication was verified
+by this work; Safari/Firefox and manual screen-reader limits remain UI-001.
 
 ## Reading and adding evidence
 

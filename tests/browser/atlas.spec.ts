@@ -89,6 +89,7 @@ test("map filters follow internal navigation and browser history", async ({
   const search = page.getByRole("textbox", {
     name: "Rechercher dans la carte",
   });
+  await expect(search).toBeEnabled();
   await search.pressSequentially("Systèmes numériques");
   await expect(search).toHaveValue("Systèmes numériques");
   const filtered = page.url();
@@ -215,6 +216,9 @@ test("list and map share compatible filters while apprenticeship keeps its snaps
   const views = page.getByRole("tablist", {
     name: "Dans Formations",
   });
+  await expect(
+    page.getByRole("button", { name: "Périmètre des formations" }),
+  ).toBeEnabled();
   await views.getByRole("tab", { name: "Carte", exact: true }).focus();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(

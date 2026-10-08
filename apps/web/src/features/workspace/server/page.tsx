@@ -1,7 +1,5 @@
 import "server-only";
-import { createElement, type ComponentType } from "react";
 import { presentation } from "../domain/presentation";
-import { serverViews } from "./views";
 import { panelParams, resolvePanel, searchString } from "../domain/registry";
 import { loadPanel } from "./load";
 import { Workspace } from "../ui/workspace";
@@ -30,15 +28,6 @@ export async function WorkspacePage({
   const query = panelParams(panel, new URLSearchParams(searchString(params)));
   const payload = await loadPanel(panel, query.toString());
   const descriptor = presentation(panel, payload, query);
-  const initialContent =
-    descriptor.view === "message" ? (
-      <p className="py-12">{descriptor.message}</p>
-    ) : (
-      createElement(
-        serverViews[descriptor.view] as ComponentType<Record<string, unknown>>,
-        { ...descriptor.props, key: descriptor.key },
-      )
-    );
   return (
     <Workspace
       key={path}
@@ -46,7 +35,6 @@ export async function WorkspacePage({
       initialSearch={query.toString()}
       initialPayload={payload}
       initialView={descriptor.view}
-      initialContent={initialContent}
     />
   );
 }

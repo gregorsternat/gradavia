@@ -6,7 +6,7 @@ import {
   usePathname as useNextPathname,
 } from "next/navigation";
 import NextLink from "next/link";
-import type { ComponentProps } from "react";
+import type { ComponentProps, ComponentPropsWithoutRef } from "react";
 import {
   canonicalHref,
   resolvePanel,
@@ -85,6 +85,7 @@ export default function WorkspaceLink({
   return (
     <NextLink
       {...props}
+      prefetch={props.prefetch ?? (context ? false : undefined)}
       href={target}
       onClick={(event) => {
         onClick?.(event);
@@ -112,16 +113,13 @@ export default function WorkspaceLink({
 export function PanelMain({
   children,
   ...props
-}: ComponentProps<"main"> & { children?: ReactNode }) {
+}: ComponentPropsWithoutRef<"main"> & { children?: ReactNode }) {
   const context = useContext(Context);
   if (!context) return <main {...props}>{children}</main>;
   return (
-    <section
-      {...props}
-      id={props.id ? `${context.panel}-${props.id}` : undefined}
-    >
+    <div {...props} id={props.id ? `${context.panel}-${props.id}` : undefined}>
       {children}
-    </section>
+    </div>
   );
 }
 

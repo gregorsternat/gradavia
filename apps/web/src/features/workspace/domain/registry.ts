@@ -125,6 +125,12 @@ export function searchString(params: SearchParams): string {
       query.append(key, item);
   return query.toString();
 }
+/** Match feature loaders' first-value semantics for repeated query keys. */
+export function paramRecord(query: URLSearchParams): Record<string, string> {
+  return Object.fromEntries(
+    [...new Set(query.keys())].map((key) => [key, query.get(key)!]),
+  );
+}
 export function resolvePanel(
   path: string,
   query: URLSearchParams,
@@ -133,7 +139,9 @@ export function resolvePanel(
     return query.get("famille") === "apb"
       ? "archives"
       : query.get("famille") === "apprentissage"
-        ? "apprentissage-carte"
+        ? query.get("vue") === "liste"
+          ? "apprentissage"
+          : "apprentissage-carte"
         : "carte";
   if (path === "/apprentissage")
     return query.get("vue") === "liste"
@@ -255,6 +263,10 @@ export function resourceKey(panel: PanelId, query: URLSearchParams): string {
       break;
   }
   const normalized = panelParams(panel, query);
+  if (panel === "formations") {
+    if (normalized.get("tri") === "nom") normalized.delete("tri");
+    if (normalized.get("page") === "1") normalized.delete("page");
+  }
   if (reader === "atlas" && !normalized.has("famille"))
     normalized.set("famille", "parcoursup");
   const params = new URLSearchParams();
@@ -289,11 +301,14 @@ export function representationParams(
   const sort = current.get("tri") ?? (from === "formations" ? "nom" : "name");
   const translated =
     from === "formations"
-      ? mapSort[sort]
+      ? Object.hasOwn(mapSort, sort)
+        ? mapSort[sort]
+        : undefined
       : Object.entries(mapSort).find(([, v]) => v === sort)?.[0];
   if (translated && translated !== next.get("tri")) {
+    const defaultSort = to === "formations" ? "nom" : "name";
+    changed ||= translated !== (next.get("tri") ?? defaultSort);
     next.set("tri", translated);
-    changed = true;
   }
   if (changed) next.delete("page");
   return next;

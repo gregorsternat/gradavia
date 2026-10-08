@@ -18,7 +18,7 @@ import { loadSpecialties } from "@/features/specialties/server/load";
 import { loadInverseSpecialties } from "@/features/specialties/server/inverse";
 import { prepareEvolution } from "@/features/evolution/domain/evolution";
 import { sourceQuiz } from "@/features/discovery/domain/quiz";
-import { panelParams, type PanelId } from "../domain/registry";
+import { panelParams, paramRecord, type PanelId } from "../domain/registry";
 
 async function modalities(raw: Record<string, string>) {
   const params = Object.fromEntries(
@@ -104,9 +104,7 @@ async function evolution(params: Record<string, string>) {
 }
 /** Shared by initial SSR and the allowlisted, same-origin panel reader. */
 export const loadPanel = cache(async (panel: PanelId, search: string) => {
-  const params = Object.fromEntries(
-    panelParams(panel, new URLSearchParams(search)),
-  );
+  const params = paramRecord(panelParams(panel, new URLSearchParams(search)));
   switch (panel) {
     case "formations":
       return {

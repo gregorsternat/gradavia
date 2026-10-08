@@ -4,6 +4,8 @@
 
 "use client";
 
+import { ResponsiveContainer } from "@/components/charts/responsive-container";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import React from "react";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
 import {
@@ -12,7 +14,6 @@ import {
   Label,
   BarChart as RechartsBarChart,
   Legend as RechartsLegend,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
@@ -554,6 +555,7 @@ interface BarChartProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
   (props, forwardedRef) => {
+    const reduce = useReducedMotion();
     const {
       data = [],
       categories = [],
@@ -783,7 +785,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
             </YAxis>
             <Tooltip
               wrapperStyle={{ outline: "none" }}
-              isAnimationActive={true}
+              isAnimationActive={!reduce}
               animationDuration={100}
               cursor={{ fill: "#d1d5db", opacity: "0.15" }}
               offset={20}

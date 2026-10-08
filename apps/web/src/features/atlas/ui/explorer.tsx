@@ -650,14 +650,6 @@ export function AtlasExplorer({
   result: AtlasResult;
   initialQuery: ExplorationQuery;
 }) {
-  const pathname = usePathname();
-  const search = useSearchParams();
-  const family =
-    pathname === "/archives"
-      ? "apb"
-      : pathname === "/apprentissage"
-        ? "apprentissage"
-        : (search.get("famille") ?? "parcoursup");
   if (result.status === "ready")
     return (
       <ReadyExplorer

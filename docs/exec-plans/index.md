@@ -6,10 +6,12 @@ Keep brief work brief; use a plan when several boundaries change together.
 
 ## Active
 
-- [Persistent workspace tabs](active/persistent-workspaces.md): preserve tool state
-  and load panels on demand within each primary destination.
+No active execution plan.
 
 ## Completed
+
+- [Persistent workspace tabs](completed/persistent-workspaces.md): six spaces with
+  retained tool state, lazy code/data, native History, legacy redirects and SSR.
 
 - [Navigation simplification](completed/navigation-simplification.md): five primary
   destinations, secondary navigation and compatible List/Map context.

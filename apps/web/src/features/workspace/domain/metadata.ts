@@ -3,7 +3,13 @@ import {
   explorerMetadata,
   type PublicPage,
 } from "../../seo/domain/metadata";
-import { panelParams, panelHref, panels, type PanelId } from "./registry";
+import {
+  panelParams,
+  panelHref,
+  panels,
+  paramRecord,
+  type PanelId,
+} from "./registry";
 import type { PanelPayload } from "../server/load";
 
 export function workspaceMetadata(
@@ -14,11 +20,15 @@ export function workspaceMetadata(
   if (panel === "formations" && payload?.kind === "formations")
     return explorerMetadata(payload.result);
   const query = panelParams(panel, input);
-  if (panel.startsWith("apprentissage") || panel === "archives")
+  if (
+    panel.startsWith("apprentissage") ||
+    panel === "archives" ||
+    panel === "carte"
+  )
     query.delete("famille");
   const metadata = pageMetadata(
     panels[panel].path as PublicPage,
-    Object.fromEntries(query),
+    paramRecord(query),
   );
   const canonical = new URL(String(metadata.alternates!.canonical));
   const href = new URL(

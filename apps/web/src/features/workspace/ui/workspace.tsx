@@ -1,12 +1,5 @@
 "use client";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ReactElement,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   panels,
@@ -30,6 +23,7 @@ import {
   TabsTrigger,
   TabsContent,
 } from "@/components/motion/tabs";
+import { MotionActivityProvider } from "@/lib/hooks/use-reduced-motion";
 import { SelectField } from "@/features/formations/ui/shared";
 
 type Entry = {
@@ -43,7 +37,10 @@ type Entry = {
 };
 type State = { active: PanelId; entries: Partial<Record<PanelId, Entry>> };
 function failed(payload: PanelPayload) {
-  return "result" in payload && payload.result?.status === "unavailable";
+  return "results" in payload
+    ? (payload.results?.some(({ result }) => result.status === "unavailable") ??
+        false)
+    : "result" in payload && payload.result?.status === "unavailable";
 }
 function PanelBoundary({
   id,
@@ -51,7 +48,6 @@ function PanelBoundary({
   active,
   navigate,
   retry,
-  initialContent,
   initialView,
 }: {
   id: PanelId;
@@ -59,7 +55,6 @@ function PanelBoundary({
   active: boolean;
   navigate: (href: string, replace?: boolean) => void;
   retry: () => void;
-  initialContent?: ReactElement;
   initialView?: ViewId | "message";
 }) {
   const waiting =
@@ -81,35 +76,38 @@ function PanelBoundary({
   );
   return (
     <PanelNavigationProvider value={context}>
-      <div aria-busy={waiting && !entry.failed}>
-        {waiting && !entry.failed && (
-          <p aria-live="polite" className="py-4 text-sm text-muted-foreground">
-            Chargement de {panels[id].label.toLocaleLowerCase("fr")}…
-          </p>
-        )}
-        {entry.failed && (
-          <div role="alert" className="panel my-4 p-4">
-            <p>Les données sont temporairement indisponibles.</p>
-            <button type="button" className="mt-2 underline" onClick={retry}>
-              Réessayer
-            </button>
-          </div>
-        )}
-        {entry.payload && (
-          <Panel
-            initialContent={initialContent}
-            initialView={initialView}
-            panel={id}
-            payload={entry.payload}
-            params={
-              waiting &&
-              (id === "selection" || id === "favoris" || id === "modalites")
-                ? new URLSearchParams(entry.loadedSearch)
-                : params
-            }
-          />
-        )}
-      </div>
+      <MotionActivityProvider value={active}>
+        <div inert={!active} aria-busy={waiting && !entry.failed}>
+          {waiting && !entry.failed && (
+            <p
+              aria-live="polite"
+              className="py-4 text-sm text-muted-foreground"
+            >
+              Chargement de {panels[id].label.toLocaleLowerCase("fr")}…
+            </p>
+          )}
+          {entry.failed && (
+            <div role="alert" className="panel my-4 p-4">
+              <p>Les données sont temporairement indisponibles.</p>
+              <button type="button" className="mt-2 underline" onClick={retry}>
+                Réessayer
+              </button>
+            </div>
+          )}
+          {entry.payload && (
+            <Panel
+              initialView={initialView}
+              panel={id}
+              payload={entry.payload}
+              params={
+                waiting && (id === "selection" || id === "favoris")
+                  ? new URLSearchParams(entry.loadedSearch)
+                  : params
+              }
+            />
+          )}
+        </div>
+      </MotionActivityProvider>
     </PanelNavigationProvider>
   );
 }
@@ -121,9 +119,13 @@ function cachePayload(
 ) {
   if (failed(payload)) return;
   cache.set(resourceKey(id, new URLSearchParams(search)), payload);
-  if (payload.kind === "atlas" && payload.result.status === "ready") {
+  if (
+    (payload.kind === "atlas" || payload.kind === "formations") &&
+    payload.result.status === "ready"
+  ) {
     const query = new URLSearchParams(search);
-    query.set("famille", payload.result.data.family);
+    if (payload.kind === "atlas")
+      query.set("famille", payload.result.data.family);
     query.set("campagne", String(payload.result.data.source.campaign));
     query.set("version", payload.result.data.source.releaseId);
     cache.set(resourceKey(id, query), payload);
@@ -134,13 +136,11 @@ export function Workspace({
   initialPanel,
   initialSearch,
   initialPayload,
-  initialContent,
   initialView,
 }: {
   initialPanel: PanelId;
   initialSearch: string;
   initialPayload: PanelPayload;
-  initialContent: ReactElement;
   initialView: ViewId | "message";
 }) {
   const space = spaces[panels[initialPanel].space];
@@ -208,6 +208,8 @@ export function Workspace({
       const previous = latest.current;
       const old = previous.entries[previous.active];
       const remembered = previous.entries[target];
+      const forceRetry =
+        target === previous.active && remembered?.failed && !fromHistory;
       const key = resourceKey(target, new URLSearchParams(nextSearch));
       const cached = cache.current.get(key);
       const entry: Entry = {
@@ -215,7 +217,9 @@ export function Workspace({
         ...remembered,
         search: nextSearch,
         hash: url.hash,
+        ...(forceRetry ? { loadedKey: undefined } : {}),
         failed:
+          !forceRetry &&
           remembered &&
           resourceKey(target, new URLSearchParams(remembered.search)) === key
             ? remembered.failed
@@ -367,13 +371,22 @@ export function Workspace({
       })
       .catch(() => {
         if (!cancelled)
-          setState((current) => ({
-            ...current,
-            entries: {
-              ...current.entries,
-              [id]: { ...current.entries[id]!, failed: true },
-            },
-          }));
+          setState((current) => {
+            const existing = current.entries[id];
+            if (
+              !existing ||
+              resourceKey(id, new URLSearchParams(existing.search)) !==
+                wantedKey
+            )
+              return current;
+            return {
+              ...current,
+              entries: {
+                ...current.entries,
+                [id]: { ...existing, failed: true },
+              },
+            };
+          });
       });
     return () => {
       cancelled = true;
@@ -381,6 +394,8 @@ export function Workspace({
   }, [state.active, entry.search, entry.loadedKey, entry.failed, wantedKey]);
 
   const targetHref = (id: PanelId) => {
+    if (id === state.active)
+      return panelHref(id, new URLSearchParams(entry.search), entry.hash);
     const remembered = state.entries[id];
     let params = new URLSearchParams(remembered?.search);
     if (space.path === "/formations") {
@@ -397,6 +412,15 @@ export function Workspace({
         if (state.active.startsWith("apprentissage"))
           current.set("version", entry.payload.result.data.source.releaseId);
       }
+      if (
+        (remembered?.payload?.kind === "atlas" ||
+          remembered?.payload?.kind === "formations") &&
+        remembered.payload.result.status === "ready"
+      )
+        params.set(
+          "campagne",
+          String(remembered.payload.result.data.source.campaign),
+        );
       params = representationParams(
         state.active,
         id,
@@ -414,6 +438,42 @@ export function Workspace({
     }
     return panelHref(id, params, remembered?.hash);
   };
+  const otherSearch = new URLSearchParams(
+    state.entries[state.active === "formations" ? "carte" : "formations"]
+      ?.search,
+  );
+  const retainedCriteria =
+    state.active === "carte"
+      ? [
+          otherSearch.get("departement")
+            ? `Département : ${otherSearch.get("departement")}`
+            : "",
+          otherSearch.get("selectivite")
+            ? `Sélectivité : ${otherSearch.get("selectivite")}`
+            : "",
+        ].filter(Boolean)
+      : state.active === "formations"
+        ? [
+            otherSearch.get("ville")
+              ? `Proximité : ${otherSearch.get("ville")}`
+              : "",
+            otherSearch.get("interet") ? "Centre d’intérêt" : "",
+            [
+              "places_min",
+              "places_max",
+              "acces_min",
+              "acces_max",
+              "voeux_min",
+              "voeux_max",
+            ].some((key) => otherSearch.has(key))
+              ? "Seuils d’indicateurs"
+              : "",
+            otherSearch.get("similaire") ? "Formation de référence" : "",
+            ["distance", "priorities"].includes(otherSearch.get("tri") ?? "")
+              ? "Tri propre à la carte"
+              : "",
+          ].filter(Boolean)
+        : [];
   const ids: readonly PanelId[] =
     space.path === "/formations" && state.active.startsWith("apprentissage")
       ? ["apprentissage", "apprentissage-carte"]
@@ -526,6 +586,12 @@ export function Workspace({
             une version archivée de la carte reste propre à la carte.
           </p>
         )}
+        {retainedCriteria.length > 0 && (
+          <p className="mt-2 text-xs text-muted-foreground">
+            Conservés dans l’autre vue, inactifs ici :{" "}
+            {retainedCriteria.join(" · ")}.
+          </p>
+        )}
         {(
           [...new Set([...ids, ...Object.keys(state.entries)])] as PanelId[]
         ).map((id) => (
@@ -533,9 +599,6 @@ export function Workspace({
             {state.entries[id] && (
               <PanelBoundary
                 id={id}
-                initialContent={
-                  id === initialPanel ? initialContent : undefined
-                }
                 initialView={id === initialPanel ? initialView : undefined}
                 entry={state.entries[id]!}
                 active={state.active === id}

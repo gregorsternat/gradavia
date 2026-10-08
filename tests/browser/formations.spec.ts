@@ -220,6 +220,7 @@ test("keyboard and reduced motion preserve search and filter access", async ({
   ).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/#contenu$/);
+  await expect(page.getByRole("button", { name: /^Filtres/ })).toBeEnabled();
   await page.getByRole("button", { name: /^Filtres/ }).focus();
   await page.keyboard.press("Enter");
   const filter = page.getByRole("button", {
