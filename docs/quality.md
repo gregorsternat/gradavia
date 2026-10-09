@@ -98,6 +98,29 @@ including Ctrl+K and Escape. Evidence: `.artifacts/navigation-review/verify.log`
 and the follow-up section of the completed plan above. No live data audit or
 deployment was performed.
 
+## Arc copy-button validation
+
+On 2026-10-09 (Asia/Shanghai), the Arc integration diff against `d8acc7a` passed
+`WRANGLER_SEND_METRICS=false CI=true E2E_PORT=3566 mise exec -- just verify`:
+formatting, lint, types, architecture/docs, Clippy, 115 TypeScript cases, Node/Rust
+suites, disposable PostgreSQL 18 contracts and credential-free builds. Chromium
+passed 139 development, 137 production and six cases in each of the three
+production data states (294 executions, eight intended exclusions).
+
+Clipboard journeys verify keyboard activation, URL/hash changes, source-version
+preservation, note-sharing consent, stable button width and persistent manual
+recovery after a denied clipboard write. Real-browser review covered light/dark,
+390/768/1024/1440 widths, 44px copy targets and no horizontal page overflow.
+Reduced-motion and both-theme accessibility journeys remain passing. Arc source,
+MIT notices and integration patches are recorded in [third-party sources](third-party.md).
+No dependency versions or lockfiles changed.
+
+Evidence and initial corrected failures are recorded in the
+[completed plan](exec-plans/completed/arc-copy-buttons.md), with the final log at
+`.artifacts/arc-copy/verify.log`. These local fixture checks do not establish
+remote CI, merge, deployment or live data availability. Existing UI-001 limits
+remain in [technical debt](exec-plans/tech-debt.md).
+
 ## Reading and adding evidence
 
 - Keep this page a current summary. Put detailed investigations and historical

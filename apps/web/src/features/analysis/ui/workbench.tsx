@@ -6,8 +6,6 @@ import Link from "next/link";
 import {
   ArrowDownToLine,
   ArrowUpRight,
-  Check,
-  Copy,
   Database,
   SlidersHorizontal,
   X,
@@ -64,6 +62,7 @@ import {
 import { analysisCsv, analysisExport, analysisSvg } from "../domain/export";
 import { Scatter } from "./scatter";
 import { SavedViews } from "./saved-views";
+import { ShareButton } from "@/features/formations/ui/shared";
 
 const families = [
   { value: "parcoursup", label: "Parcoursup" },
@@ -172,7 +171,6 @@ function Workspace({ data }: { data: AtlasData }) {
   const query = searchParams.toString();
   const config = useMemo(() => readConfig(new URLSearchParams(query)), [query]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [copyState, setCopyState] = useState("");
   const rows = useMemo(
     () => filterItems(data.items, config),
     [data.items, config],
@@ -366,31 +364,7 @@ function Workspace({ data }: { data: AtlasData }) {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            className="h-9 rounded-lg"
-            onClick={async () => {
-              try {
-                await navigator.clipboard.writeText(
-                  new URL(href, window.location.origin).href,
-                );
-                setCopyState("Lien copié, version de source incluse.");
-              } catch {
-                window.history.replaceState(null, "", href);
-                setCopyState(
-                  "Copiez l’adresse de cette page pour partager cette version.",
-                );
-              }
-            }}
-          >
-            {copyState.startsWith("Lien copié") ? (
-              <Check className="size-3.5" />
-            ) : (
-              <Copy className="size-3.5" />
-            )}
-            Partager
-          </Button>
+          <ShareButton href={href} />
           {(["csv", "json", "svg"] as const).map((format) => (
             <Button
               key={format}
@@ -406,11 +380,6 @@ function Workspace({ data }: { data: AtlasData }) {
           ))}
         </div>
       </div>
-      {copyState && (
-        <p role="status" className="mt-3 text-xs text-muted-foreground">
-          {copyState}
-        </p>
-      )}
 
       <section aria-label="Population de l’analyse" className="mt-7 space-y-4">
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[1fr_.7fr_1.2fr_1.2fr_1.4fr]">

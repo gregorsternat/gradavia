@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
   ArrowUpRight,
   Bookmark,
-  Check,
-  Copy,
   Download,
   GitCompareArrows,
   MapPin,
@@ -15,6 +13,8 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { usePageUrl } from "@/lib/hooks/use-page-url";
+import { CopyButton } from "@/components/arc/copy-button/copy-button";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import {
   Select,
@@ -238,37 +238,9 @@ export function ExportButton({
     </Button>
   );
 }
-export function ShareButton() {
-  const [state, setState] = useState<"idle" | "copied" | "error">("idle");
-  return (
-    <div>
-      <Button
-        variant="secondary"
-        size="sm"
-        className="rounded-lg"
-        onClick={async () => {
-          try {
-            await navigator.clipboard.writeText(window.location.href);
-            setState("copied");
-          } catch {
-            setState("error");
-          }
-        }}
-      >
-        {state === "copied" ? (
-          <Check className="size-3.5" />
-        ) : (
-          <Copy className="size-3.5" />
-        )}
-        {state === "copied" ? "Lien copié" : "Partager"}
-      </Button>
-      {state === "error" && (
-        <p role="status" className="mt-2 text-xs text-muted-foreground">
-          Copiez l’adresse de cette page depuis votre navigateur.
-        </p>
-      )}
-    </div>
-  );
+export function ShareButton({ href }: { href?: string }) {
+  const value = usePageUrl(href);
+  return <CopyButton value={value} label="Partager" disabled={!value} />;
 }
 export function SourceDisclosure({
   source,

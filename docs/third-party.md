@@ -160,6 +160,51 @@ indexed-access fallback and derives its reduced-motion text without effect-state
 updates; unused variants remain in the single upstream source
 file rather than adding separate components.
 
+## Arc (2026-10-09)
+
+Source: [Arc UI](https://uiarc.dev/), the official
+[copy-button documentation](https://uiarc.dev/components/copy-button/markdown),
+and its public shadcn registry. License: [MIT](licenses/arc.txt), with upstream
+copyright notices retained in the copied files. Only free items are used.
+The Arc MCP tools were unavailable in this session, so the documented HTTP
+registry and Markdown fallback supplied the source.
+
+Commands ran inside `apps/web` after registering `@uiarc` in `components.json`:
+
+```sh
+mise exec -- pnpm dlx shadcn@latest add @uiarc/arc-foundation @uiarc/copy-button --yes
+```
+
+| Registry item       | Local files under `apps/web/src/components/arc`                                                 |
+| ------------------- | ----------------------------------------------------------------------------------------------- |
+| `copy-button`       | `copy-button/copy-button.tsx`, `copy-button/copy-button.module.css`, `lib/use-copy-feedback.ts` |
+| `arc-foundation`    | `foundation.css`                                                                                |
+| `arc-motion-tokens` | `motion-tokens.ts`, `lib/motion-tokens.ts`                                                      |
+
+Motion and Lucide were already pinned, so neither manifest nor lockfile changed.
+Local integration changes:
+
+- Format the upstream files and retain their icon, letter and stroke animations.
+  These official animations include blur and stroke drawing, in addition to
+  transform/opacity, and use the upstream component's deliberate timing presets.
+- Translate idle/success/error feedback and announcements into French. Empty
+  announcements remain polite live regions without claiming an active status.
+- Keep copy errors visible until retry, with a selectable read-only URL and a
+  recovery instruction. Successful feedback keeps the upstream timed reset.
+  Feedback is keyed to the copied value so changing filters or note-sharing
+  consent cannot leave a new link displaying an old success/error state.
+- Use Gradavia's hydration-safe reduced-motion hook, preserving identical initial
+  server/client markup and reacting to later preference changes.
+- Load the foundation through the root stylesheet in the `arc` layer, below
+  Tailwind and existing unlayered app tokens. Accept `.dark` as well as Arc's
+  `data-theme="dark"`, and scope upstream focus selectors to Arc copy buttons.
+  Semantic palette overrides preserve monochrome states, inherited system fonts
+  and a 44px minimum control height. No font downloads are introduced.
+
+Shared page links, analysis/evolution links and preparation-list sharing use this
+component. Feature code retains the source-version and note-consent contracts;
+list duplication is a separate storage action.
+
 ## Tremor Raw
 
 Source: [tremorlabs/tremor](https://github.com/tremorlabs/tremor).

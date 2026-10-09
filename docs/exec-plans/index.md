@@ -10,6 +10,9 @@ No active execution plan.
 
 ## Completed
 
+- [Arc copy buttons](completed/arc-copy-buttons.md): source-owned registry integration
+  and consistent clipboard actions.
+
 - [Navigation simplification](completed/navigation-simplification.md): five primary
   destinations, secondary navigation and compatible List/Map context.
 
