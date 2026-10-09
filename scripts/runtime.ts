@@ -142,3 +142,44 @@ export async function startApi(
     throw error;
   }
 }
+
+/** A credential-free publication reader on its own ephemeral loopback port. */
+export async function startPublicationApi(root: string, artifacts: string) {
+  const process = await startProcess(
+    path.resolve("target/debug/gradavia-publication-server"),
+    [],
+    {
+      ...webEnvironment(""),
+      GRADAVIA_PUBLICATION_DIR: root,
+      API_BIND: "127.0.0.1:0",
+    },
+    path.join(artifacts, "publication-reader.log"),
+  );
+  try {
+    const address = await new Promise<string>((resolve, reject) => {
+      let text = "";
+      const timer = setTimeout(
+        () => reject(new Error("Publication reader startup timed out")),
+        15_000,
+      );
+      process.closed.then(() => {
+        clearTimeout(timer);
+        reject(new Error("Publication reader exited during startup"));
+      });
+      process.child.stdout.on("data", (chunk: Buffer) => {
+        text += chunk.toString();
+        const match = /Publication server listening on (127\.0\.0\.1:\d+)/.exec(
+          text,
+        );
+        if (match) {
+          clearTimeout(timer);
+          resolve(match[1]!);
+        }
+      });
+    });
+    return { ...process, url: `http://${address}` };
+  } catch (error) {
+    await process.stop();
+    throw error;
+  }
+}

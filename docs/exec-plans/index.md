@@ -6,7 +6,8 @@ Keep brief work brief; use a plan when several boundaries change together.
 
 ## Active
 
-No active execution plan.
+- [Cloudflare Free publication and performance](active/cloudflare-free.md):
+  preserve the Next.js product while publishing static pages/data and a Wasm API.
 
 ## Completed
 

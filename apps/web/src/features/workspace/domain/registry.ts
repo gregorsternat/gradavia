@@ -1,4 +1,4 @@
-import type { SearchParams } from "@/features/formations/domain/explorer";
+import type { SearchParams } from "../../formations/domain/explorer";
 
 export const spaces = [
   { path: "/formations", label: "Formations", panels: ["formations", "carte"] },

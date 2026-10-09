@@ -1,11 +1,14 @@
 [package]
 name = "gradavia-api"
+default-run = "gradavia-api"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 publish.workspace = true
 
 [dependencies]
+gradavia-read-model = { path = "../read-model" }
+sha2 = "0.10"
 gradavia-core = { path = "../core" }
 axum = { version = "0.8", default-features = false, features = ["http1", "json", "tokio"] }
 serde.workspace = true

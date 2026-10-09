@@ -26,6 +26,19 @@ export async function WorkspacePage({
 }) {
   const panel = resolvePanel(path, new URLSearchParams(searchString(params)))!;
   const query = panelParams(panel, new URLSearchParams(searchString(params)));
+  if (
+    process.env.GRADAVIA_PRERENDER === "1" &&
+    query.has("_publication_shell")
+  ) {
+    query.delete("_publication_shell");
+    return (
+      <Workspace
+        key={path}
+        initialPanel={panel}
+        initialSearch={query.toString()}
+      />
+    );
+  }
   const payload = await loadPanel(panel, query.toString());
   const descriptor = presentation(panel, payload, query);
   return (

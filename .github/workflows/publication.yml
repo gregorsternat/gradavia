@@ -1,0 +1,102 @@
+name: Prepare immutable Cloudflare publication
+
+on:
+  workflow_dispatch:
+    inputs:
+      data_release:
+        description: Existing immutable GitHub data release tag (leave empty to capture the production reader)
+        required: false
+        type: string
+      stage:
+        description: Upload private candidate Workers after verification (production routes stay unchanged)
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gradavia-publication
+  cancel-in-progress: false
+
+jobs:
+  publication:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    environment: production
+    env:
+      CI: true
+      NEXT_TELEMETRY_DISABLED: 1
+      WRANGLER_SEND_METRICS: false
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db
+      - run: just setup
+      - run: pnpm exec playwright install-deps chromium
+      - name: Verify contracts and real local Cloudflare browser behavior
+        run: just verify test-publication test-publication-browser
+      - name: Install PostgreSQL 18 snapshot tools
+        if: inputs.data_release == ''
+        run: |
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install -y postgresql-client-18
+          echo '/usr/lib/postgresql/18/bin' >> "$GITHUB_PATH"
+      - name: Capture explicitly selected production data in read-only mode
+        if: inputs.data_release == ''
+        env:
+          DATABASE_URL: ${{ secrets.GRADAVIA_PUBLICATION_DATABASE_URL }}
+        run: just publication-snapshot .artifacts/data ep-soft-surf-b1o2bgoj
+      - name: Download and verify a previously captured data release
+        if: inputs.data_release != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DATA_RELEASE: ${{ inputs.data_release }}
+        run: |
+          mkdir -p .artifacts/data-download
+          gh release download "$DATA_RELEASE" --repo "$GITHUB_REPOSITORY" --pattern data.tar.gz --pattern data.tar.gz.sha256 --dir .artifacts/data-download
+          cd .artifacts/data-download
+          sha256sum -c data.tar.gz.sha256
+          python3 - <<'PYTHON'
+          import tarfile
+          with tarfile.open('data.tar.gz') as archive:
+              assert all(member.isfile() or member.isdir() for member in archive.getmembers())
+              archive.extractall('../data', filter='data')
+          PYTHON
+      - name: Prerender all retained pages and build bounded asset archives
+        run: |
+          just publication-render .artifacts/data .artifacts/site
+          just publication-pack .artifacts/site .artifacts/candidate
+          just publication-deploy check .artifacts/candidate
+      - name: Retain versioned public artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tar -czf .artifacts/data.tar.gz -C .artifacts/data .
+          tar -czf .artifacts/site.tar.gz -C .artifacts/candidate archive shards runtime release.json
+          cd .artifacts
+          sha256sum data.tar.gz > data.tar.gz.sha256
+          sha256sum site.tar.gz > site.tar.gz.sha256
+          tag="publication-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          printf '%s\n' 'Immutable public data and prerendered site. This release does not prove production activation or a Workers Free subscription.' > release-notes.txt
+          gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "$tag" --notes-file release-notes.txt data.tar.gz data.tar.gz.sha256 site.tar.gz site.tar.gz.sha256
+      - name: Stage private immutable Workers
+        if: inputs.stage
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: just publication-deploy stage .artifacts/candidate
+      - name: Preserve validation and candidate metadata
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: publication-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .artifacts/candidate/release.json
+            .artifacts/candidate/deployment.json
+            .artifacts/publication-verification/*/browser.log
+            .artifacts/publication-verification/*/workerd.log
+            .artifacts/data-preparation/export.log
+          include-hidden-files: true
+          retention-days: 7

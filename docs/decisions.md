@@ -287,3 +287,22 @@ change does not promise an identical population or retained release across reade
 The implementation reuses source-owned tabs with a stable host element and
 manual activation for asynchronously loaded views. Client/server metadata uses
 the same per-tool indexation policy; tools do not inherit the root's robots policy.
+
+## 022 — Immutable publications for Cloudflare Free
+
+Keep Next.js and the established UI instead of introducing a second renderer.
+Capture complete HTML and full RSC from the production Next server at publication,
+including current and retained formation identities, metadata and crawlable
+campaign pagination. Prepare exports, evolution cohorts and quizzes offline;
+keep arbitrary non-indexable queries in the existing hydrated workspace. Rust
+Wasm reads compact borrowed indexes and only loads projected result rows.
+
+Use checksummed, immutable static publications instead of runtime database access.
+Pack small artifacts into bounded archives before sharding to fit the Free file
+and account Worker limits while retaining a previous complete release. A gateway
+switches all bindings together; document-pinned reads cannot silently mix versions.
+
+The production activation decision remains conditional on actual Cloudflare CPU,
+memory, browser parity/performance, account usage and billing evidence. WebAssembly
+is an execution format inside a Worker and does not itself remove billing. See
+[publication operations](cloudflare-publications.md) for the full procedure.

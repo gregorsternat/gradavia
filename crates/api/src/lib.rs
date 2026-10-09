@@ -2,6 +2,7 @@ pub mod analytics;
 pub mod atlas;
 pub mod config;
 pub mod formations;
+pub mod publication;
 
 use axum::{
     Json, Router,
