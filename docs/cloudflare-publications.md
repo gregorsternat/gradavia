@@ -16,6 +16,9 @@ same. Finite campaign/pagination/view routes have complete HTML; arbitrary
 non-indexable filter combinations load the existing workspace after hydration.
 Their initial shell does not show results for a different query. Native no-JavaScript
 catalog pagination, campaign and detail links remain prerendered.
+Detail asset identities ignore query parameters, matching the Next routes:
+the ID determines the source and campaign, including links carrying `famille`.
+Catalog and workspace queries retain their distinct page states.
 
 No database connection or credential reaches the public runtime. Neon is used
 only by ingestion and explicit publication. The standalone Axum/SQLx API remains

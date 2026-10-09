@@ -1,7 +1,7 @@
 # Verification status
 
 Reviewed on 2026-10-09 (Asia/Shanghai), including the local Cloudflare Free
-candidate on base `adc1f64`. Earlier evidence below retains its own tested revisions.
+candidate and PR #33 follow-ups. Earlier evidence below retains its tested revisions.
 This page summarizes coverage and outstanding limits. Detailed past results live
 in the [historical verification log](quality/history-through-2026-10-07.md).
 A checked-in implementation, a local pass, remote CI, publication and production
@@ -21,6 +21,34 @@ health are separate observations; none establishes Google indexing or freshness.
 | UI and local preparation  | Browser tests cover navigation, hydration readiness, chart equivalents, lists, sharing and storage failures                      | Historical visual review is scoped to the recorded change, not a fresh audit of every screen            |
 
 ## Cloudflare Free candidate validation (2026-10-09)
+
+### PR #33 detail-link regression
+
+On 2026-10-09, the review's apprenticeship/APB detail-link 404 was reproduced
+for both HTML and RSC requests before the fix. Detail asset identities now ignore
+query parameters, matching Next's ID-only source and campaign resolution. Catalog
+filters remain distinct, and missing detail IDs still return 404. All 13 publication
+unit cases passed. The browser regression opens both the analysis table and
+selection links with the keyboard and reloads each detail URL.
+
+`CI=true E2E_PORT=3587 mise exec -- just verify` passed: checks, 128 TypeScript
+cases, Node/Rust suites, disposable PostgreSQL contracts, credential-free builds
+and 378 Chromium executions (181 development, 179 production, 18 failure-state;
+eight intended exclusions). A newly rendered 222-page fixture publication,
+`c05bc839ec807ba8fb87`, also passed 18 focused desktop/mobile browser executions
+under local workerd with the Wasm API. Direct requests verified identical 200
+HTML/RSC bodies with or without detail query parameters and preserved missing-ID
+404s. These checks include classic formation details, metadata, query indexing
+and navigation without JavaScript.
+
+Evidence: `.artifacts/pr33-detail-regression-before.log`,
+`.artifacts/pr33-detail-regression-after.log`,
+`.artifacts/pr33-detail-verify.log`, `.artifacts/pr33-detail-workerd-http.log`,
+`.artifacts/pr33-detail-workerd-browser.log` and
+`.artifacts/pr33-detail-publication/`. These are local fixture checks; they do not
+establish remote CI success or production activation.
+
+### Initial candidate verification
 
 In the isolated `cloudflare-free` worktree on base `adc1f64`, `CI=true
 E2E_PORT=3576 mise exec -- just verify` passed: formatting, lint, types,

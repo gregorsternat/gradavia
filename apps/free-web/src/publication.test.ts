@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { gateway } from "./gateway";
 import assets from "./asset-service";
 import { selectAtlas } from "./publication";
-import { pageIdentity } from "./identity";
+import { pageAsset, pageIdentity } from "./identity";
 import { handle } from "./handler";
 import {
   checkEvidence,
@@ -192,7 +192,50 @@ describe("publication boundaries", () => {
       pageIdentity("/formations?utm_source=test&page=2&_rsc=xyz&vue=cartes"),
     ).toBe("/formations?page=2&vue=cartes");
     expect(pageIdentity("/comparer?ids=")).not.toBe(pageIdentity("/comparer"));
+    expect(pageIdentity("/atlas?famille=apb")).not.toBe(
+      pageIdentity("/atlas?famille=apprentissage"),
+    );
+    for (const route of ["atlas", "formations"])
+      expect(
+        pageIdentity(`/${route}/${id}?famille=apb&campagne=2017&q=test`),
+      ).toBe(pageIdentity(`/${route}/${id}`));
   });
+  it.each([
+    ["apprentissage", false],
+    ["apprentissage", true],
+    ["apb", false],
+    ["apb", true],
+  ] as const)(
+    "serves published %s detail links with ignored query parameters (RSC: %s)",
+    async (family, rsc) => {
+      const path = "/atlas/12345678-1234-1234-1234-123456789abc%3A42";
+      const published = await pageAsset(path, rsc);
+      const env = {
+        PUBLICATION: {
+          fetch: async (request: Request) =>
+            new URL(request.url).pathname === `/${published}`
+              ? new Response("published detail")
+              : new Response("missing", { status: 404 }),
+        },
+        GRADAVIA_API: service("unused"),
+      };
+      const get = (detailPath: string) =>
+        handle(
+          new Request(
+            `https://gradavia.com${detailPath}?famille=${family}&_rsc=transport`,
+            { headers: rsc ? { rsc: "1" } : {} },
+          ),
+          env,
+        );
+      const response = await get(path);
+      expect(response.status).toBe(200);
+      expect(await response.text()).toBe("published detail");
+      expect(response.headers.get("content-type")).toContain(
+        rsc ? "text/x-component" : "text/html",
+      );
+      expect((await get(path.replace("%3A42", "%3A43"))).status).toBe(404);
+    },
+  );
   it("extracts a bounded object when asset bindings ignore Range, including chunk boundaries", async () => {
     const key = createHash("sha256").update("pages/test.html").digest("hex");
     let cancelled = false;

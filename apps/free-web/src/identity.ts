@@ -3,6 +3,8 @@ export function pageIdentity(value: string) {
   const url = new URL(value, "https://gradavia.com");
   const detail = url.pathname.match(/^\/(formations|atlas)\/([^/]+)$/);
   if (detail) {
+    // Next detail routes derive their source and campaign from the ID alone.
+    url.search = "";
     try {
       const id = decodeURIComponent(detail[2]!);
       if (/^[a-f0-9-]{36}:[1-9]\d*$/i.test(id))
