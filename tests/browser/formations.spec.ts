@@ -13,7 +13,7 @@ async function openFilters(page: Page) {
   ).toBeVisible();
 }
 
-test("copy feedback follows navigation, supports the keyboard and keeps failed links selectable", async ({
+test("copy feedback handles navigation, keyboard activation and stale writes", async ({
   page,
   context,
 }, testInfo) => {
@@ -47,6 +47,7 @@ test("copy feedback follows navigation, supports the keyboard and keeps failed l
   await expect
     .poll(() => page.evaluate(() => navigator.clipboard.readText()))
     .toBe(page.url());
+  await expect(copy).toHaveAttribute("data-copy-state", "copied");
 
   await page.evaluate(() => {
     Object.defineProperty(navigator, "clipboard", {
@@ -76,6 +77,38 @@ test("copy feedback follows navigation, supports the keyboard and keeps failed l
   ).toBe(page.url().length);
   await page.clock.fastForward(2_500);
   await expect(copy).toHaveAttribute("data-copy-state", "error");
+
+  await page.evaluate(() => {
+    let calls = 0;
+    let resolveFirstWrite: (() => void) | undefined;
+    const testWindow = window as Window & {
+      resolveFirstClipboardWrite?: () => void;
+    };
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText: async () => {
+          calls += 1;
+          if (calls === 1)
+            await new Promise<void>((resolve) => {
+              resolveFirstWrite = resolve;
+            });
+          else throw new DOMException("Clipboard denied", "NotAllowedError");
+        },
+      },
+    });
+    testWindow.resolveFirstClipboardWrite = () => resolveFirstWrite?.();
+  });
+  await copy.click();
+  await copy.click();
+  await expect(copy).toHaveAttribute("data-copy-state", "error");
+  await page.evaluate(() => {
+    (
+      window as Window & { resolveFirstClipboardWrite?: () => void }
+    ).resolveFirstClipboardWrite?.();
+  });
+  await expect(copy).toHaveAttribute("data-copy-state", "error");
+
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

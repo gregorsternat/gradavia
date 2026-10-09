@@ -224,7 +224,9 @@ Local integration changes:
 - Keep copy errors visible until retry, with a selectable read-only URL and a
   recovery instruction. Successful feedback keeps the upstream timed reset.
   Feedback is keyed to the copied value so changing filters or note-sharing
-  consent cannot leave a new link displaying an old success/error state.
+  consent cannot leave a new link displaying an old success/error state. A
+  generation guard prevents late clipboard writes and stale timers from
+  replacing the latest feedback state.
 - Use Gradavia's hydration-safe reduced-motion hook, preserving identical initial
   server/client markup and reacting to later preference changes.
 - Load the foundation through the root stylesheet in the `arc` layer, below

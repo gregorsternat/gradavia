@@ -10,9 +10,11 @@ export function useCopyFeedback(duration = 1900) {
   const [state, setState] = useState<CopyFeedbackState>("idle");
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const operation = useRef(0);
 
   const reset = useCallback(() => {
-    if (timeout.current) clearTimeout(timeout.current);
+    operation.current += 1;
+    if (timeout.current !== null) clearTimeout(timeout.current);
     timeout.current = null;
     setState("idle");
     setActiveKey(null);
@@ -20,22 +22,28 @@ export function useCopyFeedback(duration = 1900) {
 
   useEffect(
     () => () => {
-      if (timeout.current) clearTimeout(timeout.current);
+      operation.current += 1;
+      if (timeout.current !== null) clearTimeout(timeout.current);
     },
     [],
   );
 
   const copy = useCallback(
     async (value: string, key = "default") => {
-      if (timeout.current) clearTimeout(timeout.current);
+      const currentOperation = ++operation.current;
+      if (timeout.current !== null) clearTimeout(timeout.current);
+      timeout.current = null;
       setActiveKey(key);
       try {
         await navigator.clipboard.writeText(value);
+        if (currentOperation !== operation.current) return false;
         setState("copied");
-        timeout.current = setTimeout(reset, duration);
+        timeout.current = setTimeout(() => {
+          if (currentOperation === operation.current) reset();
+        }, duration);
         return true;
       } catch {
-        setState("error");
+        if (currentOperation === operation.current) setState("error");
         return false;
       }
     },

@@ -151,6 +151,19 @@ no retries). `mise exec -- just build`, focused ESLint/formatting and documentat
 checks passed. Evidence: `.artifacts/pr32-ci/{github-failure,focused-development,focused-production,build}.log`.
 This is focused local validation; the full CI result remains separate.
 
+### PR #32 stale clipboard completion follow-up
+
+The [CI run for `c5c21d7`](https://github.com/gregorsternat/gradavia/actions/runs/37905115181)
+failed the desktop development copy-recovery case: after a rejected clipboard
+write, feedback remained `idle`. The hook now ignores clipboard completions and
+feedback timers from older copy operations. A browser regression defers one
+successful write, starts a newer rejected write, then resolves the old write and
+checks that the error remains visible. The focused Chromium case passed five
+repetitions per desktop/mobile project (10 executions). Type, lint, formatting
+and documentation checks passed locally. Evidence:
+`.artifacts/pr32-ci/copy-race-retry-dev/`. The next remote CI run remains the
+merge gate.
+
 ## GitHub repository link validation (2026-10-08)
 
 On 2026-10-08 (Asia/Shanghai), `CI=true E2E_PORT=3542 mise exec -- just verify`
