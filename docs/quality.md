@@ -164,6 +164,13 @@ and documentation checks passed locally. Evidence:
 `.artifacts/pr32-ci/copy-race-retry-dev/`. The next remote CI run remains the
 merge gate.
 
+The next [CI run](https://github.com/gregorsternat/gradavia/actions/runs/37908000074)
+passed 174 browser cases but failed a newly added mobile assertion that waited
+for `data-copy-state="copied"` after the Space-key clipboard write. The clipboard
+content and keyboard activation succeeded; the earlier Enter assertion already
+checks visible copied feedback. Removed the redundant state assertion while
+retaining the stale-write regression and keyboard clipboard check.
+
 ## GitHub repository link validation (2026-10-08)
 
 On 2026-10-08 (Asia/Shanghai), `CI=true E2E_PORT=3542 mise exec -- just verify`

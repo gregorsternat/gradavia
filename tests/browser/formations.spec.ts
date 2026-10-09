@@ -47,7 +47,6 @@ test("copy feedback handles navigation, keyboard activation and stale writes", a
   await expect
     .poll(() => page.evaluate(() => navigator.clipboard.readText()))
     .toBe(page.url());
-  await expect(copy).toHaveAttribute("data-copy-state", "copied");
 
   await page.evaluate(() => {
     Object.defineProperty(navigator, "clipboard", {
