@@ -11,6 +11,8 @@ import {
   useSyncExternalStore,
   useTransition,
 } from "react";
+import { CopyButton } from "@/components/arc/copy-button/copy-button";
+import { usePageUrl } from "@/lib/hooks/use-page-url";
 import { useRouter } from "@/features/workspace/ui/navigation";
 import Link from "@/features/workspace/ui/navigation";
 import {
@@ -481,8 +483,6 @@ export function FavoritesWorkspace({
   );
   const [editing, setEditing] = useState<"create" | "rename" | null>(null);
   const [includeNotes, setIncludeNotes] = useState(false);
-  const [shareMessage, setShareMessage] = useState("");
-  const [shareLink, setShareLink] = useState("");
   const panelHash = usePanelHash();
   const globalHash = useSyncExternalStore(
     subscribeHash,
@@ -518,6 +518,13 @@ export function FavoritesWorkspace({
   const name = shared
     ? sharedContent.name
     : (activeList?.name ?? "Mes favoris");
+  const sharePath = shareListUrl(
+    rows.map((row) => row.id),
+    name,
+    notes,
+    includeNotes,
+  );
+  const shareLink = usePageUrl(sharePath ?? "");
   const pages = Math.max(1, Math.ceil(rows.length / FAVORITES_PAGE_SIZE));
   const currentPage = Math.min(page, pages);
   const visibleRows = rows.slice(
@@ -781,40 +788,14 @@ export function FavoritesWorkspace({
                     checked={includeNotes}
                     onCheckedChange={(value) => {
                       setIncludeNotes(value);
-                      setShareLink("");
-                      setShareMessage("");
                     }}
                     className="text-xs"
                   />
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={async () => {
-                      const path = shareListUrl(
-                        rows.map((row) => row.id),
-                        name,
-                        notes,
-                        includeNotes,
-                      );
-                      if (!path) {
-                        setShareMessage(
-                          "Cette liste contient trop de notes pour un lien. Partagez-la sans notes ou imprimez le dossier.",
-                        );
-                        return;
-                      }
-                      const url = window.location.origin + path;
-                      setShareLink(url);
-                      try {
-                        await navigator.clipboard.writeText(url);
-                        setShareMessage("Lien copié.");
-                      } catch {
-                        setShareMessage("Copiez le lien ci-dessous.");
-                      }
-                    }}
-                  >
-                    <Copy className="size-3.5" />
-                    Copier le lien
-                  </Button>
+                  <CopyButton
+                    value={shareLink}
+                    label="Copier le lien"
+                    disabled={!sharePath || !shareLink}
+                  />
                 </div>
                 {includeNotes && (
                   <p className="mt-3 text-xs text-muted-foreground">
@@ -822,12 +803,13 @@ export function FavoritesWorkspace({
                     personne disposant du lien.
                   </p>
                 )}
-                {shareMessage && (
+                {!sharePath && (
                   <p role="status" className="mt-3 text-xs">
-                    {shareMessage}
+                    Cette liste contient trop de notes pour un lien. Partagez-la
+                    sans notes ou imprimez le dossier.
                   </p>
                 )}
-                {shareLink && (
+                {sharePath && shareLink && (
                   <Input
                     label="Lien de partage"
                     readOnly

@@ -225,6 +225,13 @@ See [decisions](docs/decisions.md) and [data contract](docs/data-contract.md).
 
 ## Client state and visualization
 
+Arc copy buttons are vendored shared primitives under `components/arc`, alongside
+the existing beUI sources. The root stylesheet imports Arc's foundation once in
+a lower-priority layer and bridges semantic tokens to the existing theme.
+`usePageUrl` resolves share paths after hydration and observes route/hash changes;
+feature code still constructs release-aware analysis, evolution and list paths.
+Clipboard writes and in-place feedback belong to Arc's `use-copy-feedback` helper.
+
 `features/seo` owns public page identity, structured data and discovery sitemaps.
 Pure metadata and XML rules stay under `domain`; sitemap loading uses the existing
 server-only atlas client. Metadata and formation rendering share request-scoped

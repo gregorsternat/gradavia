@@ -48,7 +48,9 @@ test("analysis URL restores filters on history traversal and clears them on bare
 
 test("analysis filters, local views and exported provenance share one cohort", async ({
   page,
+  context,
 }, testInfo) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.goto("/analyses");
   await expect(
     page.getByRole("heading", { name: "Atelier d’analyse", exact: true }),
@@ -87,6 +89,16 @@ test("analysis filters, local views and exported provenance share one cohort", a
   expect(exported.records[0].metrics.capacity).toBe(32);
   expect(exported.filtersAndChart.annotation).toContain("BTS publié");
   expect(exported.source.releaseId).toMatch(/^[a-f0-9-]{36}$/);
+  const copy = page.getByRole("button", { name: "Partager", exact: true });
+  await copy.click();
+  await expect(copy).toHaveAttribute("data-copy-state", "copied");
+  const sharedUrl = new URL(
+    await page.evaluate(() => navigator.clipboard.readText()),
+  );
+  expect(sharedUrl.pathname).toBe("/observatoire");
+  expect(sharedUrl.searchParams.get("onglet")).toBe("analyses");
+  expect(sharedUrl.searchParams.get("version")).toBe(exported.source.releaseId);
+  expect(sharedUrl.searchParams.get("q")).toBe("Systèmes numériques");
   await page
     .getByRole("button", { name: "Vues et cohortes enregistrées" })
     .click();

@@ -3,7 +3,7 @@ import { usePanelActive, PanelMain } from "@/features/workspace/ui/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "@/features/workspace/ui/navigation";
 import Link from "@/features/workspace/ui/navigation";
-import { ArrowDownToLine, Copy, Pause, Play } from "lucide-react";
+import { ArrowDownToLine, Pause, Play } from "lucide-react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import {
@@ -24,6 +24,7 @@ import { Table, type TableColumn } from "@/components/motion/table";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
 import { LineChart } from "@/components/charts/tremor/components/LineChart/LineChart";
 import { ChartData } from "@/features/observatory/ui/shared";
+import { ShareButton } from "@/features/formations/ui/shared";
 import { datasetUrl } from "@/features/formations/domain/explorer";
 import {
   formatMeasure,
@@ -85,7 +86,6 @@ export function Evolution({ data }: { data: EvolutionData }) {
   const type = (searchParams.get("type") ?? "").slice(0, 200);
   const region = (searchParams.get("region") ?? "").slice(0, 200);
   const mode = searchParams.get("mode") === "index" ? "index" : "count";
-  const [notice, setNotice] = useState("");
   const [frame, setFrame] = useState<"before" | "after">("before"),
     [playing, setPlaying] = useState(false);
   const matches = data;
@@ -275,35 +275,13 @@ export function Evolution({ data }: { data: EvolutionData }) {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={async () => {
-              try {
-                await navigator.clipboard.writeText(
-                  new URL(href, window.location.origin).href,
-                );
-                setNotice("Lien copié avec les deux versions de source.");
-              } catch {
-                router.replaceState(null, "", href);
-                setNotice("Copiez l’adresse de cette page.");
-              }
-            }}
-          >
-            <Copy className="size-3.5" />
-            Partager
-          </Button>
+          <ShareButton href={href} />
           <Button variant="ghost" size="sm" onClick={exportJson}>
             <ArrowDownToLine className="size-3.5" />
             JSON
           </Button>
         </div>
       </div>
-      {notice && (
-        <p role="status" className="mt-3 text-xs text-muted-foreground">
-          {notice}
-        </p>
-      )}
       <section
         className="mt-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-6"
         aria-label="Paramètres de comparaison"
