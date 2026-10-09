@@ -1,7 +1,8 @@
 "use client";
+import { usePanelActive, PanelMain } from "@/features/workspace/ui/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { useRouter, useSearchParams } from "@/features/workspace/ui/navigation";
+import Link from "@/features/workspace/ui/navigation";
 import { ArrowDownToLine, Pause, Play } from "lucide-react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { Button, ButtonLink } from "@/components/motion/button/base";
@@ -73,6 +74,7 @@ function Choice({
 export function Evolution({ data }: { data: EvolutionData }) {
   const { before, after } = data;
   const router = useRouter();
+  const active = usePanelActive();
   const reduce = useReducedMotion();
   const searchParams = useSearchParams();
   const requestedMeasure = searchParams.get("indicateur");
@@ -150,7 +152,7 @@ export function Evolution({ data }: { data: EvolutionData }) {
     value: string,
   ) => {
     sourceParams.set(key, value);
-    window.history.replaceState(null, "", `/evolutions?${sourceParams}`);
+    router.replaceState(null, "", `/evolutions?${sourceParams}`);
   };
   const campaignChange = (key: "debut" | "fin", value: string) => {
     sourceParams.set(key, value);
@@ -158,13 +160,13 @@ export function Evolution({ data }: { data: EvolutionData }) {
     router.push(`/evolutions?${sourceParams}`);
   };
   useEffect(() => {
-    if (!playing || reduce) return;
+    if (!playing || reduce || !active) return;
     const timer = window.setInterval(
       () => setFrame((value) => (value === "before" ? "after" : "before")),
       1800,
     );
     return () => window.clearInterval(timer);
-  }, [playing, reduce]);
+  }, [playing, reduce, active]);
   const columns: TableColumn<(typeof pairs)[number]>[] = [
     {
       key: "name",
@@ -259,7 +261,7 @@ export function Evolution({ data }: { data: EvolutionData }) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
   return (
-    <main id="contenu" tabIndex={-1} className="min-w-0 py-8">
+    <PanelMain id="contenu" tabIndex={-1} className="min-w-0 py-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="page-title">Évolutions</h1>
@@ -714,6 +716,6 @@ export function Evolution({ data }: { data: EvolutionData }) {
           },
         ]}
       />
-    </main>
+    </PanelMain>
   );
 }

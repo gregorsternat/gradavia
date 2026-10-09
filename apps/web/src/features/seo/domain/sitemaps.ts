@@ -1,3 +1,4 @@
+import { canonicalHref } from "../../workspace/domain/registry";
 import type { AtlasData } from "../../atlas/domain/api-contract";
 import { absoluteUrl, pages } from "./metadata";
 import { detailPath } from "./structured-data";
@@ -33,7 +34,7 @@ export function sitemapXml(paths: string[], index = false): string {
 export function publicPagePaths(): string[] {
   return Object.entries(pages)
     .filter(([, page]) => !("noIndex" in page && page.noIndex))
-    .map(([path]) => path);
+    .map(([path]) => canonicalHref(path));
 }
 
 export function formationPaths(data: AtlasData): string[] {

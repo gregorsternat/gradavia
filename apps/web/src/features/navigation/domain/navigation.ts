@@ -1,216 +1,112 @@
-export const navigationGroups = [
-  {
-    href: "/formations",
-    label: "Formations",
-    pages: [
-      {
-        href: "/formations",
-        label: "Rechercher des formations",
-        keywords: ["parcoursup", "liste", "explorer"],
-      },
-      {
-        href: "/carte",
-        label: "Carte des formations",
-        keywords: ["proximité", "ville", "rayon", "intérêts"],
-      },
-      {
-        href: "/apprentissage",
-        label: "Apprentissage",
-        keywords: ["alternance", "contrat"],
-      },
-    ],
+import {
+  canonicalHref,
+  panels,
+  resolvePanel,
+  spaces,
+  type PanelId,
+} from "../../workspace/domain/registry";
+
+// Search aliases describe the tools; route ownership and destinations live in
+// the workspace registry used by server rendering, tabs and metadata.
+const commands: Partial<
+  Record<PanelId, { label?: string; keywords: string[] }>
+> = {
+  formations: {
+    label: "Rechercher des formations",
+    keywords: ["parcoursup", "liste", "explorer"],
   },
-  {
-    href: "/specialites",
+  carte: {
+    label: "Carte des formations",
+    keywords: ["proximité", "ville", "rayon", "intérêts"],
+  },
+  apprentissage: {
+    label: "Apprentissage",
+    keywords: ["alternance", "contrat"],
+  },
+  specialites: {
     label: "Spécialités du bac",
-    pages: [
-      {
-        href: "/specialites",
-        label: "Spécialités du bac",
-        keywords: ["lycée", "doublette", "profil", "bac général"],
-      },
-      {
-        href: "/specialites/inverse",
-        label: "Spécialités : partir d’une formation",
-        keywords: ["inverse"],
-      },
+    keywords: ["lycée", "doublette", "profil", "bac général"],
+  },
+  inverse: {
+    label: "Spécialités : partir d’une formation",
+    keywords: ["inverse"],
+  },
+  selection: {
+    label: "Comparer ma sélection",
+    keywords: ["comparaison", "sélection"],
+  },
+  modalites: {
+    label: "Comparer les modalités",
+    keywords: [
+      "hors apprentissage",
+      "apprentissage",
+      "alternance",
+      "Comparer hors apprentissage et apprentissage",
     ],
   },
-  {
-    href: "/comparer",
-    label: "Comparer",
-    pages: [
-      {
-        href: "/comparer",
-        label: "Comparer ma sélection",
-        keywords: ["comparaison", "sélection"],
-      },
-      {
-        href: "/modalites",
-        label: "Comparer les modalités",
-        keywords: [
-          "hors apprentissage",
-          "apprentissage",
-          "alternance",
-          "Comparer hors apprentissage et apprentissage",
-        ],
-      },
+  favoris: {
+    label: "Mes favoris",
+    keywords: [
+      "listes",
+      "préparation",
+      "notes",
+      "dossier",
+      "enregistrées",
+      "sauvegarder",
     ],
   },
-  {
-    href: "/favoris",
-    label: "Mon projet",
-    pages: [
-      {
-        href: "/favoris",
-        label: "Mes favoris",
-        keywords: [
-          "listes",
-          "préparation",
-          "notes",
-          "dossier",
-          "enregistrées",
-          "sauvegarder",
-        ],
-      },
-      {
-        href: "/budget",
-        label: "Budget étudiant",
-        keywords: ["coût", "logement", "scénarios"],
-      },
+  budget: {
+    label: "Budget étudiant",
+    keywords: ["coût", "logement", "scénarios"],
+  },
+  overview: { keywords: ["accueil", "statistiques"] },
+  territoires: { keywords: ["région", "géographie", "villes"] },
+  evolutions: {
+    keywords: ["campagnes", "historique", "Comparer les campagnes"],
+  },
+  analyses: {
+    keywords: ["graphiques", "distribution", "export", "statistiques"],
+  },
+  decouvrir: {
+    keywords: [
+      "découvrir",
+      "données",
+      "À vous d’estimer · découvrir les données",
     ],
   },
-  {
-    href: "/observatoire",
-    label: "Observatoire",
-    pages: [
-      {
-        href: "/observatoire",
-        label: "Vue d’ensemble",
-        keywords: ["accueil", "statistiques"],
-      },
-      {
-        href: "/territoires",
-        label: "Territoires",
-        keywords: ["région", "géographie", "villes"],
-      },
-      {
-        href: "/evolutions",
-        label: "Évolutions",
-        keywords: ["campagnes", "historique", "Comparer les campagnes"],
-      },
-      {
-        href: "/analyses",
-        label: "Atelier d’analyse",
-        keywords: ["graphiques", "distribution", "export", "statistiques"],
-      },
-      {
-        href: "/decouvrir",
-        label: "À vous d’estimer",
-        keywords: [
-          "découvrir",
-          "données",
-          "À vous d’estimer · découvrir les données",
-        ],
-      },
+  sources: { keywords: ["indicateurs", "méthodologie"] },
+  donnees: {
+    keywords: [
+      "données",
+      "exports",
+      "télécharger",
+      "API publique et notebooks",
     ],
   },
-  {
-    href: "/sources",
-    label: "Données & méthode",
-    pages: [
-      {
-        href: "/sources",
-        label: "Sources et définitions",
-        keywords: ["indicateurs", "méthodologie"],
-      },
-      {
-        href: "/donnees",
-        label: "API et notebooks",
-        keywords: [
-          "données",
-          "exports",
-          "télécharger",
-          "API publique et notebooks",
-        ],
-      },
-      {
-        href: "/archives",
-        label: "Archives APB",
-        keywords: ["admission post-bac", "historique"],
-      },
-    ],
-  },
-];
-
-export function navigationGroup(pathname: string, family?: string | null) {
-  if (pathname === "/carte" && family === "apb") return navigationGroups[5];
-  if (pathname.startsWith("/atlas/")) return navigationGroups[0];
-  return navigationGroups.find((group) =>
-    group.pages.some(
-      (page) => pathname === page.href || pathname.startsWith(`${page.href}/`),
-    ),
-  );
-}
-
-const sharedFilters = ["campagne", "q", "type", "region", "statut"];
-const mapSort: Record<string, string> = {
-  nom: "name",
-  capacite: "capacity",
-  candidatures: "applications",
+  archives: { keywords: ["admission post-bac", "historique"] },
 };
-const listSort: Record<string, string> = {
-  name: "nom",
-  capacity: "capacite",
-  applications: "candidatures",
-};
-
-/** Different readers support different filters; never silently copy an unsupported constraint. */
-export function representationUrl(
-  pathname: string,
-  params: URLSearchParams,
-  view: "liste" | "carte",
-) {
-  const apprenticeship =
-    pathname === "/apprentissage" ||
-    (pathname === "/carte" && params.get("famille") === "apprentissage");
-  if (apprenticeship) {
-    const next = new URLSearchParams(params);
-    next.set("famille", "apprentissage");
-    next.set("vue", view);
-    return `/apprentissage?${next}`;
-  }
-  if ((pathname === "/formations") === (view === "liste"))
-    return `${pathname}${params.size ? `?${params}` : ""}`;
-  const next = new URLSearchParams();
-  for (const key of sharedFilters) {
-    const value = params.get(key);
-    if (value) next.set(key, value);
-  }
-  const sorts = view === "carte" ? mapSort : listSort;
-  const requestedSort = params.get("tri") ?? "";
-  const sort = Object.hasOwn(sorts, requestedSort)
-    ? sorts[requestedSort]
-    : undefined;
-  if (sort) next.set("tri", sort);
-  return `${view === "carte" ? "/carte" : "/formations"}${next.size ? `?${next}` : ""}`;
-}
-
-export function scopeUrl(
-  params: URLSearchParams,
-  family: string,
-  view: "liste" | "carte",
-) {
-  // A different source family has its own campaigns, taxonomy and release IDs.
-  const next = new URLSearchParams();
-  const q = params.get("q");
-  if (q) next.set("q", q);
-  if (family === "apprentissage") next.set("vue", view);
-  const path =
-    family === "apprentissage"
-      ? "/apprentissage"
-      : view === "liste"
-        ? "/formations"
-        : "/carte";
-  return `${path}${next.size ? `?${next}` : ""}`;
+export const navigationGroups = spaces.map((space) => ({
+  href: space.path,
+  label: space.label,
+  pages: (
+    [
+      ...space.panels,
+      ...(space.path === "/formations" ? ["apprentissage" as const] : []),
+    ] as PanelId[]
+  ).map((id) => ({
+    href: canonicalHref(panels[id].path),
+    label: commands[id]?.label ?? panels[id].label,
+    keywords: commands[id]?.keywords ?? [],
+  })),
+}));
+export function navigationGroup(href: string, family?: string | null) {
+  const url = new URL(href, "https://gradavia.invalid");
+  if (family) url.searchParams.set("famille", family);
+  if (
+    url.pathname.startsWith("/atlas/") ||
+    url.pathname.startsWith("/formations/")
+  )
+    return navigationGroups[0];
+  const panel = resolvePanel(url.pathname, url.searchParams);
+  return panel ? navigationGroups[panels[panel].space] : undefined;
 }

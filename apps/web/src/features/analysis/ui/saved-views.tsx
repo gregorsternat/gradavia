@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState, useSyncExternalStore } from "react";
-import Link from "next/link";
+import Link from "@/features/workspace/ui/navigation";
 import { BookmarkPlus, Trash2 } from "lucide-react";
 import { Button } from "@/components/motion/button/base";
 import { Input } from "@/components/motion/input";

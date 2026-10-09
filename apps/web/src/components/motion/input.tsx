@@ -12,6 +12,7 @@ import {
   type InputHTMLAttributes,
   type ReactNode,
 } from "react";
+import { useClientReady } from "@/lib/hooks/use-client-ready";
 import { cn } from "@/lib/utils";
 
 export type InputClassNames = {
@@ -59,13 +60,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     rightIcon,
     className,
     classNames,
-    disabled,
+    disabled: requestedDisabled,
     id: idProp,
     type,
     ...rest
   },
   ref,
 ) {
+  const ready = useClientReady();
+  const disabled = requestedDisabled || (!!onChange && !ready);
   const reactId = useId();
   const id = idProp ?? reactId;
   const reduce = useReducedMotion();

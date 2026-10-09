@@ -1,8 +1,9 @@
 "use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 
 import { useState, useSyncExternalStore, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter } from "@/features/workspace/ui/navigation";
+import Link from "@/features/workspace/ui/navigation";
 import {
   ArrowLeft,
   ArrowRight,
@@ -149,7 +150,7 @@ function ReadySpecialties({
     if (pending) return;
     const selected = value as SpecialtyIndicator;
     setIndicator(selected);
-    window.history.replaceState(
+    router.replaceState(
       null,
       "",
       specialtiesUrl(data.selectedPair.id, data.query.groupe, selected),
@@ -231,7 +232,7 @@ function ReadySpecialties({
     timeZone: "Europe/Paris",
   }).format(new Date(data.source.collectedAt));
   return (
-    <main id="contenu" className="min-w-0 flex-1 py-8" aria-busy={pending}>
+    <PanelMain id="contenu" className="min-w-0 flex-1 py-8" aria-busy={pending}>
       <div className="mb-7 flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-[-0.045em]">
@@ -518,7 +519,7 @@ function ReadySpecialties({
           },
         ]}
       />
-    </main>
+    </PanelMain>
   );
 }
 
@@ -538,7 +539,7 @@ export function SpecialtyExplorer({
       />
     );
   return (
-    <main id="contenu" className="py-8">
+    <PanelMain id="contenu" className="py-8">
       <h1 className="text-3xl font-semibold tracking-tight">
         Spécialités du bac
       </h1>
@@ -557,6 +558,6 @@ export function SpecialtyExplorer({
           Réessayer
         </ButtonLink>
       </section>
-    </main>
+    </PanelMain>
   );
 }

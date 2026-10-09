@@ -52,6 +52,41 @@ external dependencies of the pure domain crate; changing that allowlist requires
 an architectural decision. Regression fixtures prove forbidden paths are caught.
 Static analysis does not replace review of side effects or data semantics.
 
+## Persistent workspaces
+
+Six server-rendered roots own the interactive tool panels: `/formations`,
+`/specialites`, `/comparer`, `/favoris`, `/observatoire` and `/sources`.
+`onglet` selects the panel; `famille=apprentissage` selects the independent
+apprenticeship population in Formations. Previous tool paths below remain
+permanent redirects that preserve their query state and browser fragments.
+Formation details, the landing page and public dataset downloads remain routes.
+
+`features/workspace/domain` owns URL identity, per-reader data keys and typed
+presentation descriptors. Feature server loaders compose the initial result and
+`GET /api/workspace/[panel]`; the latter accepts only registered panels and
+bounded queries and returns serializable, validated feature data. It is a private
+application contract, not a replacement for the public dataset export API.
+No browser module imports server I/O or directly addresses the Rust service.
+
+The server renders only the requested feature into the workspace. Subsequent
+panels import their own view and read data on demand. Visited panels keep their
+state until leaving the workspace. Scoped navigation prevents hidden panels from
+reading another panel's URL or changing browser history. Native links still work
+without JavaScript. Same-space activation uses History; the active URL and
+back/forward traversal select the displayed panel and its query. Only existing
+favorites and budget stores persist beyond this visit. Panel `refresh()` invalidates
+and reloads only that entry through the read facade, preserving other drafts.
+Global print styles are installed only by the active panel. A pending result
+cannot supply campaign/version defaults for a newer requested context. Comparison
+actions use the current requested IDs and filter retained data to those IDs, so
+consecutive removals remain effective while earlier reads are pending.
+
+Overview/territories and sources/downloads reuse the same data keys. Latest
+panel results and a bounded in-memory request cache prevent repeated reads;
+obsolete responses cannot overwrite a newer query. Loading/errors stay inside
+the affected panel. Full atlas limits and source-specific reader semantics remain
+unchanged; regular list-only and map-only criteria are remembered separately.
+
 ## Runtime interfaces
 
 - `GET /formations` renders a 25-row search page. `campagne`, `q`, `type`,
@@ -61,7 +96,7 @@ Static analysis does not replace review of side effects or data semantics.
   streamed preview from `/v1/overview`. Loading uses inert placeholders;
   empty/unavailable data uses a non-numeric search/navigation panel.
   Legacy `/?campagne=YYYY` links redirect to `/observatoire?campagne=YYYY`.
-- `/observatoire` and `/territoires` consume `/v1/overview`; each headline, breakdown and
+- `/observatoire` and its `onglet=territoires` panel consume `/v1/overview`; each headline, breakdown and
   coverage value uses the same selected immutable campaign release.
 - `/formations/[id]` reads a retained `release:row` identity, source-defined
   indicators and separately qualified history. Retained links survive imports.
@@ -71,14 +106,17 @@ Static analysis does not replace review of side effects or data semantics.
   specialty dataset. National, group and formation levels stay separate.
 - `/sources` reads the 14-source inventory and explains metric definitions,
   population differences, history limits and local selection persistence.
-- `/carte`, `/apprentissage` and `/archives` load separate family snapshots
-  from `/v1/atlas`; `/atlas/[id]` reads their immutable record details.
-- `/analyses` and `/decouvrir` use a retained atlas; `/evolutions` captures two
-  campaigns with qualified matching. `/modalites` compares independently chosen
-  regular/apprenticeship records without asserting course equivalence.
-- `/specialites/inverse` consumes `/v1/specialties/inverse` within the reviewed
-  2025 population. `/budget` stores user-entered scenarios in the browser.
-- `/donnees` exposes download/notebook entry points; `/api/v1/datasets` is the
+- `/formations?onglet=carte`, `famille=apprentissage` and
+  `/sources?onglet=archives` load separate family snapshots from `/v1/atlas`;
+  `/atlas/[id]` reads their immutable record details.
+- Observatoire panels `analyses` and `decouvrir` use a retained atlas;
+  `evolutions` captures two campaigns with qualified matching. Comparer’s
+  `modalites` panel compares independently chosen regular/apprenticeship records
+  without asserting course equivalence.
+- `/specialites?onglet=formation` consumes `/v1/specialties/inverse` within the
+  reviewed 2025 population. `/favoris?onglet=budget` stores user-entered scenarios
+  in the browser.
+- `/sources?onglet=donnees` exposes download/notebook entry points; `/api/v1/datasets` is the
   bounded public HTTP export facade over the private Rust atlas service.
 - `/robots.txt` and `/sitemap.xml` expose the search-discovery policy and root
   sitemap index; the four child sitemaps are documented in [SEO](docs/seo.md).

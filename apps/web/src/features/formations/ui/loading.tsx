@@ -1,8 +1,14 @@
+import { PanelMain } from "@/features/workspace/ui/navigation";
 import { Loader } from "@/components/motion/loader";
 
 export default function LoadingFormations() {
   return (
-    <main id="contenu" tabIndex={-1} className="flex-1 py-14" aria-busy="true">
+    <PanelMain
+      id="contenu"
+      tabIndex={-1}
+      className="flex-1 py-14"
+      aria-busy="true"
+    >
       <h1 className="text-4xl font-medium tracking-tight">
         Explorer les formations
       </h1>
@@ -22,6 +28,6 @@ export default function LoadingFormations() {
           />
         ))}
       </div>
-    </main>
+    </PanelMain>
   );
 }

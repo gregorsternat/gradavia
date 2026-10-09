@@ -1,3 +1,4 @@
+import { canonicalHref } from "../../workspace/domain/registry";
 import { describe, expect, test } from "vitest";
 import type {
   CampaignSource,
@@ -60,7 +61,7 @@ describe("search page identity", () => {
     for (const path of Object.keys(pages) as PublicPage[]) {
       const metadata = pageMetadata(path);
       expect(metadata.alternates?.canonical).toBe(
-        `https://gradavia.com${path}`,
+        `https://gradavia.com${canonicalHref(path)}`,
       );
       expect(metadata.openGraph).toMatchObject({
         url: metadata.alternates?.canonical,
@@ -80,7 +81,7 @@ describe("search page identity", () => {
         vue: "liste",
       }),
     ).toMatchObject({
-      alternates: { canonical: "https://gradavia.com/carte" },
+      alternates: { canonical: "https://gradavia.com/formations?onglet=carte" },
       robots: { index: true },
     });
     expect(
@@ -92,7 +93,7 @@ describe("search page identity", () => {
     ).toMatchObject({
       alternates: {
         canonical:
-          "https://gradavia.com/carte?q=Lyon&region=Auvergne-Rh%C3%B4ne-Alpes",
+          "https://gradavia.com/formations?q=Lyon&region=Auvergne-Rh%C3%B4ne-Alpes&onglet=carte",
       },
       robots: { index: false, follow: true },
     });

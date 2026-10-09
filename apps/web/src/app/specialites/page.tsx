@@ -1,26 +1,13 @@
-import { pageMetadata } from "@/features/seo/domain/metadata";
 import type { SearchParams } from "@/features/formations/domain/explorer";
-import { parseIndicator } from "@/features/specialties/domain/explorer";
-import { loadSpecialties } from "@/features/specialties/server/load";
-import { SpecialtyExplorer } from "@/features/specialties/ui/explorer";
+import {
+  WorkspacePage,
+  workspaceMetadata,
+} from "@/features/workspace/server/page";
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) {
-  return pageMetadata("/specialites", await searchParams);
+type Props = { searchParams: Promise<SearchParams> };
+export async function generateMetadata({ searchParams }: Props) {
+  return workspaceMetadata("/specialites", await searchParams);
 }
-export default async function SpecialtiesPage({
-  searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) {
-  const params = await searchParams;
-  return (
-    <SpecialtyExplorer
-      result={await loadSpecialties(params)}
-      indicator={parseIndicator(params.tri)}
-    />
-  );
+export default async function Page({ searchParams }: Props) {
+  return <WorkspacePage path="/specialites" params={await searchParams} />;
 }

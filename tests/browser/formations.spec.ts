@@ -174,7 +174,7 @@ test("pending searches and sorting retain criteria when the view is changed imme
   const sortGate = new Promise<void>((resolve) => {
     releaseSort = resolve;
   });
-  await page.route("**/formations?**", async (route) => {
+  await page.route("**/api/workspace/formations?**", async (route) => {
     const params = new URL(route.request().url()).searchParams;
     if (params.get("q") === "ecole etampes")
       await (params.get("tri") === "capacite" ? sortGate : searchGate);
@@ -183,7 +183,10 @@ test("pending searches and sorting retain criteria when the view is changed imme
   try {
     await page.getByRole("searchbox").fill("ecole etampes");
     await page.getByRole("button", { name: "Rechercher", exact: true }).click();
-    await expect(page.getByRole("main")).toHaveAttribute("aria-busy", "true");
+    await expect(page.locator("#formations-contenu")).toHaveAttribute(
+      "aria-busy",
+      "true",
+    );
     await expect(page.getByRole("tab", { name: "Vue cartes" })).toBeDisabled();
     await expect(
       page.getByRole("button", { name: "Trier les formations" }),
@@ -196,7 +199,10 @@ test("pending searches and sorting retain criteria when the view is changed imme
     expect(new URL(page.url()).searchParams.get("q")).toBe("ecole etampes");
 
     await selectOption(page, "Trier les formations", "Places · Décroissant");
-    await expect(page.getByRole("main")).toHaveAttribute("aria-busy", "true");
+    await expect(page.locator("#formations-contenu")).toHaveAttribute(
+      "aria-busy",
+      "true",
+    );
     await expect(page.getByRole("tab", { name: "Vue liste" })).toBeDisabled();
     const changeToList = page.getByRole("tab", { name: "Vue liste" }).click();
     releaseSort();
@@ -284,6 +290,7 @@ test("keyboard and reduced motion preserve search and filter access", async ({
   ).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/#contenu$/);
+  await expect(page.getByRole("button", { name: /^Filtres/ })).toBeEnabled();
   await page.getByRole("button", { name: /^Filtres/ }).focus();
   await page.keyboard.press("Enter");
   const filter = page.getByRole("button", {
@@ -586,25 +593,59 @@ test("adding to a shared comparison preserves its formations and campaign with f
     page.getByRole("table", { name: "Comparaison des indicateurs" }),
   ).toBeVisible();
   expect(new URL(page.url()).searchParams.get("ids")?.split(",")).toEqual(ids);
-  await page
-    .getByRole("button", {
-      name: `Retirer du comparateur : ${titles[0]}`,
-      exact: true,
-    })
-    .click();
-  await page
-    .getByRole("button", {
-      name: `Retirer du comparateur : ${titles[1]}`,
-      exact: true,
-    })
-    .click();
-  await expect(
-    page.getByRole("link", { name: titles[0], exact: true }),
-  ).toHaveCount(0);
-  await expect(
-    page.getByRole("link", { name: titles[1], exact: true }),
-  ).toHaveCount(0);
-  expect(new URL(page.url()).searchParams.get("ids")?.split(",")).toEqual([
-    ids[2],
-  ]);
+  let releaseFirst!: () => void;
+  const firstResponse = new Promise<void>((resolve) => {
+    releaseFirst = resolve;
+  });
+  let requestCount = 0;
+  await page.route("**/api/workspace/selection?*", async (route) => {
+    const first = requestCount++ === 0;
+    const response = await route.fetch();
+    if (first) await firstResponse;
+    await route.fulfill({ response });
+  });
+  try {
+    const firstRequest = page.waitForRequest("**/api/workspace/selection?*");
+    await page
+      .getByRole("button", {
+        name: `Retirer du comparateur : ${titles[0]}`,
+        exact: true,
+      })
+      .click();
+    await firstRequest;
+    await expect(
+      page.getByRole("link", { name: titles[0], exact: true }),
+    ).toHaveCount(0);
+    const secondResponse = page.waitForResponse("**/api/workspace/selection?*");
+    await page
+      .getByRole("button", {
+        name: `Retirer du comparateur : ${titles[1]}`,
+        exact: true,
+      })
+      .click();
+    await secondResponse;
+    for (const title of titles.slice(0, 2))
+      await expect(
+        page.getByRole("link", { name: title, exact: true }),
+      ).toHaveCount(0);
+    expect(new URL(page.url()).searchParams.get("ids")?.split(",")).toEqual([
+      ids[2],
+    ]);
+    const staleResponse = page.waitForResponse("**/api/workspace/selection?*");
+    releaseFirst();
+    await staleResponse;
+    for (const title of titles.slice(0, 2))
+      await expect(
+        page.getByRole("link", { name: title, exact: true }),
+      ).toHaveCount(0);
+    await expect(
+      page.getByRole("link", { name: titles[2], exact: true }),
+    ).toBeVisible();
+    expect(new URL(page.url()).searchParams.get("ids")?.split(",")).toEqual([
+      ids[2],
+    ]);
+  } finally {
+    releaseFirst();
+    await page.unrouteAll({ behavior: "wait" });
+  }
 });

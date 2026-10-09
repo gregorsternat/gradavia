@@ -1,10 +1,40 @@
 # Third-party source components
 
+## GitHub repository mark (2026-10-08)
+
+Source: Primer Octicons
+[`mark-github-16.svg`](https://github.com/primer/octicons/blob/97825f832c98f817867f770d084c08e3edc6f78c/icons/mark-github-16.svg).
+License: [MIT](licenses/octicons.txt).
+
+The path is copied unchanged into `apps/web/src/components/github-link.tsx`.
+Local integration uses an 18px decorative SVG with `currentColor`, a shared beUI
+icon link, a French accessible name and native tooltip, and a new-tab repository
+destination. No icon package or runtime dependency is added.
+
 ## beUI
 
 Source: [beUI](https://beui.dev/) and
 [starc007/ui-components](https://github.com/starc007/ui-components).
 License: [MIT](licenses/beui.txt).
+
+### Persistent workspace controls (2026-10-08)
+
+Local changes to the existing beUI tabs add native anchor triggers, named tab
+lists, manual keyboard activation and a stable panel host that preserves child
+state. `ButtonLink` normalizes internal workspace destinations. Controlled inputs
+wait for hydration before accepting edits, preventing early typing from being
+replaced by the initial state. Selects, accordion triggers, sliders and buttons
+with JavaScript click handlers also expose their readiness through disabled state;
+native links and submit buttons retain their server-rendered behavior. No component or dependency was newly copied. Hidden panels set the shared motion
+preference to reduced; the evolution timer and Leaflet movement also pause.
+The inline slider uses the same deterministic motion hook so a reduced-motion
+preference does not change its handle markup during hydration.
+
+Leaflet remains browser-only behind a client view boundary. The workspace
+uses a React lazy boundary for the requested server-rendered feature and imports
+additional tool views on first activation. Tool client references are not statically
+collected in the server entry, which would bundle every tool into initial JavaScript.
+The browser suite checks that Budget code is absent until its first activation.
 
 ### Expanded exploration (2026-10-05)
 
@@ -110,7 +140,9 @@ Local integration patches:
   Radio groups and tabs have
   roving keyboard focus; tabs identify their associated panels. Radio items offer
   an optional segment presentation for the theme and metric selectors, retaining
-  the source component's shared indicator and keyboard model. Number ticker
+  the source component's shared indicator and keyboard model. Theme selection
+  uses the existing client-ready guard to disable radios until hydration attaches
+  their handlers and restores the saved preference. Number ticker
   precision is explicit for fractional published rates.
   Tab panels can omit inactive viewport-dependent children while retaining their
   semantic panel IDs, avoiding zero-size measurements from hidden charts.
@@ -261,6 +293,9 @@ cover the multi-series legend.
 BarChart axis labels carry a local `gradavia-axis-label` class so scoped theme
 styles preserve readable contrast in both themes; current Recharts no longer
 adds its former label class when a custom class is supplied.
+The four charts share a local measured container that retains positive dimensions
+while hidden and remeasures on activation, preserving chart state. Series animations
+respect reduced motion and panel activity.
 All four chart tooltips use semantic surface, border, foreground and muted text
 tokens. This prevents the scoped gray palette's surface override from also
 coloring dark-mode tooltip titles and values with their background color.

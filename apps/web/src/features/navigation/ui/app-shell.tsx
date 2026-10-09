@@ -2,8 +2,13 @@
 
 import type { ReactNode } from "react";
 import { Suspense, useCallback, useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import Link, { navigateInWorkspace } from "@/features/workspace/ui/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  canonicalHref,
+  panels,
+  resolvePanel,
+} from "@/features/workspace/domain/registry";
 import {
   ArrowUpRight,
   BookOpen,
@@ -35,8 +40,8 @@ import { Button } from "@/components/motion/button/base";
 import { ThemeSelect } from "@/components/theme-select";
 import { LogoMark } from "@/components/logo-mark";
 import { Wordmark } from "@/components/wordmark";
+import { GitHubLink } from "@/components/github-link";
 import { navigationGroup, navigationGroups } from "../domain/navigation";
-import { SectionNavigation } from "./section-navigation";
 import { useFormationSelection } from "@/features/formations/ui/selection-provider";
 
 const icons = [
@@ -50,6 +55,13 @@ const icons = [
 const destinations = navigationGroups
   .slice(0, 5)
   .map((group, index) => ({ ...group, icon: icons[index]! }));
+
+function PanelTitle({ fallback }: { fallback: string }) {
+  const pathname = usePathname();
+  const search = useSearchParams();
+  const panel = resolvePanel(pathname, search);
+  return panel ? panels[panel].label : fallback;
+}
 
 function ShellContents({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -80,7 +92,10 @@ function ShellContents({ children }: { children: ReactNode }) {
         icon: icons[index],
         keywords: [...page.keywords, group.label],
         group: group.label,
-        onSelect: () => router.push(page.href),
+        onSelect: () => {
+          if (!navigateInWorkspace(page.href))
+            router.push(canonicalHref(page.href));
+        },
       })),
     ),
     {
@@ -89,11 +104,42 @@ function ShellContents({ children }: { children: ReactNode }) {
       icon: BookOpen,
       keywords: ["indicateurs", "chiffres", "définition"],
       group: "Données & méthode",
-      onSelect: () => router.push("/sources#indicateurs"),
+      onSelect: () => {
+        if (!navigateInWorkspace("/sources#indicateurs"))
+          router.push("/sources#indicateurs");
+      },
     },
   ];
   return (
-    <>
+    <div
+      className="contents"
+      onClickCapture={(event) => {
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey
+        )
+          return;
+        const anchor = (event.target as Element).closest<HTMLAnchorElement>(
+          "a[href]",
+        );
+        if (
+          !anchor ||
+          anchor.closest("[data-workspace]") ||
+          anchor.target === "_blank" ||
+          anchor.hasAttribute("download") ||
+          anchor.getAttribute("href")?.startsWith("#")
+        )
+          return;
+        if (navigateInWorkspace(anchor.href)) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }}
+    >
       <AnimatedSidebar
         ariaLabel="Navigation principale"
         panelClassName="bg-sidebar border-0"
@@ -172,11 +218,12 @@ function ShellContents({ children }: { children: ReactNode }) {
               </AnimatedSidebarMenuButton>
             </AnimatedSidebarMenuItem>
           </AnimatedSidebarMenu>
-          {(open || isMobile) && (
-            <div className="px-3">
-              <ThemeSelect />
-            </div>
-          )}
+          <div
+            className={`flex items-center gap-3 ${open || isMobile ? "px-3" : "justify-center"}`}
+          >
+            <GitHubLink />
+            {(open || isMobile) && <ThemeSelect />}
+          </div>
         </AnimatedSidebarFooter>
       </AnimatedSidebar>
       <div className="min-w-0 flex-1 bg-background">
@@ -194,7 +241,11 @@ function ShellContents({ children }: { children: ReactNode }) {
             <span aria-hidden="true" className="hidden text-border sm:inline">
               /
             </span>
-            <span className="truncate font-medium">{title}</span>
+            <span className="truncate font-medium">
+              <Suspense fallback={title}>
+                <PanelTitle fallback={title} />
+              </Suspense>
+            </span>
           </div>
           {pathname !== "/formations" && (
             <Link
@@ -206,9 +257,6 @@ function ShellContents({ children }: { children: ReactNode }) {
           )}
         </header>
         <div className="page-frame mx-auto max-w-[1480px] px-4 pb-14 sm:px-8 lg:px-10">
-          <Suspense>
-            <SectionNavigation />
-          </Suspense>
           {children}
         </div>
       </div>
@@ -219,7 +267,7 @@ function ShellContents({ children }: { children: ReactNode }) {
         placeholder="Où voulez-vous aller ?"
         emptyMessage="Aucune page ne correspond à votre recherche."
       />
-    </>
+    </div>
   );
 }
 export function AppShell({ children }: { children: ReactNode }) {

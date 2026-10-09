@@ -13,6 +13,7 @@ test("analysis URL restores filters on history traversal and clears them on bare
     name: "Formations de l’analyse",
     exact: true,
   });
+  await expect(search).toBeEnabled();
   await search.focus();
   await search.pressSequentially("Systèmes");
   await expect(search).toBeFocused();
@@ -33,7 +34,7 @@ test("analysis URL restores filters on history traversal and clears them on bare
     .getByRole("combobox")
     .fill("Atelier d’analyse");
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/analyses$/);
+  await expect(page).toHaveURL(/\/observatoire\?onglet=analyses$/);
   await expect(search).toHaveValue("");
   await expect(table).toHaveAttribute("aria-rowcount", "32");
   await page.goBack();
@@ -41,7 +42,7 @@ test("analysis URL restores filters on history traversal and clears them on bare
   await expect(search).toHaveValue("Systèmes");
   await expect(table).toHaveAttribute("aria-rowcount", "2");
   await page.goForward();
-  await expect(page).toHaveURL(/\/analyses$/);
+  await expect(page).toHaveURL(/\/observatoire\?onglet=analyses$/);
   await expect(search).toHaveValue("");
 });
 
@@ -94,6 +95,8 @@ test("analysis filters, local views and exported provenance share one cohort", a
   const sharedUrl = new URL(
     await page.evaluate(() => navigator.clipboard.readText()),
   );
+  expect(sharedUrl.pathname).toBe("/observatoire");
+  expect(sharedUrl.searchParams.get("onglet")).toBe("analyses");
   expect(sharedUrl.searchParams.get("version")).toBe(exported.source.releaseId);
   expect(sharedUrl.searchParams.get("q")).toBe("Systèmes numériques");
   await page
@@ -224,6 +227,7 @@ test("source quiz reveals real denominators and links to the pinned analysis", a
   const slider = page.getByRole("slider", {
     name: "Votre estimation en pourcentage",
   });
+  await expect(slider).toBeEnabled();
   await slider.focus();
   await page.keyboard.press("Home");
   await expect(slider).toHaveAttribute("aria-valuenow", "0");

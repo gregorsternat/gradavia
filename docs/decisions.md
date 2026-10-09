@@ -268,3 +268,22 @@ separate tasks. No metric definition, persistence schema or API contract changes
 representation links disable automatic prefetching, avoiding background snapshot
 loads and prefetching the active search URL; production browser tests cover
 campaign metadata updates as well as the visible results.
+
+## 021 — Persist tool panels within each navigation group
+
+Supersedes the secondary-route UI in decision 020 while retaining its six groups
+and distinct data populations. Each space has one root URL and an `onglet`
+selector. Old tool URLs redirect permanently, preserving source/query identity.
+Native History controls local activation, with server rendering for direct entry
+and a bounded Next.js read facade for panels opened later. The first view is
+rendered directly on the server; other feature modules are imported on demand.
+
+Panel state is scoped to the visit, not saved in a new browser store. Existing
+favorites, notes and budgets keep their explicit persistence/sharing contracts.
+Regular list and geographic search retain their separate readers: common filters
+transfer, incompatible criteria remain local and are restored on return. A panel
+change does not promise an identical population or retained release across readers.
+
+The implementation reuses source-owned tabs with a stable host element and
+manual activation for asynchronously loaded views. Client/server metadata uses
+the same per-tool indexation policy; tools do not inherit the root's robots policy.

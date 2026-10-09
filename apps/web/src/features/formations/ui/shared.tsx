@@ -1,7 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import Link from "next/link";
+import Link from "@/features/workspace/ui/navigation";
+import { canonicalHref } from "@/features/workspace/domain/registry";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -239,7 +240,7 @@ export function ExportButton({
   );
 }
 export function ShareButton({ href }: { href?: string }) {
-  const value = usePageUrl(href);
+  const value = usePageUrl(href ? canonicalHref(href) : undefined);
   return <CopyButton value={value} label="Partager" disabled={!value} />;
 }
 export function SourceDisclosure({

@@ -20,7 +20,7 @@ test("map filters keep the complete snapshot, radius and share URL synchronized"
   await expect(
     page.getByRole("heading", { name: "Explorer la carte", exact: true }),
   ).toBeVisible();
-  await expect(page.locator(".leaflet-container canvas")).toBeVisible();
+  await expect(page.locator(".leaflet-container:visible canvas")).toBeVisible();
   await page
     .getByRole("button", { name: "Cadrer les résultats", exact: true })
     .click();
@@ -89,6 +89,7 @@ test("map filters follow internal navigation and browser history", async ({
   const search = page.getByRole("textbox", {
     name: "Rechercher dans la carte",
   });
+  await expect(search).toBeEnabled();
   await search.pressSequentially("Systèmes numériques");
   await expect(search).toHaveValue("Systèmes numériques");
   const filtered = page.url();
@@ -129,7 +130,7 @@ test("apprenticeship and APB stay separate and retain missing indicators", async
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Explorer les archives APB",
   );
-  await expect(page.locator(".leaflet-container")).toHaveCount(0);
+  await expect(page.locator(".leaflet-container:visible")).toHaveCount(0);
   await page
     .getByRole("region", { name: "Formations de la carte" })
     .getByRole("link")
@@ -212,18 +213,21 @@ test("list and map share compatible filters while apprenticeship keeps its snaps
   page,
 }) => {
   await page.goto("/formations?campagne=2025&q=BTS&type=BTS&tri=capacite");
-  const views = page.getByRole("navigation", {
-    name: "Affichage des formations",
+  const views = page.getByRole("tablist", {
+    name: "Dans Formations",
   });
-  await views.getByRole("link", { name: "Carte", exact: true }).focus();
+  await expect(
+    page.getByRole("button", { name: "Périmètre des formations" }),
+  ).toBeEnabled();
+  await views.getByRole("tab", { name: "Carte", exact: true }).focus();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(
-    /\/carte\?campagne=2025&q=BTS&type=BTS&tri=capacity$/,
+    /\/formations\?campagne=2025&q=BTS&type=BTS&tri=capacity&onglet=carte$/,
   );
   await expect(
     page.getByRole("textbox", { name: "Rechercher dans la carte" }),
   ).toHaveValue("BTS");
-  await views.getByRole("link", { name: "Liste", exact: true }).click();
+  await views.getByRole("tab", { name: "Liste", exact: true }).click();
   await expect(page).toHaveURL(
     /\/formations\?campagne=2025&q=BTS&type=BTS&tri=capacite$/,
   );
@@ -231,8 +235,8 @@ test("list and map share compatible filters while apprenticeship keeps its snaps
   await page
     .getByRole("option", { name: "Apprentissage", exact: true })
     .click();
-  await expect(page).toHaveURL(/\/apprentissage\?q=BTS&vue=liste$/);
-  await expect(page.locator(".leaflet-container")).toHaveCount(0);
+  await expect(page).toHaveURL(/\/formations\?q=BTS&famille=apprentissage$/);
+  await expect(page.locator(".leaflet-container:visible")).toHaveCount(0);
   await expect(
     page.getByRole("link", {
       name: "BTS - Informatique en apprentissage",
@@ -244,19 +248,19 @@ test("list and map share compatible filters while apprenticeship keeps its snaps
     exact: true,
   });
   await expect(locate).toHaveCount(0);
-  await views.getByRole("link", { name: "Carte", exact: true }).click();
-  await expect(page.locator(".leaflet-container canvas")).toBeVisible();
+  await views.getByRole("tab", { name: "Carte", exact: true }).click();
+  await expect(page.locator(".leaflet-container:visible canvas")).toBeVisible();
   await expect(locate).toBeVisible();
   await locate.click();
   const release = new URL(page.url()).searchParams.get("version");
   expect(release).toBeTruthy();
-  await views.getByRole("link", { name: "Liste", exact: true }).click();
-  await expect(page).toHaveURL(/vue=liste/);
-  await expect(page.locator(".leaflet-container")).toHaveCount(0);
+  await views.getByRole("tab", { name: "Liste", exact: true }).click();
+  expect(new URL(page.url()).searchParams.has("onglet")).toBe(false);
+  await expect(page.locator(".leaflet-container:visible")).toHaveCount(0);
   expect(new URL(page.url()).searchParams.get("version")).toBe(release);
   await expect(locate).toHaveCount(0);
   await page.reload();
-  await expect(page.locator(".leaflet-container")).toHaveCount(0);
+  await expect(page.locator(".leaflet-container:visible")).toHaveCount(0);
   await expect(locate).toHaveCount(0);
   await expect(
     page.getByRole("textbox", { name: "Rechercher dans la carte" }),
@@ -267,9 +271,11 @@ test("legacy APB map links retain their filters under methodology", async ({
   page,
 }) => {
   await page.goto("/carte?famille=apb&campagne=2017&q=BTS");
-  await expect(page).toHaveURL(/\/archives\?famille=apb&campagne=2017&q=BTS$/);
+  await expect(page).toHaveURL(
+    /\/sources\?campagne=2017&q=BTS&onglet=archives$/,
+  );
   await expect(
-    page.getByRole("navigation", { name: "Dans Données & méthode" }),
+    page.getByRole("tablist", { name: "Dans Données & méthode" }),
   ).toBeVisible();
   await expect(
     page.getByRole("textbox", { name: "Rechercher dans la carte" }),

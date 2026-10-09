@@ -1,9 +1,9 @@
 "use client";
+import { usePanelPending, PanelMain } from "@/features/workspace/ui/navigation";
 
-import { FormationNavigation } from "@/features/navigation/ui/formation-navigation";
 import { useState, useSyncExternalStore, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter } from "@/features/workspace/ui/navigation";
+import Link from "@/features/workspace/ui/navigation";
 import {
   ArrowLeft,
   ArrowRight,
@@ -91,7 +91,9 @@ function ReadyExplorer({
   initialView?: "liste" | "cartes";
 }) {
   const router = useRouter();
-  const [pending, startTransition] = useTransition();
+  const [transitionPending, startTransition] = useTransition();
+  const panelPending = usePanelPending();
+  const pending = transitionPending || panelPending;
   const [draft, setDraft] = useState(data.query);
   const mobile = useSyncExternalStore(
     subscribeMobile,
@@ -125,7 +127,7 @@ function ReadyExplorer({
       "https://gradavia.invalid",
     );
     url.searchParams.set("vue", normalized);
-    window.history.replaceState(null, "", url.pathname + url.search);
+    router.replaceState(null, "", url.pathname + url.search);
   };
   const columns: TableColumn<Formation>[] = [
     {
@@ -276,7 +278,7 @@ function ReadyExplorer({
     </div>
   );
   return (
-    <main id="contenu" className="min-w-0 flex-1 py-8" aria-busy={pending}>
+    <PanelMain id="contenu" className="min-w-0 flex-1 py-8" aria-busy={pending}>
       <ExplorerHeader>
         <div className="flex gap-2">
           <ShareButton />
@@ -289,7 +291,6 @@ function ReadyExplorer({
           />
         </div>
       </ExplorerHeader>
-      <FormationNavigation campaign={data.source.campaign} />
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -617,7 +618,7 @@ function ReadyExplorer({
         </p>
       </div>
       <ComparisonTray />
-    </main>
+    </PanelMain>
   );
 }
 
@@ -639,9 +640,8 @@ export function FormationExplorer({
       />
     );
   return (
-    <main id="contenu" className="flex-1 py-8">
+    <PanelMain id="contenu" className="flex-1 py-8">
       <ExplorerHeader />
-      <FormationNavigation />
       <section className="rounded-xl border border-border bg-surface px-6 py-20 text-center">
         <GraduationCap className="mx-auto mb-5 size-8 text-muted-foreground" />
         <h2 className="text-xl font-medium">
@@ -662,6 +662,6 @@ export function FormationExplorer({
           Réessayer
         </ButtonLink>
       </section>
-    </main>
+    </PanelMain>
   );
 }

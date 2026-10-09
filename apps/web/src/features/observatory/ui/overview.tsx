@@ -1,9 +1,10 @@
 "use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 
 import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/motion/radio";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from "@/features/workspace/ui/navigation";
+import { useRouter } from "@/features/workspace/ui/navigation";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -259,7 +260,7 @@ export function Overview({ result }: { result: OverviewResult }) {
 function ReadyOverview({ data }: { data: OverviewData }) {
   const regions = orderBreakdown(data.byRegion, "formations").slice(0, 6);
   return (
-    <main id="contenu" tabIndex={-1} className="py-6 sm:py-8">
+    <PanelMain id="contenu" tabIndex={-1} className="py-6 sm:py-8">
       <div className="mb-7 flex flex-wrap items-end justify-between gap-5 sm:mb-9">
         <div>
           <h1 className="page-title">Vue d’ensemble</h1>
@@ -422,6 +423,6 @@ function ReadyOverview({ data }: { data: OverviewData }) {
           <BookOpen className="size-3.5" /> Lire les indicateurs
         </ButtonLink>
       </div>
-    </main>
+    </PanelMain>
   );
 }

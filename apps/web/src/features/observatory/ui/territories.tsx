@@ -1,6 +1,7 @@
 "use client";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/features/workspace/ui/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
 import { RadioGroup, RadioGroupItem } from "@/components/motion/radio";
@@ -50,7 +51,7 @@ function ReadyTerritories({ data }: { data: OverviewData }) {
     [metrics[metric]]: metricValue(r, metric),
   }));
   return (
-    <main id="contenu" tabIndex={-1} className="py-6 sm:py-8">
+    <PanelMain id="contenu" tabIndex={-1} className="py-6 sm:py-8">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-5">
         <div>
           <h1 className="page-title">Territoires</h1>
@@ -212,6 +213,6 @@ function ReadyTerritories({ data }: { data: OverviewData }) {
       <div className="mt-8">
         <SourceLine source={data.source} />
       </div>
-    </main>
+    </PanelMain>
   );
 }
