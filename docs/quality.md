@@ -136,6 +136,21 @@ fix passes the same checks. Logs: `.artifacts/pr32-conflicts/focused.log` and
 `final-focused.log`. The full suite and production browser runs were not repeated
 for this conflict repair; remote CI and deployment remain separate.
 
+### PR #32 CI clock repair
+
+The [CI run for `5727b50`](https://github.com/gregorsternat/gradavia/actions/runs/37899976219)
+failed the desktop clipboard-recovery case: feedback returned to `idle`.
+The test installed Playwright's clock after creating native feedback timers;
+a local Chromium reproduction confirmed that clearing such a timer after clock
+installation did not cancel it. The test now installs the clock before navigation,
+following the [Clock API ordering requirement](https://playwright.dev/docs/clock).
+
+On 2026-10-09 (Asia/Shanghai), the corrected case passed five repetitions per
+desktop/mobile project in both development and production (20 executions total,
+no retries). `mise exec -- just build`, focused ESLint/formatting and documentation
+checks passed. Evidence: `.artifacts/pr32-ci/{github-failure,focused-development,focused-production,build}.log`.
+This is focused local validation; the full CI result remains separate.
+
 ## GitHub repository link validation (2026-10-08)
 
 On 2026-10-08 (Asia/Shanghai), `CI=true E2E_PORT=3542 mise exec -- just verify`

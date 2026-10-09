@@ -18,6 +18,8 @@ test("copy feedback follows navigation, supports the keyboard and keeps failed l
   context,
 }, testInfo) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  // Install before application timers so feedback resets remain cancellable.
+  await page.clock.install();
   await page.goto("/formations");
   const copy = page.getByRole("button", { name: "Partager", exact: true });
   await expect(copy).toBeEnabled();
@@ -56,7 +58,6 @@ test("copy feedback follows navigation, supports the keyboard and keeps failed l
       },
     });
   });
-  await page.clock.install();
   await copy.click();
   await expect(copy).toHaveAttribute("data-copy-state", "error");
   await expect(
