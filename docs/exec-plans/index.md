@@ -11,6 +11,9 @@ Keep brief work brief; use a plan when several boundaries change together.
 
 ## Completed
 
+- [Arc copy buttons](completed/arc-copy-buttons.md): source-owned registry integration
+  and consistent clipboard actions.
+
 - [Persistent workspace tabs](completed/persistent-workspaces.md): six spaces with
   retained tool state, lazy code/data, native History, legacy redirects and SSR.
 

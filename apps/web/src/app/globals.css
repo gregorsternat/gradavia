@@ -1,3 +1,5 @@
+@layer arc, theme, base, components, utilities;
+@import "../components/arc/foundation.css" layer(arc);
 @import "tailwindcss";
 
 .gradavia-map .leaflet-tile-pane {
@@ -18,6 +20,15 @@
   --subtle: #f2f3f5;
   --chart-primary: #313640;
   --chart-secondary: #9299a7;
+  /* Arc inherits Gradavia's palette, typography and accessible control size. */
+  --surface-muted: var(--subtle);
+  --text-secondary: var(--muted);
+  --border-strong: var(--muted);
+  --accent: var(--foreground);
+  --accent-strong: var(--foreground);
+  --success: var(--foreground);
+  --danger: var(--foreground);
+  --control-height-sm: 2.75rem;
 }
 .dark {
   color-scheme: dark;

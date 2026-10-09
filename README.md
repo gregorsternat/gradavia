@@ -6,7 +6,7 @@ Gradavia is an interactive observatory for French higher education: national
 Parcoursup statistics, formation search, detailed indicators and history,
 same-campaign comparisons, local favorites, regional exploration, and a
 specialty-pair explorer for general baccalaureate graduates. The interface uses
-source-owned beUI controls, Tremor charts and Motion with monochrome light/dark
+source-owned beUI controls, Arc copy buttons, Tremor charts and Motion with monochrome light/dark
 themes. All product data comes through a standalone Rust read API.
 
 The expanded workspace adds a synchronized formation map, apprenticeship and APB

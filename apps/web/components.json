@@ -16,5 +16,8 @@
     "lib": "@/lib",
     "hooks": "@/lib/hooks"
   },
-  "registries": { "@beui": "https://beui.dev/r/{name}.json" }
+  "registries": {
+    "@beui": "https://beui.dev/r/{name}.json",
+    "@uiarc": "https://uiarc.dev/r/{name}.json"
+  }
 }

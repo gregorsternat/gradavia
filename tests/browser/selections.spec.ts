@@ -110,7 +110,9 @@ test("named lists retain notes and progress across reloads and synchronize tabs"
 test("sharing excludes notes by default and imports an explicit annotated copy", async ({
   page,
   browser,
+  context,
 }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.goto("/formations?q=Droit+01&vue=cartes");
   await page
     .getByRole("button", {
@@ -134,6 +136,9 @@ test("sharing excludes notes by default and imports an explicit annotated copy",
     .getByRole("textbox", { name: "Lien de partage" })
     .inputValue();
   expect(decodeURIComponent(ordinary)).not.toContain("Une question privée");
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    ordinary,
+  );
   await page
     .getByRole("checkbox", { name: "Inclure mes notes, démarches et suivi" })
     .click();
@@ -147,6 +152,9 @@ test("sharing excludes notes by default and imports an explicit annotated copy",
     "Une question privée",
   );
   expect(new URL(annotated).search).not.toContain("privée");
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    annotated,
+  );
   const recipient = await browser.newContext();
   const shared = await recipient.newPage();
   await shared.goto(annotated);

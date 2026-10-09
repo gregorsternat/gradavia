@@ -78,6 +78,13 @@ landing is present, including when navigating between routes without a reload.
 - beUI is the default for every interactive primitive: buttons, inputs, select,
   combobox, tabs, radio controls, tooltip, accordion, table, command palette,
   sidebar, loaders and animated numbers. Components are installed as owned source.
+- Arc is available alongside beUI through the `@uiarc` registry in
+  `apps/web/components.json`. Its official `copy-button` owns all clipboard actions,
+  with French in-place feedback and a persistent manual-copy field on failure.
+  The foundation is imported once by the root stylesheet in a lower-priority
+  CSS layer; Gradavia's palette and system fonts remain authoritative. Arc's
+  keyboard-focus rules are scoped to Arc copy buttons, and its dark tokens accept
+  the existing `.dark` theme. Install only the items a feature actually uses.
 - Tremor Raw supplies area, line, bar and donut charts. Monochrome series use the
   `charcoal`, `silver`, `mist`, `steel` and `pale` tokens. Exact values and labels
   carry meaning independently of the shade.
@@ -85,7 +92,8 @@ landing is present, including when navigating between routes without a reload.
   changes and short content reveals. `MotionConfig reducedMotion="user"` governs
   movement; loading and every action remain understandable without animation.
 - Product-specific compositions reuse these primitives and Tailwind spacing and
-  typography. Do not add another design system or install unused blocks.
+  typography. Keep Arc's source-owned CSS modules and shared motion tokens;
+  do not introduce unrelated design systems or install unused blocks.
 
 Source files, licenses, upstream revisions and local compatibility/accessibility
 changes are recorded in [third-party sources](third-party.md). Local fixes include

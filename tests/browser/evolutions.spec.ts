@@ -48,7 +48,9 @@ test("evolution URL restores settings on history traversal and resets bare-route
 
 test("evolution compares exactly matched fixture observations and preserves indices", async ({
   page,
+  context,
 }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/evolutions?debut=2023&fin=2024");
   await expect(
@@ -81,6 +83,17 @@ test("evolution compares exactly matched fixture observations and preserves indi
     .click();
   await expect(page).toHaveURL(/version_debut=/);
   await expect(page).toHaveURL(/mode=index/);
+  const copy = page.getByRole("button", { name: "Partager", exact: true });
+  await copy.click();
+  await expect(copy).toHaveAttribute("data-copy-state", "copied");
+  const copiedUrl = new URL(
+    await page.evaluate(() => navigator.clipboard.readText()),
+  );
+  const displayedUrl = new URL(page.url());
+  expect(copiedUrl.pathname).toBe("/observatoire");
+  expect(copiedUrl.searchParams.get("version_debut")).toBeTruthy();
+  expect(copiedUrl.searchParams.get("version_fin")).toBeTruthy();
+  expect(copiedUrl.search).toBe(displayedUrl.search);
   await page.reload();
   await expect(
     page.getByRole("button", { name: "Affichage des graphiques", exact: true }),

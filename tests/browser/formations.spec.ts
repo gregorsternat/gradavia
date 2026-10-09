@@ -13,6 +13,109 @@ async function openFilters(page: Page) {
   ).toBeVisible();
 }
 
+test("copy feedback handles navigation, keyboard activation and stale writes", async ({
+  page,
+  context,
+}, testInfo) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  // Install before application timers so feedback resets remain cancellable.
+  await page.clock.install();
+  await page.goto("/formations");
+  const copy = page.getByRole("button", { name: "Partager", exact: true });
+  await expect(copy).toBeEnabled();
+  const initialWidth = await copy.evaluate(
+    (button: HTMLButtonElement) => button.offsetWidth,
+  );
+  await copy.focus();
+  await page.keyboard.press("Enter");
+  await expect(copy).toHaveAttribute("data-copy-state", "copied");
+  await expect
+    .poll(() => page.evaluate(() => navigator.clipboard.readText()))
+    .toBe(page.url());
+  expect(
+    await copy.evaluate((button: HTMLButtonElement) => button.offsetWidth),
+  ).toBe(initialWidth);
+
+  await page.getByRole("searchbox").fill("Systèmes");
+  await page.getByRole("button", { name: "Rechercher", exact: true }).click();
+  await expect(page).toHaveURL(/q=Syst/);
+  await page.evaluate(() => {
+    window.location.hash = "contenu";
+  });
+  await copy.focus();
+  await page.keyboard.press("Space");
+  await expect
+    .poll(() => page.evaluate(() => navigator.clipboard.readText()))
+    .toBe(page.url());
+
+  await page.evaluate(() => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText: async () => {
+          throw new DOMException("Clipboard denied", "NotAllowedError");
+        },
+      },
+    });
+  });
+  await copy.click();
+  await expect(copy).toHaveAttribute("data-copy-state", "error");
+  await expect(
+    page.getByRole("status").filter({ hasText: "copie impossible" }),
+  ).toContainText("réessayez");
+  const fallback = page.getByRole("textbox", {
+    name: "Lien à copier manuellement",
+    exact: true,
+  });
+  await expect(fallback).toHaveValue(page.url());
+  await fallback.focus();
+  expect(
+    await fallback.evaluate(
+      (input: HTMLInputElement) => input.selectionEnd! - input.selectionStart!,
+    ),
+  ).toBe(page.url().length);
+  await page.clock.fastForward(2_500);
+  await expect(copy).toHaveAttribute("data-copy-state", "error");
+
+  await page.evaluate(() => {
+    let calls = 0;
+    let resolveFirstWrite: (() => void) | undefined;
+    const testWindow = window as Window & {
+      resolveFirstClipboardWrite?: () => void;
+    };
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText: async () => {
+          calls += 1;
+          if (calls === 1)
+            await new Promise<void>((resolve) => {
+              resolveFirstWrite = resolve;
+            });
+          else throw new DOMException("Clipboard denied", "NotAllowedError");
+        },
+      },
+    });
+    testWindow.resolveFirstClipboardWrite = () => resolveFirstWrite?.();
+  });
+  await copy.click();
+  await copy.click();
+  await expect(copy).toHaveAttribute("data-copy-state", "error");
+  await page.evaluate(() => {
+    (
+      window as Window & { resolveFirstClipboardWrite?: () => void }
+    ).resolveFirstClipboardWrite?.();
+  });
+  await expect(copy).toHaveAttribute("data-copy-state", "error");
+
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath("copy-error.png") });
+});
+
 test("explorer is accessible with provenance and bounded list and card views", async ({
   page,
   isMobile,
@@ -219,7 +322,7 @@ test("keyboard and reduced motion preserve search and filter access", async ({
     page.getByRole("link", { name: "Aller au contenu" }),
   ).toBeFocused();
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/#contenu$/);
+  await expect(page.locator("main#contenu")).toBeFocused();
   await expect(page.getByRole("button", { name: /^Filtres/ })).toBeEnabled();
   await page.getByRole("button", { name: /^Filtres/ }).focus();
   await page.keyboard.press("Enter");
