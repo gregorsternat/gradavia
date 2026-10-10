@@ -1,6 +1,6 @@
 # Verification status
 
-Reviewed on 2026-10-09 (Asia/Shanghai), including the local Cloudflare Free
+Reviewed on 2026-10-10 (Asia/Shanghai), including the local Cloudflare Free
 candidate and PR #33 follow-ups. Earlier evidence below retains its tested revisions.
 This page summarizes coverage and outstanding limits. Detailed past results live
 in the [historical verification log](quality/history-through-2026-10-07.md).
@@ -21,6 +21,22 @@ health are separate observations; none establishes Google indexing or freshness.
 | UI and local preparation  | Browser tests cover navigation, hydration readiness, chart equivalents, lists, sharing and storage failures                      | Historical visual review is scoped to the recorded change, not a fresh audit of every screen            |
 
 ## Cloudflare Free candidate validation (2026-10-09)
+
+### PR #33 diagnostics upload repair (2026-10-10)
+
+GitHub run [37934353584](https://github.com/gregorsternat/gradavia/actions/runs/37934353584)
+passed `just verify` and the 177 publication contracts, then failed to upload
+diagnostics because publication filenames contain colons. The workflow now uploads
+a tar archive created outside `.artifacts`, preserving those names and hidden logs.
+Running the exact packaging step locally retained all 178 fixture files byte for
+byte, including 78 colon-containing names, and handled an absent diagnostics
+directory. `just test-publication` passed all 177 contracts again. Formatting and
+actionlint passed with only its unsupported, pre-existing `concurrency.queue`
+diagnostic filtered. The full suite was not repeated for this workflow-only fix.
+
+Evidence: `.artifacts/pr33-ci-failure.log`,
+`.artifacts/pr33-ci-publication-contracts.log` and
+`.artifacts/pr33-ci-archive-check.log`. The new remote upload remains to be verified.
 
 ### PR #33 detail-link regression
 
