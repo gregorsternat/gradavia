@@ -63,6 +63,13 @@ hashes match; Flight chunk ordering varies with request timing and is verified
 functionally by the workerd browser suite. Evidence:
 `.artifacts/cloudflare/prerender-cache-benchmark.json`.
 
+The remaining detail hot path recomputed title similarity and distance during
+every sort comparison. Preparing each peer's score once reduced a 48-reference
+probe over the real 14,252-row atlas from 3,777 ms to 228 ms; complete summaries
+and alternative ordering are deeply equal before/after. A regression covers
+score, distance, missing coordinates, title ordering and stable ties. Evidence:
+`.artifacts/cloudflare/peer-summary-{before,after}.json`.
+
 PR #38 was merged as `1a4f3fd` after
 [run 38057137343](https://github.com/gregorsternat/gradavia/actions/runs/38057137343)
 passed on its final head. The analysis workbench now retains its filtered cohort

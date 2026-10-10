@@ -136,3 +136,7 @@ local code, tests and deployment alone do not prove that outcome.
   from 4,132 ms to 1,844 ms with identical rendered DOM. Bound preparation to
   1-8 independent Next processes (two by default) and one route per process;
   preserve complete HTML/Flight validation and deterministic manifest ordering.
+- Peer ranking was another measured preparation bottleneck: title normalization
+  and distance were recalculated inside the sort comparator. Calculate them once
+  per peer, preserving score/distance/title precedence and stable ties. Complete
+  results match across 48 real references; the probe fell from 3,777 ms to 228 ms.
