@@ -10,7 +10,14 @@ import {
 } from "../../../scripts/cloudflare-publication";
 import type { Release } from "../../../scripts/prepare-cloudflare-publication";
 import { createHash } from "node:crypto";
-import { mkdtemp, writeFile, mkdir, symlink, readFile } from "node:fs/promises";
+import {
+  mkdtemp,
+  writeFile,
+  mkdir,
+  symlink,
+  readFile,
+  rm,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { brotliDecompressSync } from "node:zlib";
 import { join } from "node:path";
@@ -20,13 +27,65 @@ import {
   addDocumentArtifact,
   digest,
   partitionPublication,
+  BYTE_LIMIT,
   type Manifest,
 } from "../../../scripts/publication-assets";
+import { packPublication } from "../../../scripts/pack-publication";
 
 const service = (value: string, status = 200) => ({
   fetch: async () => new Response(value, { status }),
 });
 describe("publication boundaries", () => {
+  it.each([false, true])(
+    "packs a page index with split=%s without changing its publication identity",
+    async (split) => {
+      const root = await mkdtemp(join(tmpdir(), "gradavia-page-index-"));
+      const source = join(root, "source");
+      const output = join(root, "packed");
+      const manifest: Manifest = { format: 1, files: {} };
+      const publicationId = "a".repeat(20);
+      try {
+        for (const [name, value] of Object.entries({
+          "publication.json": "{}",
+          "runtime/api/index.js": "export default {};",
+          "runtime/web/index.js": "export default {};",
+          "pages.json":
+            (split ? " ".repeat(BYTE_LIMIT) : "") +
+            JSON.stringify({ format: 1, publicationId, routes: {} }),
+        }))
+          await addArtifact(source, manifest, name, value);
+        await writeFile(
+          join(source, "manifest.json"),
+          JSON.stringify(manifest),
+        );
+        await packPublication(source, output);
+        const release = JSON.parse(
+          await readFile(join(output, "release.json"), "utf8"),
+        );
+        expect(release.dataId).toBe(publicationId);
+        expect(release.logicalFiles).toBe(Object.keys(manifest.files).length);
+        const archive = join(output, "archive");
+        await validatePublication(archive);
+        for (const name of Object.keys(manifest.files).filter((name) =>
+          name.startsWith("pages.json"),
+        )) {
+          const key = digest(name);
+          const lookup = JSON.parse(
+            await readFile(
+              join(archive, `lookup/${key.slice(0, 3)}.json`),
+              "utf8",
+            ),
+          )[key];
+          const pack = await readFile(join(archive, lookup.pack));
+          expect(
+            digest(pack.subarray(lookup.offset, lookup.offset + lookup.bytes)),
+          ).toBe(manifest.files[name]!.sha256);
+        }
+      } finally {
+        await rm(root, { recursive: true });
+      }
+    },
+  );
   it("keeps identity bytes and prepares smaller lossless representations for large documents", async () => {
     const root = await mkdtemp(join(tmpdir(), "gradavia-brotli-"));
     const manifest: Manifest = { format: 1, files: {} };

@@ -43,7 +43,7 @@ const fixtureManifest: Manifest = JSON.parse(
   await readFile(join(rendered, "manifest.json"), "utf8"),
 );
 const fixturePages = JSON.parse(
-  await readFile(join(rendered, "pages.json"), "utf8"),
+  (await readArtifact(rendered, "pages.json")).toString(),
 );
 const probe = "/compression-probe";
 const probeFiles = {
@@ -146,7 +146,7 @@ try {
       request.end();
     });
   const pages = JSON.parse(
-    await readFile(join(rendered, "pages.json"), "utf8"),
+    (await readArtifact(rendered, "pages.json")).toString(),
   ) as { routes: Record<string, { html: string; rsc: string }> };
   const manifest = JSON.parse(
     await readFile(join(rendered, "manifest.json"), "utf8"),
