@@ -124,3 +124,9 @@ local code, tests and deployment alone do not prove that outcome.
   exact wire bytes, identity fallback, HEAD and conditional requests in workerd
   before measuring the final candidate. This diagnostic is not a production
   publication and must be removed after profiling.
+- The final client profile repeated the same journey five times per device:
+  mobile readiness maxima fell from 7,981/13,540 ms to 3,299/5,811 ms for
+  formations/analysis, with maximum Event Timing 192 ms. Full publication CPU,
+  memory, browser parity and these performance measurements remain activation
+  requirements. The verified real-data checkpoint has 161,059 retained details
+  across 14 publications; rendering has started locally with the latest runtime.

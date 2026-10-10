@@ -61,7 +61,8 @@ it is smaller. Its archive reference shares the identity document's lookup, so
 negotiation adds no lookup request. Clients accepting Brotli receive the prepared
 bytes through the asset reader, page Worker and gateway without recompression;
 other clients receive identity bytes. Page responses vary by RSC and
-Accept-Encoding and use representation-specific ETags. Split documents keep
+Accept-Encoding and use representation-specific ETags; encoded responses use
+`Cache-Control: no-transform` to prevent edge recompression. Split documents keep
 their streaming identity fallback. The workerd check compares both wire
 representations with the publication and exercises HEAD and conditional requests.
 

@@ -40,6 +40,21 @@ on-the-fly compression; decompression equals the original 10,169,567-byte HTML.
 `Cache-Control: no-transform` is required to retain that saving at the edge.
 The diagnostic Worker is not a full publication and establishes no activation gate.
 
+Five repetitions on that profile, using the same conditions as the baseline,
+measured mobile maximum readiness of 3,299 ms for formations and 5,811 ms for
+analysis, maximum LCP 1,732 ms and 532 ms respectively, and maximum analysis Event
+Timing 192 ms. Desktop maxima were 1,651/1,096 ms readiness and 72 ms interaction.
+CLS stayed below 0.001. The complete staged publication must repeat these checks;
+this profile contains only the two captured pages and their client assets.
+Evidence: `.artifacts/cloudflare/client-edge-brotli-profile-20261010.json`.
+
+`just verify` passed code checks, Rust/PostgreSQL contracts, build and 181 development
+browser cases. The production suite had 178 passes and one failure caused solely
+by five `ERR_CONNECTION_CLOSED` responses from `tile.openstreetmap.org`. The exact
+map-camera test passed again on desktop and mobile without source changes, and all
+18 remaining data-state cases passed separately. Final TypeScript and formatting
+checks passed. Logs: `.artifacts/brotli-{verify,map-retry,data-states}.log`.
+
 PR #38 was merged as `1a4f3fd` after
 [run 38057137343](https://github.com/gregorsternat/gradavia/actions/runs/38057137343)
 passed on its final head. The analysis workbench now retains its filtered cohort
