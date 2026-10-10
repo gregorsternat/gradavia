@@ -105,3 +105,8 @@ local code, tests and deployment alone do not prove that outcome.
   Authenticated billing access is available; Workers Paid remains active until
   publication validation and obsolete-resource cleanup are complete. See
   [quality status](../../quality.md) for the exact workflow evidence.
+- Production preparation exposed repeated campaign scans in the existing history
+  lookup. The first run was cancelled after more than 20 minutes without finishing
+  its first detail campaign. Add the exact source-identity expression index through
+  Drizzle, prove bounded work with a 20,000-row database regression, then rerun the
+  real publication. Source values, duplicate semantics and public UI stay unchanged.

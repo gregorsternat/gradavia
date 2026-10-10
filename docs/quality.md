@@ -32,10 +32,22 @@ and passed the production smoke: 14,252 current formations and a complete
 
 The production reader secret is configured for the explicit publication workflow.
 [Run 38052470527](https://github.com/gregorsternat/gradavia/actions/runs/38052470527)
-passed contracts and local workerd browser verification before starting the real
-source snapshot/preparation. Its completion and production-scale gates remain
-unverified. Legacy deployment versions are retained in ignored local artifacts
-for rollback before any gateway change.
+passed contracts and local workerd browser verification, captured production
+sources and prepared all eight Parcoursup catalogs by 13:00 UTC. It was cancelled
+at 13:22 UTC while still preparing the first detail campaign. A read-only
+production `EXPLAIN ANALYZE` showed the history identity lookup scanning 14,252
+campaign rows, filtering 14,251 and taking 62.955 ms for one campaign. The new
+Drizzle expression index matches the existing raw source identity predicates;
+query semantics, including duplicate ambiguity and exact source values, stay
+unchanged. A 20,000-row PostgreSQL regression checks bounded lookup work and
+two-match ambiguity. The publisher reports progress every 1,000 retained details.
+Removing the index in a disposable database reproduced the regression: the same
+lookup touched 357 blocks instead of four and failed the bounded-work assertion.
+The indexed synthetic query took 0.010 ms versus 1.052 ms without the index;
+these local timings are not production latency measurements. Plans are retained
+under `.artifacts/source-identity-probe/`.
+Full publication completion and production-scale gates remain unverified. Legacy
+deployment versions are retained in ignored local artifacts for rollback.
 
 The read-only account analytics token is configured in GitHub. Manual usage checks
 now run before cutover; scheduled checks remain gated on the publication runtime.
