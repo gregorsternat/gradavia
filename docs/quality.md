@@ -24,6 +24,28 @@ health are separate observations; none establishes Google indexing or freshness.
 
 ### Production preparation and usage monitoring (2026-10-10)
 
+PR #39 merged as `546fe0c` after its final-head CI
+[run 38062499170](https://github.com/gregorsternat/gradavia/actions/runs/38062499170)
+passed. The final local repository run passed all 378 browser executions;
+the separate final-head check passed 134 TypeScript cases and Rust tests, and
+the workerd suite passed 179 cases with five intended exclusions. Logs:
+`.artifacts/prerender-cache-verify.log`,
+`.artifacts/final-check-unit-4195029.log` and
+`.artifacts/final-publication-browser-4195029.log`.
+
+The subsequent main CI
+[run 38063708319](https://github.com/gregorsternat/gradavia/actions/runs/38063708319)
+failed the desktop campaign-selection browser case. Its trace records the click
+while the menu and target item still had zero opacity: the opening list changed
+height from 99 to 154 px and its scroll offset changed during the click. The
+selection helper now waits for the option's entrance opacity before clicking;
+the product component and animation remain unchanged. Diagnostic archive:
+`.artifacts/main-ci-38063708319/`. The targeted production test passed 20 repeats
+per viewport (40 total), recorded in `.artifacts/campaign-animation-repeat.log`.
+All 26 production formation browser cases also passed in
+`.artifacts/campaign-animation-all-retry.log`; the initial harness exited before
+starting its server or executing tests, and a fresh launch completed successfully.
+
 Production capture in [run 38055944373](https://github.com/gregorsternat/gradavia/actions/runs/38055944373)
 completed and retained the data checkpoint `publication-data-38055944373-1`.
 The 643,081,469-byte archive was downloaded and its published SHA-256 verified.
