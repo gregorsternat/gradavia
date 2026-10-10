@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   usage:
-    if: vars.GRADAVIA_RUNTIME == 'publication'
+    if: github.event_name == 'workflow_dispatch' || vars.GRADAVIA_RUNTIME == 'publication'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
