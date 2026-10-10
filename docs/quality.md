@@ -24,6 +24,18 @@ health are separate observations; none establishes Google indexing or freshness.
 
 ### Production preparation and usage monitoring (2026-10-10)
 
+The production render completed all 279,682 routes with publication identity
+`47a65367432736a4efc2`: 1,100,535 manifest entries and 71,016,762,961 logical bytes,
+including 165,432 Brotli representations. No individual file exceeds 24 MiB.
+The page index itself spans three chunks. Packing previously rejected that valid
+split index because it only recognized a single `pages.json`; it now uses the
+existing logical-artifact reader and recognizes both forms. A regression fails
+before the fix and verifies publication identity and archived bytes for both
+single-file and split indexes afterward. All 17 publication unit cases pass.
+This is a completed local render, not a staged or activated production release.
+Evidence: `.artifacts/cloudflare/production-site-inventory-4195029.json` and
+`.artifacts/split-index-{before,unit}.log`.
+
 PR #39 merged as `546fe0c` after its final-head CI
 [run 38062499170](https://github.com/gregorsternat/gradavia/actions/runs/38062499170)
 passed. The final local repository run passed all 378 browser executions;

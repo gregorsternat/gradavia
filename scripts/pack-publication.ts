@@ -4,6 +4,7 @@ import {
   validatePublication,
   digest,
   addArtifact,
+  readArtifact,
   partitionPublication,
   type Manifest,
 } from "./publication-assets";
@@ -22,7 +23,8 @@ export async function packPublication(
   workerBudget = 90,
 ) {
   const source = await validatePublication(root);
-  if (!source.files["pages.json"]) throw new Error("Prerender before packing");
+  if (!source.files["pages.json"] && !source.files["pages.json.parts.json"])
+    throw new Error("Prerender before packing");
   const runtime = Object.fromEntries(
     Object.entries(source.files)
       .filter(([name]) => name.startsWith("runtime/"))
@@ -130,7 +132,7 @@ export async function packPublication(
       siteSha256,
       archiveSha256,
       runtime,
-      dataId: JSON.parse(await readFile(join(root, "pages.json"), "utf8"))
+      dataId: JSON.parse((await readArtifact(root, "pages.json")).toString())
         .publicationId,
       logicalFiles: Object.keys(source.files).length,
       physicalFiles: Object.keys(manifest.files).length,

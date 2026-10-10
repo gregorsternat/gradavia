@@ -35,7 +35,7 @@ if (
 )
   throw new Error("Use 1-8 render workers and a valid local port range");
 const manifest = await validatePublication(sourceRoot);
-if (manifest.files["pages.json"])
+if (manifest.files["pages.json"] || manifest.files["pages.json.parts.json"])
   throw new Error("Use a data-only publication as input");
 const root = resolve(process.argv[3] || `${sourceRoot}-web`);
 await mkdir(root);
