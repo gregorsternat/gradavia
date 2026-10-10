@@ -22,6 +22,21 @@ health are separate observations; none establishes Google indexing or freshness.
 
 ## Cloudflare Free candidate validation (2026-10-09)
 
+### PR #33 clipboard test synchronization (2026-10-10)
+
+The [next CI run](https://github.com/gregorsternat/gradavia/actions/runs/38039679987)
+successfully uploaded diagnostics but failed the desktop clipboard error case.
+Its trace shows the search still pending during the Space-key copy and rejected
+write; applying the response then replaces the keyed explorer and resets the
+button. The test now waits for the search input to become enabled before testing
+clipboard feedback on the resulting page. All error, recovery, keyboard and
+stale-write assertions remain, with no added retries or arbitrary delay.
+
+Ten repetitions per desktop/mobile project passed in both development and
+production (40 executions). Focused lint and formatting also passed. Evidence:
+`.artifacts/pr33-ci-latest-failure.log`, `.artifacts/pr33-ci-38039679987/`,
+`.artifacts/pr33-ci-copy-dev.log` and `.artifacts/pr33-ci-copy-prod.log`.
+
 ### PR #33 diagnostics upload repair (2026-10-10)
 
 GitHub run [37934353584](https://github.com/gregorsternat/gradavia/actions/runs/37934353584)
@@ -36,7 +51,8 @@ diagnostic filtered. The full suite was not repeated for this workflow-only fix.
 
 Evidence: `.artifacts/pr33-ci-failure.log`,
 `.artifacts/pr33-ci-publication-contracts.log` and
-`.artifacts/pr33-ci-archive-check.log`. The new remote upload remains to be verified.
+`.artifacts/pr33-ci-archive-check.log`. The subsequent run above confirms that
+packaging and uploading the diagnostics both succeeded.
 
 ### PR #33 detail-link regression
 
