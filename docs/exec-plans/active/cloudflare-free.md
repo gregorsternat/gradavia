@@ -116,3 +116,27 @@ local code, tests and deployment alone do not prove that outcome.
   aggregations. Keep filtering memoized by its actual filter fields; retain
   aggregation results across presentation-only changes. Verify the same real-data
   journey again on the final candidate before claiming a performance improvement.
+- A temporary Cloudflare client profile using real public production data sent
+  960,158 Brotli bytes for the 10,169,567-byte analysis document. Offline Brotli
+  quality 9 produces 685,378 bytes without changing its contents. Prepare optional
+  encoded HTML/RSC representations above 128 KiB, store their references in the
+  existing lookup, and negotiate them through the page Worker and gateway. Verify
+  exact wire bytes, identity fallback, HEAD and conditional requests in workerd
+  before measuring the final candidate. This diagnostic is not a production
+  publication and must be removed after profiling.
+- The final client profile repeated the same journey five times per device:
+  mobile readiness maxima fell from 7,981/13,540 ms to 3,299/5,811 ms for
+  formations/analysis, with maximum Event Timing 192 ms. Full publication CPU,
+  memory, browser parity and these performance measurements remain activation
+  requirements. The verified real-data checkpoint has 161,059 retained details
+  across 14 publications; rendering has started locally with the latest runtime.
+- Full rendering contains 279,682 routes. Real-detail probes exposed repeated
+  catalog reads and validation on every HTML/Flight request. A one-entry cache
+  enabled only for the immutable offline process reduced a warm 24-route probe
+  from 4,132 ms to 1,844 ms with identical rendered DOM. Bound preparation to
+  1-8 independent Next processes (two by default) and one route per process;
+  preserve complete HTML/Flight validation and deterministic manifest ordering.
+- Peer ranking was another measured preparation bottleneck: title normalization
+  and distance were recalculated inside the sort comparator. Calculate them once
+  per peer, preserving score/distance/title precedence and stable ties. Complete
+  results match across 48 real references; the probe fell from 3,777 ms to 228 ms.

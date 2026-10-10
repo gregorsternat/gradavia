@@ -4,11 +4,19 @@ import {
   datasetMetadata,
 } from "../apps/web/src/features/atlas/domain/export";
 import { atlasResponse } from "../apps/web/src/features/atlas/domain/api-contract";
-import { readArtifact } from "./publication-assets";
+import {
+  readArtifact,
+  addArtifact,
+  addDocumentArtifact,
+  type Manifest,
+} from "./publication-assets";
+import { pageAsset } from "../apps/free-web/src/identity";
 import type { Publication } from "../apps/free-web/src/publication";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
+import { request as httpRequest } from "node:http";
+import { brotliDecompressSync } from "node:zlib";
 import { packPublication } from "./pack-publication";
 import { prepareDeployment } from "./prepare-cloudflare-publication";
 import { startProcess, webEnvironment } from "./runtime";
@@ -29,9 +37,42 @@ const data = (
 ).trim();
 await run("prerender-publication", [data]);
 const rendered = `${data}-web`;
+// Small source fixtures do not naturally produce a large Flight response. Add
+// a transport-only route to this disposable publication to exercise both forms.
+const fixtureManifest: Manifest = JSON.parse(
+  await readFile(join(rendered, "manifest.json"), "utf8"),
+);
+const fixturePages = JSON.parse(
+  await readFile(join(rendered, "pages.json"), "utf8"),
+);
+const probe = "/compression-probe";
+const probeFiles = {
+  html: await pageAsset(probe, false),
+  rsc: await pageAsset(probe, true),
+};
+for (const [representation, name] of Object.entries(probeFiles))
+  await addDocumentArtifact(
+    rendered,
+    fixtureManifest,
+    name,
+    (representation === "html"
+      ? "<p>Public fixture</p>"
+      : '0:{"fixture":"public"}\n'
+    ).repeat(10_000),
+  );
+fixturePages.routes[probe] = probeFiles;
+await addArtifact(
+  rendered,
+  fixtureManifest,
+  "pages.json",
+  JSON.stringify(fixturePages),
+);
+await writeFile(
+  join(rendered, "manifest.json"),
+  JSON.stringify(fixtureManifest),
+);
 await packPublication(rendered, artifacts);
-const { stage } = await prepareDeployment(artifacts);
-const web = stage.find((config) => config.endsWith("/web.json"))!;
+const { stage, gateway: web } = await prepareDeployment(artifacts);
 const port = process.env.E2E_PORT ?? "3597";
 const worker = await startProcess(
   "pnpm",
@@ -67,6 +108,100 @@ try {
   }
   if (!ready)
     throw new Error("Fixture Cloudflare publication did not become ready");
+  // Node's raw HTTP client keeps wire bytes intact, so this exercises encoding
+  // through the real asset, page and gateway Workers rather than a Response mock.
+  const wire = (
+    route: string,
+    headers: Record<string, string>,
+    method = "GET",
+  ) =>
+    new Promise<{
+      status: number;
+      headers: import("node:http").IncomingHttpHeaders;
+      body: Buffer;
+    }>((resolve, reject) => {
+      const request = httpRequest(
+        `http://127.0.0.1:${port}${route}`,
+        { headers, method },
+        (response) => {
+          const chunks: Buffer[] = [];
+          response.on("data", (chunk: Buffer) => chunks.push(chunk));
+          response.on("error", reject);
+          response.on("aborted", () =>
+            reject(new Error("Truncated wire response")),
+          );
+          response.on("end", () =>
+            resolve({
+              status: response.statusCode!,
+              headers: response.headers,
+              body: Buffer.concat(chunks),
+            }),
+          );
+        },
+      );
+      request.on("error", reject);
+      request.setTimeout(15_000, () =>
+        request.destroy(new Error("Wire response timed out")),
+      );
+      request.end();
+    });
+  const pages = JSON.parse(
+    await readFile(join(rendered, "pages.json"), "utf8"),
+  ) as { routes: Record<string, { html: string; rsc: string }> };
+  const manifest = JSON.parse(
+    await readFile(join(rendered, "manifest.json"), "utf8"),
+  ) as { files: Record<string, unknown> };
+  for (const representation of ["html", "rsc"] as const) {
+    const page = Object.entries(pages.routes).find(
+      ([route, files]) =>
+        !route.includes("_publication_shell") &&
+        manifest.files[`${files[representation]}.br`],
+    );
+    assert(
+      page,
+      `Fixture must exercise a compressed ${representation} document`,
+    );
+    const [route, files] = page;
+    const headers: Record<string, string> =
+      representation === "rsc" ? { rsc: "1" } : {};
+    const raw = await wire(route, {
+      ...headers,
+      "accept-encoding": "identity",
+    });
+    const compressed = await wire(route, {
+      ...headers,
+      "accept-encoding": "br",
+    });
+    assert.equal(raw.status, 200);
+    assert.equal(compressed.status, 200);
+    assert.equal(compressed.headers["content-encoding"], "br");
+    assert.deepEqual(
+      raw.body,
+      await readArtifact(rendered, files[representation]),
+    );
+    assert.deepEqual(
+      compressed.body,
+      await readArtifact(rendered, `${files[representation]}.br`),
+    );
+    assert.deepEqual(brotliDecompressSync(compressed.body), raw.body);
+    // Wrangler normalizes Accept-Encoding on the upstream request and may
+    // decode its response for identity clients. Unit tests separately cover
+    // the asset reader's representation selection and distinct validators.
+    const unchanged = await wire(route, {
+      ...headers,
+      "accept-encoding": "br",
+      "if-none-match": compressed.headers.etag!,
+    });
+    assert.equal(unchanged.status, 304);
+    assert.equal(unchanged.body.length, 0);
+    const head = await wire(
+      route,
+      { ...headers, "accept-encoding": "br" },
+      "HEAD",
+    );
+    assert.equal(head.status, 200);
+    assert.equal(head.body.length, 0);
+  }
   const publication: Publication = JSON.parse(
     await readFile(join(rendered, "publication.json"), "utf8"),
   );

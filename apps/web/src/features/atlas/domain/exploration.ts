@@ -439,16 +439,24 @@ export function peerSummary(items: AtlasItem[], reference: AtlasItem) {
     fold(row.title)
       .split(/[^a-z0-9]+/)
       .filter((word) => words.has(word)).length;
-  const alternatives = [...peers]
+  const located = hasCoordinates(reference);
+  const alternatives = peers
+    .map((row) => ({
+      row,
+      similarity: similarity(row),
+      distance: located
+        ? hasCoordinates(row)
+          ? distanceKm(reference, row)
+          : Infinity
+        : 0,
+    }))
     .sort(
       (a, b) =>
-        similarity(b) - similarity(a) ||
-        (hasCoordinates(reference)
-          ? (hasCoordinates(a) ? distanceKm(reference, a) : Infinity) -
-            (hasCoordinates(b) ? distanceKm(reference, b) : Infinity)
-          : 0) ||
-        a.title.localeCompare(b.title, "fr"),
+        b.similarity - a.similarity ||
+        a.distance - b.distance ||
+        a.row.title.localeCompare(b.row.title, "fr"),
     )
-    .slice(0, 6);
+    .slice(0, 6)
+    .map(({ row }) => row);
   return { count: peers.length, positions, alternatives };
 }

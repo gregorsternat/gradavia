@@ -12,10 +12,12 @@ import type { Release } from "../../../scripts/prepare-cloudflare-publication";
 import { createHash } from "node:crypto";
 import { mkdtemp, writeFile, mkdir, symlink, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
+import { brotliDecompressSync } from "node:zlib";
 import { join } from "node:path";
 import {
   validatePublication,
   addArtifact,
+  addDocumentArtifact,
   digest,
   partitionPublication,
   type Manifest,
@@ -25,6 +27,95 @@ const service = (value: string, status = 200) => ({
   fetch: async () => new Response(value, { status }),
 });
 describe("publication boundaries", () => {
+  it("keeps identity bytes and prepares smaller lossless representations for large documents", async () => {
+    const root = await mkdtemp(join(tmpdir(), "gradavia-brotli-"));
+    const manifest: Manifest = { format: 1, files: {} };
+    const content = "<p>Données publiques françaises</p>".repeat(6000);
+    await addDocumentArtifact(root, manifest, "large.html", content);
+    await addDocumentArtifact(root, manifest, "small.rsc", "small document");
+    expect(await readFile(join(root, "large.html"), "utf8")).toBe(content);
+    const compressed = await readFile(join(root, "large.html.br"));
+    expect(brotliDecompressSync(compressed).toString()).toBe(content);
+    expect(compressed.length).toBeLessThan(Buffer.byteLength(content));
+    expect(manifest.files["small.rsc.br"]).toBeUndefined();
+  });
+  it("negotiates encoded page bytes and representation-specific validators through the gateway", async () => {
+    const key = digest(await pageAsset("/formations", false));
+    const identity = {
+      pack: "raw.bin",
+      offset: 0,
+      bytes: 8,
+      packBytes: 8,
+      sha256: "raw",
+    };
+    const encoded = {
+      pack: "br.bin",
+      offset: 0,
+      bytes: 7,
+      packBytes: 7,
+      sha256: "br",
+    };
+    const publication = {
+      fetch: (request: Request) =>
+        assets.fetch(request, {
+          SHARDS: JSON.stringify([{ binding: "FILES", first: "", last: "zz" }]),
+          FILES: {
+            fetch: async (request: Request) => {
+              const path = new URL(request.url).pathname;
+              if (path.startsWith("/lookup/"))
+                return Response.json({ [key]: { ...identity, br: encoded } });
+              return new Response(
+                path.endsWith("br.bin") ? "encoded" : "identity",
+              );
+            },
+          },
+        }),
+    };
+    const get = (headers: Record<string, string>, method = "GET") =>
+      gateway(
+        new Request("https://gradavia.com/formations", { headers, method }),
+        {
+          CURRENT_ID: "release",
+          CURRENT: {
+            fetch: (request) =>
+              handle(request, {
+                PUBLICATION: publication,
+                GRADAVIA_API: service("unused"),
+              }),
+          },
+        },
+      );
+    for (const [accept, compressed] of [
+      ["br", true],
+      ["gzip, br;q=0.5", true],
+      ["*", true],
+      ["br;q=0, *;q=1", false],
+      ["br;q=invalid", false],
+      ["gzip", false],
+      ["", false],
+    ] as const) {
+      const response = await get({ "accept-encoding": accept });
+      expect(await response.text()).toBe(compressed ? "encoded" : "identity");
+      expect(response.headers.get("content-encoding")).toBe(
+        compressed ? "br" : null,
+      );
+      expect(response.headers.get("etag")).toBe(compressed ? '"br"' : '"raw"');
+      expect(response.headers.get("vary")).toBe("RSC, Accept-Encoding");
+    }
+    const same = await get({
+      "accept-encoding": "br",
+      "if-none-match": '"br"',
+    });
+    expect(same.status).toBe(304);
+    expect(await same.text()).toBe("");
+    expect(
+      (await get({ "accept-encoding": "identity", "if-none-match": '"br"' }))
+        .status,
+    ).toBe(200);
+    expect(await (await get({ "accept-encoding": "br" }, "HEAD")).text()).toBe(
+      "",
+    );
+  });
   it("caches immutable chunks and revalidates pages without sending a body for HEAD or 304", async () => {
     const env = {
       PUBLICATION: {
@@ -40,7 +131,7 @@ describe("publication boundaries", () => {
     const head = await get("/formations", { method: "HEAD" });
     expect(head.status).toBe(200);
     expect(await head.text()).toBe("");
-    expect(head.headers.get("vary")).toBe("RSC");
+    expect(head.headers.get("vary")).toBe("RSC, Accept-Encoding");
     const same = await get("/formations", {
       headers: { "if-none-match": 'W/"v1"' },
     });

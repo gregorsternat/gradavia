@@ -56,6 +56,16 @@ reader handles a complete response with bounded streaming slicing and cancels
 the remainder. It also accepts a correctly validated 206 response. Large
 standalone assets stay streamed without slicing or buffering in JavaScript.
 
+HTML/RSC documents of at least 128 KiB also retain a Brotli representation when
+it is smaller. Its archive reference shares the identity document's lookup, so
+negotiation adds no lookup request. Clients accepting Brotli receive the prepared
+bytes through the asset reader, page Worker and gateway without recompression;
+other clients receive identity bytes. Page responses vary by RSC and
+Accept-Encoding and use representation-specific ETags; encoded responses use
+`Cache-Control: no-transform` to prevent edge recompression. Split documents keep
+their streaming identity fallback. The workerd check compares both wire
+representations with the publication and exercises HEAD and conditional requests.
+
 Physical files are partitioned deterministically into at most 18,000 files per
 asset Worker. The quota check reserves a previous release and entrypoints below
 90 Workers; the account inventory must additionally account for unrelated work.
@@ -105,6 +115,14 @@ just publication-pack .artifacts/site .artifacts/candidate
 just publication-deploy check .artifacts/candidate
 just publication-deploy stage .artifacts/candidate
 ```
+
+Rendering uses two local Next processes by default, with one HTML/Flight request
+sequence in flight per process. `PUBLICATION_RENDER_WORKERS` accepts 1-8 and
+`PUBLICATION_WEB_PORT` selects the first consecutive port. Each offline process
+retains only its last validated atlas query while `GRADAVIA_PRERENDER=1`; ordinary
+server requests keep their existing uncached reads. Failed reads are not retained.
+Both processes use the same frozen data/runtime identity, and the final route and
+file manifests are sorted independently of completion order.
 
 The snapshot command requires `DATABASE_URL` for the `gradavia_api` role and
 checks the selected endpoint. PostgreSQL credentials go through process
