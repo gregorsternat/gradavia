@@ -110,3 +110,9 @@ local code, tests and deployment alone do not prove that outcome.
   its first detail campaign. Add the exact source-identity expression index through
   Drizzle, prove bounded work with a 20,000-row database regression, then rerun the
   real publication. Source values, duplicate semantics and public UI stay unchanged.
+- The production mobile analysis baseline measured a 280 ms Event Timing sample
+  when opening Quality with 14,252 formations (CPU throttled 4x). View and
+  annotation changes recreated the filter configuration and invalidated all
+  aggregations. Keep filtering memoized by its actual filter fields; retain
+  aggregation results across presentation-only changes. Verify the same real-data
+  journey again on the final candidate before claiming a performance improvement.
