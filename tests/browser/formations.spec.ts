@@ -39,6 +39,8 @@ test("copy feedback handles navigation, keyboard activation and stale writes", a
   await page.getByRole("searchbox").fill("Systèmes");
   await page.getByRole("button", { name: "Rechercher", exact: true }).click();
   await expect(page).toHaveURL(/q=Syst/);
+  // The URL changes before the search response replaces the explorer and its buttons.
+  await expect(page.getByRole("searchbox")).toBeEnabled();
   await page.evaluate(() => {
     window.location.hash = "contenu";
   });

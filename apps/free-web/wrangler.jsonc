@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gradavia-web-free",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": false,
+  "preview_urls": false,
+  "services": [
+    { "binding": "PUBLICATION", "service": "gradavia-publication" },
+    { "binding": "GRADAVIA_API", "service": "gradavia-api-free" },
+  ],
+  "observability": { "enabled": true, "redact_query_string": true },
+}

@@ -1,7 +1,7 @@
 # Verification status
 
-Reviewed on 2026-10-09 (Asia/Shanghai), including the CI follow-up local
-diff on `8f08c19`. Earlier evidence below retains its own tested revisions.
+Reviewed on 2026-10-10 (Asia/Shanghai), including the local Cloudflare Free
+candidate and PR #33 follow-ups. Earlier evidence below retains its tested revisions.
 This page summarizes coverage and outstanding limits. Detailed past results live
 in the [historical verification log](quality/history-through-2026-10-07.md).
 A checked-in implementation, a local pass, remote CI, publication and production
@@ -19,6 +19,122 @@ health are separate observations; none establishes Google indexing or freshness.
 | Cloudflare delivery       | OpenNext build, Worker dry runs and image build; main-only deployment after verification; public data smoke                      | `just verify` does not run `just cf-check` or the public smoke; publication can precede a failing smoke |
 | Ingestion and provenance  | Archive/replay, source-shape, transaction and concurrency checks                                                                 | Imports are manual; live source/schema drift and remote archive backup need separate checks             |
 | UI and local preparation  | Browser tests cover navigation, hydration readiness, chart equivalents, lists, sharing and storage failures                      | Historical visual review is scoped to the recorded change, not a fresh audit of every screen            |
+
+## Cloudflare Free candidate validation (2026-10-09)
+
+### PR #33 clipboard test synchronization (2026-10-10)
+
+The [next CI run](https://github.com/gregorsternat/gradavia/actions/runs/38039679987)
+successfully uploaded diagnostics but failed the desktop clipboard error case.
+Its trace shows the search still pending during the Space-key copy and rejected
+write; applying the response then replaces the keyed explorer and resets the
+button. The test now waits for the search input to become enabled before testing
+clipboard feedback on the resulting page. All error, recovery, keyboard and
+stale-write assertions remain, with no added retries or arbitrary delay.
+
+Ten repetitions per desktop/mobile project passed in both development and
+production (40 executions). Focused lint and formatting also passed. Evidence:
+`.artifacts/pr33-ci-latest-failure.log`, `.artifacts/pr33-ci-38039679987/`,
+`.artifacts/pr33-ci-copy-dev.log` and `.artifacts/pr33-ci-copy-prod.log`.
+
+### PR #33 diagnostics upload repair (2026-10-10)
+
+GitHub run [37934353584](https://github.com/gregorsternat/gradavia/actions/runs/37934353584)
+passed `just verify` and the 177 publication contracts, then failed to upload
+diagnostics because publication filenames contain colons. The workflow now uploads
+a tar archive created outside `.artifacts`, preserving those names and hidden logs.
+Running the exact packaging step locally retained all 178 fixture files byte for
+byte, including 78 colon-containing names, and handled an absent diagnostics
+directory. `just test-publication` passed all 177 contracts again. Formatting and
+actionlint passed with only its unsupported, pre-existing `concurrency.queue`
+diagnostic filtered. The full suite was not repeated for this workflow-only fix.
+
+Evidence: `.artifacts/pr33-ci-failure.log`,
+`.artifacts/pr33-ci-publication-contracts.log` and
+`.artifacts/pr33-ci-archive-check.log`. The subsequent run above confirms that
+packaging and uploading the diagnostics both succeeded.
+
+### PR #33 detail-link regression
+
+On 2026-10-09, the review's apprenticeship/APB detail-link 404 was reproduced
+for both HTML and RSC requests before the fix. Detail asset identities now ignore
+query parameters, matching Next's ID-only source and campaign resolution. Catalog
+filters remain distinct, and missing detail IDs still return 404. All 13 publication
+unit cases passed. The browser regression opens both the analysis table and
+selection links with the keyboard and reloads each detail URL.
+
+`CI=true E2E_PORT=3587 mise exec -- just verify` passed: checks, 128 TypeScript
+cases, Node/Rust suites, disposable PostgreSQL contracts, credential-free builds
+and 378 Chromium executions (181 development, 179 production, 18 failure-state;
+eight intended exclusions). A newly rendered 222-page fixture publication,
+`c05bc839ec807ba8fb87`, also passed 18 focused desktop/mobile browser executions
+under local workerd with the Wasm API. Direct requests verified identical 200
+HTML/RSC bodies with or without detail query parameters and preserved missing-ID
+404s. These checks include classic formation details, metadata, query indexing
+and navigation without JavaScript.
+
+Evidence: `.artifacts/pr33-detail-regression-before.log`,
+`.artifacts/pr33-detail-regression-after.log`,
+`.artifacts/pr33-detail-verify.log`, `.artifacts/pr33-detail-workerd-http.log`,
+`.artifacts/pr33-detail-workerd-browser.log` and
+`.artifacts/pr33-detail-publication/`. These are local fixture checks; they do not
+establish remote CI success or production activation.
+
+### Initial candidate verification
+
+In the isolated `cloudflare-free` worktree on base `adc1f64`, `CI=true
+E2E_PORT=3576 mise exec -- just verify` passed: formatting, lint, types,
+architecture/docs, Clippy, 124 TypeScript cases, Node/Rust suites, disposable
+PostgreSQL 18 contracts and credential-free builds. Chromium passed 175 development,
+173 production and 18 production data-state cases (366 executions, eight intended
+exclusions). A specialty drill-down race was reproduced first, then fixed with
+the existing panel pending state and a delayed-response browser regression.
+
+`just test-publication` passed 177 native SQL/publication HTTP comparisons,
+including eight fixture campaigns, all fixture specialty groups, retained atlas
+versions, malformed requests, missing identities and literal wildcard searches.
+The portable Rust read model has three tests; nine TypeScript publication tests
+cover version pinning, bounded archive reads, checksums, capacity, cache/HEAD/
+conditional requests and activation evidence rejection.
+
+The final publication harness captured 222 HTML/RSC page pairs, froze the runtime,
+packed all assets, ran the actual Wasm API under local workerd with private service
+bindings, checked every retained public dataset CSV/JSON/metadata export and passed
+173 desktop/mobile Chromium cases (five intended exclusions). CSV checks compare
+bytes to include the UTF-8 BOM. Every generated Worker deployment dry run passed;
+the Wasm API is approximately 319 KiB compressed. The final code checks and focused
+publication unit tests were repeated after publication identity/packaging repairs.
+Manual browser inspection of the frozen fixture runtime covered desktop (1440 px)
+and mobile (390 px), light/dark themes, the mobile drawer and opening/closing the
+quick search with the keyboard. Screenshots are under `.artifacts/baseline/` with
+the `free-*-final` prefix. No layout or product-copy redesign was introduced.
+
+Evidence: `.artifacts/publication-verify-final.log`,
+`.artifacts/publication-contracts-final.log`,
+`.artifacts/publication-workerd-verified-final.log`,
+`.artifacts/publication-verification/a677f438-7f55-4633-b9b5-61fc4e770dc9/`,
+`.artifacts/publication-cloudflare-final.log` and
+`.artifacts/publication-check-last.log`.
+
+This does not establish production-scale CPU, memory, LCP, CLS, p95 latency,
+publication duration/storage or a free subscription. Direct PostgreSQL sessions
+to the explicitly selected production reader closed before a snapshot completed;
+Cloudflare subscription inspection returned HTTP 403. No production routes,
+obsolete resources or account plan were changed. The existing production runtime
+remains active; the [execution plan](exec-plans/active/cloudflare-free.md) and
+[publication operations](cloudflare-publications.md) retain the outstanding gates.
+
+### PR #33 merge repair
+
+On 2026-10-09 (Asia/Shanghai), merging `main` at `cf822e3` into `5a1c61b`
+retained the Arc clipboard integration and the publication-specific workspace
+loader, prerender shell, version pinning and specialty pending fix. `just check`,
+14 focused publication/workspace unit cases and 20 development Chromium
+desktop/mobile executions passed. Browser coverage includes clipboard recovery,
+sharing, keyboard navigation, pending reads, persistent tabs and no-JavaScript
+destinations; desktop/mobile screenshots were inspected. Evidence is under
+`.artifacts/pr33-conflicts/`. The full suite, production publication and deployment
+were not repeated for this merge repair; remote CI remains a separate check.
 
 See [repository workflow](harness.md) for commands and maintenance rules,
 [development](development.md) for isolation, and [technical debt](exec-plans/tech-debt.md)

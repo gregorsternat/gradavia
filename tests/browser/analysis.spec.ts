@@ -2,6 +2,40 @@ import AxeBuilder from "@axe-core/playwright";
 import { readFile } from "node:fs/promises";
 import { expect, test } from "./fixtures";
 
+for (const [family, title] of [
+  ["apprentissage", "BTS - Informatique en apprentissage"],
+  ["apb", "BTS - Informatique — Services informatiques"],
+] as const) {
+  test(`${family} analysis table and selection links open published details`, async ({
+    page,
+  }) => {
+    for (const source of ["table", "selection"]) {
+      await page.goto(`/analyses?famille=${family}`);
+      const table = page.getByRole("table", {
+        name: "Formations de l’analyse",
+        exact: true,
+      });
+      if (source === "selection")
+        await table.getByRole("button", { name: title, exact: true }).click();
+      const link =
+        source === "table"
+          ? table.getByRole("link", { name: `Ouvrir ${title}`, exact: true })
+          : page
+              .getByRole("region", { name: "Formation sélectionnée" })
+              .getByRole("link", { name: "Ouvrir la fiche", exact: true });
+      const href = await link.getAttribute("href");
+      expect(href).toMatch(new RegExp(`^/atlas/.+\\?famille=${family}$`));
+      await link.focus();
+      await page.keyboard.press("Enter");
+      await expect(page).toHaveURL((url) => url.pathname + url.search === href);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(title);
+      // A direct HTML request must resolve the same published detail as navigation.
+      expect((await page.reload())?.status()).toBe(200);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(title);
+    }
+  });
+}
+
 test("analysis URL restores filters on history traversal and clears them on bare-route navigation", async ({
   page,
 }) => {

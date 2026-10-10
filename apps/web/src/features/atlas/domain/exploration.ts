@@ -1,6 +1,6 @@
 import type { AtlasData, AtlasItem, AtlasMetricKey } from "./api-contract";
-import type { Formation } from "@/features/formations/domain/api-contract";
-import type { SearchParams } from "@/features/formations/domain/explorer";
+import type { Formation } from "../../formations/domain/api-contract";
+import type { SearchParams } from "../../formations/domain/explorer";
 
 export const familyLabels = {
   parcoursup: "Parcoursup",

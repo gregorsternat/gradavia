@@ -273,3 +273,16 @@ origin; it does not transfer local storage between domains.
 CSV generation preserves missingness and provenance and neutralizes spreadsheet
 formula prefixes. Chart values have table equivalents and filters have
 keyboard-accessible controls; Motion respects reduced motion.
+
+## Immutable publication candidate
+
+The [Free publication path](docs/cloudflare-publications.md) keeps the Next.js
+renderer and current views while moving rendering and expensive read preparation
+to an explicit offline publication. `crates/read-model` owns portable, I/O-free
+query and publication routing contracts. `crates/edge` is the Workers Rust/Wasm
+adapter. `crates/api/src/publication.rs` prepares validated projections using the
+existing native repositories; it never changes Drizzle's schema ownership.
+`apps/free-web` contains the private archive reader, bounded web facade and atomic
+publication gateway. These adapters import shared domain/composition code, never
+database clients. The original Container deployment remains active until the
+candidate passes the documented production gates and is explicitly switched.

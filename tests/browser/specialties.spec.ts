@@ -227,3 +227,41 @@ test("specialty drill-down preserves masked and observed zero and exports labell
     page.getByRole("table", { name: "Groupes par combinaison de spécialités" }),
   ).toBeVisible();
 });
+
+test("changing a specialty indicator waits for the requested group", async ({
+  page,
+}) => {
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route("**/api/workspace/specialites?**", async (route) => {
+    if (new URL(route.request().url()).searchParams.get("groupe") === "BUT")
+      await gate;
+    await route.continue();
+  });
+  try {
+    await page.goto("/specialites");
+    const indicator = page.getByRole("button", {
+      name: "Indicateur des spécialités",
+      exact: true,
+    });
+    await expect(indicator).toBeEnabled();
+    await page.getByRole("link", { name: "BUT", exact: true }).click();
+    await expect(indicator).toBeDisabled();
+    release();
+    await expect(indicator).toBeEnabled();
+    await indicator.click();
+    await page
+      .getByRole("option", { name: "Avec une acceptation", exact: true })
+      .click();
+    await expect(page).toHaveURL(/groupe=BUT.*tri=accepted/);
+    await expect(
+      page.getByRole("table", {
+        name: "Formations par combinaison de spécialités",
+      }),
+    ).toBeVisible();
+  } finally {
+    release();
+  }
+});
