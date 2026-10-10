@@ -4,6 +4,7 @@ import {
   fileNames,
   validatePublication,
   addArtifact,
+  addDocumentArtifact,
   digest,
 } from "./publication-assets";
 import { startProcess, startPublicationApi, webEnvironment } from "./runtime";
@@ -174,8 +175,8 @@ try {
         ? `shells/${panel}`
         : `pages/${key}`;
     const files = { html: `${base}.html`, rsc: `${base}.rsc` };
-    await addArtifact(root, manifest, files.html, body);
-    await addArtifact(root, manifest, files.rsc, await rsc.text());
+    await addDocumentArtifact(root, manifest, files.html, body);
+    await addDocumentArtifact(root, manifest, files.rsc, await rsc.text());
     routes[route] = files;
     if (++done % 100 === 0)
       console.log(`Prerendered ${done}/${paths.size} pages`);

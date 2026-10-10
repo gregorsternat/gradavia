@@ -116,3 +116,11 @@ local code, tests and deployment alone do not prove that outcome.
   aggregations. Keep filtering memoized by its actual filter fields; retain
   aggregation results across presentation-only changes. Verify the same real-data
   journey again on the final candidate before claiming a performance improvement.
+- A temporary Cloudflare client profile using real public production data sent
+  960,158 Brotli bytes for the 10,169,567-byte analysis document. Offline Brotli
+  quality 9 produces 685,378 bytes without changing its contents. Prepare optional
+  encoded HTML/RSC representations above 128 KiB, store their references in the
+  existing lookup, and negotiate them through the page Worker and gateway. Verify
+  exact wire bytes, identity fallback, HEAD and conditional requests in workerd
+  before measuring the final candidate. This diagnostic is not a production
+  publication and must be removed after profiling.

@@ -7,7 +7,35 @@ type Entry = {
   bytes: number;
   sha256: string;
   packBytes: number;
+  br?: Entry;
 };
+function acceptsBrotli(header: string | null) {
+  const codings = (header ?? "")
+    .toLowerCase()
+    .split(",")
+    .map((part) => {
+      const [name, ...parameters] = part.trim().split(";");
+      const quality = parameters
+        .map((p) => p.trim())
+        .find((p) => p.startsWith("q="))
+        ?.slice(2);
+      return {
+        name: name?.trim(),
+        quality:
+          quality === undefined
+            ? 1
+            : /^(?:0(?:\.\d{0,3})?|1(?:\.0{0,3})?)$/.test(quality)
+              ? Number(quality)
+              : 0,
+      };
+    });
+  return (
+    ((
+      codings.find((c) => c.name === "br") ??
+      codings.find((c) => c.name === "*")
+    )?.quality ?? 0) > 0
+  );
+}
 const hash = async (value: string) =>
   Array.from(
     new Uint8Array(
@@ -34,8 +62,11 @@ export async function readAsset(request: Request, env: Env): Promise<Response> {
   const key = await hash(path);
   const index = await file(env, `lookup/${key.slice(0, 3)}.json`);
   if (!index.ok) return new Response(null, { status: index.status });
-  const entry = ((await index.json()) as Record<string, Entry>)[key];
-  if (!entry) return new Response(null, { status: 404 });
+  const original = ((await index.json()) as Record<string, Entry>)[key];
+  if (!original) return new Response(null, { status: 404 });
+  const encoded =
+    !!original.br && acceptsBrotli(request.headers.get("accept-encoding"));
+  const entry = encoded ? original.br! : original;
   if (
     !Number.isSafeInteger(entry.offset) ||
     !Number.isSafeInteger(entry.bytes) ||
@@ -96,15 +127,18 @@ export async function readAsset(request: Request, env: Env): Promise<Response> {
       });
     }
   } else return new Response(null, { status: 503 });
-  return new Response(request.method === "HEAD" ? null : body, {
+  const init = {
     headers: {
       etag: `"${entry.sha256}"`,
       "content-length": String(entry.bytes),
       "content-type": path.endsWith(".json")
         ? "application/json"
         : "application/octet-stream",
+      ...(encoded ? { "content-encoding": "br" } : {}),
     },
-  });
+    ...(encoded ? { encodeBody: "manual" as const } : {}),
+  };
+  return new Response(request.method === "HEAD" ? null : body, init);
 }
 // Large logical objects have <= 4 chunks. Return a stream without buffering it.
 const assetService = {

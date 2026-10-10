@@ -13,6 +13,7 @@ type Entry = {
   bytes: number;
   sha256: string;
   packBytes: number;
+  br?: Entry;
 };
 /** A deterministic byte archive avoids one Worker asset per retained HTML/RSC row. */
 export async function packPublication(
@@ -83,6 +84,17 @@ export async function packPublication(
     }
   } finally {
     await closePack();
+  }
+  // Keep an optional encoded representation in the same lookup bucket as its
+  // identity representation, avoiding an extra edge read for small documents.
+  for (const name of Object.keys(source.files).filter((name) =>
+    /\.(html|rsc)\.br$/.test(name),
+  )) {
+    const identity = digest(name.slice(0, -3)),
+      encoded = digest(name);
+    const entry = lookups.get(identity.slice(0, 3))?.[identity];
+    const br = lookups.get(encoded.slice(0, 3))?.[encoded];
+    if (entry && br) entry.br = br;
   }
   for (const [prefix, index] of lookups)
     await addArtifact(

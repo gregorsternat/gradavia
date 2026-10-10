@@ -1,4 +1,6 @@
 import { createHash } from "node:crypto";
+import { brotliCompress, constants } from "node:zlib";
+import { promisify } from "node:util";
 import {
   lstat,
   readFile,
@@ -15,6 +17,25 @@ export type FileRecord = { bytes: number; sha256: string };
 export type Manifest = { format: 1; files: Record<string, FileRecord> };
 export const digest = (bytes: Uint8Array | string) =>
   createHash("sha256").update(bytes).digest("hex");
+const compressDocument = promisify(brotliCompress);
+export async function addDocumentArtifact(
+  root: string,
+  manifest: Manifest,
+  name: string,
+  content: string,
+) {
+  const bytes = Buffer.from(content);
+  await addArtifact(root, manifest, name, bytes);
+  if (bytes.length < 128 * 1024 || bytes.length > BYTE_LIMIT) return;
+  const compressed = await compressDocument(bytes, {
+    params: {
+      [constants.BROTLI_PARAM_MODE]: constants.BROTLI_MODE_TEXT,
+      [constants.BROTLI_PARAM_QUALITY]: bytes.length >= 1024 * 1024 ? 9 : 6,
+    },
+  });
+  if (compressed.length < bytes.length)
+    await addArtifact(root, manifest, `${name}.br`, compressed);
+}
 export async function validatePublication(root: string): Promise<Manifest> {
   const manifest = JSON.parse(
     await readFile(path.join(root, "manifest.json"), "utf8"),

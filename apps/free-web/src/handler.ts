@@ -21,9 +21,9 @@ const error = (status: number, code: string) =>
       },
     },
   );
-async function asset(env: Environment, path: string) {
+async function asset(env: Environment, path: string, headers?: HeadersInit) {
   return env.PUBLICATION.fetch(
-    new Request(`https://publication.internal/${path}`),
+    new Request(`https://publication.internal/${path}`, { headers }),
   );
 }
 const contentTypes: Record<string, string> = {
@@ -40,6 +40,14 @@ const contentTypes: Record<string, string> = {
   woff2: "font/woff2",
 };
 function cached(request: Request, response: Response, headers: Headers) {
+  const encoding = response.headers.get("content-encoding");
+  if (encoding) {
+    headers.set("content-encoding", encoding);
+    headers.set(
+      "cache-control",
+      `${headers.get("cache-control")}, no-transform`,
+    );
+  }
   const etag = response.headers.get("etag");
   if (etag) headers.set("etag", etag);
   const match = request.headers
@@ -56,6 +64,7 @@ function cached(request: Request, response: Response, headers: Headers) {
       headers,
     });
   }
+  // Keep the fetched stream and encoding together for Cloudflare pass-through.
   return new Response(response.body, { status: response.status, headers });
 }
 export async function handle(
@@ -139,7 +148,10 @@ export async function handle(
   }
   const rsc = request.headers.get("rsc") === "1";
   const path = pageIdentity(url.pathname + url.search);
-  let response = await asset(env, await pageAsset(path, rsc));
+  const encodingHeaders = {
+    "accept-encoding": request.headers.get("accept-encoding") ?? "identity",
+  };
+  let response = await asset(env, await pageAsset(path, rsc), encodingHeaders);
   let fallback = false;
   if (response.status === 404) {
     const panel = resolvePanel(url.pathname, url.searchParams);
@@ -156,14 +168,18 @@ export async function handle(
         },
       });
     }
-    response = await asset(env, `shells/${panel}.${rsc ? "rsc" : "html"}`);
+    response = await asset(
+      env,
+      `shells/${panel}.${rsc ? "rsc" : "html"}`,
+      encodingHeaders,
+    );
     fallback = true;
   }
   if (!response.ok) return error(503, "unavailable");
   const headers = new Headers({
     "content-type": rsc ? "text/x-component" : "text/html; charset=utf-8",
     "cache-control": "public, max-age=0, must-revalidate",
-    vary: "RSC",
+    vary: "RSC, Accept-Encoding",
     "x-content-type-options": "nosniff",
   });
   if (fallback) headers.set("x-robots-tag", "noindex, follow");

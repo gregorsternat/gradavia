@@ -24,6 +24,43 @@ health are separate observations; none establishes Google indexing or freshness.
 
 ### Production preparation and usage monitoring (2026-10-10)
 
+Production capture in [run 38055944373](https://github.com/gregorsternat/gradavia/actions/runs/38055944373)
+completed and retained the data checkpoint `publication-data-38055944373-1`.
+The 643,081,469-byte archive was downloaded and its published SHA-256 verified.
+The old-head rendering run was then cancelled so the final frontend/runtime can
+reuse the same real data. This is a data checkpoint, not an activated publication.
+
+The Brotli transport regression exercises actual HTML and Flight wire bytes
+through asset, page and gateway Workers, including HEAD and conditional requests.
+The workerd browser suite passed 179 cases with five intended exclusions.
+Evidence: `.artifacts/brotli-publication-browser-verified.log` and its referenced
+browser log. A temporary Cloudflare profile of the real 14,252-formation analysis
+page delivered exactly 685,378 prepared bytes, down from 960,158 bytes with
+on-the-fly compression; decompression equals the original 10,169,567-byte HTML.
+`Cache-Control: no-transform` is required to retain that saving at the edge.
+The diagnostic Worker is not a full publication and establishes no activation gate.
+
+PR #38 was merged as `1a4f3fd` after
+[run 38057137343](https://github.com/gregorsternat/gradavia/actions/runs/38057137343)
+passed on its final head. The analysis workbench now retains its filtered cohort
+and aggregations across view and annotation changes. `just verify` passed again
+with 378 browser executions, and `just test-publication-browser` passed all retained
+fixture exports and 179 workerd browser cases (five intended exclusions).
+Logs: `.artifacts/analysis-memo-verify.log` and
+`.artifacts/analysis-final-publication-browser.log`.
+
+Five desktop and five throttled-mobile repetitions captured the existing public
+formation-to-analysis journey. The production mobile maxima were 7,981 ms to ready
+for formations, 13,540 ms for analysis and 280 ms Event Timing for opening Quality.
+Replaying the same public data on the local production Next build after the change
+gave 3,162 ms, 8,759 ms and 224 ms respectively, with CLS below 0.001. Hosting differs:
+these local results isolate client work but do not establish production improvement
+or satisfy the Cloudflare activation gates. Desktop/mobile screenshots were inspected;
+visual layout and copy are unchanged. The final edge candidate must still pass the
+same journey measurement, including the 200 ms interaction target.
+Evidence: `.artifacts/cloudflare/browser-baseline-interactions-20261010.json` and
+`.artifacts/cloudflare/local-public-journeys-20261010.json`.
+
 PR #33 was merged as `1bde30a8`. Main
 [run 38052198328](https://github.com/gregorsternat/gradavia/actions/runs/38052198328)
 passed repository verification, deployed the existing OpenNext/Container runtime
