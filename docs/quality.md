@@ -22,6 +22,46 @@ health are separate observations; none establishes Google indexing or freshness.
 
 ## Cloudflare Free candidate validation (2026-10-09)
 
+### Production preparation and usage monitoring (2026-10-10)
+
+PR #33 was merged as `1bde30a8`. Main
+[run 38052198328](https://github.com/gregorsternat/gradavia/actions/runs/38052198328)
+passed repository verification, deployed the existing OpenNext/Container runtime
+and passed the production smoke: 14,252 current formations and a complete
+8,988,565-byte snapshot at 12:59 UTC. This is not publication runtime activation.
+
+The production reader secret is configured for the explicit publication workflow.
+[Run 38052470527](https://github.com/gregorsternat/gradavia/actions/runs/38052470527)
+passed contracts and local workerd browser verification, captured production
+sources and prepared all eight Parcoursup catalogs by 13:00 UTC. It was cancelled
+at 13:22 UTC while still preparing the first detail campaign. A read-only
+production `EXPLAIN ANALYZE` showed the history identity lookup scanning 14,252
+campaign rows, filtering 14,251 and taking 62.955 ms for one campaign. The new
+Drizzle expression index matches the existing raw source identity predicates;
+query semantics, including duplicate ambiguity and exact source values, stay
+unchanged. A 20,000-row PostgreSQL regression checks bounded lookup work and
+two-match ambiguity. The publisher reports progress every 1,000 retained details.
+Removing the index in a disposable database reproduced the regression: the same
+lookup touched 357 blocks instead of four and failed the bounded-work assertion.
+The indexed synthetic query took 0.010 ms versus 1.052 ms without the index;
+these local timings are not production latency measurements. Plans are retained
+under `.artifacts/source-identity-probe/`.
+Full publication completion and production-scale gates remain unverified. Legacy
+deployment versions are retained in ignored local artifacts for rollback.
+
+The read-only account analytics token is configured in GitHub. Manual usage checks
+now run before cutover; scheduled checks remain gated on the publication runtime.
+[Run 38054661487](https://github.com/gregorsternat/gradavia/actions/runs/38054661487)
+passed with 73,537 account Worker invocations over the preceding 24 hours. This
+does not prove the new runtime's CPU, memory or future traffic budget. Workers
+Paid remains active pending verified cutover and obsolete-resource cleanup.
+
+For the manual-monitoring workflow condition, actionlint and
+`CI=true E2E_PORT=3596 mise exec -- just verify` passed locally, including 378
+browser executions (181 development, 179 production and 18 failure-state cases;
+eight intended exclusions). Evidence: `.artifacts/cutover-monitor-verify.log` and
+`.artifacts/cloudflare/usage-38054661487.log`.
+
 ### PR #33 clipboard test synchronization (2026-10-10)
 
 The [next CI run](https://github.com/gregorsternat/gradavia/actions/runs/38039679987)

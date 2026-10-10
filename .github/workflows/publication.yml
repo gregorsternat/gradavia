@@ -65,6 +65,16 @@ jobs:
               assert all(member.isfile() or member.isdir() for member in archive.getmembers())
               archive.extractall('../data', filter='data')
           PYTHON
+      - name: Retain captured public data before page rendering
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tar -czf .artifacts/data.tar.gz -C .artifacts/data .
+          cd .artifacts
+          sha256sum data.tar.gz > data.tar.gz.sha256
+          tag="publication-data-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          printf '%s\n' 'Immutable public data checkpoint. Reuse this tag as data_release to retry rendering without another production snapshot. No production runtime was activated.' > data-release-notes.txt
+          gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "$tag" --notes-file data-release-notes.txt data.tar.gz data.tar.gz.sha256
       - name: Prerender all retained pages and build bounded asset archives
         run: |
           just publication-render .artifacts/data .artifacts/site
@@ -74,10 +84,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tar -czf .artifacts/data.tar.gz -C .artifacts/data .
           tar -czf .artifacts/site.tar.gz -C .artifacts/candidate archive shards runtime release.json
           cd .artifacts
-          sha256sum data.tar.gz > data.tar.gz.sha256
           sha256sum site.tar.gz > site.tar.gz.sha256
           tag="publication-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           printf '%s\n' 'Immutable public data and prerendered site. This release does not prove production activation or a Workers Free subscription.' > release-notes.txt

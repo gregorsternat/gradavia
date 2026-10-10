@@ -194,6 +194,9 @@ pub async fn export(pool: &PgPool, root: &Path) -> Result<(), ReadError> {
                         writer.json(&format!("details/{record}.json"), &detail)?;
                     }
                     details.push(json!({"id":record,"family":family}));
+                    if details.len().is_multiple_of(1000) {
+                        println!("Prepared {} retained details", details.len());
+                    }
                 }
                 println!(
                     "Prepared {family} {year}: {} details",

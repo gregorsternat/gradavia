@@ -93,5 +93,26 @@ local code, tests and deployment alone do not prove that outcome.
   The saved activation receipt supports rollback without rebuilding old code.
 - Keep this plan active until the production-scale publication, Cloudflare CPU/
   memory and controlled page-performance measurements, cutover, obsolete-resource
-  cleanup and effective account downgrade have actually been verified. The manual
-  publication workflow and daily usage workflow have not run on GitHub yet.
+  cleanup and effective account downgrade have actually been verified.
+- 2026-10-10: PR #33 merged as `1bde30a8`; main CI, the existing runtime deployment
+  and the complete current-dataset production smoke passed. The production reader
+  secret is configured. The manual publication workflow passed its contract and
+  local workerd checks and started production snapshot/preparation; no immutable
+  production candidate is activated yet.
+- The Account Analytics Read token is configured in GitHub. Manual monitoring is
+  available before cutover, while scheduled monitoring retains its runtime gate.
+  Its first successful run measured 73,537 account requests over 24 hours.
+  Authenticated billing access is available; Workers Paid remains active until
+  publication validation and obsolete-resource cleanup are complete. See
+  [quality status](../../quality.md) for the exact workflow evidence.
+- Production preparation exposed repeated campaign scans in the existing history
+  lookup. The first run was cancelled after more than 20 minutes without finishing
+  its first detail campaign. Add the exact source-identity expression index through
+  Drizzle, prove bounded work with a 20,000-row database regression, then rerun the
+  real publication. Source values, duplicate semantics and public UI stay unchanged.
+- The production mobile analysis baseline measured a 280 ms Event Timing sample
+  when opening Quality with 14,252 formations (CPU throttled 4x). View and
+  annotation changes recreated the filter configuration and invalidated all
+  aggregations. Keep filtering memoized by its actual filter fields; retain
+  aggregation results across presentation-only changes. Verify the same real-data
+  journey again on the final candidate before claiming a performance improvement.

@@ -122,6 +122,9 @@ existing GitHub data release or captures a new snapshot using the production
 public data/site archives and checksums in a versioned release, and can upload
 private candidate Workers. It never automatically activates an unmeasured
 candidate. Cloudflare receives only `CLOUDFLARE_API_TOKEN` during upload.
+Before rendering pages, the workflow saves a `publication-data-<run>-<attempt>`
+release containing the public data archive and checksum. If rendering or staging
+fails, reuse that tag as `data_release` to avoid another production snapshot.
 
 After measuring the exact candidate on Cloudflare, provide the evidence format
 in `scripts/cloudflare-publication.ts`. Activation rejects stale evidence,
@@ -162,8 +165,9 @@ just publication-deploy rollback .artifacts/previous .artifacts/previous/activat
    account authorized for subscription management. Verify the effective plan,
    cancellation date and any remaining paid services separately.
 7. Configure `CLOUDFLARE_ANALYTICS_TOKEN` with Account Analytics Read. The daily
-   usage workflow runs only when the runtime variable is `publication`; it fails
-   visibly at the 80% account margin and never upgrades the plan.
+   scheduled usage workflow runs only when the runtime variable is `publication`.
+   A manual run also works before cutover to verify the token and account margin.
+   It fails visibly at the 80% account margin and never upgrades the plan.
 
 Free currently means a shared account allowance of 100,000 dynamic requests/day,
 10 ms CPU and 128 MiB memory, with 20,000 static files per Worker and 25 MiB per

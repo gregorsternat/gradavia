@@ -172,9 +172,20 @@ function Workspace({ data }: { data: AtlasData }) {
   const query = searchParams.toString();
   const config = useMemo(() => readConfig(new URLSearchParams(query)), [query]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const filterRegions = JSON.stringify(config.region);
+  const { type, status, search, minimum, maximum, metric } = config;
   const rows = useMemo(
-    () => filterItems(data.items, config),
-    [data.items, config],
+    () =>
+      filterItems(data.items, {
+        region: JSON.parse(filterRegions) as string[],
+        type,
+        status,
+        search,
+        minimum,
+        maximum,
+        metric,
+      }),
+    [data.items, filterRegions, type, status, search, minimum, maximum, metric],
   );
   const stats = useMemo(
     () => distribution(rows, config.metric),
