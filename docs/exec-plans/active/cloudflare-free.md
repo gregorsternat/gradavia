@@ -130,3 +130,9 @@ local code, tests and deployment alone do not prove that outcome.
   memory, browser parity and these performance measurements remain activation
   requirements. The verified real-data checkpoint has 161,059 retained details
   across 14 publications; rendering has started locally with the latest runtime.
+- Full rendering contains 279,682 routes. Real-detail probes exposed repeated
+  catalog reads and validation on every HTML/Flight request. A one-entry cache
+  enabled only for the immutable offline process reduced a warm 24-route probe
+  from 4,132 ms to 1,844 ms with identical rendered DOM. Bound preparation to
+  1-8 independent Next processes (two by default) and one route per process;
+  preserve complete HTML/Flight validation and deterministic manifest ordering.

@@ -55,6 +55,14 @@ map-camera test passed again on desktop and mobile without source changes, and a
 18 remaining data-state cases passed separately. Final TypeScript and formatting
 checks passed. Logs: `.artifacts/brotli-{verify,map-retry,data-states}.log`.
 
+A subsequent production-scale preparation probe found repeated full-atlas parsing
+for detail comparisons. Three unit cases cover the offline-only one-entry cache,
+query isolation/eviction, concurrent reuse and failure retries. On 24 real detail
+routes, warm HTML/Flight preparation fell from 4,132 ms to 1,844 ms. Rendered DOM
+hashes match; Flight chunk ordering varies with request timing and is verified
+functionally by the workerd browser suite. Evidence:
+`.artifacts/cloudflare/prerender-cache-benchmark.json`.
+
 PR #38 was merged as `1a4f3fd` after
 [run 38057137343](https://github.com/gregorsternat/gradavia/actions/runs/38057137343)
 passed on its final head. The analysis workbench now retains its filtered cohort

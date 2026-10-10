@@ -23,6 +23,17 @@ const sourceRoot = resolve(
   process.argv[2] ??
     (await readFile(".artifacts/publication-fixture-path", "utf8")).trim(),
 );
+const workerCount = Number(process.env.PUBLICATION_RENDER_WORKERS ?? "2");
+const webPort = Number(process.env.PUBLICATION_WEB_PORT ?? "3580");
+if (
+  !Number.isInteger(workerCount) ||
+  workerCount < 1 ||
+  workerCount > 8 ||
+  !Number.isInteger(webPort) ||
+  webPort < 1024 ||
+  webPort + workerCount > 65536
+)
+  throw new Error("Use 1-8 render workers and a valid local port range");
 const manifest = await validatePublication(sourceRoot);
 if (manifest.files["pages.json"])
   throw new Error("Use a data-only publication as input");
@@ -49,9 +60,8 @@ const metadata = JSON.parse(
 const details = JSON.parse(
   await readFile(join(root, "details.json"), "utf8"),
 ) as { id: string; family: string }[];
-const webPort = process.env.PUBLICATION_WEB_PORT ?? "3580";
 const api = await startPublicationApi(root, join(root, ".."));
-let web: Awaited<ReturnType<typeof startProcess>> | undefined;
+const servers: Awaited<ReturnType<typeof startProcess>>[] = [];
 async function ready(origin: string, path: string) {
   for (let i = 0; i < 100; i++) {
     try {
@@ -64,18 +74,25 @@ async function ready(origin: string, path: string) {
 try {
   const apiUrl = api.url;
   await ready(apiUrl, "/health/live");
-  web = await startProcess(
-    "pnpm",
-    ["--filter", "@gradavia/web", "start", "--port", webPort],
-    {
-      ...webEnvironment(apiUrl),
-      GRADAVIA_PRERENDER: "1",
-      GRADAVIA_PUBLICATION_ID: publicationId,
-    },
-    join(root, "..", "render-web.log"),
-  );
-  const origin = `http://127.0.0.1:${webPort}`;
-  await ready(origin, "/api/health");
+  const origins: string[] = [];
+  for (let index = 0; index < workerCount; index++) {
+    const port = String(webPort + index);
+    const web = await startProcess(
+      "pnpm",
+      ["--filter", "@gradavia/web", "start", "--port", port],
+      {
+        ...webEnvironment(apiUrl),
+        GRADAVIA_PRERENDER: "1",
+        GRADAVIA_PUBLICATION_ID: publicationId,
+      },
+      join(root, "..", `render-web-${index}.log`),
+    );
+    servers.push(web);
+    const origin = `http://127.0.0.1:${port}`;
+    await ready(origin, "/api/health");
+    origins.push(origin);
+  }
+  const origin = origins[0]!;
   const paths = new Set<string>(["/"]);
   for (const panel of Object.keys(panels) as PanelId[]) {
     paths.add(panelHref(panel));
@@ -138,7 +155,7 @@ try {
   paths.add("/not-a-gradavia-page");
   const routes: Record<string, { html: string; rsc: string }> = {};
   let done = 0;
-  for (const route of paths) {
+  async function render(route: string, origin: string) {
     const key = digest(pageIdentity(route));
     const missing = route === "/not-a-gradavia-page";
     const html = await fetch(origin + route, {
@@ -181,6 +198,14 @@ try {
     if (++done % 100 === 0)
       console.log(`Prerendered ${done}/${paths.size} pages`);
   }
+  const pending = [...paths];
+  let next = 0;
+  // One request sequence per server bounds both in-flight bodies and CPU work.
+  await Promise.all(
+    origins.map(async (origin) => {
+      while (next < pending.length) await render(pending[next++]!, origin);
+    }),
+  );
   for (const route of [
     "/robots.txt",
     "/sitemap.xml",
@@ -218,12 +243,25 @@ try {
     root,
     manifest,
     "pages.json",
-    JSON.stringify({ format: 1, publicationId, routes }),
+    JSON.stringify({
+      format: 1,
+      publicationId,
+      routes: Object.fromEntries(
+        Object.entries(routes).sort(([a], [b]) => a.localeCompare(b, "en")),
+      ),
+    }),
   );
   await writeFile(".artifacts/publication-render-path", root);
   await writeFile(
     join(root, "manifest.json.partial"),
-    JSON.stringify(manifest),
+    JSON.stringify({
+      ...manifest,
+      files: Object.fromEntries(
+        Object.entries(manifest.files).sort(([a], [b]) =>
+          a.localeCompare(b, "en"),
+        ),
+      ),
+    }),
   );
   await rename(
     join(root, "manifest.json.partial"),
@@ -233,6 +271,6 @@ try {
     `Prerendered ${done} pages and their Next.js navigation payloads.`,
   );
 } finally {
-  await web?.stop();
+  await Promise.all(servers.map((web) => web.stop()));
   await api.stop();
 }

@@ -3,12 +3,20 @@ import { cache } from "react";
 import { readApi } from "@/features/formations/server/load";
 import { formationId } from "@/features/formations/domain/api-contract";
 import type { SearchParams } from "@/features/formations/domain/explorer";
+import { withPrerenderAtlasCache } from "./prerender-cache";
 import {
   atlasResponse,
   atlasDetailResponse,
   type AtlasResult,
   type AtlasDetailResult,
 } from "../domain/api-contract";
+
+const readAtlas = withPrerenderAtlasCache(async (query) => {
+  const response = await readApi("/v1/atlas", new URLSearchParams(query));
+  if (response.status === 404) return { status: "not-found" };
+  if (response.status !== 200) return { status: "unavailable" };
+  return atlasResponse.parse(response.body);
+});
 
 export async function loadAtlas(
   params: SearchParams = {},
@@ -20,10 +28,7 @@ export async function loadAtlas(
       const value = Array.isArray(raw) ? raw[0] : raw;
       if (value !== undefined) search.set(key, value.trim().slice(0, 160));
     }
-    const response = await readApi("/v1/atlas", search);
-    if (response.status === 404) return { status: "not-found" };
-    if (response.status !== 200) return { status: "unavailable" };
-    return atlasResponse.parse(response.body);
+    return await readAtlas(search.toString());
   } catch {
     return { status: "unavailable" };
   }

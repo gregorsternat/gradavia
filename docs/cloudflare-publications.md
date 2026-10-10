@@ -116,6 +116,14 @@ just publication-deploy check .artifacts/candidate
 just publication-deploy stage .artifacts/candidate
 ```
 
+Rendering uses two local Next processes by default, with one HTML/Flight request
+sequence in flight per process. `PUBLICATION_RENDER_WORKERS` accepts 1-8 and
+`PUBLICATION_WEB_PORT` selects the first consecutive port. Each offline process
+retains only its last validated atlas query while `GRADAVIA_PRERENDER=1`; ordinary
+server requests keep their existing uncached reads. Failed reads are not retained.
+Both processes use the same frozen data/runtime identity, and the final route and
+file manifests are sorted independently of completion order.
+
 The snapshot command requires `DATABASE_URL` for the `gradavia_api` role and
 checks the selected endpoint. PostgreSQL credentials go through process
 environment only; raw driver diagnostics are suppressed. Builds and serving
