@@ -218,41 +218,4 @@ describe("geographic exploration", () => {
       ),
     ).toEqual(["first", "zero", "missing"]);
   });
-  it("orders alternatives by shared words, distance and title while retaining stable ties", () => {
-    const reference = row("ref", { title: "Licence informatique systèmes" });
-    const rows = [
-      reference,
-      row("far", {
-        title: "Informatique systèmes",
-        latitude: 48.85,
-        longitude: 2.35,
-      }),
-      row("near", { title: "Informatique systèmes" }),
-      row("missing-z", {
-        title: "Informatique systèmes Z",
-        latitude: null,
-        longitude: null,
-      }),
-      row("missing-a", {
-        title: "Informatique systèmes A",
-        latitude: null,
-        longitude: null,
-      }),
-      row("tie-first", { title: "Informatique" }),
-      row("tie-second", { title: "Informatique" }),
-      row("unrelated", { title: "Biologie" }),
-    ];
-    const originalOrder = rows.map((item) => item.id);
-    expect(
-      peerSummary(rows, reference).alternatives.map((item) => item.id),
-    ).toEqual([
-      "near",
-      "far",
-      "missing-a",
-      "missing-z",
-      "tie-first",
-      "tie-second",
-    ]);
-    expect(rows.map((item) => item.id)).toEqual(originalOrder);
-  });
 });

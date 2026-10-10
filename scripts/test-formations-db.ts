@@ -9,7 +9,6 @@ import { createNodeClient } from "../packages/db/src/node";
 import { rawRecords, sourceDatasets } from "../packages/db/src/schema";
 import { startApi } from "./runtime";
 import { seedFormations } from "./seed-formations";
-import { testSourceIdentityLookup } from "./test-source-identity-db";
 import {
   detailResponse,
   explorerResponse,
@@ -75,7 +74,6 @@ export async function testFormationReads(connection: string) {
     );
     assert.equal(first.total, 31, "Latest campaign count");
     assert.equal(first.formations.length, 25, "Bounded page size");
-    await testSourceIdentityLookup(connection);
     for (const campaign of fixtureCampaigns) {
       const result = await read({ campagne: String(campaign) });
       const count = await client.query(

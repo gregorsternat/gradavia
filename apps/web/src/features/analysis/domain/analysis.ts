@@ -163,10 +163,7 @@ export const normalize = (value: string) =>
     .toLocaleLowerCase("fr");
 export function filterItems(
   items: AtlasItem[],
-  config: Pick<
-    AnalysisConfig,
-    "region" | "type" | "status" | "search" | "minimum" | "maximum" | "metric"
-  >,
+  config: AnalysisConfig,
 ): AtlasItem[] {
   const words = normalize(config.search).split(/\s+/).filter(Boolean);
   return items.filter((item) => {

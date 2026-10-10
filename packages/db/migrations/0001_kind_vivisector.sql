@@ -1,1 +1,0 @@
-CREATE INDEX "raw_records_source_identity_idx" ON "raw_records" USING btree ("release_id","campaign",("payload"->>'cod_aff_form'),("payload"->>'cod_uai'));

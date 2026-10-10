@@ -1,5 +1,5 @@
 "use client";
-import { PanelMain, usePanelPending } from "@/features/workspace/ui/navigation";
+import { PanelMain } from "@/features/workspace/ui/navigation";
 
 import { useState, useSyncExternalStore, useTransition } from "react";
 import { useRouter } from "@/features/workspace/ui/navigation";
@@ -128,9 +128,7 @@ function ReadySpecialties({
   initialIndicator: SpecialtyIndicator;
 }) {
   const router = useRouter();
-  const [transitionPending, startTransition] = useTransition();
-  const panelPending = usePanelPending();
-  const pending = transitionPending || panelPending;
+  const [pending, startTransition] = useTransition();
   const [indicator, setIndicator] = useState(initialIndicator);
   const mobile = useSyncExternalStore(
     subscribeMobile,

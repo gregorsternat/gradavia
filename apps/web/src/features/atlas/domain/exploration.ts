@@ -1,6 +1,6 @@
 import type { AtlasData, AtlasItem, AtlasMetricKey } from "./api-contract";
-import type { Formation } from "../../formations/domain/api-contract";
-import type { SearchParams } from "../../formations/domain/explorer";
+import type { Formation } from "@/features/formations/domain/api-contract";
+import type { SearchParams } from "@/features/formations/domain/explorer";
 
 export const familyLabels = {
   parcoursup: "Parcoursup",
@@ -439,24 +439,16 @@ export function peerSummary(items: AtlasItem[], reference: AtlasItem) {
     fold(row.title)
       .split(/[^a-z0-9]+/)
       .filter((word) => words.has(word)).length;
-  const located = hasCoordinates(reference);
-  const alternatives = peers
-    .map((row) => ({
-      row,
-      similarity: similarity(row),
-      distance: located
-        ? hasCoordinates(row)
-          ? distanceKm(reference, row)
-          : Infinity
-        : 0,
-    }))
+  const alternatives = [...peers]
     .sort(
       (a, b) =>
-        b.similarity - a.similarity ||
-        a.distance - b.distance ||
-        a.row.title.localeCompare(b.row.title, "fr"),
+        similarity(b) - similarity(a) ||
+        (hasCoordinates(reference)
+          ? (hasCoordinates(a) ? distanceKm(reference, a) : Infinity) -
+            (hasCoordinates(b) ? distanceKm(reference, b) : Infinity)
+          : 0) ||
+        a.title.localeCompare(b.title, "fr"),
     )
-    .slice(0, 6)
-    .map(({ row }) => row);
+    .slice(0, 6);
   return { count: peers.length, positions, alternatives };
 }

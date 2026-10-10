@@ -90,12 +90,6 @@ export const rawRecords = pgTable(
   (table) => [
     primaryKey({ columns: [table.releaseId, table.rowNumber] }),
     index("raw_records_campaign_idx").on(table.releaseId, table.campaign),
-    index("raw_records_source_identity_idx").on(
-      table.releaseId,
-      table.campaign,
-      sql`(${table.payload}->>'cod_aff_form')`,
-      sql`(${table.payload}->>'cod_uai')`,
-    ),
     index("raw_records_establishment_idx")
       .on(table.campaign, table.establishmentId)
       .where(sql`${table.establishmentId} IS NOT NULL`),

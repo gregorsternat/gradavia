@@ -115,12 +115,3 @@ The [repository workflow](docs/harness.md) maps each concern to its authoritativ
 document and explains the executable guardrails.
 
 Start with [architecture](ARCHITECTURE.md), the [documentation index](docs/index.md), and [AGENTS.md](AGENTS.md). The [deployment guide](docs/deployment.md) covers the Cloudflare website and private Rust Container. The public website is [gradavia.com](https://gradavia.com). GitHub Actions verifies main pushes before deploying the API and website; setup and release evidence are recorded in the deployment guide and [quality status](docs/quality.md).
-
-## Cloudflare Free candidate
-
-The immutable publication path retains Next.js and the existing product interface,
-with offline HTML/RSC rendering, prepared public data and a Rust/Wasm read Worker.
-See [publication operations](docs/cloudflare-publications.md) for the commands,
-real workerd browser checks, quota gates and cutover steps. Implementation and
-local verification do not imply production activation or cancellation of Workers
-Paid. Ingestion remains explicit and independent of publication.

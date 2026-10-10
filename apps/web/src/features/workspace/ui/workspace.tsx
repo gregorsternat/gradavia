@@ -146,8 +146,8 @@ export function Workspace({
 }: {
   initialPanel: PanelId;
   initialSearch: string;
-  initialPayload?: PanelPayload;
-  initialView?: ViewId | "message";
+  initialPayload: PanelPayload;
+  initialView: ViewId | "message";
 }) {
   const space = spaces[panels[initialPanel].space];
   const router = useRouter();
@@ -161,10 +161,11 @@ export function Workspace({
         scroll: 0,
         payload: initialPayload,
         loadedSearch: initialSearch,
-        loadedKey: initialPayload
-          ? resourceKey(initialPanel, new URLSearchParams(initialSearch))
-          : undefined,
-        failed: initialPayload ? failed(initialPayload) : false,
+        loadedKey: resourceKey(
+          initialPanel,
+          new URLSearchParams(initialSearch),
+        ),
+        failed: failed(initialPayload),
       },
     },
   }));
@@ -177,8 +178,7 @@ export function Workspace({
     latest.current = state;
   }, [state]);
   useEffect(() => {
-    if (initialPayload)
-      cachePayload(cache.current, initialPanel, initialSearch, initialPayload);
+    cachePayload(cache.current, initialPanel, initialSearch, initialPayload);
   }, [initialPanel, initialSearch, initialPayload]);
 
   // Keep panel routers stable: feature effects depend on router identity while
@@ -353,16 +353,14 @@ export function Workspace({
   useEffect(() => {
     if (entry.loadedKey === wantedKey || entry.failed) return;
     const id = state.active;
-    if (latest.current.entries[id]?.search !== entry.search) return;
     let request = requests.current.get(wantedKey);
     if (!request) {
-      const publication = document.documentElement.dataset.gradaviaPublication;
-      request = fetch(`/api/workspace/${id}?${entry.search}`, {
-        headers: publication ? { "X-Gradavia-Publication": publication } : {},
-      }).then(async (response) => {
-        if (!response.ok) throw new Error("Panel unavailable");
-        return (await response.json()) as PanelPayload;
-      });
+      request = fetch(`/api/workspace/${id}?${entry.search}`).then(
+        async (response) => {
+          if (!response.ok) throw new Error("Panel unavailable");
+          return (await response.json()) as PanelPayload;
+        },
+      );
       requests.current.set(wantedKey, request);
       void request
         .finally(() => requests.current.delete(wantedKey))

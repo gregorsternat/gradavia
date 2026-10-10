@@ -4,11 +4,7 @@ import { expect, test } from "./fixtures";
 
 async function selectOption(page: Page, label: string, option: string) {
   await page.getByRole("button", { name: label, exact: true }).click();
-  const item = page.getByRole("option", { name: option, exact: true });
-  // Options mount before their staggered entrance. An early scroll/click can
-  // target a moving row while the list's opening height is still changing.
-  await expect(item.locator("..")).toHaveCSS("opacity", "1");
-  await item.click();
+  await page.getByRole("option", { name: option, exact: true }).click();
 }
 async function openFilters(page: Page) {
   await page.getByRole("button", { name: /^Filtres/ }).click();
@@ -43,8 +39,6 @@ test("copy feedback handles navigation, keyboard activation and stale writes", a
   await page.getByRole("searchbox").fill("Systèmes");
   await page.getByRole("button", { name: "Rechercher", exact: true }).click();
   await expect(page).toHaveURL(/q=Syst/);
-  // The URL changes before the search response replaces the explorer and its buttons.
-  await expect(page.getByRole("searchbox")).toBeEnabled();
   await page.evaluate(() => {
     window.location.hash = "contenu";
   });

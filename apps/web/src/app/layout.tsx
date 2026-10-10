@@ -15,12 +15,7 @@ export const metadata: Metadata = {
 };
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html
-      lang="fr"
-      data-scroll-behavior="smooth"
-      data-gradavia-publication={process.env.GRADAVIA_PUBLICATION_ID}
-      suppressHydrationWarning
-    >
+    <html lang="fr" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className="font-sans antialiased">
         <Providers>
           <a

@@ -1,9 +1,5 @@
 # Cloudflare deployment
 
-The runtime below is still the active production path. The replacement
-[immutable publication candidate](cloudflare-publications.md) is implemented
-alongside it and requires production validation before cutover or plan changes.
-
 ## Runtime boundary
 
 The deployment uses two Workers in account
