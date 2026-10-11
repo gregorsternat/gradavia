@@ -10,11 +10,14 @@ No active execution plan.
 
 ## Completed
 
+- [Native copy buttons](completed/native-copy-buttons.md): restored beUI sharing
+  and removed the vendored clipboard integration.
+
+- [Arc copy buttons (superseded)](completed/arc-copy-buttons.md): historical
+  integration evidence; replaced by the native copy-button restoration.
+
 - [Lean verification](completed/lean-verification.md): fast local checks, selective CI
   and on-demand exhaustive coverage.
-
-- [Arc copy buttons](completed/arc-copy-buttons.md): source-owned registry integration
-  and consistent clipboard actions.
 
 - [Persistent workspace tabs](completed/persistent-workspaces.md): six spaces with
   retained tool state, lazy code/data, native History, legacy redirects and SSR.

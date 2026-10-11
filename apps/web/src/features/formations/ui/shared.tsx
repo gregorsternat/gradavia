@@ -1,12 +1,14 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import Link from "@/features/workspace/ui/navigation";
 import { canonicalHref } from "@/features/workspace/domain/registry";
 import {
   ArrowRight,
   ArrowUpRight,
   Bookmark,
+  Check,
+  Copy,
   Download,
   GitCompareArrows,
   MapPin,
@@ -15,7 +17,6 @@ import {
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { usePageUrl } from "@/lib/hooks/use-page-url";
-import { CopyButton } from "@/components/arc/copy-button/copy-button";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import {
   Select,
@@ -241,7 +242,45 @@ export function ExportButton({
 }
 export function ShareButton({ href }: { href?: string }) {
   const value = usePageUrl(href ? canonicalHref(href) : undefined);
-  return <CopyButton value={value} label="Partager" disabled={!value} />;
+  const operation = useRef(0);
+  const [feedback, setFeedback] = useState<{
+    value: string;
+    state: "copied" | "error";
+  } | null>(null);
+  const state = feedback?.value === value ? feedback.state : "idle";
+  return (
+    <div>
+      <Button
+        variant="secondary"
+        size="sm"
+        className="rounded-lg"
+        disabled={!value}
+        onClick={async () => {
+          const currentOperation = ++operation.current;
+          try {
+            await navigator.clipboard.writeText(value);
+            if (currentOperation === operation.current)
+              setFeedback({ value, state: "copied" });
+          } catch {
+            if (currentOperation === operation.current)
+              setFeedback({ value, state: "error" });
+          }
+        }}
+      >
+        {state === "copied" ? (
+          <Check aria-hidden="true" className="size-3.5" />
+        ) : (
+          <Copy aria-hidden="true" className="size-3.5" />
+        )}
+        {state === "copied" ? "Lien copié" : "Partager"}
+      </Button>
+      {state === "error" && (
+        <p role="status" className="mt-2 text-xs text-muted-foreground">
+          Copiez l’adresse de cette page depuis votre navigateur.
+        </p>
+      )}
+    </div>
+  );
 }
 export function SourceDisclosure({
   source,
