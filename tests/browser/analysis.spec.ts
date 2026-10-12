@@ -89,9 +89,9 @@ test("analysis filters, local views and exported provenance share one cohort", a
   expect(exported.records[0].metrics.capacity).toBe(32);
   expect(exported.filtersAndChart.annotation).toContain("BTS publié");
   expect(exported.source.releaseId).toMatch(/^[a-f0-9-]{36}$/);
-  const copy = page.getByRole("button", { name: "Partager", exact: true });
+  const copy = page.getByRole("button", { name: /^(Partager|Lien copié)$/ });
   await copy.click();
-  await expect(copy).toHaveAttribute("data-copy-state", "copied");
+  await expect(copy).toHaveText("Lien copié");
   const sharedUrl = new URL(
     await page.evaluate(() => navigator.clipboard.readText()),
   );

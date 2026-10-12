@@ -226,12 +226,13 @@ See [decisions](docs/decisions.md) and [data contract](docs/data-contract.md).
 
 ## Client state and visualization
 
-Arc copy buttons are vendored shared primitives under `components/arc`, alongside
-the existing beUI sources. The root stylesheet imports Arc's foundation once in
-a lower-priority layer and bridges semantic tokens to the existing theme.
+Sharing uses the existing beUI secondary buttons and Lucide copy/check icons.
 `usePageUrl` resolves share paths after hydration and observes route/hash changes;
-feature code still constructs release-aware analysis, evolution and list paths.
-Clipboard writes and in-place feedback belong to Arc's `use-copy-feedback` helper.
+feature code constructs release-aware analysis, evolution and list paths. Explicit
+share paths use canonical workspace URLs. Shared buttons keep French feedback
+local to the copied URL and ignore older clipboard completions. Preparation lists
+expose a manual link after the copy action, excluding notes unless explicitly
+requested.
 
 `features/seo` owns public page identity, structured data and discovery sitemaps.
 Pure metadata and XML rules stay under `domain`; sitemap loading uses the existing

@@ -18,23 +18,15 @@ test("copy feedback handles navigation, keyboard activation and stale writes", a
   context,
 }, testInfo) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-  // Install before application timers so feedback resets remain cancellable.
-  await page.clock.install();
   await page.goto("/formations");
-  const copy = page.getByRole("button", { name: "Partager", exact: true });
+  const copy = page.getByRole("button", { name: /^(Partager|Lien copié)$/ });
   await expect(copy).toBeEnabled();
-  const initialWidth = await copy.evaluate(
-    (button: HTMLButtonElement) => button.offsetWidth,
-  );
   await copy.focus();
   await page.keyboard.press("Enter");
-  await expect(copy).toHaveAttribute("data-copy-state", "copied");
+  await expect(copy).toHaveText("Lien copié");
   await expect
     .poll(() => page.evaluate(() => navigator.clipboard.readText()))
     .toBe(page.url());
-  expect(
-    await copy.evaluate((button: HTMLButtonElement) => button.offsetWidth),
-  ).toBe(initialWidth);
 
   await page.getByRole("searchbox").fill("Systèmes");
   await page.getByRole("button", { name: "Rechercher", exact: true }).click();
@@ -59,23 +51,11 @@ test("copy feedback handles navigation, keyboard activation and stale writes", a
     });
   });
   await copy.click();
-  await expect(copy).toHaveAttribute("data-copy-state", "error");
-  await expect(
-    page.getByRole("status").filter({ hasText: "copie impossible" }),
-  ).toContainText("réessayez");
-  const fallback = page.getByRole("textbox", {
-    name: "Lien à copier manuellement",
-    exact: true,
+  await expect(copy).toHaveText("Partager");
+  const fallback = page.getByRole("status").filter({
+    hasText: "Copiez l’adresse de cette page depuis votre navigateur.",
   });
-  await expect(fallback).toHaveValue(page.url());
-  await fallback.focus();
-  expect(
-    await fallback.evaluate(
-      (input: HTMLInputElement) => input.selectionEnd! - input.selectionStart!,
-    ),
-  ).toBe(page.url().length);
-  await page.clock.fastForward(2_500);
-  await expect(copy).toHaveAttribute("data-copy-state", "error");
+  await expect(fallback).toBeVisible();
 
   await page.evaluate(() => {
     let calls = 0;
@@ -100,13 +80,13 @@ test("copy feedback handles navigation, keyboard activation and stale writes", a
   });
   await copy.click();
   await copy.click();
-  await expect(copy).toHaveAttribute("data-copy-state", "error");
+  await expect(fallback).toBeVisible();
   await page.evaluate(() => {
     (
       window as Window & { resolveFirstClipboardWrite?: () => void }
     ).resolveFirstClipboardWrite?.();
   });
-  await expect(copy).toHaveAttribute("data-copy-state", "error");
+  await expect(fallback).toBeVisible();
 
   expect(
     await page.evaluate(

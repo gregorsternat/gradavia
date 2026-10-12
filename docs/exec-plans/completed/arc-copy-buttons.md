@@ -1,4 +1,8 @@
-# Arc copy buttons
+# Arc copy buttons (superseded)
+
+Superseded on 2026-10-12 by [native copy buttons](native-copy-buttons.md).
+The vendored source, registry, foundation and license were removed. This plan
+retains historical implementation and verification evidence only.
 
 ## Objective and scope
 

@@ -83,9 +83,9 @@ test("evolution compares exactly matched fixture observations and preserves indi
     .click();
   await expect(page).toHaveURL(/version_debut=/);
   await expect(page).toHaveURL(/mode=index/);
-  const copy = page.getByRole("button", { name: "Partager", exact: true });
+  const copy = page.getByRole("button", { name: /^(Partager|Lien copié)$/ });
   await copy.click();
-  await expect(copy).toHaveAttribute("data-copy-state", "copied");
+  await expect(copy).toHaveText("Lien copié");
   const copiedUrl = new URL(
     await page.evaluate(() => navigator.clipboard.readText()),
   );
