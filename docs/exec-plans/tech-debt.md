@@ -13,6 +13,7 @@ chooses the next task; a trigger identifies when a constraint must be revisited.
 | DB-001   | Separate ingestion and migration roles; the production runtime reader is already provisioned                                                       | Before automating production migrations or ingestion                                                   |
 | TOOL-001 | Upgrade ESLint 9 after Next.js plugin peers support ESLint 10                                                                                      | Compatible release available                                                                           |
 | UI-001   | Manual screen-reader and Safari/Firefox verification of composite controls, virtual tables and chart equivalents                                   | Before claiming broader browser and assistive-technology support                                       |
+| UI-003   | Show static visual values for NumberTicker without JavaScript; correct server-rendered screen-reader text already exists                           | Before claiming visual metric parity without JavaScript; observed during the performance release       |
 | OPS-001  | Production monitoring, ingestion scheduling and freshness policy                                                                                   | Before expanding beyond the initial public launch                                                      |
 | OPS-002  | Inventory and back up raw ingestion archives outside their original worktree                                                                       | Before retiring an ingestion checkout or enabling scheduled refresh                                    |
 | SEO-001  | Verify Search Console ownership, submit the sitemap and record indexing/search-performance baselines; assess field performance and API cold starts | After publishing the search-discovery changes; requires property access and actual production evidence |
@@ -24,3 +25,8 @@ jobs remain deferred. Populated databases and local archives were verified in
 earlier milestones;
 that evidence does not establish current branch contents or an archive backup.
 New worktrees do not automatically receive the original `.data/raw` tree.
+
+The [page-load performance release](completed/page-load-performance.md) addresses
+regional placement, bounded caching and progressive loading. SQL redesign and
+server-side atlas pagination remain within PERF-001; warm-cache improvements do
+not remove the full-snapshot transfer or establish post-idle cold-start latency.

@@ -6,10 +6,13 @@ Keep brief work brief; use a plan when several boundaries change together.
 
 ## Active
 
-- [Page-load performance](active/page-load-performance.md): regional API placement,
-  bounded public-data caching, streamed workspaces and concurrent lazy tools.
+No active implementation plan.
 
 ## Completed
+
+- [Page-load performance](completed/page-load-performance.md): deployed WEUR
+  placement, 15-minute public-data cache, progressive rendering and lazy tools;
+  five-run warm median server waiting reduced by 65–88% across measured requests.
 
 - [Native copy buttons](completed/native-copy-buttons.md): restored beUI sharing
   and removed the vendored clipboard integration.
