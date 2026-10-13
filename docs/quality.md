@@ -14,12 +14,17 @@ production smoke (`just test-smoke`) and opt-in exhaustive verification
 (`just verify-full`). Historical `just verify` results below refer to the old
 exhaustive command, not the current fast command. See [CI selection](harness.md#ci-selection).
 
-The [page-load performance plan](exec-plans/active/page-load-performance.md)
+The [page-load performance plan](exec-plans/completed/page-load-performance.md)
 records the current cache, streaming and lazy-loading validation. Local evidence
 on 2026-10-14 includes 130 TypeScript cases, Node/Rust checks, PostgreSQL 18
 contracts, 20 slow-response performance/SEO browser executions and 84 production
-regression executions on desktop/mobile. Remote publication and live timings are
-tracked separately in that plan.
+regression executions on desktop/mobile. PR #44 and main revision `dec5704` passed
+remote verification. The main pipeline published both Workers and passed the
+public data smoke; the running container was verified in `dub02/WEUR` with
+unchanged capacity. Five-run warm TTFB medians improved by 65–88% across the five
+measured requests. Live map/profile keyboard navigation, native no-JavaScript
+navigation and true detail 404s passed. Exact timings and cold-cache/field-data
+limits are recorded in the completed plan.
 
 | Area                      | Executable evidence                                                                                                                      | Remaining limit                                                                                                |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |

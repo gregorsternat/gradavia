@@ -24,6 +24,9 @@ The single `basic` container is constrained to `WEUR` to reduce its distance fro
 the Frankfurt database. Its instance limit (one), ten-minute sleep and database
 capacity are unchanged. Verify actual instance placement after deployment; the
 configuration is a constraint, not evidence that a running instance moved.
+The 2026-10-14 [performance release](exec-plans/completed/page-load-performance.md)
+verified the running instance in `dub02/WEUR`, with unchanged CPU, memory, disk
+and instance limit.
 
 Validated web reads use the named Cache API cache `gradavia-public-data-v1`, with
 a strict 900-second TTL and schema validation on hits. This cache is local to each
