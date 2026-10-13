@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { z } from "zod";
+import { publicData } from "../../../server/public-data-cache";
 import {
   detailResponse,
   explorerResponse,
@@ -139,9 +140,16 @@ export const loadExplorer = cache(async function loadExplorer(
             .join(""),
         );
     }
-    const response = await readApi("/v1/formations", search);
-    if (response.status !== 200) throw new Error("API unavailable");
-    const result = explorerResponse.parse(response.body);
+    const result = await publicData(
+      "/v1/formations",
+      search,
+      (body) => explorerResponse.parse(body),
+      async () => {
+        const response = await readApi("/v1/formations", search);
+        if (response.status !== 200) throw new Error("API unavailable");
+        return explorerResponse.parse(response.body);
+      },
+    );
     if (result.status === "ready") {
       for (const key of FILTER_KEYS)
         result.data.facets[key].sort((a, b) => a.localeCompare(b, "fr"));
@@ -159,19 +167,25 @@ export const loadFormation = cache(async function loadFormation(
 ): Promise<DetailResult> {
   if (!formationId.safeParse(id).success) return { status: "not-found" };
   try {
-    const response = await readApi(`/v1/formations/${encodeURIComponent(id)}`);
-    if (
-      response.status === 404 &&
-      z
-        .object({ error: z.object({ code: z.literal("not_found") }) })
-        .safeParse(response.body).success
-    )
-      return { status: "not-found" };
-    if (response.status !== 200) throw new Error("API unavailable");
-    const result = detailResponse.parse(response.body);
-    if (result.data.formation.id !== id)
-      throw new Error("Inconsistent formation identity");
-    return result;
+    const path = `/v1/formations/${encodeURIComponent(id)}`;
+    const parse = (body: unknown) => {
+      const result = detailResponse.parse(body);
+      if (result.data.formation.id !== id)
+        throw new Error("Inconsistent formation identity");
+      return result;
+    };
+    return await publicData<DetailResult>(path, undefined, parse, async () => {
+      const response = await readApi(path);
+      if (
+        response.status === 404 &&
+        z
+          .object({ error: z.object({ code: z.literal("not_found") }) })
+          .safeParse(response.body).success
+      )
+        return { status: "not-found" };
+      if (response.status !== 200) throw new Error("API unavailable");
+      return parse(response.body);
+    });
   } catch {
     console.error("Formation API unavailable.");
     return { status: "unavailable" };

@@ -15,7 +15,7 @@ import {
 import type { PanelPayload } from "../server/load";
 import { PanelNavigationProvider } from "./navigation";
 import { Panel } from "./panel";
-import type { ViewId } from "./views";
+import { preloadPanel, type ViewId } from "./views";
 import { workspaceMetadata } from "../domain/metadata";
 import {
   Tabs,
@@ -323,7 +323,6 @@ export function Workspace({
       entry.payload,
     );
     const title = `${String(metadata.title)} · Gradavia`;
-    document.title = title;
     const values: Record<string, string> = {
       description: String(metadata.description ?? ""),
       "og:title": title,
@@ -338,21 +337,56 @@ export function Workspace({
           ? "noindex, follow"
           : "index, follow",
     };
-    for (const [key, value] of Object.entries(values)) {
-      const element = document.head.querySelector<HTMLMetaElement>(
-        `meta[${key.startsWith("og:") ? "property" : "name"}="${key}"]`,
-      );
-      if (element) element.content = value;
-    }
-    const canonical = document.head.querySelector<HTMLLinkElement>(
-      'link[rel="canonical"]',
-    );
-    if (canonical)
-      canonical.href = String(metadata.alternates?.canonical ?? "");
+    const updateMetadata = () => {
+      if (document.title !== title) document.title = title;
+      for (const [key, value] of Object.entries(values)) {
+        for (const element of document.querySelectorAll<HTMLMetaElement>(
+          `meta[${key.startsWith("og:") ? "property" : "name"}="${key}"]`,
+        )) {
+          if (element.content !== value) element.content = value;
+        }
+      }
+      const href = String(metadata.alternates?.canonical ?? "");
+      for (const canonical of document.querySelectorAll<HTMLLinkElement>(
+        'link[rel="canonical"]',
+      )) {
+        if (canonical.href !== href) canonical.href = href;
+      }
+    };
+    updateMetadata();
+    // Next can stream metadata into the body after the workspace is interactive.
+    // Reconcile only metadata mutations; charts and other UI updates are ignored.
+    const selector = 'title, meta[name], meta[property], link[rel="canonical"]';
+    const observer = new MutationObserver((records) => {
+      if (
+        records.some(
+          (record) =>
+            (record.target instanceof Element &&
+              record.target.matches(selector)) ||
+            (record.type === "characterData" &&
+              record.target.parentElement?.matches("title")) ||
+            [...record.addedNodes].some(
+              (node) =>
+                node instanceof Element &&
+                (node.matches(selector) || node.querySelector(selector)),
+            ),
+        )
+      )
+        updateMetadata();
+    });
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["content", "href"],
+      characterData: true,
+    });
+    return () => observer.disconnect();
   }, [state.active, entry.search, entry.payload]);
   useEffect(() => {
     if (entry.loadedKey === wantedKey || entry.failed) return;
     const id = state.active;
+    preloadPanel(id, new URLSearchParams(entry.search));
     let request = requests.current.get(wantedKey);
     if (!request) {
       request = fetch(`/api/workspace/${id}?${entry.search}`).then(

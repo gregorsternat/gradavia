@@ -10,8 +10,6 @@ import { FormationDetailView } from "@/features/formations/ui/detail";
 import { ButtonLink } from "@/components/motion/button/base";
 import { decodeFormationRouteId } from "@/features/formations/domain/api-contract";
 import { formationUrl } from "@/features/formations/domain/metrics";
-import { loadAtlas, loadAtlasDetail } from "@/features/atlas/server/load";
-import { peerSummary } from "@/features/atlas/domain/exploration";
 
 export async function generateMetadata({
   params,
@@ -63,13 +61,6 @@ export default async function FormationPage({
         </ButtonLink>
       </main>
     );
-  const [enriched, atlas] = await Promise.all([
-    loadAtlasDetail(id),
-    loadAtlas({
-      campagne: String(result.data.source.campaign),
-      version: result.data.source.releaseId,
-    }),
-  ]);
   return (
     <>
       <StructuredData
@@ -79,15 +70,7 @@ export default async function FormationPage({
           "parcoursup",
         )}
       />
-      <FormationDetailView
-        detail={result.data}
-        enriched={enriched.status === "ready" ? enriched.data : undefined}
-        peers={
-          enriched.status === "ready" && atlas.status === "ready"
-            ? peerSummary(atlas.data.items, enriched.data.item)
-            : undefined
-        }
-      />
+      <FormationDetailView key={id} detail={result.data} />
     </>
   );
 }

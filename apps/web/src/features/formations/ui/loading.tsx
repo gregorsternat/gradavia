@@ -4,7 +4,7 @@ import { Loader } from "@/components/motion/loader";
 export default function LoadingFormations() {
   return (
     <PanelMain
-      id="contenu"
+      id="chargement"
       tabIndex={-1}
       className="flex-1 py-14"
       aria-busy="true"

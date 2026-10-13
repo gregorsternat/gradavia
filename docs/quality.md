@@ -14,6 +14,13 @@ production smoke (`just test-smoke`) and opt-in exhaustive verification
 (`just verify-full`). Historical `just verify` results below refer to the old
 exhaustive command, not the current fast command. See [CI selection](harness.md#ci-selection).
 
+The [page-load performance plan](exec-plans/active/page-load-performance.md)
+records the current cache, streaming and lazy-loading validation. Local evidence
+on 2026-10-14 includes 130 TypeScript cases, Node/Rust checks, PostgreSQL 18
+contracts, 20 slow-response performance/SEO browser executions and 84 production
+regression executions on desktop/mobile. Remote publication and live timings are
+tracked separately in that plan.
+
 | Area                      | Executable evidence                                                                                                                      | Remaining limit                                                                                                |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | Architecture              | Import graph and Cargo dependency checks in `just check`; regression cases under `scripts/tests`                                         | Does not prove all side effects or statistical semantics                                                       |

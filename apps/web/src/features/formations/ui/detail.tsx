@@ -4,9 +4,7 @@ import { PanelMain } from "@/features/workspace/ui/navigation";
 import { useState } from "react";
 import { Breadcrumbs } from "@/features/seo/ui/breadcrumbs";
 import { detailBreadcrumbs } from "@/features/seo/domain/structured-data";
-import { DetailInsights } from "@/features/atlas/ui/detail-insights";
-import type { AtlasDetail } from "@/features/atlas/domain/api-contract";
-import type { peerSummary } from "@/features/atlas/domain/exploration";
+import { FormationInsights } from "./insights";
 import Link from "@/features/workspace/ui/navigation";
 import { ArrowLeft, ArrowUpRight, Building2, Info, MapPin } from "lucide-react";
 import { Button, ButtonLink } from "@/components/motion/button/base";
@@ -178,17 +176,10 @@ function History({ detail }: { detail: FormationDetail }) {
   );
 }
 
-export function FormationDetailView({
-  detail,
-  enriched,
-  peers,
-}: {
-  detail: FormationDetail;
-  enriched?: AtlasDetail;
-  peers?: ReturnType<typeof peerSummary>;
-}) {
+export function FormationDetailView({ detail }: { detail: FormationDetail }) {
   const { formation, source } = detail;
   const [tab, setTab] = useState("synthese");
+  const [insightsRequested, setInsightsRequested] = useState(false);
   const volumeData = volumeKeys.map((key) => ({
     indicateur: key === "capacity" ? "Places" : metricLabels[key],
     Effectif: observedMetric(formation.metrics, key),
@@ -296,20 +287,28 @@ export function FormationDetailView({
           </section>
         ))}
       </Reveal>
-      <Tabs value={tab} onValueChange={setTab} variant="underline">
+      <Tabs
+        value={tab}
+        onValueChange={(value) => {
+          setTab(value);
+          if (value === "profils") setInsightsRequested(true);
+        }}
+        variant="underline"
+      >
         <TabsList className="mb-6">
           <TabsTrigger value="synthese">Vue d’ensemble</TabsTrigger>
           <TabsTrigger value="historique">Historique</TabsTrigger>
-          {enriched && (
-            <TabsTrigger value="profils">Profils et alternatives</TabsTrigger>
-          )}
+          <TabsTrigger value="profils">Profils et alternatives</TabsTrigger>
           <TabsTrigger value="source">Définitions et source</TabsTrigger>
         </TabsList>
-        {enriched && (
-          <TabsContent value="profils" keepMounted={false}>
-            <DetailInsights detail={enriched} peers={peers} />
-          </TabsContent>
-        )}
+        <TabsContent value="profils" keepMounted>
+          <FormationInsights
+            key={formation.id}
+            id={formation.id}
+            active={tab === "profils"}
+            requested={insightsRequested}
+          />
+        </TabsContent>
         <TabsContent value="synthese" keepMounted={false}>
           <Reveal className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.5fr)_minmax(260px,1fr)]">
             <div className="space-y-5">

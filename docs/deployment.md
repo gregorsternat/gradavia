@@ -20,6 +20,19 @@ role. Next.js does not import a database client or receive database credentials.
 Ingestion and Drizzle migrations remain explicitly operated outside Cloudflare.
 The API's bounded SQLx pool and immutable-release caches are unchanged.
 
+The single `basic` container is constrained to `WEUR` to reduce its distance from
+the Frankfurt database. Its instance limit (one), ten-minute sleep and database
+capacity are unchanged. Verify actual instance placement after deployment; the
+configuration is a constraint, not evidence that a running instance moved.
+
+Validated web reads use the named Cache API cache `gradavia-public-data-v1`, with
+a strict 900-second TTL and schema validation on hits. This cache is local to each
+Cloudflare location and can evict early. It needs no new storage binding; Next's
+build-time asset cache and the private API binding remain in place. Empty/error
+responses are not stored, and cache failures fall back to the normal API read.
+See [data freshness](data-contract.md#formation-explorer-read-contract). Bump the
+cache namespace when changing a response contract or validation semantics.
+
 The web entrypoint performs the canonical redirect before OpenNext parses query
 parameters, preserving encoded search values and repeated keys. `keep_names` is
 disabled to keep the theme library's serialized browser script self-contained.
