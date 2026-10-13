@@ -123,7 +123,11 @@ export function PanelMain({
   const context = useContext(Context);
   if (!context) return <main {...props}>{children}</main>;
   return (
-    <div {...props} id={props.id ? `${context.panel}-${props.id}` : undefined}>
+    <div
+      {...props}
+      data-workspace-view
+      id={props.id ? `${context.panel}-${props.id}` : undefined}
+    >
       {children}
     </div>
   );

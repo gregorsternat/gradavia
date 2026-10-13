@@ -69,7 +69,15 @@ application contract, not a replacement for the public dataset export API.
 No browser module imports server I/O or directly addresses the Rust service.
 
 The server renders only the requested feature into the workspace. Subsequent
-panels import their own view and read data on demand. Visited panels keep their
+panels start their view import and data read together on activation; maps also
+preload Leaflet. The six root pages stream their loading placeholders through
+page-local Suspense, so nested detail routes retain their pre-stream 404 decision.
+A scoped `noscript` style exposes the delivered workspace and lazy view in source
+order and preserves the page frame without revealing inactive tabs. It matches
+our workspace/view markers rather than React's internal stream segment IDs.
+Client navigation reconciles streamed metadata in both head and body with the
+current panel/query, so a late initial canonical cannot replace a newer campaign.
+Visited panels keep their
 state until leaving the workspace. Scoped navigation prevents hidden panels from
 reading another panel's URL or changing browser history. Native links still work
 without JavaScript. Same-space activation uses History; the active URL and
@@ -100,6 +108,11 @@ unchanged; regular list-only and map-only criteria are remembered separately.
   coverage value uses the same selected immutable campaign release.
 - `/formations/[id]` reads a retained `release:row` identity, source-defined
   indicators and separately qualified history. Retained links survive imports.
+  Its secondary profiles tab imports its view and calls
+  `GET /api/formations/[id]/insights` on first activation. This app-only route
+  returns enriched detail and a compact peer summary, pinned to the same campaign,
+  family and release. It never returns the full atlas. Failures are retryable;
+  successful results stay within the visit and cannot replace a different detail.
 - `/comparer` reads at most four formations, requires one campaign and exposes
   exact metric states. `/favoris` resolves saved identities through the same API.
 - `/specialites` uses the separately reviewed 2025 general-baccalaureate

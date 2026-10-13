@@ -1,3 +1,8 @@
+import { Suspense } from "react";
+import {
+  WorkspaceLoading,
+  WorkspaceNoScript,
+} from "@/features/workspace/ui/loading";
 import type { SearchParams } from "@/features/formations/domain/explorer";
 import {
   WorkspacePage,
@@ -9,5 +14,13 @@ export async function generateMetadata({ searchParams }: Props) {
   return workspaceMetadata("/formations", await searchParams);
 }
 export default async function Page({ searchParams }: Props) {
-  return <WorkspacePage path="/formations" params={await searchParams} />;
+  const params = await searchParams;
+  return (
+    <>
+      <WorkspaceNoScript />
+      <Suspense fallback={<WorkspaceLoading path="/formations" />}>
+        <WorkspacePage path="/formations" params={params} />
+      </Suspense>
+    </>
+  );
 }

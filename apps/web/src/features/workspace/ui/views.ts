@@ -1,3 +1,5 @@
+import type { PanelId } from "../domain/registry";
+
 // Literal imports keep each tool independently loadable. The server resolves
 // only the requested view; the browser imports another view on first activation.
 export const viewLoaders = {
@@ -44,3 +46,37 @@ export const viewLoaders = {
   Quiz: () => import("@/features/discovery/ui/quiz").then((m) => m.Quiz),
 };
 export type ViewId = keyof typeof viewLoaders;
+
+const panelViews = {
+  formations: "FormationExplorer",
+  carte: "AtlasExplorer",
+  apprentissage: "AtlasExplorer",
+  "apprentissage-carte": "AtlasExplorer",
+  specialites: "SpecialtyExplorer",
+  inverse: "InverseSpecialties",
+  selection: "ComparisonPageView",
+  modalites: "ModalityComparison",
+  favoris: "FavoritesPageView",
+  budget: "BudgetCalculator",
+  overview: "Overview",
+  territoires: "Territories",
+  evolutions: "Evolution",
+  analyses: "AnalysisWorkbench",
+  decouvrir: "Quiz",
+  sources: "Sources",
+  donnees: "DataAccess",
+  archives: "AtlasExplorer",
+} satisfies Record<PanelId, ViewId>;
+
+/** Activation, including history, starts code before the data response arrives. */
+export function preloadPanel(panel: PanelId, params: URLSearchParams) {
+  void viewLoaders[panelViews[panel]]().catch(() => {});
+  if (
+    panel === "carte" ||
+    panel === "apprentissage-carte" ||
+    (panel === "archives" && params.get("vue") !== "liste")
+  ) {
+    // This function only runs in the browser; Leaflet requires window at import.
+    void import("@/features/atlas/ui/leaflet-map").catch(() => {});
+  }
+}

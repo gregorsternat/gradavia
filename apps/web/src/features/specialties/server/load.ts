@@ -1,4 +1,5 @@
 import "server-only";
+import { publicData } from "../../../server/public-data-cache";
 import { readApi } from "../../formations/server/load";
 import type { SearchParams } from "../../formations/domain/explorer";
 import {
@@ -16,9 +17,17 @@ export async function loadSpecialties(
       const first = Array.isArray(value) ? value[0] : value;
       if (first) search.set(key, Array.from(first).slice(0, 1200).join(""));
     }
-    const response = await readApi("/v1/specialties", search);
-    if (response.status !== 200) throw new Error("Specialty API unavailable");
-    return specialtyResponse.parse(response.body);
+    return await publicData(
+      "/v1/specialties",
+      search,
+      (body) => specialtyResponse.parse(body),
+      async () => {
+        const response = await readApi("/v1/specialties", search);
+        if (response.status !== 200)
+          throw new Error("Specialty API unavailable");
+        return specialtyResponse.parse(response.body);
+      },
+    );
   } catch {
     console.error("Specialty API unavailable.");
     return { status: "unavailable" };

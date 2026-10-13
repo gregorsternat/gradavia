@@ -6,7 +6,8 @@ Keep brief work brief; use a plan when several boundaries change together.
 
 ## Active
 
-No active execution plan.
+- [Page-load performance](active/page-load-performance.md): regional API placement,
+  bounded public-data caching, streamed workspaces and concurrent lazy tools.
 
 ## Completed
 

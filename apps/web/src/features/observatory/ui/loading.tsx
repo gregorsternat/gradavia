@@ -1,14 +1,18 @@
 import { PanelMain } from "@/features/workspace/ui/navigation";
 import { Loader } from "@/components/motion/loader";
 
-export default function ObservatoryLoading() {
+export default function ObservatoryLoading({
+  label = "Chargement de l’observatoire",
+}: {
+  label?: string;
+}) {
   return (
     <PanelMain
-      id="contenu"
+      id="chargement"
       tabIndex={-1}
       className="py-8"
       aria-busy="true"
-      aria-label="Chargement de l’observatoire"
+      aria-label={label}
     >
       <div aria-hidden="true" className="h-8 w-56 rounded-lg bg-subtle" />
       <div

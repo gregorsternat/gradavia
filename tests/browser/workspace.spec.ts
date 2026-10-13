@@ -243,7 +243,9 @@ test("server-rendered tabs retain native destinations and tool-specific metadata
     await staticPage.goto("/favoris");
     await staticPage.getByRole("tab", { name: "Budget", exact: true }).click();
     await expect(staticPage).toHaveURL(/onglet=budget/);
-    await expect(staticPage.locator("main h1")).toContainText("budget");
+    await expect(staticPage.getByRole("heading", { level: 1 })).toContainText(
+      "budget",
+    );
     await expect(staticPage.locator('meta[name="robots"]')).toHaveAttribute(
       "content",
       "index, follow",
@@ -276,7 +278,9 @@ test("server-rendered tabs retain native destinations and tool-specific metadata
       "content",
       "index, follow",
     );
-    await expect(staticPage.locator("main h1")).toContainText("carte");
+    await expect(staticPage.getByRole("heading", { level: 1 })).toContainText(
+      "carte",
+    );
   } finally {
     await context.close();
   }

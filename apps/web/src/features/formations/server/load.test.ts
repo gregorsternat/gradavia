@@ -129,6 +129,50 @@ describe("formation HTTP client boundary", () => {
     expect(publicFetch).not.toHaveBeenCalled();
   });
 
+  test("stores only validated successful public responses and keeps failures retryable", async () => {
+    vi.stubEnv("GRADAVIA_API_TRANSPORT", "service-binding");
+    const stored = new Map<string, string>();
+    const put = vi.fn(async (request: Request, response: Response) => {
+      stored.set(request.url, await response.text());
+    });
+    vi.stubGlobal("caches", {
+      open: async () => ({
+        put,
+        match: async (request: Request) => {
+          const body = stored.get(request.url);
+          return body
+            ? new Response(body, {
+                headers: { "X-Gradavia-Expires": String(Date.now() + 900_000) },
+              })
+            : undefined;
+        },
+      }),
+    });
+    const fetcher = vi
+      .fn()
+      .mockImplementationOnce(async () =>
+        Response.json({ status: "ready", data: {} }),
+      )
+      .mockImplementationOnce(async () =>
+        Response.json(ready(), { status: 503 }),
+      )
+      .mockImplementationOnce(async () => Response.json({ status: "empty" }))
+      .mockImplementation(async () => Response.json(ready()));
+    vi.mocked(getCloudflareContext).mockReturnValue({
+      env: { GRADAVIA_API: { fetch: fetcher } } as unknown as CloudflareEnv,
+      ctx: {},
+      cf: undefined,
+    });
+    expect(await loadExplorer({})).toEqual({ status: "unavailable" });
+    expect(await loadExplorer({})).toEqual({ status: "unavailable" });
+    expect(await loadExplorer({})).toEqual({ status: "empty" });
+    expect(put).not.toHaveBeenCalled();
+    expect((await loadExplorer({})).status).toBe("ready");
+    expect((await loadExplorer({})).status).toBe("ready");
+    expect(fetcher).toHaveBeenCalledTimes(4);
+    expect(put).toHaveBeenCalledTimes(1);
+  });
+
   test.each([300, 301, 302, 303, 307, 308, 399])(
     "rejects a service-binding %i redirect before reading its body",
     async (status) => {

@@ -84,7 +84,15 @@ Read rows by captured `release_id` and `campaign`, preserving `(release_id,
 row_number)` identity and duplicate multiplicity. Counts are source records for
 the selected campaign, never unique people or cross-year formation counts.
 Pagination, counts and campaign-wide filter options share that release. A later
-request observes a newly published current pointer.
+uncached request observes a newly published current pointer. The web's named
+Cloudflare Cache API cache can reuse a validated public response for at most
+900 seconds after its successful read; expired entries are never served as a
+fallback. Its versioned keys include the endpoint and all bounded, normalized
+reader parameters, including campaign, family and requested release. Only ready
+results are stored, never empty, invalid, failed or not-found responses. Cache
+failures use the normal private API transport; local reads bypass this cache.
+The existing browser workspace retains visited results until navigation/reload,
+so this server TTL does not automatically refresh an already open panel.
 
 The displayed fields are `lib_for_voe_ins`, `g_ea_lib_vx`, `ville_etab`, `dep_lib`,
 `region_etab_aff`, `fili`, `contrat_etab`, `select_form` and `lien_form_psup`.

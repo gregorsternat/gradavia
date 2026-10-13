@@ -43,7 +43,9 @@ an unavailable instance returns a sanitized 503 with a five-second retry hint.
 | `GET /health/ready`             | Database connectivity (`SELECT 1`); not freshness, completeness or schema readiness                  |
 
 All responses use JSON and `Cache-Control: no-store`. Health success is
-`{"status":"ok"}`. There is no persistent response cache hiding source publication.
+`{"status":"ok"}`. The Rust transport does not cache HTTP responses. The web's
+validated public reads can reuse a response for up to 900 seconds through its
+separate named Cache API cache; see [web freshness](data-contract.md#formation-explorer-read-contract).
 
 ## Query parameters
 
@@ -399,3 +401,12 @@ Rust service credential, database connection or arbitrary upstream proxy.
 
 This UI contract is not a new public dataset API. `/api/v1/datasets` retains its
 existing export contract and limits.
+
+`GET /api/formations/[id]/insights` is another app-only route. It validates the
+retained formation identifier, reads the enriched detail and pins its peer atlas
+to exactly the same campaign, family and release. A ready response contains only
+`data.detail` and `data.peers` (counts, three metric positions and at most six
+alternatives), never the full atlas. Missing identities return 404; unavailable or
+mismatched data return 503 so the tab can retry. Responses are `private, no-store`
+with `X-Robots-Tag: noindex`, while the underlying validated reads share the
+bounded server cache. The initial formation document makes neither atlas read.
