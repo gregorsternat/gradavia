@@ -5,6 +5,10 @@ import { createContext, useContext, useSyncExternalStore } from "react";
 const MotionActivity = createContext(true);
 export const MotionActivityProvider = MotionActivity.Provider;
 
+export function useMotionActive() {
+  return useContext(MotionActivity);
+}
+
 const mediaQuery = "(prefers-reduced-motion: reduce)";
 const serverSnapshot = () => false;
 const clientSnapshot = () => window.matchMedia(mediaQuery).matches;

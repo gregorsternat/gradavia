@@ -78,6 +78,12 @@ landing is present, including when navigating between routes without a reload.
 - beUI is the default for every interactive primitive: buttons, inputs, select,
   combobox, tabs, radio controls, tooltip, accordion, table, command palette,
   sidebar, loaders and animated numbers. Components are installed as owned source.
+- Interactive tables compose beUI's async mode: 25-row local batches after global
+  sorting, or bounded network reads. Near-end scrolling loads more, including keyboard scrolling in the focusable
+  table region. Tables and card grids load automatically without a manual
+  load-more button. Errors retain the displayed rows and require
+  explicit retry. Small tables need no artificial loading state. Existing chart
+  equivalents and print tables keep their complete static presentation.
 - Copy actions use the existing beUI secondary button and Lucide copy/check icons.
   Page sharing confirms with “Lien copié”; denied clipboard access explains how
   to copy the browser address. Preparation lists expose a read-only share link

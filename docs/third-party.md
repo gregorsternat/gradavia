@@ -17,6 +17,24 @@ Source: [beUI](https://beui.dev/) and
 [starc007/ui-components](https://github.com/starc007/ui-components).
 License: [MIT](licenses/beui.txt).
 
+### Async table composition (2026-10-14)
+
+Verified [table-async](https://beui.dev/r/table-async.json) against the public
+registry after the MCP transport was unavailable. It uses the same Table source
+already installed, including `onEndReached`, `loading` and skeleton rows. No new
+dependencies or replacement of patched helpers was needed.
+
+Local composition adds progress/retry controls and globally sorted local batches.
+Tables load through their focusable scroll region and cards observe a sentinel.
+Neither displays a manual load-more button; errors retain an explicit retry action. Specialty headers
+inherit the primitive typography.
+The primitive accepts total row counts and scroll-reset identity; end detection
+resets when rows append and checks newly measured underfilled viewports. Sorting
+resets scroll without remounting the focused header. Hidden virtual tables retain
+the full spacer height when their measured range is empty, preserving scroll
+position and preventing spurious end detection when the panel becomes visible. Existing French labels,
+monochrome styles and reduced-motion support remain intact.
+
 ### Persistent workspace controls (2026-10-08)
 
 Local changes to the existing beUI tabs add native anchor triggers, named tab

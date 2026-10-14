@@ -11,7 +11,11 @@ export async function GET(
   const url = new URL(request.url);
   if (url.search.length > 16_384)
     return Response.json({ error: "Query too large" }, { status: 400 });
-  const data = await loadPanel(panel, url.searchParams.toString());
+  const data = await loadPanel(
+    panel,
+    url.searchParams.toString(),
+    request.headers.get("X-Gradavia-Refresh") === "1",
+  );
   return Response.json(data, {
     headers: {
       "Cache-Control": "private, no-store",

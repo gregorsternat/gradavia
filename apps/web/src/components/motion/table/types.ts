@@ -31,6 +31,8 @@ export type InsertPosition = "before" | "after";
 export interface TableProps<T> {
   "aria-label"?: string;
   data: T[];
+  totalRows?: number;
+  resetScrollKey?: string;
   columns: TableColumn<T>[];
   /** Stable id per row, required for correct selection across sorts. Defaults to row index. */
   getRowId?: (row: T, index: number) => string;

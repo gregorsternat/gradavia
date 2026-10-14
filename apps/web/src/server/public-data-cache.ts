@@ -14,6 +14,7 @@ export async function publicData<T extends { status: string }>(
   params: URLSearchParams | undefined,
   parse: (body: unknown) => T,
   load: () => Promise<T>,
+  refresh = false,
 ): Promise<T> {
   let storage: Cache | undefined;
   let context: CloudflareContext | undefined;
@@ -30,7 +31,7 @@ export async function publicData<T extends { status: string }>(
       context = getCloudflareContext();
       if (context.env.GRADAVIA_API && typeof caches !== "undefined") {
         storage = await caches.open(CACHE_NAME);
-        const hit = await storage.match(request);
+        const hit = refresh ? undefined : await storage.match(request);
         if (hit) {
           const expires = Number(hit.headers.get(EXPIRES_HEADER));
           if (Number.isFinite(expires) && expires > Date.now()) {

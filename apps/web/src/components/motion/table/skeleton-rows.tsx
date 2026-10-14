@@ -20,6 +20,7 @@ export function SkeletonRows<T>({
       {Array.from({ length: count }, (_, r) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: static placeholder rows
         <tr
+          aria-hidden="true"
           key={r}
           style={{ height: rowHeight }}
           className="border-border/60 border-b"
@@ -32,7 +33,7 @@ export function SkeletonRows<T>({
             >
               <div
                 className={cn(
-                  "h-3 animate-pulse rounded-full bg-muted",
+                  "h-3 animate-pulse motion-reduce:animate-none rounded-full bg-muted",
                   column.align === "right" ? "ml-auto w-10" : "w-2/3",
                 )}
               />
