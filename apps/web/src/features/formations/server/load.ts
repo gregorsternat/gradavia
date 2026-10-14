@@ -125,6 +125,7 @@ export async function readApi(
 
 export const loadExplorer = cache(async function loadExplorer(
   params: SearchParams,
+  refresh = false,
 ): Promise<ExplorerResult> {
   try {
     const search = new URLSearchParams();
@@ -149,6 +150,7 @@ export const loadExplorer = cache(async function loadExplorer(
         if (response.status !== 200) throw new Error("API unavailable");
         return explorerResponse.parse(response.body);
       },
+      refresh,
     );
     if (result.status === "ready") {
       for (const key of FILTER_KEYS)

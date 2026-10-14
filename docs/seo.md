@@ -98,10 +98,15 @@ proof of an edge-cache hit. No timestamp is fabricated from request/build time:
 source collection time does not establish the last significant page update.
 
 Historical Parcoursup formations remain discoverable through native campaign
-links and pagination; detail history also links related retained records.
+links and no-JavaScript pagination; detail history also links related retained records.
 Sitemaps initially advertise the latest published campaign per family,
 not every retained release. All sitemap files live at the root to avoid path-scope
 ambiguity. Builds and the static index require no live credentials or dataset.
+
+Hydrated formation lists append batches without changing their entry URL or
+canonical. Legacy `page=N` requests still render their own batch and metadata;
+next/previous anchors are delivered inside `noscript`. The initial batch remains
+available through its native formation directory without JavaScript.
 
 ## Production rollout and measurement
 

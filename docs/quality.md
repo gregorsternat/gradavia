@@ -41,6 +41,20 @@ See [repository workflow](harness.md) for commands and maintenance rules,
 [development](development.md) for isolation, and [technical debt](exec-plans/tech-debt.md)
 for follow-up triggers.
 
+## Async table validation (2026-10-14)
+
+The [completed async-table plan](exec-plans/completed/async-tables.md) records
+local validation of this checkout's implementation: `just verify` (133
+TypeScript cases plus Node/Rust checks), PostgreSQL 18 contracts, a production
+build and 16 smoke executions. All 136 selected production browser executions
+were validated across the broad regression run and a focused cancellation rerun.
+Desktop/mobile inspection covered both themes, reduced motion and keyboard
+scrolling. Native no-JavaScript pagination, complete sharing/import/printing,
+source-version rejection, retries and preserved workspace rows were checked.
+
+These are local results, not remote CI, merge or deployment evidence. No schema,
+public Rust contract or dependency change was required.
+
 ## Lean verification validation (2026-10-11)
 
 On the local diff against `bc4da92`, `just verify` passed checks, 115 TypeScript
@@ -265,3 +279,21 @@ regression failures, focused results and desktop/mobile visual inspection are
 retained in the same directory. A preliminary formatting check caught generated
 CLI snapshots outside the ignored artifact directory; they were moved before the
 successful full run. Remote CI and publication are not established by this local pass.
+
+### Automatic loading audit (2026-10-14)
+
+All 150 targeted desktop/mobile Chromium cases passed after fixing hidden virtual
+tables that collapsed their spacer and lost scroll position on reactivation.
+The new 14-case matrix covers three batches in specialties, inverse specialties,
+territories, analysis, evolution and shared favorites, plus atlas card exhaustion.
+It verifies end-of-list behavior, retained positions and absence of manual load
+buttons. Existing journeys cover network failure/retry, stale responses, inactive
+panels, small history/comparison/profile tables, exports, printing and no-JS URLs.
+`just verify` passed. Live development-data checks loaded 100 of 14,252 formations
+by scrolling tables and cards at desktop/mobile widths in light/dark themes.
+Evidence: `.artifacts/auto-audit-final.log`, `.artifacts/auto-audit-verify.log`,
+`.artifacts/auto-audit-live-*`. Mobile validation is emulated; physical devices
+and other browser engines were not tested in this audit.
+
+The final `just test-smoke` production build and all 16 desktop/mobile smoke
+journeys passed (`.artifacts/auto-audit-smoke.log`).

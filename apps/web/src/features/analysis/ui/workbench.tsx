@@ -28,7 +28,10 @@ import {
   TabsTrigger,
 } from "@/components/motion/tabs";
 import { BouncyAccordion } from "@/components/motion/bouncy-accordion";
-import { Table, type TableColumn } from "@/components/motion/table";
+import {
+  AsyncTable as Table,
+  type TableColumn,
+} from "@/components/motion/table/async";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
 import { datasetUrl } from "@/features/formations/domain/explorer";
 import { ChartData, Reveal } from "@/features/observatory/ui/shared";

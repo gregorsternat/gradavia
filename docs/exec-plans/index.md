@@ -10,6 +10,9 @@ No active implementation plan.
 
 ## Completed
 
+- [Async tables](completed/async-tables.md): beUI incremental tables and cards,
+  bounded network reads, retry and complete shared-list actions.
+
 - [Page-load performance](completed/page-load-performance.md): deployed WEUR
   placement, 15-minute public-data cache, progressive rendering and lazy tools;
   five-run warm median server waiting reduced by 65–88% across measured requests.

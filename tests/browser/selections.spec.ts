@@ -188,17 +188,23 @@ test("shared lists larger than one page import and print every formation", async
   await expect(
     page.getByRole("link", { name: "Licence - Droit 01", exact: true }),
   ).toBeVisible();
-  const links = await page
-    .getByRole("link", { name: /^Licence - Droit \d+$/ })
-    .evaluateAll((elements) =>
-      elements
-        .slice(0, 13)
-        .map((element) =>
-          decodeURIComponent(
-            (element as HTMLAnchorElement).pathname.split("/").at(-1)!,
-          ),
-        ),
-    );
+  let links: string[] = [];
+  await expect
+    .poll(async () => {
+      links = await page
+        .locator("article a:has(h2)")
+        .evaluateAll((elements) =>
+          elements
+            .slice(0, 13)
+            .map((element) =>
+              decodeURIComponent(
+                (element as HTMLAnchorElement).pathname.split("/").at(-1)!,
+              ),
+            ),
+        );
+      return links.length;
+    })
+    .toBe(13);
   expect(links).toHaveLength(13);
   await page.goto(
     `/favoris?${new URLSearchParams({ ids: links.join(","), partage: "1" })}`,
@@ -214,11 +220,49 @@ test("shared lists larger than one page import and print every formation", async
   );
   await expect(
     page.getByRole("navigation", { name: "Pagination des favoris" }),
-  ).toContainText("Page 1 sur 2");
-  await page.getByRole("button", { name: "Suivante", exact: true }).click();
-  await expect(
-    page.getByRole("navigation", { name: "Pagination des favoris" }),
-  ).toContainText("Page 2 sur 2");
+  ).toHaveCount(0);
+  await page.locator("[data-load-progress]").scrollIntoViewIfNeeded();
+  await expect(page.getByRole("article")).toHaveCount(13);
+  await expect(page.locator("[data-load-progress]")).toContainText(
+    "13 résultats affichés sur 13",
+  );
   await page.emulateMedia({ media: "print" });
   await expect(page.locator("#selection-dossier article")).toHaveCount(13);
+});
+
+test("printing a shared list loads its remaining batch before opening the print dialog", async ({
+  page,
+}) => {
+  await page.goto("/formations?q=Droit&vue=cartes");
+  const links = page.locator("article a:has(h2)");
+  await expect(links).toHaveCount(25);
+  const ids = await links.evaluateAll((elements) =>
+    elements
+      .slice(0, 13)
+      .map((element) =>
+        decodeURIComponent(
+          (element as HTMLAnchorElement).pathname.split("/").at(-1)!,
+        ),
+      ),
+  );
+  await page.goto(
+    `/favoris?${new URLSearchParams({ ids: ids.join(","), partage: "1" })}`,
+  );
+  await expect(page.locator("[data-load-progress]")).toContainText(
+    "12 résultats affichés sur 13",
+  );
+  await page.evaluate(() => {
+    window.print = () => {
+      document.documentElement.dataset.printedRows = String(
+        document.querySelectorAll("#selection-dossier article").length,
+      );
+    };
+  });
+  await page
+    .getByRole("button", { name: "Imprimer le dossier", exact: true })
+    .click();
+  await expect(page.locator("html")).toHaveAttribute("data-printed-rows", "13");
+  await expect(page.locator("[data-load-progress]")).toContainText(
+    "13 résultats affichés sur 13",
+  );
 });

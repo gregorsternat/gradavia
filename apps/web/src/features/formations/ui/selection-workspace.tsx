@@ -1,4 +1,5 @@
 "use client";
+import { z } from "zod";
 import {
   usePanelHash,
   usePanelActive,
@@ -14,7 +15,6 @@ import {
 import { useRouter } from "@/features/workspace/ui/navigation";
 import Link from "@/features/workspace/ui/navigation";
 import {
-  ArrowLeft,
   ArrowRight,
   Copy,
   FolderPlus,
@@ -27,7 +27,11 @@ import { Button, ButtonLink } from "@/components/motion/button/base";
 import { Input } from "@/components/motion/input";
 import { Checkbox } from "@/components/motion/checkbox";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
-import type { DetailResult, FormationDetail } from "../domain/api-contract";
+import {
+  detailResponse,
+  type DetailResult,
+  type FormationDetail,
+} from "../domain/api-contract";
 import { formatMetric, formationUrl } from "../domain/metrics";
 import {
   FAVORITES_PAGE_SIZE,
@@ -37,7 +41,6 @@ import {
   STATUSES,
   formationSummary,
   selectionUpdates,
-  selectionUrl,
   type SavedFormation,
   type SelectionNote,
 } from "../domain/selection";
@@ -56,6 +59,10 @@ import {
   Reveal,
   SelectField,
 } from "./shared";
+
+import { flushSync } from "react-dom";
+import { useIncrementalRows } from "@/lib/hooks/use-incremental-rows";
+import { LoadProgress } from "@/components/motion/table/progress";
 
 type LoadedSelection = { id: string; result: DetailResult }[];
 const EMPTY_NOTE: SelectionNote = { note: "", status: "discover" };
@@ -341,11 +348,13 @@ function PrintDossier({
   notes,
   name,
   comparison,
+  missingIds = [],
 }: {
   rows: SavedFormation[];
   notes: Record<string, SelectionNote>;
   name: string;
   comparison: SavedFormation[];
+  missingIds?: string[];
 }) {
   const active = usePanelActive();
   return (
@@ -354,13 +363,30 @@ function PrintDossier({
         <style>{`@media print { body * { visibility: hidden !important; } #selection-dossier, #selection-dossier * { visibility: visible !important; } #selection-dossier { position: absolute; inset: 0; display: block !important; padding: 20px; color: #111; background: white; font-size: 11px; } #selection-dossier article { break-inside: avoid; } #selection-dossier a { overflow-wrap: anywhere; } @page { margin: 15mm; } }`}</style>
       )}
       <h1 className="text-2xl font-semibold">{name}</h1>
-      <p className="mt-2">{rows.length} formations · Dossier Gradavia</p>
+      <p className="mt-2">
+        {rows.length + missingIds.length} formations · Dossier Gradavia
+      </p>
       <p className="mt-2">
         Les données ci-dessous sont les versions enregistrées dans cette
         sélection. Les candidatures ne représentent pas des personnes uniques.
         Un taux d’accès publié n’est pas une probabilité individuelle
         d’admission.
       </p>
+      {missingIds.length > 0 && (
+        <>
+          <p>
+            {missingIds.length} formation(s) sans détail chargé. Les données
+            manquantes ne sont pas remplacées.
+          </p>
+          {missingIds.map((id) => (
+            <article key={id} className="mt-4">
+              <h2>Formation non chargée ou indisponible</h2>
+              <p>{id}</p>
+              {notes[id] && <p>{notes[id].note}</p>}
+            </article>
+          ))}
+        </>
+      )}
       {comparison.length > 1 && (
         <section className="mt-6">
           <h2 className="text-base font-semibold">
@@ -462,7 +488,6 @@ function PrintDossier({
 export function FavoritesWorkspace({
   results,
   ids,
-  page,
   shared = false,
 }: {
   results: LoadedSelection;
@@ -499,93 +524,144 @@ export function FavoritesWorkspace({
   const activeList = selection.lists.find(
     (list) => list.id === selection.activeListId,
   );
-  const details = results.flatMap(({ result }) =>
+  const localRows = selection.favoriteRecords.filter(
+    (row) => !activeList || activeList.ids.includes(row.id),
+  );
+  const requestedIds = shared ? ids : localRows.map((row) => row.id);
+  const initial = results.filter(({ id }) => requestedIds.includes(id));
+  const stream = useIncrementalRows({
+    identity: `${shared ? ids.join(",") : (activeList?.id ?? "all")}:${JSON.stringify(results)}`,
+    initial,
+    request: async (loaded, signal, all) => {
+      let combined = loaded.filter(({ id }) => requestedIds.includes(id));
+      const missing = requestedIds.filter(
+        (id) => !combined.some((entry) => entry.id === id),
+      );
+      for (
+        let offset = 0;
+        offset < missing.length;
+        offset += FAVORITES_PAGE_SIZE
+      ) {
+        const batch = missing.slice(offset, offset + FAVORITES_PAGE_SIZE);
+        const response = await fetch(
+          `/api/workspace/favoris?ids=${encodeURIComponent(batch.join(","))}`,
+          { signal },
+        );
+        if (!response.ok) throw new Error("Le chargement a échoué. Réessayez.");
+        const parsedPayload = z
+          .object({
+            kind: z.literal("favoris"),
+            results: z.array(
+              z.object({
+                id: z.string(),
+                result: z.union([
+                  detailResponse,
+                  z.object({ status: z.enum(["not-found", "unavailable"]) }),
+                ]),
+              }),
+            ),
+          })
+          .safeParse(await response.json());
+        if (
+          !parsedPayload.success ||
+          parsedPayload.data.results.length !== batch.length
+        )
+          throw new Error("Le chargement a échoué. Réessayez.");
+        const payload = parsedPayload.data;
+        const next: LoadedSelection = batch.map((id, index) => {
+          const entry = payload.results[index];
+          if (entry?.id !== id)
+            throw new Error("La suite des favoris est incohérente. Réessayez.");
+          if (entry.result?.status === "not-found")
+            return { id, result: { status: "not-found" } };
+          const parsed = detailResponse.safeParse(entry.result);
+          if (!parsed.success || parsed.data.data.formation.id !== id)
+            throw new Error("Le chargement a échoué. Réessayez.");
+          return { id, result: parsed.data };
+        });
+        combined = [...combined, ...next];
+        if (!all) break;
+      }
+      return combined;
+    },
+  });
+  const visibleResults = stream.rows.filter(({ id }) =>
+    requestedIds.includes(id),
+  );
+  const details = visibleResults.flatMap(({ result }) =>
     result.status === "ready" ? [result.data] : [],
   );
-  const sharedRows: SavedFormation[] = details.map((detail) => ({
+  const toSaved = (detail: FormationDetail): SavedFormation => ({
     id: detail.formation.id,
     campaign: detail.source.campaign,
     title: detail.formation.title,
     establishment: detail.formation.establishment,
     summary: formationSummary(detail.formation, detail),
-  }));
-  const rows = shared
-    ? sharedRows
-    : selection.favoriteRecords.filter(
-        (row) => !activeList || activeList.ids.includes(row.id),
-      );
+  });
+  const sharedRows = details.map(toSaved);
+  const rows = shared ? sharedRows : localRows;
   const notes = shared ? sharedContent.notes : selection.notes;
   const name = shared
     ? sharedContent.name
     : (activeList?.name ?? "Mes favoris");
-  const pages = Math.max(1, Math.ceil(rows.length / FAVORITES_PAGE_SIZE));
-  const currentPage = Math.min(page, pages);
-  const visibleRows = rows.slice(
-    (currentPage - 1) * FAVORITES_PAGE_SIZE,
-    currentPage * FAVORITES_PAGE_SIZE,
-  );
-  const localIds = visibleRows.map((row) => row.id).join(",");
-  const loadedIds = ids.join(",");
   const hydrated = shared ? sharedHydrated : selection.hydrated;
+  const hasMore = visibleResults.length < requestedIds.length;
+  const panelActive = usePanelActive();
+  const { loadMore, loading, error } = stream;
   useEffect(() => {
     if (
-      !shared &&
-      selection.hydrated &&
-      (localIds !== loadedIds || currentPage !== page)
-    ) {
-      const url = new URL(
-        selectionUrl(localIds ? localIds.split(",") : [], "/favoris"),
-        "https://gradavia.invalid",
-      );
-      if (currentPage > 1) url.searchParams.set("page", String(currentPage));
-      startTransition(() =>
-        router.replace(url.pathname + url.search, { scroll: false }),
-      );
-    }
+      !panelActive ||
+      !hydrated ||
+      visibleResults.length ||
+      !requestedIds.length ||
+      loading ||
+      error
+    )
+      return;
+    const timer = setTimeout(() => {
+      void loadMore();
+    }, 0);
+    return () => clearTimeout(timer);
   }, [
-    shared,
-    selection.hydrated,
-    localIds,
-    loadedIds,
-    currentPage,
-    page,
-    router,
+    panelActive,
+    hydrated,
+    visibleResults.length,
+    requestedIds.length,
+    loading,
+    error,
+    loadMore,
   ]);
+  const [printRows, setPrintRows] = useState<{
+    ids: string;
+    rows: SavedFormation[];
+  } | null>(null);
+  const complete = async (action: "print" | "import") => {
+    const entries = hasMore ? await stream.loadMore(true) : visibleResults;
+    if (!entries) return;
+    const completeRows = entries.flatMap(({ result }) =>
+      result.status === "ready" ? [toSaved(result.data)] : [],
+    );
+    if (action === "import") {
+      if (
+        completeRows.length === ids.length &&
+        selection.importList(name, completeRows, notes)
+      )
+        router.push("/favoris");
+    } else {
+      flushSync(() => setPrintRows({ ids: ids.join(","), rows: completeRows }));
+      window.print();
+    }
+  };
+  const printedRows = printRows?.ids === ids.join(",") ? printRows.rows : rows;
   const rememberDetails = selection.rememberDetails;
   useEffect(() => {
     if (!shared)
       rememberDetails(
-        results.flatMap(({ result }) =>
+        stream.rows.flatMap(({ result }) =>
           result.status === "ready" ? [result.data] : [],
         ),
       );
-  }, [shared, results, rememberDetails]);
-  const changePage = (next: number) => {
-    const url = new URL(
-      selectionUrl(
-        shared
-          ? ids
-          : rows
-              .slice(
-                (next - 1) * FAVORITES_PAGE_SIZE,
-                next * FAVORITES_PAGE_SIZE,
-              )
-              .map((row) => row.id),
-        "/favoris",
-      ),
-      "https://gradavia.invalid",
-    );
-    if (shared) {
-      url.searchParams.set("partage", "1");
-      url.hash = hash;
-    }
-    if (next > 1) url.searchParams.set("page", String(next));
-    startTransition(() => router.push(url.pathname + url.search + url.hash));
-  };
-  const visibleResults = shared
-    ? results.filter(({ id }) => visibleRows.some((row) => row.id === id))
-    : results;
-  const ready = shared || localIds === loadedIds;
+  }, [shared, stream.rows, rememberDetails]);
   return (
     <>
       <PanelMain
@@ -598,7 +674,7 @@ export function FavoritesWorkspace({
             <h1 className="text-3xl font-semibold tracking-[-0.045em]">
               {name}
               <span className="ml-3 align-middle text-lg font-normal text-muted-foreground">
-                {rows.length || ""}
+                {requestedIds.length || ""}
               </span>
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
@@ -612,8 +688,10 @@ export function FavoritesWorkspace({
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={() => window.print()}
-                disabled={!hydrated}
+                onClick={() =>
+                  shared ? void complete("print") : window.print()
+                }
+                disabled={!hydrated || stream.loading}
               >
                 <Printer className="size-3.5" />
                 Imprimer le dossier
@@ -635,11 +713,8 @@ export function FavoritesWorkspace({
             {shared && (
               <Button
                 size="sm"
-                disabled={!hydrated || details.length !== ids.length}
-                onClick={() => {
-                  if (selection.importList(name, sharedRows, notes))
-                    router.push("/favoris");
-                }}
+                disabled={!hydrated || stream.loading}
+                onClick={() => void complete("import")}
               >
                 <Copy className="size-3.5" />
                 Enregistrer cette liste
@@ -730,14 +805,15 @@ export function FavoritesWorkspace({
             )}
           </div>
         )}
-        {!hydrated || !ready ? (
+        {!hydrated ? (
           <p
             role="status"
             className="py-16 text-center text-sm text-muted-foreground"
           >
             Chargement de vos favoris…
           </p>
-        ) : rows.length === 0 ? (
+        ) : requestedIds.length === 0 ||
+          (shared && !hasMore && details.length === 0) ? (
           <section className="rounded-xl border border-dashed border-border px-6 py-16 text-center">
             <h2 className="text-lg font-medium">
               {activeList
@@ -917,7 +993,7 @@ export function FavoritesWorkspace({
                 );
               })}
             </Reveal>
-            {shared && details.length < ids.length && (
+            {shared && !hasMore && details.length < ids.length && (
               <p role="status" className="mt-4 text-sm text-muted-foreground">
                 {ids.length - details.length} formation(s) indisponible(s).
                 Réessayez avant d’enregistrer cette liste.
@@ -930,39 +1006,23 @@ export function FavoritesWorkspace({
                 </Button>
               </p>
             )}
-            {pages > 1 && (
-              <nav
-                aria-label="Pagination des favoris"
-                className="mt-5 flex items-center justify-between"
-              >
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  disabled={currentPage === 1 || pending}
-                  onClick={() => changePage(currentPage - 1)}
-                >
-                  <ArrowLeft className="size-3.5" />
-                  Précédente
-                </Button>
-                <p className="text-xs text-muted-foreground">
-                  Page {currentPage} sur {pages}
-                </p>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  disabled={currentPage === pages || pending}
-                  onClick={() => changePage(currentPage + 1)}
-                >
-                  Suivante
-                  <ArrowRight className="size-3.5" />
-                </Button>
-              </nav>
-            )}
+            <LoadProgress
+              count={visibleResults.length}
+              total={requestedIds.length}
+              hasMore={hasMore}
+              loading={stream.loading}
+              error={stream.error}
+              onLoadMore={() => {
+                void stream.loadMore();
+              }}
+              automatic
+              active={hydrated}
+            />
             {details.length > 0 && (
               <div className="mt-6">
                 <ExportButton
                   rows={details}
-                  label={shared ? "Exporter la liste" : "Exporter cette page"}
+                  label="Exporter les résultats chargés"
                   filename="gradavia-favoris"
                 />
               </div>
@@ -972,10 +1032,15 @@ export function FavoritesWorkspace({
         <ComparisonTray />
       </PanelMain>
       <PrintDossier
-        rows={rows}
+        rows={shared ? printedRows : rows}
         notes={notes}
         name={name}
         comparison={shared ? [] : selection.comparisonRecords}
+        missingIds={
+          shared
+            ? ids.filter((id) => !printedRows.some((row) => row.id === id))
+            : []
+        }
       />
     </>
   );

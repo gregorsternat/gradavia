@@ -103,89 +103,87 @@ async function evolution(params: Record<string, string>) {
   } as const;
 }
 /** Shared by initial SSR and the allowlisted, same-origin panel reader. */
-export const loadPanel = cache(async (panel: PanelId, search: string) => {
-  const params = paramRecord(panelParams(panel, new URLSearchParams(search)));
-  switch (panel) {
-    case "formations":
-      return {
-        kind: "formations",
-        result: await loadExplorer(params),
-      } as const;
-    case "carte":
-    case "apprentissage":
-    case "apprentissage-carte":
-    case "archives":
-    case "analyses":
-      return {
-        kind: "atlas",
-        result: await loadAtlas({
-          ...params,
-          famille: params.famille ?? "parcoursup",
-        }),
-      } as const;
-    case "overview":
-    case "territoires":
-      return {
-        kind: "overview",
-        result: await loadOverview(params.campagne),
-      } as const;
-    case "sources":
-    case "donnees":
-      return { kind: "sources", result: await loadSources() } as const;
-    case "specialites":
-      return {
-        kind: "specialites",
-        result: await loadSpecialties(params),
-      } as const;
-    case "inverse":
-      return {
-        kind: "inverse",
-        result: await loadInverseSpecialties(params),
-      } as const;
-    case "selection":
-      return {
-        kind: "selection",
-        results: await loadFormationSelection(parseSelectionIds(params.ids)),
-      } as const;
-    case "favoris": {
-      const shared = params.partage === "1";
-      const ids = parseSelectionIds(
-        params.ids,
-        shared ? MAX_FAVORITES : FAVORITES_PAGE_SIZE,
-      );
-      const results = [];
-      for (let offset = 0; offset < ids.length; offset += FAVORITES_PAGE_SIZE)
-        results.push(
-          ...(await loadFormationSelection(
-            ids.slice(offset, offset + FAVORITES_PAGE_SIZE),
-          )),
+export const loadPanel = cache(
+  async (panel: PanelId, search: string, refresh = false) => {
+    const params = paramRecord(panelParams(panel, new URLSearchParams(search)));
+    switch (panel) {
+      case "formations":
+        return {
+          kind: "formations",
+          result: await loadExplorer(params, refresh),
+        } as const;
+      case "carte":
+      case "apprentissage":
+      case "apprentissage-carte":
+      case "archives":
+      case "analyses":
+        return {
+          kind: "atlas",
+          result: await loadAtlas({
+            ...params,
+            famille: params.famille ?? "parcoursup",
+          }),
+        } as const;
+      case "overview":
+      case "territoires":
+        return {
+          kind: "overview",
+          result: await loadOverview(params.campagne),
+        } as const;
+      case "sources":
+      case "donnees":
+        return { kind: "sources", result: await loadSources() } as const;
+      case "specialites":
+        return {
+          kind: "specialites",
+          result: await loadSpecialties(params),
+        } as const;
+      case "inverse":
+        return {
+          kind: "inverse",
+          result: await loadInverseSpecialties(params),
+        } as const;
+      case "selection":
+        return {
+          kind: "selection",
+          results: await loadFormationSelection(parseSelectionIds(params.ids)),
+        } as const;
+      case "favoris": {
+        const shared = params.partage === "1";
+        const ids = parseSelectionIds(
+          params.ids,
+          shared ? MAX_FAVORITES : FAVORITES_PAGE_SIZE,
         );
-      return { kind: "favoris", results } as const;
+        const results = await loadFormationSelection(
+          ids.slice(0, FAVORITES_PAGE_SIZE),
+        );
+        return { kind: "favoris", results } as const;
+      }
+      case "budget":
+        return { kind: "budget" } as const;
+      case "modalites":
+        return { kind: "modalites", result: await modalities(params) } as const;
+      case "evolutions":
+        return { kind: "evolutions", result: await evolution(params) } as const;
+      case "decouvrir": {
+        const result = await loadAtlas({
+          campagne: params.campagne,
+          version: params.version,
+          famille: "parcoursup",
+        });
+        return {
+          kind: "decouvrir",
+          result:
+            result.status === "ready"
+              ? {
+                  status: "ready",
+                  questions: sourceQuiz(result.data),
+                  source: result.data.source,
+                }
+              : result,
+        } as const;
+      }
     }
-    case "budget":
-      return { kind: "budget" } as const;
-    case "modalites":
-      return { kind: "modalites", result: await modalities(params) } as const;
-    case "evolutions":
-      return { kind: "evolutions", result: await evolution(params) } as const;
-    case "decouvrir": {
-      const result = await loadAtlas({
-        campagne: params.campagne,
-        version: params.version,
-        famille: "parcoursup",
-      });
-      return {
-        kind: "decouvrir",
-        result:
-          result.status === "ready"
-            ? {
-                status: "ready",
-                questions: sourceQuiz(result.data),
-                source: result.data.source,
-              }
-            : result,
-      } as const;
-    }
-  }
-});
+  },
+);
 export type PanelPayload = Awaited<ReturnType<typeof loadPanel>>;

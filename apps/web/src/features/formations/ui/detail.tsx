@@ -14,7 +14,10 @@ import {
   TabsTrigger,
   TabsContent,
 } from "@/components/motion/tabs";
-import { Table, type TableColumn } from "@/components/motion/table";
+import {
+  AsyncTable as Table,
+  type TableColumn,
+} from "@/components/motion/table/async";
 import { Tooltip } from "@/components/motion/tooltip";
 import { BouncyAccordion } from "@/components/motion/bouncy-accordion";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";

@@ -51,6 +51,8 @@ import {
 } from "../domain/exploration";
 import { FormationMap } from "./formation-map";
 
+import { LoadProgress } from "@/components/motion/table/progress";
+
 const numberClass = { field: "rounded-lg", input: "text-sm", label: "text-xs" };
 
 function ReadyExplorer({
@@ -82,7 +84,7 @@ function ReadyExplorer({
   const [bounds, setBounds] = useState<GeoBounds>();
   const [visibleOnly, setVisibleOnly] = useState(false);
   const [selectedId, setSelectedId] = useState("");
-  const [limit, setLimit] = useState(20);
+  const [display, setDisplay] = useState({ key: "", limit: 20 });
   const cities = useMemo(() => cityChoices(data.items), [data.items]);
   const center = useMemo(
     () => cities.find((city) => city.value === query.city),
@@ -103,6 +105,9 @@ function ReadyExplorer({
       ),
     [filtered, query, showMap, visibleOnly, bounds, center],
   );
+  const displayKey = JSON.stringify(visible.map((row) => row.id));
+  if (display.key !== displayKey) setDisplay({ key: displayKey, limit: 20 });
+  const limit = display.key === displayKey ? display.limit : 20;
   const plotted = filtered.filter(hasCoordinates).length;
   const selected = data.items.find((row) => row.id === selectedId);
   const reference = data.items.find((row) => row.id === query.reference);
@@ -110,7 +115,7 @@ function ReadyExplorer({
   const change = (patch: Partial<ExplorationQuery>) => {
     const next = { ...query, ...patch };
     if (patch.radius !== undefined) setRadiusInput(String(patch.radius));
-    setLimit(20);
+    setDisplay({ key: displayKey, limit: 20 });
     router.replaceState(
       null,
       "",
@@ -625,15 +630,15 @@ function ReadyExplorer({
               Aucune formation ne correspond à ces critères.
             </p>
           )}
-          {visible.length > limit && (
-            <Button
-              variant="secondary"
-              className="mt-4 w-full"
-              onClick={() => setLimit((value) => value + 20)}
-            >
-              Afficher 20 formations de plus
-            </Button>
-          )}
+          <LoadProgress
+            count={Math.min(limit, visible.length)}
+            total={visible.length}
+            hasMore={visible.length > limit}
+            onLoadMore={() =>
+              setDisplay({ key: displayKey, limit: limit + 20 })
+            }
+            automatic
+          />
         </section>
       </div>
       <div className="mt-8">
