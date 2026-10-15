@@ -3,7 +3,7 @@ import { PanelMain } from "@/features/workspace/ui/navigation";
 import { useTransition } from "react";
 import { useRouter, useSearchParams } from "@/features/workspace/ui/navigation";
 import Link from "@/features/workspace/ui/navigation";
-import { ArrowLeft, ArrowUpRight, Download } from "lucide-react";
+import { ArrowLeft, Download } from "lucide-react";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import {
   Combobox,
@@ -19,13 +19,11 @@ import {
   BarChart,
   type TooltipProps,
 } from "@/components/charts/tremor/components/BarChart/BarChart";
-import { BouncyAccordion } from "@/components/motion/bouncy-accordion";
 import {
   MetricValue,
   SelectField,
   ShareButton,
 } from "../../formations/ui/shared";
-import { datasetUrl } from "../../formations/domain/explorer";
 import { formatCount } from "../../formations/domain/metrics";
 import {
   indicatorLabels,
@@ -271,39 +269,6 @@ function ReadyInverse({
           />
         </>
       )}
-      <BouncyAccordion
-        className="mt-6 max-w-3xl"
-        classNames={{
-          item: "border-0 bg-transparent",
-          trigger: "px-0 py-3",
-          title: "text-xs",
-          description: "px-0 pb-4 text-xs leading-6 text-muted-foreground",
-        }}
-        items={[
-          {
-            id: "source",
-            title: `Source et périmètre · Spécialités ${data.source.campaign}`,
-            description: (
-              <div className="space-y-2">
-                {data.notices.map((notice) => (
-                  <p key={notice}>{notice}</p>
-                ))}
-                <p>
-                  {data.source.provider} · {data.source.license} · Version{" "}
-                  {data.source.releaseId}
-                </p>
-                <a
-                  href={datasetUrl(data.source.datasetId)}
-                  className="inline-flex items-center gap-1 underline underline-offset-4"
-                >
-                  Consulter le jeu source
-                  <ArrowUpRight className="size-3" />
-                </a>
-              </div>
-            ),
-          },
-        ]}
-      />
     </PanelMain>
   );
 }

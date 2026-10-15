@@ -1,15 +1,13 @@
 "use client";
 import { PanelMain } from "@/features/workspace/ui/navigation";
-
 import { Breadcrumbs } from "@/features/seo/ui/breadcrumbs";
 import { detailBreadcrumbs } from "@/features/seo/domain/structured-data";
-
 import Link from "@/features/workspace/ui/navigation";
 import { useState } from "react";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
 import { Table, type TableColumn } from "@/components/motion/table";
 import { ButtonLink } from "@/components/motion/button/base";
-import { SelectField, SourceDisclosure } from "@/features/formations/ui/shared";
+import { SelectField } from "@/features/formations/ui/shared";
 import { formatCount } from "@/features/formations/domain/metrics";
 import type { Metric } from "@/features/formations/domain/api-contract";
 import type { AtlasDetail } from "../domain/api-contract";
@@ -31,8 +29,6 @@ const readable = (metric?: Metric, percent = false) =>
 const groups = {
   mentions: {
     title: "Mentions au baccalauréat",
-    subtitle:
-      "Effectifs publiés des néo-bacheliers admis. Les catégories suivent le découpage de la campagne.",
     keys: [
       "mentionNone",
       "mentionFair",
@@ -44,8 +40,6 @@ const groups = {
   },
   candidats: {
     title: "Profils des candidats",
-    subtitle:
-      "Phase principale pour Parcoursup hors apprentissage. Ces effectifs ne forment pas un suivi individuel vers les admissions toutes phases.",
     keys: [
       "generalApplications",
       "technologyApplications",
@@ -55,8 +49,6 @@ const groups = {
   },
   propositions: {
     title: "Profils recevant une proposition",
-    subtitle:
-      "Effectifs publiés par type de baccalauréat, toutes phases selon la source.",
     keys: [
       "generalOffers",
       "technologyOffers",
@@ -66,8 +58,6 @@ const groups = {
   },
   admis: {
     title: "Profils des admis",
-    subtitle:
-      "Effectifs publiés par type de baccalauréat, toutes phases selon la source.",
     keys: [
       "generalAdmitted",
       "technologyAdmitted",
@@ -77,8 +67,6 @@ const groups = {
   },
   jalons: {
     title: "Quand les admis ont reçu leur proposition",
-    subtitle:
-      "Jalons cumulés parmi les admis finaux. Ils ne mesurent pas les admissions enregistrées à chaque date et ne s’additionnent pas.",
     keys: ["admittedAtOpening", "admittedBeforeBac", "admittedBeforeEnd"],
   },
 } as const;
@@ -143,11 +131,6 @@ export function DetailInsights({
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <h2 className="text-sm font-semibold">{config.title}</h2>
-            <p className="mt-2 max-w-2xl text-xs leading-5 text-muted-foreground">
-              {detail.family === "parcoursup"
-                ? config.subtitle
-                : `${config.title} · périmètre ${familyLabels[detail.family]}. Les définitions de chaque champ figurent ci-dessous.`}
-            </p>
           </div>
           <SelectField
             label="Population détaillée"
@@ -203,19 +186,9 @@ export function DetailInsights({
             </div>
           ))}
         </div>
-        <p className="mt-4 text-xs leading-5 text-muted-foreground">
-          {detail.family === "apb"
-            ? "Part publiée des admis APB dans leur académie d’origine. Le dénominateur diffère de celui de Parcoursup."
-            : "Parts publiées des néo-bacheliers admis. La variante francilienne réunit Paris, Créteil et Versailles. Les catégories ne s’additionnent pas."}
-        </p>
       </section>
       <section className="rounded-xl border border-border bg-surface p-5 sm:p-6">
         <h2 className="text-sm font-semibold">Rang du dernier appelé</h2>
-        <p className="mt-2 text-xs leading-5 text-muted-foreground">
-          Un rang appartient à un groupe de classement et à une campagne. Il ne
-          prédit pas une admission future. Les groupes de chaque année restent
-          séparés.
-        </p>
         <div className="mt-5 space-y-3">
           {detail.rankGroups.map((rank) => (
             <div
@@ -286,8 +259,7 @@ export function DetailInsights({
           <p className="mt-2 text-xs leading-5 text-muted-foreground">
             {formatCount(peers.count)} autres formations de même type (
             {detail.item.type ?? "non renseigné"}) et de même sélectivité
-            publiée, campagne {detail.source.campaign}. Ce groupe ne garantit
-            pas des contenus identiques.
+            publiée, campagne {detail.source.campaign}.
           </p>
           <div className="mt-5 grid gap-5 sm:grid-cols-3">
             {peers.positions.map((position) => (
@@ -321,10 +293,6 @@ export function DetailInsights({
           <h3 className="mt-7 text-sm font-medium">
             Autres formations à explorer
           </h3>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Intitulés partageant des mots, puis proximité lorsque les
-            coordonnées sont publiées.
-          </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {peers.alternatives.map((row) => (
               <Link
@@ -349,26 +317,6 @@ export function DetailInsights({
           </ButtonLink>
         </section>
       )}
-      <details className="rounded-xl border border-border p-5">
-        <summary className="cursor-pointer text-xs font-medium">
-          Définitions des profils et périmètres
-        </summary>
-        <dl className="mt-4 space-y-4">
-          {detail.definitions.map((definition) => (
-            <div key={definition.key}>
-              <dt className="text-xs font-medium">
-                {definition.label}{" "}
-                <span className="font-normal text-muted-foreground">
-                  · {definition.field || "non publié"}
-                </span>
-              </dt>
-              <dd className="mt-1 text-xs leading-5 text-muted-foreground">
-                {definition.description}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </details>
     </div>
   );
 }
@@ -421,18 +369,7 @@ export function AtlasDetailView({
           </div>
         ))}
       </div>
-      {detail.notices.map((notice) => (
-        <p
-          key={notice}
-          className="mb-4 text-xs leading-5 text-muted-foreground"
-        >
-          {notice}
-        </p>
-      ))}
       <DetailInsights detail={detail} peers={peers} />
-      <div className="mt-7">
-        <SourceDisclosure source={detail.source} />
-      </div>
     </PanelMain>
   );
 }

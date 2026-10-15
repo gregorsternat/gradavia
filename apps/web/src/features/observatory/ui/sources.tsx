@@ -59,7 +59,7 @@ const definitions = [
     id: "missing",
     title: "Valeurs absentes, masquées ou invalides",
     description:
-      "Un zéro publié est un zéro. Un champ absent reste non disponible. Une valeur masquée par le producteur reste masquée. Une représentation invalide est signalée sans être convertie en chiffre. Les sommes partielles indiquent le nombre de lignes renseignées.",
+      "Un zéro publié est un zéro. Un champ absent reste non disponible. Une valeur masquée par le producteur reste masquée. Une représentation invalide est signalée sans être convertie en chiffre. Les sommes incomplètes portent la mention « Partiel ». Les exports conservent la couverture détaillée.",
   },
   {
     id: "continuity",

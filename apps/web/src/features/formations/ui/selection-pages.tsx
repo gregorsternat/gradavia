@@ -1,6 +1,5 @@
 "use client";
 import { PanelMain } from "@/features/workspace/ui/navigation";
-
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "@/features/workspace/ui/navigation";
 import Link from "@/features/workspace/ui/navigation";
@@ -30,7 +29,6 @@ import {
   Reveal,
   SelectField,
   ShareButton,
-  SourceDisclosure,
 } from "./shared";
 
 type LoadedSelection = { id: string; result: DetailResult }[];
@@ -281,10 +279,6 @@ export function ComparisonPageView({
                       <li key={comment}>{comment}</li>
                     ))}
                   </ul>
-                  <p className="mt-3 text-xs text-muted-foreground">
-                    Les taux d’accès décrivent la campagne passée ; ils ne
-                    prédisent pas une admission individuelle.
-                  </p>
                 </section>
               )}
               <section className="rounded-xl border border-border bg-surface p-5 sm:p-6">
@@ -343,28 +337,6 @@ export function ComparisonPageView({
                 height={570}
                 className="rounded-xl bg-surface [&_table]:min-w-[540px]"
               />
-              <p className="text-[11px] leading-5 text-muted-foreground">
-                Le taux d’accès est l’indicateur officiel de la source, pas une
-                probabilité personnelle d’admission. Les profils, périmètres et
-                types de formation peuvent différer. — : non publié ; masqué :
-                valeur masquée par la source.
-              </p>
-              <div className="flex flex-wrap gap-5">
-                {[
-                  ...new Map(
-                    details.map((detail) => [
-                      detail.source.releaseId,
-                      detail.source,
-                    ]),
-                  ).values(),
-                ].map((source) => (
-                  <SourceDisclosure
-                    key={source.releaseId}
-                    source={source}
-                    compact
-                  />
-                ))}
-              </div>
             </Reveal>
           ) : null}
         </>

@@ -17,6 +17,15 @@ Source: [beUI](https://beui.dev/) and
 [starc007/ui-components](https://github.com/starc007/ui-components).
 License: [MIT](licenses/beui.txt).
 
+### Bounded search table rendering (2026-10-16)
+
+The existing beUI table adds an optional `virtualized` prop, defaulting to true.
+Formation search sets it to false to render all 25 paginated rows and native
+links during SSR, replacing the redundant crawlable disclosure. Sorting, row
+identity, accessible cells and the fixed scroll viewport use the existing render
+path. Large tables keep virtualization. No new dependency or upstream source
+was copied.
+
 ### Persistent workspace controls (2026-10-08)
 
 Local changes to the existing beUI tabs add native anchor triggers, named tab

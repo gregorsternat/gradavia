@@ -96,7 +96,7 @@ test("copy feedback handles navigation, keyboard activation and stale writes", a
   await page.screenshot({ path: testInfo.outputPath("copy-error.png") });
 });
 
-test("explorer is accessible with provenance and bounded list and card views", async ({
+test("explorer is accessible with focused results and bounded list and card views", async ({
   page,
   isMobile,
 }) => {
@@ -115,18 +115,13 @@ test("explorer is accessible with provenance and bounded list and card views", a
   await expect(
     page.getByRole("table", { name: "Résultats de la recherche" }),
   ).toHaveAttribute("aria-rowcount", "26");
-  await page
-    .getByRole("button", {
-      name: "Source et périmètre · Parcoursup 2025",
-      exact: true,
-    })
-    .click();
-  const provenance = page.getByRole("region", {
-    name: "Source et périmètre · Parcoursup 2025",
-    exact: true,
-  });
-  await expect(provenance.getByText(/Fixtures synthétiques/)).toBeVisible();
-  await expect(provenance.locator(":scope > div")).toHaveCSS("opacity", "1");
+  await expect(
+    page.getByRole("button", { name: /Source et périmètre/ }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByText(/Toutes les formations de cette page/),
+  ).toHaveCount(0);
+  await expect(page.getByText(/Les critères communs suivent/)).toHaveCount(0);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   expect(
     await page.evaluate(
@@ -297,6 +292,8 @@ test("keyboard and reduced motion preserve search and filter access", async ({
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/formations");
   await expect(page.getByRole("status")).toContainText("31 résultats");
+  // Exercise client keyboard navigation after hydration; SSR links have their own journey.
+  await expect(page.getByRole("button", { name: /^Filtres/ })).toBeEnabled();
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("link", { name: "Aller au contenu" }),
@@ -325,7 +322,7 @@ test("keyboard and reduced motion preserve search and filter access", async ({
   await expect(page.getByRole("status")).toContainText("1 résultat");
 });
 
-test("formation details preserve zero and masked values with history and definitions @smoke", async ({
+test("formation details preserve zero and masked values with history and focused tabs @smoke", async ({
   page,
 }) => {
   await page.goto("/formations?q=Droit+02&vue=cartes");
@@ -344,16 +341,10 @@ test("formation details preserve zero and masked values with history and definit
       name: "Historique des indicateurs et continuité",
     }),
   ).toBeVisible();
-  await page.getByRole("tab", { name: "Définitions et source" }).click();
   await expect(
-    page.getByRole("heading", { name: "Comprendre chaque indicateur" }),
-  ).toBeVisible();
-  const accessDefinition = page.getByRole("button", {
-    name: /Taux d’accès/,
-    exact: false,
-  });
-  await accessDefinition.click();
-  await expect(page.getByText(/taux_acces_ens/)).toBeVisible();
+    page.getByRole("tab", { name: "Définitions et source" }),
+  ).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /Définition/ })).toHaveCount(0);
   await page.goto("/formations?q=Droit+03&vue=cartes");
   await page.getByRole("link", { name: "Voir la formation" }).click();
   await expect(

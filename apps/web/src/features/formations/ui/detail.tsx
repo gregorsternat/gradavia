@@ -1,13 +1,12 @@
 "use client";
 import { PanelMain } from "@/features/workspace/ui/navigation";
-
 import { useState } from "react";
 import { Breadcrumbs } from "@/features/seo/ui/breadcrumbs";
 import { detailBreadcrumbs } from "@/features/seo/domain/structured-data";
 import { FormationInsights } from "./insights";
 import Link from "@/features/workspace/ui/navigation";
-import { ArrowLeft, ArrowUpRight, Building2, Info, MapPin } from "lucide-react";
-import { Button, ButtonLink } from "@/components/motion/button/base";
+import { ArrowLeft, ArrowUpRight, Building2, MapPin } from "lucide-react";
+import { ButtonLink } from "@/components/motion/button/base";
 import {
   Tabs,
   TabsList,
@@ -15,8 +14,6 @@ import {
   TabsContent,
 } from "@/components/motion/tabs";
 import { Table, type TableColumn } from "@/components/motion/table";
-import { Tooltip } from "@/components/motion/tooltip";
-import { BouncyAccordion } from "@/components/motion/bouncy-accordion";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
 import { LineChart } from "@/components/charts/tremor/components/LineChart/LineChart";
 import type { FormationDetail, MetricKey } from "../domain/api-contract";
@@ -36,7 +33,6 @@ import {
   Reveal,
   SelectField,
   ShareButton,
-  SourceDisclosure,
 } from "./shared";
 
 const volumeKeys = ["capacity", "applications", "offers", "admitted"] as const;
@@ -114,9 +110,6 @@ function History({ detail }: { detail: FormationDetail }) {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-sm font-semibold">Évolution par campagne</h2>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Même identifiant source et même établissement.
-            </p>
           </div>
           <SelectField
             label="Indicateur historique"
@@ -149,12 +142,6 @@ function History({ detail }: { detail: FormationDetail }) {
             Aucun point comparable publié pour cet indicateur.
           </p>
         )}
-        <p className="mt-4 flex items-start gap-2 text-[11px] leading-5 text-muted-foreground">
-          <Info className="mt-0.5 size-3.5 shrink-0" />
-          Les changements de libellé ou de localisation interrompent la courbe.
-          Un identifiant commun ne garantit pas un périmètre identique ; les
-          valeurs de chaque campagne restent consultables ci-dessous.
-        </p>
       </section>
       <Table
         aria-label="Historique des indicateurs et continuité"
@@ -165,13 +152,6 @@ function History({ detail }: { detail: FormationDetail }) {
         height={Math.min(500, history.length * 52 + 48)}
         className="rounded-xl bg-surface [&_table]:min-w-[700px]"
       />
-      <div className="space-y-3">
-        {history
-          .filter((row) => row.formationId)
-          .map((row) => (
-            <SourceDisclosure key={row.campaign} source={row.source} compact />
-          ))}
-      </div>
     </Reveal>
   );
 }
@@ -246,30 +226,18 @@ export function FormationDetailView({ detail }: { detail: FormationDetail }) {
       <Reveal className="mb-7 grid grid-cols-2 gap-3 xl:grid-cols-4">
         {(
           [
-            ["capacity", "Places proposées", "Capacité d’accueil"],
-            ["applications", "Candidatures", "Vœux enregistrés"],
-            ["admitted", "Admis", "Admissions enregistrées"],
-            ["accessRate", "Taux d’accès", "Indicateur officiel Parcoursup"],
+            ["capacity", "Places proposées"],
+            ["applications", "Candidatures"],
+            ["admitted", "Admis"],
+            ["accessRate", "Taux d’accès"],
           ] as const
-        ).map(([key, label, note]) => (
+        ).map(([key, label]) => (
           <section
             key={key}
             className="rounded-xl border border-border bg-surface p-5"
           >
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-xs text-muted-foreground">{label}</h2>
-              {key === "accessRate" && (
-                <Tooltip content="Taux officiel publié par le MESR pour la phase principale. Il ne représente pas votre probabilité individuelle d’admission.">
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="-my-2 size-6"
-                    aria-label="Comprendre le taux d’accès"
-                  >
-                    <Info className="size-3.5" />
-                  </Button>
-                </Tooltip>
-              )}
             </div>
             <div className="mt-3">
               <MetricValue
@@ -279,11 +247,6 @@ export function FormationDetailView({ detail }: { detail: FormationDetail }) {
                 className="text-3xl font-semibold tracking-[-0.06em]"
               />
             </div>
-            <p className="mt-2 text-[10px] text-muted-foreground">
-              {formation.metrics[key].state === "observed"
-                ? note
-                : formatMetric(formation.metrics[key], key)}
-            </p>
           </section>
         ))}
       </Reveal>
@@ -299,7 +262,6 @@ export function FormationDetailView({ detail }: { detail: FormationDetail }) {
           <TabsTrigger value="synthese">Vue d’ensemble</TabsTrigger>
           <TabsTrigger value="historique">Historique</TabsTrigger>
           <TabsTrigger value="profils">Profils et alternatives</TabsTrigger>
-          <TabsTrigger value="source">Définitions et source</TabsTrigger>
         </TabsList>
         <TabsContent value="profils" keepMounted>
           <FormationInsights
@@ -357,11 +319,6 @@ export function FormationDetailView({ detail }: { detail: FormationDetail }) {
                     </div>
                   ))}
                 </div>
-                <p className="mt-5 text-[11px] leading-5 text-muted-foreground">
-                  Ces volumes ne constituent pas un entonnoir de personnes
-                  uniques. Le taux d’accès officiel ne se calcule pas en
-                  divisant les admis par les candidatures.
-                </p>
               </section>
               <section className="rounded-xl border border-border bg-surface p-5 sm:p-6">
                 <h2 className="text-sm font-semibold">
@@ -438,7 +395,6 @@ export function FormationDetailView({ detail }: { detail: FormationDetail }) {
                     ["Statut", formation.status],
                     ["Région", formation.region],
                     ["Département", formation.department],
-                    ["Identifiant source", formation.sourceFormationId],
                   ].map(([label, value]) => (
                     <div key={label}>
                       <dt className="text-[10px] text-muted-foreground">
@@ -465,72 +421,12 @@ export function FormationDetailView({ detail }: { detail: FormationDetail }) {
                     Lien Parcoursup indisponible
                   </p>
                 )}
-                <p className="mt-3 text-[10px] leading-4 text-muted-foreground">
-                  Une fiche historique peut mener vers la fiche actuelle.
-                </p>
               </section>
-              <SourceDisclosure source={source} />
             </aside>
           </Reveal>
         </TabsContent>
         <TabsContent value="historique" keepMounted={false}>
           <History detail={detail} />
-        </TabsContent>
-        <TabsContent value="source">
-          <Reveal className="max-w-3xl space-y-5">
-            <SourceDisclosure source={source} />
-            <section className="rounded-xl border border-border bg-surface p-5">
-              <h2 className="mb-4 text-sm font-semibold">
-                Comprendre chaque indicateur
-              </h2>
-              <BouncyAccordion
-                classNames={{
-                  item: "border-border",
-                  trigger: "py-3",
-                  title: "text-xs",
-                  description: "text-xs leading-6",
-                }}
-                items={[
-                  ...detail.definitions.map((definition) => ({
-                    id: definition.key,
-                    title: definition.label,
-                    description: (
-                      <div>
-                        <p>{definition.description}</p>
-                        <p className="mt-2 text-[10px] text-muted-foreground">
-                          Champ source : {definition.field} · Unité :{" "}
-                          {definition.unit === "percent" ? "%" : "effectif"}
-                        </p>
-                      </div>
-                    ),
-                  })),
-                  {
-                    id: "methodology",
-                    title: "Périmètre et précautions de lecture",
-                    description: (
-                      <div className="space-y-3">
-                        {detail.notices.map((notice) => (
-                          <p key={notice}>{notice}</p>
-                        ))}
-                      </div>
-                    ),
-                  },
-                  {
-                    id: "missing-values",
-                    title: "Valeurs absentes, masquées et invalides",
-                    description: (
-                      <p>
-                        « Non publié » indique une valeur absente ; « Masqué »
-                        une valeur masquée par la source ; « Invalide » une
-                        valeur qui ne respecte pas son format. Un zéro publié
-                        reste un zéro.
-                      </p>
-                    ),
-                  },
-                ]}
-              />
-            </section>
-          </Reveal>
         </TabsContent>
       </Tabs>
       <ComparisonTray />

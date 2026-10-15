@@ -115,18 +115,9 @@ test("changed descriptions stay outside the followed cohort", async ({
       .getByRole("region", { name: "Périmètre suivi" })
       .getByText("Aucune paire exploitable", { exact: true }),
   ).toBeVisible();
-  await page
-    .getByRole("button", {
-      name: "Décomposition du périmètre source",
-      exact: true,
-    })
-    .click();
-  const table = page.getByRole("table", {
-    name: "Décomposition de la variation des sources",
-    exact: true,
-  });
-  await expect(table).toContainText("Description modifiée");
-  await expect(table).toContainText("Identifiants ambigus");
+  await expect(
+    page.getByRole("button", { name: "Décomposition du périmètre source" }),
+  ).toHaveCount(0);
   await expect(
     page.getByRole("table", {
       name: "Évolutions des formations suivies",

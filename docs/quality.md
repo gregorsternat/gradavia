@@ -7,6 +7,22 @@ in the [historical verification log](quality/history-through-2026-10-07.md).
 A checked-in implementation, a local pass, remote CI, publication and production
 health are separate observations; none establishes Google indexing or freshness.
 
+## Data page simplification (2026-10-16)
+
+The local diff against `b23f5a7` removes optional source/methodology UI while
+retaining the dedicated destination, statistical states and export provenance.
+`just verify` passed (130 TypeScript tests, 11 Node tests and Rust suites), as did
+the credential-free build. Nine focused browser specs passed 122 development and
+122 production executions on desktop/mobile with disposable PostgreSQL fixtures.
+Native formation links/pagination without JavaScript, exports, selections, charts
+and removed disclosures are covered. Real Chromium inspection covered both themes
+at 1440×960 and 390×844, keyboard history activation and no horizontal page overflow.
+
+Evidence, earlier failed runs and their corrections are recorded in the
+[completed plan](exec-plans/completed/data-page-simplification.md) and
+`.artifacts/data-pages/`. This is local validation; no remote CI or deployment
+is established. API contracts, calculations, dependencies and lockfiles are unchanged.
+
 ## Current coverage
 
 The current validation commands separate daily checks (`just verify`) from

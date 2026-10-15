@@ -19,7 +19,9 @@ the shared filter. Missing labels are shown explicitly and remain in totals.
 Demographic shares describe the source's specified population: female admissions,
 scholarship neo-baccalaureate admissions, baccalaureate groups or source-defined
 local recruitment. They must not be compared as if their denominators were equal.
-Definitions are shown with the source field beside the analysis.
+Definitions and source fields remain in exports; optional explanations belong in
+Données & méthode. The workbench keeps population labels and compact partial
+status next to numeric results.
 
 ## Calculations
 
@@ -62,7 +64,7 @@ minimum plus the square root of the normalized size indicator. Missing sizes use
 the minimum radius and never remove otherwise valid points. No points are
 sampled. The virtualized beUI table exposes every point, value state and record
 link through keyboard controls. The heatmap is a beUI table with numeric values,
-coverage and up to six columns per page; no categories are discarded.
+partial status and up to six columns per page; no categories are discarded.
 
 This is a product-owned scatter/heatmap composition, not a copied Tremor scatter
 component. Existing beUI controls, tables and reduced-motion-aware tabs are reused.
@@ -131,7 +133,8 @@ formation indices. All small multiples share a zero origin and a common maximum.
 They connect two observations only and never fill intermediate campaigns. The
 two-frame playback is paused by default, opt-in, and disabled for reduced motion.
 
-Source-wide diagnostics separate matched, description-changed, ambiguous,
+Source-wide diagnostics remain in the API and exports, without a supplemental
+UI disclosure. They separate matched, description-changed, ambiguous,
 source-entering, source-exiting and unidentified records. They report observed
 sums and coverage independently for each snapshot. Empty groups contribute an
 empty sum of zero, while a nonempty group without observed values remains null.

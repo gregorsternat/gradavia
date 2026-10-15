@@ -18,7 +18,8 @@ retain source versions and missing-value states. See the
 
 The manual collector registers 14 official APB/Parcoursup source datasets and
 retains immutable source releases when imports succeed. The UI distinguishes
-published zeros, missing and suppressed values and keeps source context available beside the indicators.
+published zeros, missing and suppressed values. Optional source and methodology
+explanations live in the dedicated Données & méthode destination.
 
 Current source includes the Gradavia G identity, crawlable formation pages,
 canonical metadata and source-backed sitemaps. There is no fixed feature roadmap:

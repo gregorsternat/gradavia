@@ -1,6 +1,5 @@
 "use client";
 import { PanelMain } from "@/features/workspace/ui/navigation";
-
 import { useMemo, useState } from "react";
 import {
   usePathname,
@@ -25,7 +24,6 @@ import {
 import { BouncyAccordion } from "@/components/motion/bouncy-accordion";
 import {
   SelectField,
-  SourceDisclosure,
   ShareButton,
   FormationActions,
   Reveal,
@@ -374,10 +372,6 @@ function ReadyExplorer({
                     />
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Distance à vol d’oiseau depuis un établissement repère publié
-                  dans la ville, sans estimation du temps de trajet.
-                </p>
                 <div className="grid gap-4 sm:grid-cols-3">
                   {range("Places", "minCapacity", "maxCapacity")}
                   {range("Taux d’accès (%)", "minAccess", "maxAccess", 100)}
@@ -414,12 +408,6 @@ function ReadyExplorer({
                     aria-label="Importance des petites promotions"
                   />
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Le tri personnel favorise une distance et une capacité plus
-                  faibles selon vos poids. Une valeur non publiée ne reçoit
-                  aucun point. Ce tri ne mesure ni la qualité ni les chances
-                  d’admission.
-                </p>
                 <Button
                   size="sm"
                   variant="secondary"
@@ -472,7 +460,7 @@ function ReadyExplorer({
           </strong>
           <span className="ml-3 text-xs text-muted-foreground">
             {capacityCoverage
-              ? `${formatCount(totalPlaces)} places publiées · ${capacityCoverage}/${filtered.length} lignes`
+              ? `${formatCount(totalPlaces)} places${capacityCoverage < filtered.length ? " · Partiel" : ""}`
               : "Places non publiées"}
           </span>
         </p>
@@ -488,16 +476,6 @@ function ReadyExplorer({
           </Button>
         )}
       </div>
-      {data.notices.length > 0 && (
-        <details className="mb-5 text-xs text-muted-foreground">
-          <summary className="cursor-pointer">Périmètre et limites</summary>
-          {data.notices.map((notice) => (
-            <p key={notice} className="mt-2 leading-5">
-              {notice}
-            </p>
-          ))}
-        </details>
-      )}
       <div
         className={`grid items-start gap-5 ${showMap ? "xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,1fr)]" : ""}`}
       >
@@ -635,9 +613,6 @@ function ReadyExplorer({
             </Button>
           )}
         </section>
-      </div>
-      <div className="mt-8">
-        <SourceDisclosure source={data.source} />
       </div>
     </PanelMain>
   );

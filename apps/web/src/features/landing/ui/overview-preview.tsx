@@ -8,7 +8,6 @@ import {
   BookOpen,
   ChartNoAxesCombined,
   Layers3,
-  Info,
   Map,
   Search,
 } from "lucide-react";
@@ -17,8 +16,6 @@ import { Button } from "@/components/motion/button/base";
 import { Input } from "@/components/motion/input";
 import { Loader } from "@/components/motion/loader";
 import { RadioGroup, RadioGroupItem } from "@/components/motion/radio";
-import { Tooltip } from "@/components/motion/tooltip";
-import { datasetUrl } from "@/features/formations/domain/explorer";
 import {
   compact,
   number,
@@ -33,28 +30,16 @@ const previewClassName = "min-w-0 rounded-[18px] bg-surface text-left";
 function PreviewStat({
   label,
   value,
-  definition,
   detail,
 }: {
   label: string;
   value: number | null;
-  definition: string;
   detail?: ReactNode;
 }) {
   return (
     <dl className="min-w-0 py-1">
       <dt className="flex items-center gap-1.5 text-xs text-muted-foreground">
         {label}
-        <Tooltip content={definition}>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-6"
-            aria-label={`Définition : ${label}`}
-          >
-            <Info className="size-3" aria-hidden="true" />
-          </Button>
-        </Tooltip>
       </dt>
       <dd className="mt-2 text-[clamp(1.5rem,2.8vw,2.5rem)] leading-none font-medium tracking-[-.055em] tabular-nums sm:mt-3">
         {value === null ? (
@@ -148,7 +133,8 @@ function ReadyPreview({ data }: { data: OverviewData }) {
   );
   const selectedTotal = data.totals[metric];
   const observationHasPartialCoverage = observations.some(
-    (row) => row[metric].observed < row[metric].total,
+    (row) =>
+      row[metric].value !== null && row[metric].observed < row[metric].total,
   );
 
   return (
@@ -167,12 +153,10 @@ function ReadyPreview({ data }: { data: OverviewData }) {
           Campagne {data.source.campaign}
         </span>
       </div>
-
       <div className="grid grid-cols-2 gap-x-5 gap-y-4 px-5 pb-6 pt-5 min-[480px]:grid-cols-3 sm:gap-x-8 sm:px-7">
         <PreviewStat
           label="Formations"
           value={data.totals.formations}
-          definition="Nombre de lignes formation/établissement de cette campagne Parcoursup, hors apprentissage. Les doublons de la source sont conservés."
           detail={
             <span className="min-[480px]:hidden">
               {number(data.totals.establishments)} établissements identifiés
@@ -182,10 +166,10 @@ function ReadyPreview({ data }: { data: OverviewData }) {
         <PreviewStat
           label="Places"
           value={data.totals.capacity.value}
-          definition="Somme des capacités d’accueil publiées pour cette campagne. Les places non renseignées ou masquées ne sont pas remplacées par zéro."
           detail={
+            data.totals.capacity.value !== null &&
             data.totals.capacity.observed < data.totals.capacity.total
-              ? `Renseigné pour ${number(data.totals.capacity.observed)} / ${number(data.totals.capacity.total)} lignes`
+              ? "Partiel"
               : undefined
           }
         />
@@ -193,11 +177,9 @@ function ReadyPreview({ data }: { data: OverviewData }) {
           <PreviewStat
             label="Établissements"
             value={data.totals.establishments}
-            definition="Nombre de codes UAI distincts renseignés dans la source de cette campagne. Les établissements sans code ne sont pas déduits de leur nom."
           />
         </div>
       </div>
-
       <div className="grid min-w-0 gap-6 px-5 sm:px-7 lg:grid-cols-[minmax(0,1fr)_210px] lg:gap-8">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -229,7 +211,6 @@ function ReadyPreview({ data }: { data: OverviewData }) {
               />
             </RadioGroup>
           </div>
-
           {hasHistory ? (
             <>
               <AreaChart
@@ -251,14 +232,11 @@ function ReadyPreview({ data }: { data: OverviewData }) {
                 minValue={0}
                 connectNulls={false}
               />
-              <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
-                {category} · Périmètre variable selon les campagnes.
-                {observationHasPartialCoverage &&
-                  " Certaines sommes sont partielles."}{" "}
-                Couverture détaillée dans les valeurs.
-              </p>
+              {observationHasPartialCoverage && (
+                <p className="mt-3 text-xs text-muted-foreground">Partiel</p>
+              )}
               <ChartData
-                title={`${category} par campagne et couverture`}
+                title={`${category} par campagne`}
                 data={observations}
                 columns={[
                   {
@@ -278,29 +256,13 @@ function ReadyPreview({ data }: { data: OverviewData }) {
                         : number(row[metric].value),
                   },
                   {
-                    key: "coverage",
-                    header: "Lignes renseignées",
-                    width: "170px",
-                    align: "right",
+                    key: "status",
+                    header: "État",
                     cell: (row) =>
-                      `${number(row[metric].observed)} / ${number(row[metric].total)}`,
-                  },
-                  {
-                    key: "source",
-                    header: "Source",
-                    width: "120px",
-                    cell: (row) => (
-                      <a
-                        href={datasetUrl(row.source.datasetId)}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 underline decoration-border underline-offset-4 hover:decoration-foreground"
-                        aria-label={`Source Parcoursup ${row.campaign}`}
-                      >
-                        Parcoursup
-                        <ArrowUpRight aria-hidden="true" className="size-3" />
-                      </a>
-                    ),
+                      row[metric].value !== null &&
+                      row[metric].observed < row[metric].total
+                        ? "Partiel"
+                        : "",
                   },
                 ]}
               />
@@ -334,22 +296,22 @@ function ReadyPreview({ data }: { data: OverviewData }) {
                         />
                       </div>
                     )}
-                    <p className="mt-1.5 text-[10px] text-muted-foreground">
-                      {number(row[metric].observed)} /{" "}
-                      {number(row[metric].total)} lignes renseignées
-                    </p>
+                    {row[metric].value !== null &&
+                      row[metric].observed < row[metric].total && (
+                        <p className="mt-1.5 text-xs text-muted-foreground">
+                          Partiel
+                        </p>
+                      )}
                   </li>
                 ))}
               </ul>
-              <p className="mt-5 text-[11px] leading-relaxed text-muted-foreground">
-                {category} · Somme des valeurs publiées.
-                {selectedTotal.observed < selectedTotal.total &&
-                  " Couverture partielle."}
-              </p>
+              {selectedTotal.value !== null &&
+                selectedTotal.observed < selectedTotal.total && (
+                  <p className="mt-3 text-xs text-muted-foreground">Partiel</p>
+                )}
             </>
           )}
         </div>
-
         <div className="min-w-0 rounded-xl bg-sidebar px-4 py-4 lg:self-start">
           <h3 className="text-xs font-medium">Les filières</h3>
           <ul className="mt-3 grid gap-1 sm:grid-cols-3 lg:grid-cols-1">
@@ -377,21 +339,7 @@ function ReadyPreview({ data }: { data: OverviewData }) {
           </ul>
         </div>
       </div>
-
       <div className="mt-5 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 rounded-b-[18px] bg-sidebar/70 px-5 py-4 sm:px-7">
-        <p className="min-w-0 text-[10px] leading-relaxed text-muted-foreground">
-          <a
-            href={datasetUrl(data.source.datasetId)}
-            target="_blank"
-            rel="noreferrer"
-            title={data.source.provider}
-            aria-label={`Source Parcoursup : ${data.source.provider}`}
-            className="underline decoration-border underline-offset-4 hover:text-foreground"
-          >
-            Source : Parcoursup
-          </a>
-          <span className="block">Hors apprentissage</span>
-        </p>
         <Link
           href={`/observatoire?campagne=${data.source.campaign}`}
           className="inline-flex min-h-8 items-center gap-2 text-xs font-medium"

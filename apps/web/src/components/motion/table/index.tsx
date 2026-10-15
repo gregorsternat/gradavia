@@ -97,6 +97,7 @@ export function Table<T>({
   rowHeight = 48,
   height = 440,
   overscan = 10,
+  virtualized = true,
   onEndReached,
   loading = false,
   skeletonRows = 3,
@@ -154,6 +155,7 @@ export function Table<T>({
   // This virtualizer intentionally runs outside compiler memoization.
   // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
+    enabled: virtualized,
     count: sortedRows.length,
     getScrollElement: () => scrollRef.current,
     estimateSize: () => rowHeight,
@@ -161,6 +163,9 @@ export function Table<T>({
   });
 
   const virtualItems = virtualizer.getVirtualItems();
+  const renderedItems = virtualized
+    ? virtualItems
+    : sortedRows.map((_, index) => ({ index }));
   const totalSize = virtualizer.getTotalSize();
   const paddingTop = virtualItems[0]?.start ?? 0;
   const paddingBottom =
@@ -298,7 +303,6 @@ export function Table<T>({
             {/* Empty filler owns the leftover space — no gap, content unpinned. */}
             <col />
           </colgroup>
-
           <TableHeader
             columns={orderedColumns}
             rowHeight={rowHeight}
@@ -327,7 +331,6 @@ export function Table<T>({
             onColumnActivate={hasColumnMenu ? activateColumn : undefined}
             onColumnDeactivate={hasColumnMenu ? deactivateColumn : undefined}
           />
-
           <tbody>
             {sortedRows.length === 0 ? (
               loading ? (
@@ -354,7 +357,7 @@ export function Table<T>({
                     <td colSpan={leadColumns + 1} />
                   </tr>
                 ) : null}
-                {virtualItems.map((vItem) => {
+                {renderedItems.map((vItem) => {
                   const entry = sortedRows[vItem.index];
                   if (!entry) return null;
                   const isSelected = selected.has(entry.id);

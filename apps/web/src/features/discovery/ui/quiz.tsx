@@ -7,7 +7,6 @@ import { Button, ButtonLink } from "@/components/motion/button/base";
 import { InlineSlider } from "@/components/motion/range-slider-inline";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
 import { ChartData } from "@/features/observatory/ui/shared";
-import { datasetUrl } from "@/features/formations/domain/explorer";
 import type { CampaignSource } from "@/features/formations/domain/api-contract";
 import type { QuizQuestion } from "../domain/quiz";
 
@@ -144,18 +143,6 @@ export function Quiz({
           </motion.div>
         )}
       </section>
-      <footer className="mt-10 text-xs leading-6 text-muted-foreground">
-        <a
-          className="underline underline-offset-4"
-          href={datasetUrl(source.datasetId)}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {source.provider} · {source.datasetId}
-        </a>
-        <p>{source.license} · Une seule campagne, hors apprentissage.</p>
-        <p className="break-all">Version {source.releaseId}</p>
-      </footer>
     </PanelMain>
   );
 }

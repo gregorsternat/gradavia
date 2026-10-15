@@ -10,6 +10,9 @@ No active implementation plan.
 
 ## Completed
 
+- [Data page simplification](completed/data-page-simplification.md): focused
+  results/actions, dedicated methodology, and native paginated formation links.
+
 - [Page-load performance](completed/page-load-performance.md): deployed WEUR
   placement, 15-minute public-data cache, progressive rendering and lazy tools;
   five-run warm median server waiting reduced by 65–88% across measured requests.

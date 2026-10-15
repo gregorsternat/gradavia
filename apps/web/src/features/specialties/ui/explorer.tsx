@@ -1,19 +1,10 @@
 "use client";
 import { PanelMain } from "@/features/workspace/ui/navigation";
-
 import { useState, useSyncExternalStore, useTransition } from "react";
 import { useRouter } from "@/features/workspace/ui/navigation";
 import Link from "@/features/workspace/ui/navigation";
-import {
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpRight,
-  BookOpen,
-  Download,
-  Info,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Download } from "lucide-react";
 import { Button, ButtonLink } from "@/components/motion/button/base";
-import { BouncyAccordion } from "@/components/motion/bouncy-accordion";
 import {
   Combobox,
   ComboboxContent,
@@ -24,7 +15,6 @@ import {
   ComboboxTrigger,
 } from "@/components/motion/combobox";
 import { Table, type TableColumn } from "@/components/motion/table";
-import { Tooltip } from "@/components/motion/tooltip";
 import {
   BarChart,
   type TooltipProps,
@@ -33,7 +23,6 @@ import {
   formatCount,
   formatMetric,
 } from "@/features/formations/domain/metrics";
-import { datasetUrl } from "@/features/formations/domain/explorer";
 import {
   MetricValue,
   Reveal,
@@ -227,10 +216,7 @@ function ReadySpecialties({
     anchor.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
-  const sourceDate = new Intl.DateTimeFormat("fr-FR", {
-    dateStyle: "medium",
-    timeZone: "Europe/Paris",
-  }).format(new Date(data.source.collectedAt));
+
   return (
     <PanelMain id="contenu" className="min-w-0 flex-1 py-8" aria-busy={pending}>
       <div className="mb-7 flex flex-wrap items-start justify-between gap-4">
@@ -283,24 +269,6 @@ function ReadySpecialties({
               <h2 className="text-xs text-muted-foreground">
                 {indicatorLabels[key]}
               </h2>
-              <Tooltip
-                content={
-                  key === "applications"
-                    ? "Candidats de cette combinaison ayant confirmé au moins un vœu, au niveau national."
-                    : key === "offers"
-                      ? "Candidats de cette combinaison ayant reçu au moins une proposition, au niveau national."
-                      : "Candidats de cette combinaison ayant accepté au moins une proposition, au niveau national."
-                }
-              >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="-my-2 size-6"
-                  aria-label={`Définition : ${indicatorLabels[key]}`}
-                >
-                  <Info className="size-3.5" />
-                </Button>
-              </Tooltip>
             </div>
             <div className="sm:mt-3">
               {data.national ? (
@@ -429,11 +397,6 @@ function ReadySpecialties({
                 Aucune valeur observée n’est publiée pour cet indicateur.
               </p>
             )}
-            <p className="mt-4 text-[11px] text-muted-foreground">
-              Un candidat peut figurer dans plusieurs{" "}
-              {drilled ? "filières" : "groupes"}. Ces effectifs ne
-              s’additionnent pas.
-            </p>
           </section>
           <Table
             aria-label={
@@ -457,68 +420,6 @@ function ReadySpecialties({
           Aucune formation n’est publiée pour cette sélection.
         </p>
       )}
-      <BouncyAccordion
-        className="mt-6 max-w-3xl"
-        classNames={{
-          item: "rounded-lg border-0 bg-transparent",
-          trigger: "px-0 py-3",
-          title: "text-xs",
-          description: "px-0 pb-4 text-xs leading-6 text-muted-foreground",
-        }}
-        items={[
-          {
-            id: "source",
-            title: `Source et périmètre · Spécialités ${data.source.campaign}`,
-            description: (
-              <div className="space-y-2">
-                <p>
-                  {data.source.provider} · {data.source.license} · Collecte du{" "}
-                  {sourceDate}
-                </p>
-                <p>
-                  Les indicateurs nationaux proviennent du niveau national
-                  publié. Les groupes et les formations conservent chacun leur
-                  propre population.
-                </p>
-                <a
-                  href={datasetUrl(data.source.datasetId)}
-                  className="inline-flex items-center gap-1 text-foreground underline underline-offset-4"
-                >
-                  Consulter le jeu de données
-                  <ArrowUpRight className="size-3" />
-                </a>
-              </div>
-            ),
-          },
-          {
-            id: "definitions",
-            title: "Définitions et précautions de lecture",
-            description: (
-              <div className="space-y-4">
-                {data.definitions.map((definition) => (
-                  <div key={definition.key}>
-                    <h3 className="font-medium text-foreground">
-                      {definition.label}
-                    </h3>
-                    <p>{definition.description}</p>
-                    <p className="text-[10px]">
-                      Champ source : {definition.field}
-                    </p>
-                  </div>
-                ))}
-                {data.notices.map((notice) => (
-                  <p key={notice}>{notice}</p>
-                ))}
-                <p>
-                  — : non publié · Masqué : valeur masquée par la source ·
-                  Invalide : format non conforme. Les effectifs historiques ne
-                  prédisent pas votre admission.
-                </p>
-              </div>
-            ),
-          },
-        ]}
-      />
     </PanelMain>
   );
 }

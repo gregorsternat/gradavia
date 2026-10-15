@@ -200,10 +200,8 @@ export function Scatter({
         </div>
       )}
       <p className="mt-3 text-xs leading-5 text-muted-foreground">
-        {points.length.toLocaleString("fr")} points ·{" "}
-        {rows.length - points.length} lignes sans valeur sur l’un des axes.
-        Taille : {measureLabels[config.size].toLocaleLowerCase("fr")}. Taille
-        minimale lorsque la valeur est absente.
+        {points.length.toLocaleString("fr")} points
+        {points.length < rows.length ? " · Partiel" : ""}
       </p>
     </div>
   );

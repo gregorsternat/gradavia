@@ -17,8 +17,15 @@ accessible label identify the brand, so adjacent SVG marks remain decorative.
 `apps/web/src/app/globals.css` defines background, foreground, surface, subtle
 background, border, muted text and chart colors. Panels use quiet borders and
 rounded corners; avoid stacked separators, decorative headings and repeated
-explanatory copy. A page title describes the task. Definitions belong beside
-metrics or in a disclosure, rather than in repeated introductory paragraphs.
+explanatory copy. A page title describes the task. Product data screens show results and actions;
+optional definitions, source metadata and methodology belong in Données & méthode.
+Do not repeat them in footers, accordions, definition tooltips or dedicated detail
+tabs. Keep campaign, units and necessary population labels, chart-value tooltips,
+accessible value tables and actionable error/control feedback. A partial numeric
+total uses the brief label “Partiel”; missing, suppressed and invalid values keep
+their distinct states. Technical downloads/API documentation and required map
+attribution retain their metadata. The homepage introduction/FAQ remains separate
+from its simplified numerical preview.
 
 The desktop sidebar collapses to icons. On mobile it becomes a focus-managed
 sheet with an explicit close button. The Cmd/Ctrl+K palette, navigation and theme
@@ -103,16 +110,16 @@ history, ranked bars for regional or specialty destinations, a donut for a small
 composition, and a histogram for the official access-rate distribution. Keep
 baselines honest and null gaps visible. Do not interpolate unavailable records.
 
-Charts state units, population, campaign and source. History explicitly qualifies
-coverage and formation continuity. Every chart has an accessible table or
+Charts state units, population and campaign. History retains continuity states
+and gaps; explanations and source references live in Données & méthode. Every chart has an accessible table or
 labelled value equivalent. Clickable chart destinations also have visible links.
 Never represent missing, suppressed or invalid observations as zero; partial
-aggregates show coverage. Specialty groups overlap and cannot be stacked into a
+aggregates show a compact partial status. Specialty groups overlap and cannot be stacked into a
 national total.
 
 The atlas uses one quiet map surface next to a matching result list; exact numeric
-inputs supplement proximity and priority sliders. Coordinate coverage remains
-visible. Browser map controls and list links offer equivalent navigation without
+inputs supplement proximity and priority sliders. The map retains the count of located and unlocated results so the visible
+points are not mistaken for all results. Browser map controls and list links offer equivalent navigation without
 requiring pointer selection. Analysis places one selected visualization above its
 record table, with cohort controls shared across views. A Canvas scatter retains
 all source observations without creating thousands of DOM nodes; Tremor remains
