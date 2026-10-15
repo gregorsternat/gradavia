@@ -20,11 +20,30 @@ License: [MIT](licenses/beui.txt).
 ### Bounded search table rendering (2026-10-16)
 
 The existing beUI table adds an optional `virtualized` prop, defaulting to true.
-Formation search sets it to false to render all 25 paginated rows and native
-links during SSR, replacing the redundant crawlable disclosure. Sorting, row
+Formation search sets it to false to render all 25 initial rows and native
+links during SSR, replacing the redundant crawlable disclosure. Its async
+composition appends subsequent batches in the same table. Sorting, row
 identity, accessible cells and the fixed scroll viewport use the existing render
 path. Large tables keep virtualization. No new dependency or upstream source
 was copied.
+
+### Async table composition (2026-10-14)
+
+Verified [table-async](https://beui.dev/r/table-async.json) against the public
+registry after the MCP transport was unavailable. It uses the same Table source
+already installed, including `onEndReached`, `loading` and skeleton rows. No new
+dependencies or replacement of patched helpers was needed.
+
+Local composition adds progress/retry controls and globally sorted local batches.
+Tables load through their focusable scroll region and cards observe a sentinel.
+Neither displays a manual load-more button; errors retain an explicit retry action. Specialty headers
+inherit the primitive typography.
+The primitive accepts total row counts and scroll-reset identity; end detection
+resets when rows append and checks newly measured underfilled viewports. Sorting
+resets scroll without remounting the focused header. Hidden virtual tables retain
+the full spacer height when their measured range is empty, preserving scroll
+position and preventing spurious end detection when the panel becomes visible. Existing French labels,
+monochrome styles and reduced-motion support remain intact.
 
 ### Persistent workspace controls (2026-10-08)
 

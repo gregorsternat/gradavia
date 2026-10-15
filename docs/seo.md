@@ -61,10 +61,10 @@ boundary that requires JavaScript to reveal the completed page. Existing in-page
 transition feedback remains. Other data routes can still stream HTTP 200 before
 a missing record is known; noindex is checked independently of transport status.
 
-The primary formation table renders all 25 paginated rows and native detail
+The primary formation table renders all 25 initial rows and native detail
 links without virtualization. It stays useful without JavaScript and needs no
-duplicate expandable directory. Pagination anchors preserve filters and explicit display preferences,
-while ordinary clicks retain the existing client navigation behavior.
+duplicate expandable directory. No-JavaScript pagination anchors preserve filters
+and explicit display preferences; hydrated results append batches on scroll.
 Formation table, campaign and breadcrumb links disable speculative prefetch:
 they remain ordinary crawlable anchors without loading every linked destination
 merely because the table enters the viewport.
@@ -99,10 +99,15 @@ proof of an edge-cache hit. No timestamp is fabricated from request/build time:
 source collection time does not establish the last significant page update.
 
 Historical Parcoursup formations remain discoverable through native campaign
-links and pagination; detail history also links related retained records.
+links and no-JavaScript pagination; detail history also links related retained records.
 Sitemaps initially advertise the latest published campaign per family,
 not every retained release. All sitemap files live at the root to avoid path-scope
 ambiguity. Builds and the static index require no live credentials or dataset.
+
+Hydrated formation lists append batches without changing their entry URL or
+canonical. Legacy `page=N` requests still render their own batch and metadata;
+next/previous anchors are delivered inside `noscript`. The initial batch remains
+available through the primary table's native formation links without JavaScript.
 
 ## Production rollout and measurement
 

@@ -95,11 +95,36 @@ obsolete responses cannot overwrite a newer query. Loading/errors stay inside
 the affected panel. Full atlas limits and source-specific reader semantics remain
 unchanged; regular list-only and map-only criteria are remembered separately.
 
+## Incremental data presentation
+
+The shared beUI async table composition keeps source-owned virtualization,
+loading skeletons and accessible scroll regions. Complete local datasets are
+filtered and sorted before revealing batches of 25; charts and analysis exports
+continue to use the whole cohort. Atlas cards reveal batches of 20.
+
+Formation tables and cards share accumulated 25-row API pages. The client checks
+query, expected page, total, campaign, immutable release and duplicate identities
+before appending. A changed release offers an explicit search reload. Workspace
+refreshes send an app-only `X-Gradavia-Refresh: 1` header; formation refreshes
+bypass and replace the cached batch so recovery cannot reuse a stale first page. Favorites
+load 12 details at a time; shared-list SSR is also bounded to 12. Full shared IDs
+and optional fragment notes remain independent of the visible batch. Explicit
+import/print actions can read the remaining details; direct printing reports
+unloaded identities instead of silently omitting them. Local dossiers retain all
+saved snapshots.
+
+One request may run per list identity. Requests are aborted on disposal or panel
+inactivation, and obsolete responses cannot replace a newer list. Loaded results
+survive tab switches; retries preserve previous rows. Native links, printable
+output and accessible chart alternatives remain separate from infinite scrolling.
+
 ## Runtime interfaces
 
-- `GET /formations` renders a 25-row search page. `campagne`, `q`, `type`,
+- `GET /formations` renders an initial 25-row search batch. `campagne`, `q`, `type`,
   `region`, `departement`, `statut`, `selectivite`, `tri` and `page` encode its
-  API query; `vue` selects the client presentation. It calls `/v1/formations`.
+  API query; `vue` selects the client presentation. It calls `/v1/formations`; subsequent batches use `/api/workspace/formations`.
+  Hydrated tables/cards append results without changing the URL. Legacy `page`
+  entry points and no-JavaScript pagination remain supported.
 - `/` introduces the product with independent server-rendered content and a
   streamed preview from `/v1/overview`. Loading uses inert placeholders;
   empty/unavailable data uses a non-numeric search/navigation panel.

@@ -171,6 +171,13 @@ describe("formation HTTP client boundary", () => {
     expect((await loadExplorer({})).status).toBe("ready");
     expect(fetcher).toHaveBeenCalledTimes(4);
     expect(put).toHaveBeenCalledTimes(1);
+    const updated = ready();
+    updated.data.source.releaseId = "22222222-2222-4222-8222-222222222222";
+    fetcher.mockImplementationOnce(async () => Response.json(updated));
+    expect(await loadExplorer({}, true)).toEqual(updated);
+    expect(await loadExplorer({})).toEqual(updated);
+    expect(fetcher).toHaveBeenCalledTimes(5);
+    expect(put).toHaveBeenCalledTimes(2);
   });
 
   test.each([300, 301, 302, 303, 307, 308, 399])(

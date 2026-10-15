@@ -13,7 +13,10 @@ import {
   TabsTrigger,
   TabsContent,
 } from "@/components/motion/tabs";
-import { Table, type TableColumn } from "@/components/motion/table";
+import {
+  AsyncTable as Table,
+  type TableColumn,
+} from "@/components/motion/table/async";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
 import { LineChart } from "@/components/charts/tremor/components/LineChart/LineChart";
 import type { FormationDetail, MetricKey } from "../domain/api-contract";

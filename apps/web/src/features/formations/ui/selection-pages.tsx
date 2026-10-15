@@ -5,7 +5,10 @@ import { useRouter } from "@/features/workspace/ui/navigation";
 import Link from "@/features/workspace/ui/navigation";
 import { ArrowRight, Bookmark, GitCompareArrows, Plus, X } from "lucide-react";
 import { Button, ButtonLink } from "@/components/motion/button/base";
-import { Table, type TableColumn } from "@/components/motion/table";
+import {
+  AsyncTable as Table,
+  type TableColumn,
+} from "@/components/motion/table/async";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
 import type {
   DetailResult,

@@ -389,12 +389,15 @@ export function Workspace({
     preloadPanel(id, new URLSearchParams(entry.search));
     let request = requests.current.get(wantedKey);
     if (!request) {
-      request = fetch(`/api/workspace/${id}?${entry.search}`).then(
-        async (response) => {
-          if (!response.ok) throw new Error("Panel unavailable");
-          return (await response.json()) as PanelPayload;
-        },
-      );
+      request = fetch(`/api/workspace/${id}?${entry.search}`, {
+        headers:
+          entry.payload && !entry.loadedKey
+            ? { "X-Gradavia-Refresh": "1" }
+            : undefined,
+      }).then(async (response) => {
+        if (!response.ok) throw new Error("Panel unavailable");
+        return (await response.json()) as PanelPayload;
+      });
       requests.current.set(wantedKey, request);
       void request
         .finally(() => requests.current.delete(wantedKey))
@@ -450,7 +453,14 @@ export function Workspace({
     return () => {
       cancelled = true;
     };
-  }, [state.active, entry.search, entry.loadedKey, entry.failed, wantedKey]);
+  }, [
+    state.active,
+    entry.search,
+    entry.loadedKey,
+    entry.failed,
+    entry.payload,
+    wantedKey,
+  ]);
 
   const targetHref = (id: PanelId) => {
     if (id === state.active)

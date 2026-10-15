@@ -1,4 +1,5 @@
 "use client";
+import { z } from "zod";
 import { usePanelPending, PanelMain } from "@/features/workspace/ui/navigation";
 import { useState, useSyncExternalStore, useTransition } from "react";
 import { useRouter } from "@/features/workspace/ui/navigation";
@@ -21,7 +22,10 @@ import {
   TabsTrigger,
   TabsContent,
 } from "@/components/motion/tabs";
-import { Table, type TableColumn } from "@/components/motion/table";
+import {
+  AsyncTable as Table,
+  type TableColumn,
+} from "@/components/motion/table/async";
 import { BouncyAccordion } from "@/components/motion/bouncy-accordion";
 import {
   FILTER_KEYS,
@@ -43,6 +47,10 @@ import {
   SelectField,
   ShareButton,
 } from "./shared";
+
+import { LoadProgress } from "@/components/motion/table/progress";
+import { useIncrementalRows } from "@/lib/hooks/use-incremental-rows";
+import { appendFormationPage, RELEASE_CHANGED } from "../domain/incremental";
 
 const labels: Record<FilterKey, string> = {
   type: "Type de formation",
@@ -93,6 +101,34 @@ function ReadyExplorer({
   const panelPending = usePanelPending();
   const pending = transitionPending || panelPending;
   const [draft, setDraft] = useState(data.query);
+  const stream = useIncrementalRows({
+    identity: `${explorerUrl(data.query, data.query.page)}:${data.source.releaseId}`,
+    initial: data.formations,
+    request: async (rows, signal) => {
+      const page = data.query.page + Math.ceil(rows.length / PAGE_SIZE);
+      const search = new URL(
+        explorerUrl(data.query, page),
+        "https://gradavia.invalid",
+      ).search;
+      const response = await fetch(`/api/workspace/formations${search}`, {
+        signal,
+      });
+      if (!response.ok) throw new Error("Le chargement a échoué. Réessayez.");
+      const payload = z
+        .object({ kind: z.literal("formations"), result: z.unknown() })
+        .safeParse(await response.json());
+      if (!payload.success)
+        throw new Error("Le chargement a échoué. Réessayez.");
+      return appendFormationPage(data, rows, payload.data.result);
+    },
+  });
+  const hasMore =
+    (data.query.page - 1) * PAGE_SIZE + stream.rows.length < data.total;
+  const retry = () =>
+    stream.error === RELEASE_CHANGED
+      ? router.refresh()
+      : void stream.loadMore();
+
   const mobile = useSyncExternalStore(
     subscribeMobile,
     () => window.matchMedia("(max-width: 767px)").matches,
@@ -282,11 +318,12 @@ function ReadyExplorer({
         <div className="flex gap-2">
           <ShareButton />
           <ExportButton
-            rows={data.formations.map((formation) => ({
+            rows={stream.rows.map((formation) => ({
               formation,
               source: data.source,
             }))}
-            filename={`gradavia-parcoursup-${data.source.campaign}-page-${data.query.page}`}
+            label="Exporter les résultats chargés"
+            filename={`gradavia-parcoursup-${data.source.campaign}`}
           />
         </div>
       </ExplorerHeader>
@@ -404,7 +441,9 @@ function ReadyExplorer({
             {data.total > 0 ? (
               <span className="ml-2">
                 {formatCount((data.query.page - 1) * PAGE_SIZE + 1)}–
-                {formatCount(Math.min(data.query.page * PAGE_SIZE, data.total))}
+                {formatCount(
+                  (data.query.page - 1) * PAGE_SIZE + stream.rows.length,
+                )}
               </span>
             ) : null}
           </p>
@@ -466,18 +505,31 @@ function ReadyExplorer({
                 <Table
                   aria-label="Résultats de la recherche"
                   virtualized={false}
-                  data={data.formations}
+                  data={stream.rows}
+                  total={data.total}
+                  hasMore={hasMore}
+                  loading={stream.loading}
+                  error={stream.error}
+                  onRetry={retry}
+                  retryLabel={
+                    stream.error === RELEASE_CHANGED
+                      ? "Recharger la recherche"
+                      : undefined
+                  }
+                  onEndReached={() => {
+                    if (!pending) void stream.loadMore();
+                  }}
                   columns={columns}
                   getRowId={(row) => row.id}
                   rowHeight={76}
-                  height={Math.min(650, data.formations.length * 76 + 48)}
+                  height={Math.min(650, stream.rows.length * 76 + 48)}
                   className="rounded-xl border-border bg-surface [&_table]:min-w-[720px]"
                 />
               </Reveal>
             </TabsContent>
             <TabsContent value="cartes">
               <Reveal className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
-                {data.formations.map((formation) => (
+                {stream.rows.map((formation) => (
                   <FormationCard
                     key={formation.id}
                     formation={formation}
@@ -485,6 +537,21 @@ function ReadyExplorer({
                   />
                 ))}
               </Reveal>
+              <LoadProgress
+                count={stream.rows.length}
+                total={data.total}
+                hasMore={hasMore}
+                loading={stream.loading}
+                error={stream.error}
+                onLoadMore={retry}
+                retryLabel={
+                  stream.error === RELEASE_CHANGED
+                    ? "Recharger la recherche"
+                    : undefined
+                }
+                automatic
+                active={!pending && view === "cartes"}
+              />
             </TabsContent>
           </>
         )}
@@ -509,82 +576,84 @@ function ReadyExplorer({
         ))}
       </nav>
       {pages > 1 && (
-        <nav
-          aria-label="Pagination des formations"
-          className="mt-5 flex items-center justify-between gap-2"
-        >
-          {data.query.page <= 1 ? (
-            <Button
-              variant="secondary"
-              size="sm"
-              className="rounded-lg"
-              disabled
-            >
-              <ArrowLeft className="size-3.5" />
-              Précédente
-            </Button>
-          ) : (
-            <ButtonLink
-              variant="secondary"
-              size="sm"
-              className="rounded-lg"
-              href={paginationUrl(data.query.page - 1)}
-              rel="prev"
-              aria-disabled={pending || undefined}
-              onClick={(event) => {
-                if (
-                  event.metaKey ||
-                  event.ctrlKey ||
-                  event.shiftKey ||
-                  event.altKey
-                )
-                  return;
-                event.preventDefault();
-                navigate(data.query, data.query.page - 1);
-              }}
-            >
-              <ArrowLeft className="size-3.5" />
-              Précédente
-            </ButtonLink>
-          )}
-          <p className="text-xs tabular-nums text-muted-foreground">
-            Page {data.query.page} sur {formatCount(pages)}
-          </p>
-          {data.query.page >= pages ? (
-            <Button
-              variant="secondary"
-              size="sm"
-              className="rounded-lg"
-              disabled
-            >
-              Suivante
-              <ArrowRight className="size-3.5" />
-            </Button>
-          ) : (
-            <ButtonLink
-              variant="secondary"
-              size="sm"
-              className="rounded-lg"
-              href={paginationUrl(data.query.page + 1)}
-              rel="next"
-              aria-disabled={pending || undefined}
-              onClick={(event) => {
-                if (
-                  event.metaKey ||
-                  event.ctrlKey ||
-                  event.shiftKey ||
-                  event.altKey
-                )
-                  return;
-                event.preventDefault();
-                navigate(data.query, data.query.page + 1);
-              }}
-            >
-              Suivante
-              <ArrowRight className="size-3.5" />
-            </ButtonLink>
-          )}
-        </nav>
+        <noscript>
+          <nav
+            aria-label="Pagination des formations"
+            className="mt-5 flex items-center justify-between gap-2"
+          >
+            {data.query.page <= 1 ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                className="rounded-lg"
+                disabled
+              >
+                <ArrowLeft className="size-3.5" />
+                Précédente
+              </Button>
+            ) : (
+              <ButtonLink
+                variant="secondary"
+                size="sm"
+                className="rounded-lg"
+                href={paginationUrl(data.query.page - 1)}
+                rel="prev"
+                aria-disabled={pending || undefined}
+                onClick={(event) => {
+                  if (
+                    event.metaKey ||
+                    event.ctrlKey ||
+                    event.shiftKey ||
+                    event.altKey
+                  )
+                    return;
+                  event.preventDefault();
+                  navigate(data.query, data.query.page - 1);
+                }}
+              >
+                <ArrowLeft className="size-3.5" />
+                Précédente
+              </ButtonLink>
+            )}
+            <p className="text-xs tabular-nums text-muted-foreground">
+              Page {data.query.page} sur {formatCount(pages)}
+            </p>
+            {data.query.page >= pages ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                className="rounded-lg"
+                disabled
+              >
+                Suivante
+                <ArrowRight className="size-3.5" />
+              </Button>
+            ) : (
+              <ButtonLink
+                variant="secondary"
+                size="sm"
+                className="rounded-lg"
+                href={paginationUrl(data.query.page + 1)}
+                rel="next"
+                aria-disabled={pending || undefined}
+                onClick={(event) => {
+                  if (
+                    event.metaKey ||
+                    event.ctrlKey ||
+                    event.shiftKey ||
+                    event.altKey
+                  )
+                    return;
+                  event.preventDefault();
+                  navigate(data.query, data.query.page + 1);
+                }}
+              >
+                Suivante
+                <ArrowRight className="size-3.5" />
+              </ButtonLink>
+            )}
+          </nav>
+        </noscript>
       )}
       <ComparisonTray />
     </PanelMain>

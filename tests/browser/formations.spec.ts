@@ -114,7 +114,7 @@ test("explorer is accessible with focused results and bounded list and card view
   }
   await expect(
     page.getByRole("table", { name: "Résultats de la recherche" }),
-  ).toHaveAttribute("aria-rowcount", "26");
+  ).toHaveAttribute("aria-rowcount", "32");
   await expect(
     page.getByRole("button", { name: /Source et périmètre/ }),
   ).toHaveCount(0);
@@ -129,7 +129,10 @@ test("explorer is accessible with focused results and bounded list and card view
     ),
   ).toBe(true);
   await page.getByRole("tab", { name: "Vue cartes" }).click();
-  await expect(page.getByRole("article")).toHaveCount(25);
+  await expect
+    .poll(() => page.getByRole("article").count())
+    .toBeGreaterThanOrEqual(25);
+  expect(await page.getByRole("article").count()).toBeLessThanOrEqual(31);
   await expect(page).toHaveURL(/vue=cartes/);
   if (isMobile)
     await page
@@ -228,13 +231,17 @@ test("pending searches and sorting retain criteria when the view is changed imme
   }
 });
 
-test("filters combine, pagination is stable and new searches reset the page", async ({
+test("filters combine, async cards accumulate and new searches reset the rows", async ({
   page,
 }) => {
   await page.goto("/formations?vue=cartes");
-  await page.getByRole("link", { name: "Suivante", exact: true }).click();
-  await expect(page.getByText("Page 2 sur 2")).toBeVisible();
-  await expect(page.getByRole("article")).toHaveCount(6);
+  await expect(page.getByRole("searchbox")).toBeEditable();
+  await page.locator("[data-load-progress]:visible").scrollIntoViewIfNeeded();
+  await expect(page.getByRole("article")).toHaveCount(31);
+  await expect(page.locator("[data-load-progress]:visible")).toContainText(
+    "31 résultats affichés sur 31",
+  );
+  expect(new URL(page.url()).searchParams.has("page")).toBe(false);
   await openFilters(page);
   await selectOption(page, "Type de formation", "Licence");
   await selectOption(page, "Région", "Ile-de-France");
@@ -651,5 +658,189 @@ test("adding to a shared comparison preserves its formations and campaign with f
   } finally {
     releaseFirst();
     await page.unrouteAll({ behavior: "wait" });
+  }
+});
+
+test("async table keeps rows on failure, retries once and shares accumulated cards", async ({
+  page,
+}) => {
+  let calls = 0;
+  await page.route("**/api/workspace/formations?**", async (route) => {
+    if (new URL(route.request().url()).searchParams.get("page") !== "2")
+      return route.continue();
+    calls++;
+    if (calls === 1)
+      return route.fulfill({
+        json: { kind: "formations", result: { status: "unavailable" } },
+      });
+    return route.continue();
+  });
+  await page.goto("/formations?vue=liste");
+  await expect(page.getByRole("searchbox")).toBeEditable();
+  const table = page.getByRole("table", { name: "Résultats de la recherche" });
+  const region = page.getByRole("region", {
+    name: "Résultats de la recherche",
+  });
+  await expect(table).toHaveAttribute("aria-rowcount", "32");
+  await expect(region.locator("tbody tr[aria-rowindex]").first()).toBeVisible();
+  await region.evaluate((element) => {
+    element.scrollTop = element.scrollHeight;
+  });
+  await expect(
+    page.locator("[data-load-progress]:visible").getByRole("alert"),
+  ).toContainText("Le chargement a échoué");
+  await expect(page.locator("[data-load-progress]:visible")).toContainText(
+    "25 résultats affichés sur 31",
+  );
+  expect(calls).toBe(1);
+  await page.getByRole("button", { name: "Réessayer", exact: true }).click();
+  await expect(page.locator("[data-load-progress]:visible")).toContainText(
+    "31 résultats affichés sur 31",
+  );
+  expect(calls).toBe(2);
+  await page.getByRole("tab", { name: "Vue cartes", exact: true }).click();
+  await expect(page.getByRole("article")).toHaveCount(31);
+  expect(new URL(page.url()).searchParams.has("page")).toBe(false);
+});
+
+test("async table discards a pending old search and refuses mixed releases", async ({
+  page,
+}) => {
+  let finish: () => void = () => {};
+  const gate = new Promise<void>((resolve) => {
+    finish = resolve;
+  });
+  let started = false;
+  await page.route("**/api/workspace/formations?**", async (route) => {
+    if (new URL(route.request().url()).searchParams.get("page") !== "2")
+      return route.continue();
+    started = true;
+    await gate;
+    try {
+      await route.continue();
+    } catch {
+      /* The obsolete request was cancelled. */
+    }
+  });
+  try {
+    await page.goto("/formations?vue=liste");
+    await expect(page.getByRole("searchbox")).toBeEditable();
+    const region = page.getByRole("region", {
+      name: "Résultats de la recherche",
+    });
+    await expect(
+      region.locator("tbody tr[aria-rowindex]").first(),
+    ).toBeVisible();
+    await region.evaluate((element) => {
+      element.scrollTop = element.scrollHeight;
+    });
+    await expect.poll(() => started).toBe(true);
+    await page.getByRole("searchbox").fill("Systèmes");
+    await page.getByRole("button", { name: "Rechercher", exact: true }).click();
+    await expect(page).toHaveURL(/q=Syst/);
+    finish();
+    await expect(page.locator("[data-load-progress]:visible")).toContainText(
+      "1 résultat affiché sur 1",
+    );
+    await expect(
+      page.getByRole("table", { name: "Résultats de la recherche" }),
+    ).toHaveAttribute("aria-rowcount", "2");
+  } finally {
+    finish();
+  }
+  await page.unroute("**/api/workspace/formations?**");
+  await page.route("**/api/workspace/formations?**", async (route) => {
+    if (new URL(route.request().url()).searchParams.get("page") !== "2")
+      return route.continue();
+    const response = await route.fetch();
+    const payload = await response.json();
+    const version = "22222222-2222-4222-8222-222222222222";
+    payload.result.data.source.releaseId = version;
+    for (const row of payload.result.data.formations)
+      row.id = `${version}:${row.id.split(":")[1]}`;
+    await route.fulfill({ json: payload });
+  });
+  await page.goto("/formations?vue=liste");
+  await expect(page.getByRole("searchbox")).toBeEditable();
+  await expect(
+    page.getByRole("button", { name: "Charger la suite", exact: true }),
+  ).toHaveCount(0);
+  await page.getByRole("region", { name: "Résultats de la recherche" }).focus();
+  await page.keyboard.press("End");
+  await expect(
+    page.locator("[data-load-progress]:visible").getByRole("alert"),
+  ).toContainText("nouvelle version");
+  await expect(page.locator("[data-load-progress]:visible")).toContainText(
+    "25 résultats affichés sur 31",
+  );
+  await expect(
+    page.getByRole("button", { name: "Recharger la recherche", exact: true }),
+  ).toBeVisible();
+});
+
+test("hiding a table cancels its pending batch and returning restores its loaded rows", async ({
+  page,
+}) => {
+  let release: () => void = () => {};
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let calls = 0;
+  let cancelled = 0;
+  page.on("requestfailed", (request) => {
+    const url = new URL(request.url());
+    if (
+      url.pathname === "/api/workspace/formations" &&
+      url.searchParams.get("page") === "2"
+    )
+      cancelled++;
+  });
+  await page.route("**/api/workspace/formations?**", async (route) => {
+    if (new URL(route.request().url()).searchParams.get("page") !== "2")
+      return route.continue();
+    calls++;
+    if (calls === 1) await gate;
+    try {
+      await route.continue();
+    } catch {
+      /* Hidden-panel requests are aborted. */
+    }
+  });
+  try {
+    await page.goto("/formations?vue=liste");
+    await expect(page.getByRole("searchbox")).toBeEditable();
+    await page
+      .getByRole("region", { name: "Résultats de la recherche" })
+      .focus();
+    await page.keyboard.press("End");
+    await expect.poll(() => calls).toBe(1);
+    await page.getByRole("tab", { name: "Carte", exact: true }).click();
+    await expect(
+      page.getByRole("tab", { name: "Carte", exact: true }),
+    ).toHaveAttribute("aria-selected", "true");
+    release();
+    await expect.poll(() => cancelled).toBe(1);
+    expect(calls).toBe(1);
+    await expect(
+      page.locator("#formations-contenu [data-load-progress]").first(),
+    ).toContainText("25 résultats affichés sur 31");
+    await page.getByRole("tab", { name: "Liste", exact: true }).click();
+    const region = page.getByRole("region", {
+      name: "Résultats de la recherche",
+    });
+    await region.focus();
+    await page.keyboard.press("End");
+    await expect(page.locator("[data-load-progress]:visible")).toContainText(
+      "31 résultats affichés sur 31",
+    );
+    expect(calls).toBe(2);
+    await page.getByRole("tab", { name: "Carte", exact: true }).click();
+    await page.getByRole("tab", { name: "Liste", exact: true }).click();
+    await expect(page.locator("[data-load-progress]:visible")).toContainText(
+      "31 résultats affichés sur 31",
+    );
+    expect(calls).toBe(2);
+  } finally {
+    release();
   }
 });

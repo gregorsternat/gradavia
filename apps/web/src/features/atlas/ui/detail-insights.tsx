@@ -5,7 +5,10 @@ import { detailBreadcrumbs } from "@/features/seo/domain/structured-data";
 import Link from "@/features/workspace/ui/navigation";
 import { useState } from "react";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
-import { Table, type TableColumn } from "@/components/motion/table";
+import {
+  AsyncTable as Table,
+  type TableColumn,
+} from "@/components/motion/table/async";
 import { ButtonLink } from "@/components/motion/button/base";
 import { SelectField } from "@/features/formations/ui/shared";
 import { formatCount } from "@/features/formations/domain/metrics";

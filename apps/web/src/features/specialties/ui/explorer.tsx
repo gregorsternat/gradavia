@@ -14,7 +14,10 @@ import {
   ComboboxList,
   ComboboxTrigger,
 } from "@/components/motion/combobox";
-import { Table, type TableColumn } from "@/components/motion/table";
+import {
+  AsyncTable as Table,
+  type TableColumn,
+} from "@/components/motion/table/async";
 import {
   BarChart,
   type TooltipProps,
@@ -186,9 +189,7 @@ function ReadySpecialties({
     ).map((key) => ({
       key,
       header: (
-        <span className="block text-[10px] leading-4 whitespace-normal">
-          {indicatorLabels[key]}
-        </span>
+        <span className="block whitespace-normal">{indicatorLabels[key]}</span>
       ),
       align: "right" as const,
       cell: (row: SpecialtyObservation) => (

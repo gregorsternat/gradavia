@@ -3,7 +3,7 @@ import { PanelMain } from "@/features/workspace/ui/navigation";
 import { Input } from "@/components/motion/input";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import { BouncyAccordion } from "@/components/motion/bouncy-accordion";
-import { Table } from "@/components/motion/table";
+import { AsyncTable as Table } from "@/components/motion/table/async";
 import type { CampaignSource } from "@/features/formations/domain/api-contract";
 import type { AtlasItem, AtlasMetricKey } from "../domain/api-contract";
 

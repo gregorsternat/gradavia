@@ -5,7 +5,7 @@ import Link from "@/features/workspace/ui/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
 import { RadioGroup, RadioGroupItem } from "@/components/motion/radio";
-import { Table } from "@/components/motion/table";
+import { AsyncTable as Table } from "@/components/motion/table/async";
 import { Input } from "@/components/motion/input";
 import {
   breakdownCsv,

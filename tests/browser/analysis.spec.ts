@@ -262,3 +262,39 @@ test("source quiz reveals real denominators and links to the pinned analysis", a
     ),
   ).toBe(true);
 });
+
+test("async analysis sorts the full cohort before revealing batches and keeps keyboard focus", async ({
+  page,
+}) => {
+  await page.goto("/analyses");
+  const table = page.getByRole("table", {
+    name: "Formations de l’analyse",
+    exact: true,
+  });
+  const section = table.locator("xpath=ancestor::section[1]");
+  await expect(section.locator("[data-load-progress]")).toContainText(
+    "25 résultats affichés sur 31",
+  );
+  const heading = table.getByRole("button", { name: "Formation", exact: true });
+  await heading.focus();
+  await page.keyboard.press("Enter");
+  await expect(heading).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(heading).toBeFocused();
+  await expect(table.locator("tbody tr[aria-rowindex]").first()).toContainText(
+    "Licence - Économie",
+  );
+  await expect(
+    section.getByRole("button", { name: "Charger la suite", exact: true }),
+  ).toHaveCount(0);
+  await table.locator("xpath=ancestor::*[@role='region'][1]").focus();
+  await page.keyboard.press("End");
+  await expect(section.locator("[data-load-progress]")).toContainText(
+    "31 résultats affichés sur 31",
+  );
+  await page
+    .getByRole("textbox", { name: "Formation ou établissement" })
+    .fill("Systèmes");
+  await expect(table).toHaveAttribute("aria-rowcount", "2");
+  await expect(table).toContainText("BTS - Systèmes numériques");
+});

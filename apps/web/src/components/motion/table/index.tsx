@@ -74,6 +74,8 @@ function resolveColumnWidth(
 
 export function Table<T>({
   data,
+  totalRows,
+  resetScrollKey,
   columns,
   getRowId,
   selectable = false,
@@ -171,7 +173,9 @@ export function Table<T>({
   const paddingBottom =
     virtualItems.length > 0
       ? totalSize - (virtualItems[virtualItems.length - 1]?.end ?? totalSize)
-      : 0;
+      : // Hidden panels have no virtual items; retain the spacer so their scroll
+        // extent does not collapse before ResizeObserver measures them again.
+        totalSize;
 
   const hasRowMenu = !!(onInsertRow || onDeleteRow);
   const hasColumnMenu = !!(onInsertColumn || onDeleteColumn);
@@ -224,15 +228,29 @@ export function Table<T>({
   const endReachedRef = useRef(false);
   useEffect(() => {
     if (!loading) endReachedRef.current = false;
-  }, [loading]);
+  }, [loading, data.length]);
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
-    if (!el || !onEndReached || loading || endReachedRef.current) return;
+    if (
+      !el ||
+      !el.clientHeight ||
+      !onEndReached ||
+      loading ||
+      endReachedRef.current
+    )
+      return;
     if (el.scrollHeight - el.scrollTop - el.clientHeight < rowHeight * 4) {
       endReachedRef.current = true;
       onEndReached();
     }
   }, [onEndReached, loading, rowHeight]);
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+  }, [resetScrollKey]);
+  useEffect(() => {
+    const frame = requestAnimationFrame(handleScroll);
+    return () => cancelAnimationFrame(frame);
+  }, [handleScroll, data.length]);
   const [activeColumn, setActiveColumn] = useState<string | null>(null);
   // Small delay on leave so the pointer can cross the gap from the header cell
   // to the portal handle without the column deactivating.
@@ -284,7 +302,7 @@ export function Table<T>({
       >
         <table
           aria-label={ariaLabel}
-          aria-rowcount={data.length + 1}
+          aria-rowcount={(totalRows ?? data.length) + 1}
           className={cn("border-collapse", sized ? "w-max" : undefined)}
           style={{
             tableLayout: "fixed",
