@@ -112,7 +112,9 @@ establishment and row number break ties; the page size is fixed at 25.
 Absent descriptive fields are explicitly unavailable. Source URLs must be valid
 HTTPS links on Parcoursup hosts without embedded credentials; unavailable links
 are not reconstructed. Dataset links, producer, license, campaign, collection
-date and source modification date accompany the results. The reviewed source indicators below accompany each record. No admission
+date and source modification date remain in API results and exports. Product
+screens show campaign and necessary population labels; optional source metadata
+and explanations are reserved for Données & méthode. The reviewed source indicators below accompany each record. No admission
 probability or personalized score is calculated.
 
 ## Indicators and comparisons
@@ -128,8 +130,9 @@ official access rate.
 
 An application's historical ratio is not an individual's admission probability.
 Do not compare different phases, cohorts, coverage, or changing definitions as
-if they were equivalent. Explain denominator and coverage changes beside a
-comparison, including establishment/formation restructuring.
+if they were equivalent. Preserve denominator and coverage changes in the data
+contract and exports. The UI keeps distinct population labels, continuity states
+and gaps; the dedicated methodology destination explains comparison limits.
 
 APB collection uses its own source contract and preserves its textual values.
 An explicit methodology review is still required before longitudinal comparison
@@ -213,8 +216,9 @@ candidate matching requires the same nonempty opaque `cod_aff_form` **and**
 establishment-name changes are marked `changed-description`. Multiple matches
 are `ambiguous` with no historical metrics; zero matches are `missing`. Even
 `same-source-identity` is evidence of shared source identifiers, not a guarantee
-of unchanged formation content. Historical charts must preserve these gaps and
-explain continuity, never silently present the matching as a stable cohort.
+of unchanged formation content. Historical charts must preserve these gaps and continuity states, never silently
+present the matching as a stable cohort. Detailed continuity explanations belong
+in the methodology destination.
 
 Formation comparisons use the same campaign and indicator definitions. A
 comparison containing different snapshots must retain each source, and differences

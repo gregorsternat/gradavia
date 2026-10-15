@@ -1,7 +1,6 @@
 "use client";
 import { z } from "zod";
 import { usePanelPending, PanelMain } from "@/features/workspace/ui/navigation";
-
 import { useState, useSyncExternalStore, useTransition } from "react";
 import { useRouter } from "@/features/workspace/ui/navigation";
 import Link from "@/features/workspace/ui/navigation";
@@ -47,7 +46,6 @@ import {
   Reveal,
   SelectField,
   ShareButton,
-  SourceDisclosure,
 } from "./shared";
 
 import { LoadProgress } from "@/components/motion/table/progress";
@@ -175,6 +173,7 @@ function ReadyExplorer({
           <Link
             className="block truncate text-xs font-medium hover:underline"
             href={formationUrl(row.id)}
+            prefetch={false}
             title={row.title}
           >
             {row.title}
@@ -505,6 +504,7 @@ function ReadyExplorer({
               <Reveal>
                 <Table
                   aria-label="Résultats de la recherche"
+                  virtualized={false}
                   data={stream.rows}
                   total={data.total}
                   hasMore={hasMore}
@@ -556,31 +556,6 @@ function ReadyExplorer({
           </>
         )}
       </Tabs>
-      {view === "liste" && data.formations.length > 0 && (
-        <details className="mt-4 rounded-xl border border-border px-4 py-3 text-sm">
-          <summary className="cursor-pointer text-muted-foreground">
-            Toutes les formations de cette page ({data.formations.length})
-          </summary>
-          <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-            {data.formations.map((formation) => (
-              <li key={formation.id} className="min-w-0">
-                <Link
-                  href={formationUrl(formation.id)}
-                  prefetch={false}
-                  className="font-medium underline underline-offset-4"
-                >
-                  {formation.title}
-                </Link>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {[formation.establishment, formation.city]
-                    .filter(Boolean)
-                    .join(" · ")}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </details>
-      )}
       <nav
         aria-label="Campagnes Parcoursup"
         className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-muted-foreground"
@@ -680,12 +655,6 @@ function ReadyExplorer({
           </nav>
         </noscript>
       )}
-      <div className="mt-7 flex flex-wrap items-start justify-between gap-3">
-        <SourceDisclosure source={data.source} compact />
-        <p className="text-[10px] text-muted-foreground">
-          Accès : taux officiel · — : non publié
-        </p>
-      </div>
       <ComparisonTray />
     </PanelMain>
   );

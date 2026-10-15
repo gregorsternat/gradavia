@@ -28,14 +28,12 @@ import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChar
 import { LineChart } from "@/components/charts/tremor/components/LineChart/LineChart";
 import { ChartData } from "@/features/observatory/ui/shared";
 import { ShareButton } from "@/features/formations/ui/shared";
-import { datasetUrl } from "@/features/formations/domain/explorer";
 import {
   formatMeasure,
   measureLabels,
   quantile,
 } from "@/features/analysis/domain/analysis";
 import {
-  cohortLabels,
   evolutionMeasures,
   pairedChanges,
   pairedGroups,
@@ -344,12 +342,6 @@ export function Evolution({ data }: { data: EvolutionData }) {
           onChange={(value) => update("mode", value)}
         />
       </section>
-      <p className="mt-5 max-w-4xl text-sm leading-6 text-muted-foreground">
-        Le périmètre suivi conserve uniquement les identifiants uniques de
-        formation et d’établissement dont la description, la localisation et le
-        statut sont inchangés. Cela ne garantit pas un contenu pédagogique
-        identique.
-      </p>
       <section
         className="mt-6 grid gap-4 sm:grid-cols-3"
         aria-label="Périmètre suivi"
@@ -419,11 +411,7 @@ export function Evolution({ data }: { data: EvolutionData }) {
                   maxValue={max}
                 />
                 <p className="mt-4 text-xs text-muted-foreground">
-                  12 premières filières par valeur initiale, sur des paires
-                  identiques.{" "}
-                  {mode === "index"
-                    ? "Indice = valeur finale / valeur initiale × 100 ; une base nulle n’est pas indexée."
-                    : "Les deux campagnes partagent la même échelle."}
+                  12 premières filières par valeur initiale
                 </p>
               </>
             ) : (
@@ -557,11 +545,6 @@ export function Evolution({ data }: { data: EvolutionData }) {
         <h2 className="mb-2 text-base font-medium">
           Écarts et positions relatives
         </h2>
-        <p className="mb-4 text-xs leading-5 text-muted-foreground">
-          Les rangs comparent uniquement ces {number(pairs.length)} paires, par
-          indicateur décroissant. Les ex æquo partagent le même rang ; il ne
-          s’agit pas d’un classement de qualité.
-        </p>
         <Table
           aria-label="Évolutions des formations suivies"
           data={pairs}
@@ -576,70 +559,10 @@ export function Evolution({ data }: { data: EvolutionData }) {
         className="mt-7"
         items={[
           {
-            id: "coverage",
-            title: "Décomposition du périmètre source",
-            description: (
-              <div>
-                <p className="mb-4 text-xs leading-6 text-muted-foreground">
-                  Ensemble des deux sources, avant les filtres de région et de
-                  filière. Les entrées et sorties sont celles des identifiants
-                  publiés ; elles ne prouvent pas une ouverture ou une
-                  fermeture. Les sommes partielles conservent leur couverture.
-                </p>
-                <Table
-                  aria-label="Décomposition de la variation des sources"
-                  data={contribution}
-                  columns={[
-                    { key: "label", header: "Périmètre", width: "300px" },
-                    {
-                      key: "before",
-                      header: before.source.campaign,
-                      width: "180px",
-                      cell: (part) =>
-                        `${part.before.total} lignes · ${formatMeasure(part.before.value, measure)} (${part.before.observed} obs.)`,
-                    },
-                    {
-                      key: "after",
-                      header: after.source.campaign,
-                      width: "180px",
-                      cell: (part) =>
-                        `${part.after.total} lignes · ${formatMeasure(part.after.value, measure)} (${part.after.observed} obs.)`,
-                    },
-                    {
-                      key: "delta",
-                      header: "Écart des sommes observées",
-                      width: "200px",
-                      cell: (part) =>
-                        part.delta === null
-                          ? "Non calculable"
-                          : `${part.delta > 0 ? "+" : ""}${number(part.delta)}`,
-                    },
-                  ]}
-                  height={340}
-                  rowHeight={44}
-                />
-                <p className="mt-4 text-xs text-muted-foreground">
-                  {cohortLabels.matched} : {matches.matched.length} paires sur{" "}
-                  {before.records} lignes initiales et {after.records} lignes
-                  finales. La contribution de ce groupe peut aussi inclure des
-                  changements de disponibilité des valeurs ; le tableau
-                  principal ne retient que les paires observées.
-                </p>
-              </div>
-            ),
-          },
-          {
             id: "outliers",
             title: `Variations atypiques · ${outliers.length}`,
             description: (
               <div>
-                <p className="mb-4 text-xs leading-6 text-muted-foreground">
-                  Écarts hors de l’intervalle [
-                  {lower === null ? "—" : number(lower)} ;{" "}
-                  {upper === null ? "—" : number(upper)}], défini par 1,5 écart
-                  interquartile. Un signal descriptif à vérifier dans la source,
-                  sans diagnostic de cause ni d’erreur.
-                </p>
                 <Table
                   aria-label="Variations atypiques des formations"
                   data={outliers}
@@ -650,75 +573,24 @@ export function Evolution({ data }: { data: EvolutionData }) {
               </div>
             ),
           },
-          {
-            id: "source",
-            title: "Sources et continuité",
-            description: (
-              <div className="space-y-4 text-xs leading-6 text-muted-foreground">
-                {[before, after].map((data) => (
-                  <p key={`${data.source.releaseId}:${data.source.campaign}`}>
-                    <a
-                      className="text-foreground underline"
-                      href={datasetUrl(data.source.datasetId)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {data.source.provider} · {data.source.campaign} ·{" "}
-                      {data.source.datasetId}
-                    </a>
-                    <br />
-                    {data.source.license}
-                    <br />
-                    <span className="break-all">
-                      Version {data.source.releaseId}
-                    </span>
-                    <br />
-                    {data.definitions.find(
-                      (definition) => definition.key === measure,
-                    )?.description ?? "Nombre de lignes de formation publiées."}
-                    {data.notices.map((notice) => (
-                      <span key={notice} className="block">
-                        {notice}
-                      </span>
-                    ))}
-                  </p>
-                ))}
-                <p>
-                  La sélection exige des identifiants non vides, uniques dans
-                  chaque source complète. Toute modification exacte du titre, de
-                  l’établissement, de la filière, de la commune, du département,
-                  de la région, du statut ou de la sélectivité exclut la paire.
-                  Un identifiant identique ne prouve jamais à lui seul la
-                  stabilité d’une formation. APB, Parcoursup et apprentissage
-                  sont des familles séparées.
-                </p>
-                <p>
-                  Seuls les effectifs publiés sont comparés ; aucune moyenne de
-                  pourcentages ni probabilité individuelle n’est calculée. Les
-                  candidatures restent des candidatures par formation, pas des
-                  personnes dédupliquées.
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <ButtonLink
-                    href={`/analyses?famille=${before.family}&campagne=${before.source.campaign}&version=${before.source.releaseId}`}
-                    variant="secondary"
-                    size="sm"
-                  >
-                    Analyser {before.source.campaign}
-                  </ButtonLink>
-                  <ButtonLink
-                    href={`/analyses?famille=${after.family}&campagne=${after.source.campaign}&version=${after.source.releaseId}`}
-                    variant="secondary"
-                    size="sm"
-                  >
-                    Analyser {after.source.campaign}
-                  </ButtonLink>
-                </div>
-              </div>
-            ),
-          },
         ]}
       />
+      <div className="flex flex-wrap gap-2">
+        <ButtonLink
+          href={`/analyses?famille=${before.family}&campagne=${before.source.campaign}&version=${before.source.releaseId}`}
+          variant="secondary"
+          size="sm"
+        >
+          Analyser {before.source.campaign}
+        </ButtonLink>
+        <ButtonLink
+          href={`/analyses?famille=${after.family}&campagne=${after.source.campaign}&version=${after.source.releaseId}`}
+          variant="secondary"
+          size="sm"
+        >
+          Analyser {after.source.campaign}
+        </ButtonLink>
+      </div>
     </PanelMain>
   );
 }

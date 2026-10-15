@@ -18,6 +18,10 @@ Gradavia is the current public identity. The UI uses the shared G mark and no
 longer displays the sidebar BÊTA badge. The public site is `gradavia.com`;
 source changes on main still require their own CI/publication/smoke evidence.
 
+Optional definitions, source metadata and methodology live in Données & méthode.
+Product data screens retain observations, controls, campaign/population labels,
+missing-value states and compact partial-total status. Exports retain provenance.
+
 ## Supported journeys
 
 | Surface              | User job                                                                  | Scope                                                              |
@@ -25,7 +29,7 @@ source changes on main still require their own CI/publication/smoke evidence.
 | Landing              | Discover Gradavia and start exploring without an account                  | `/`, with source-backed preview when data is available             |
 | Overview             | Understand national offer and admission volumes, distribution and history | Published Parcoursup campaign, outside apprenticeship              |
 | Formations           | Search, filter, sort, inspect, save and select records                    | Eight registered admissions sources, one campaign at a time        |
-| Formation detail     | Read published metrics, profiles, definitions and qualified history       | One immutable formation/establishment/campaign source row          |
+| Formation detail     | Read published metrics, profiles and qualified history                    | One immutable formation/establishment/campaign source row          |
 | Comparison           | See up to four formations together across exact metrics and profiles      | Same campaign required; different populations remain labelled      |
 | Favorites            | Retain a shortlist and return to source records                           | Browser-local, no account, bounded to 100 selections               |
 | Territories          | Compare regional formation, capacity, application and admission counts    | One campaign; missing values and coverage preserved                |

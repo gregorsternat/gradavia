@@ -1,16 +1,9 @@
 "use client";
 import { PanelMain } from "@/features/workspace/ui/navigation";
-
 import { useRouter } from "@/features/workspace/ui/navigation";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
-import {
-  ArrowDownToLine,
-  ArrowUpRight,
-  Database,
-  Info,
-  RefreshCw,
-} from "lucide-react";
+import { ArrowDownToLine, Database, RefreshCw } from "lucide-react";
 import type { ReactNode } from "react";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import {
@@ -22,10 +15,7 @@ import {
 } from "@/components/motion/select";
 import { BouncyAccordion } from "@/components/motion/bouncy-accordion";
 import { Table, type TableColumn } from "@/components/motion/table";
-import { Tooltip } from "@/components/motion/tooltip";
 import { NumberTicker } from "@/components/motion/number-ticker";
-import { datasetUrl } from "@/features/formations/domain/explorer";
-import type { CampaignSource } from "@/features/formations/domain/api-contract";
 import { number, type Total, type OverviewResult } from "../domain/overview";
 
 export function Reveal({
@@ -86,27 +76,15 @@ export function Stat({
   label,
   value,
   detail,
-  definition,
 }: {
   label: string;
   value: number | null;
   detail?: ReactNode;
-  definition: string;
 }) {
   return (
     <div className="min-w-0 py-1">
       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
         {label}
-        <Tooltip content={definition}>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-6"
-            aria-label={`Définition : ${label}`}
-          >
-            <Info className="size-3" />
-          </Button>
-        </Tooltip>
       </div>
       <div className="mt-2 min-h-8 text-[clamp(1.5rem,2.8vw,2.5rem)] leading-none font-medium tracking-[-.065em] tabular-nums sm:mt-3 sm:min-h-10">
         {value === null ? (
@@ -130,13 +108,9 @@ export function Stat({
   );
 }
 export function CoverageNote({ total }: { total: Total }) {
-  return total.observed < total.total ? (
-    <span>
-      Somme partielle · {number(total.observed)} / {number(total.total)} lignes
-    </span>
-  ) : (
-    <span>Ensemble des lignes publiées</span>
-  );
+  return total.value !== null && total.observed < total.total ? (
+    <span>Partiel</span>
+  ) : null;
 }
 export function ChartData<T>({
   title,
@@ -176,29 +150,7 @@ export function ChartData<T>({
     />
   );
 }
-export function SourceLine({ source }: { source: CampaignSource }) {
-  const date = new Intl.DateTimeFormat("fr-FR", {
-    dateStyle: "medium",
-    timeZone: "UTC",
-  }).format(new Date(source.modifiedAt ?? source.collectedAt));
-  return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-muted-foreground">
-      <a
-        href={datasetUrl(source.datasetId)}
-        target="_blank"
-        rel="noreferrer"
-        className="inline-flex items-center gap-1.5 hover:text-foreground"
-      >
-        <Database className="size-3" /> {source.provider}{" "}
-        <ArrowUpRight className="size-3" />
-      </a>
-      <span>Campagne {source.campaign} · Hors apprentissage</span>
-      <span>
-        {source.modifiedAt ? "Source mise à jour" : "Collecté"} le {date}
-      </span>
-    </div>
-  );
-}
+
 export function DataUnavailable({
   status,
   title,

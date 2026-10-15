@@ -1,18 +1,10 @@
 "use client";
 import { PanelMain } from "@/features/workspace/ui/navigation";
-
 import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/motion/radio";
 import Link from "@/features/workspace/ui/navigation";
 import { useRouter } from "@/features/workspace/ui/navigation";
-import {
-  ArrowRight,
-  ArrowUpRight,
-  BookOpen,
-  Layers3,
-  Map,
-  Search,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight, Layers3, Map, Search } from "lucide-react";
 import { ButtonLink } from "@/components/motion/button/base";
 import {
   Tabs,
@@ -37,7 +29,6 @@ import {
   CoverageNote,
   DataUnavailable,
   Reveal,
-  SourceLine,
   Stat,
 } from "./shared";
 
@@ -90,10 +81,6 @@ function History({ data }: { data: OverviewData }) {
           minValue={0}
         />
       </div>
-      <p className="mt-3 text-[11px] leading-5 text-muted-foreground">
-        Périmètre des formations variable selon les campagnes. Les sommes
-        portent sur les valeurs publiées.
-      </p>
       <ChartData
         title="Offre de formation par campagne"
         data={observations}
@@ -118,11 +105,15 @@ function History({ data }: { data: OverviewData }) {
                 : number(r.admitted.value),
           },
           {
-            key: "coverage",
-            header: "Lignes renseignées",
-            align: "right",
+            key: "status",
+            header: "État",
             cell: (r) =>
-              `${number((metric === "capacity" ? r.capacity : r.admitted).observed)} / ${number(r.formations)}`,
+              r[metric === "capacity" ? "capacity" : "admitted"].value !==
+                null &&
+              r[metric === "capacity" ? "capacity" : "admitted"].observed <
+                r[metric === "capacity" ? "capacity" : "admitted"].total
+                ? "Partiel"
+                : "",
           },
         ]}
       />
@@ -228,11 +219,6 @@ function Distribution({ data }: { data: OverviewData }) {
           Le taux d’accès n’est pas publié pour cette campagne.
         </div>
       )}
-      <p className="mt-3 text-[11px] leading-5 text-muted-foreground">
-        {number(coverage?.observed ?? 0)} taux publiés sur{" "}
-        {number(data.totals.formations)} formations. Un indicateur historique,
-        pas une probabilité individuelle.
-      </p>
       {Boolean(coverage?.observed) && (
         <ChartData
           title="Répartition des taux d’accès"
@@ -288,7 +274,6 @@ function ReadyOverview({ data }: { data: OverviewData }) {
           label="Formations"
           value={data.totals.formations}
           detail={`${number(data.totals.establishments)} établissements identifiés`}
-          definition="Nombre de lignes formation/établissement de la campagne. Les doublons de la source sont conservés. Hors apprentissage."
         />
         <Stat
           label="Places proposées"
@@ -298,13 +283,11 @@ function ReadyOverview({ data }: { data: OverviewData }) {
               <CoverageNote total={data.totals.capacity} />
             ) : undefined
           }
-          definition="Somme des capacités d’accueil publiées. Les valeurs absentes ou masquées ne sont pas remplacées par zéro."
         />
         <Stat
           label="Candidatures cumulées"
           value={data.totals.applications.value}
-          detail="Vœux par formation · Non dédupliqués"
-          definition="Somme des candidatures déposées auprès des formations. Une personne peut candidater plusieurs fois : ce total ne compte pas des personnes uniques."
+          detail={<CoverageNote total={data.totals.applications} />}
         />
         <Stat
           label="Admis"
@@ -314,7 +297,6 @@ function ReadyOverview({ data }: { data: OverviewData }) {
               <CoverageNote total={data.totals.admitted} />
             ) : undefined
           }
-          definition="Somme des candidats ayant accepté une proposition selon le champ publié, phases principale et complémentaire."
         />
       </Reveal>
       <div className="grid items-stretch gap-5 xl:grid-cols-[minmax(0,1.85fr)_minmax(280px,1fr)]">
@@ -410,17 +392,8 @@ function ReadyOverview({ data }: { data: OverviewData }) {
         </TabsContent>
       </Tabs>
       <div className="mt-9 flex flex-wrap items-center justify-between gap-4">
-        <SourceLine source={data.source} />
         <ButtonLink href="/decouvrir" variant="ghost" size="sm">
           À vous d’estimer <ArrowRight className="size-3.5" />
-        </ButtonLink>
-        <ButtonLink
-          href="/sources#indicateurs"
-          variant="ghost"
-          size="sm"
-          className="rounded-lg"
-        >
-          <BookOpen className="size-3.5" /> Lire les indicateurs
         </ButtonLink>
       </div>
     </PanelMain>

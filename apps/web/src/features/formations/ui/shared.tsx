@@ -5,7 +5,6 @@ import Link from "@/features/workspace/ui/navigation";
 import { canonicalHref } from "@/features/workspace/domain/registry";
 import {
   ArrowRight,
-  ArrowUpRight,
   Bookmark,
   Check,
   Copy,
@@ -25,7 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/motion/select";
-import { BouncyAccordion } from "@/components/motion/bouncy-accordion";
 import { NumberTicker } from "@/components/motion/number-ticker";
 import { Tooltip } from "@/components/motion/tooltip";
 import type {
@@ -34,7 +32,6 @@ import type {
   Metric,
   MetricKey,
 } from "../domain/api-contract";
-import { datasetUrl } from "../domain/explorer";
 import {
   formatMetric,
   formatCount,
@@ -282,63 +279,7 @@ export function ShareButton({ href }: { href?: string }) {
     </div>
   );
 }
-export function SourceDisclosure({
-  source,
-  compact = false,
-}: {
-  source: CampaignSource;
-  compact?: boolean;
-}) {
-  const date = (value: string) =>
-    new Intl.DateTimeFormat("fr-FR", {
-      dateStyle: "medium",
-      timeZone: "Europe/Paris",
-    }).format(new Date(value));
-  return (
-    <BouncyAccordion
-      className={compact ? "max-w-2xl" : ""}
-      classNames={{
-        item: compact
-          ? "border-0 bg-transparent"
-          : "rounded-xl border border-border bg-surface",
-        trigger: compact ? "px-0 py-1" : "p-5",
-        title: "text-xs font-medium",
-        description: compact
-          ? "px-0 pb-2 text-xs leading-6 text-muted-foreground"
-          : "px-5 pb-5 text-xs leading-6 text-muted-foreground",
-      }}
-      items={[
-        {
-          id: `source-${source.releaseId}`,
-          title: `Source et périmètre · Parcoursup ${source.campaign}`,
-          description: (
-            <div className="space-y-2">
-              <p>
-                {source.provider} · Hors apprentissage · {source.license}
-              </p>
-              <p>
-                Collecte du {date(source.collectedAt)}. Mise à jour source :{" "}
-                {source.modifiedAt ? date(source.modifiedAt) : "non renseignée"}
-                .
-              </p>
-              <p>
-                Un enregistrement correspond à une formation, un établissement
-                et une campagne. Les candidatures ne représentent pas des
-                personnes uniques.
-              </p>
-              <a
-                className="inline-flex items-center gap-1 text-foreground underline underline-offset-4"
-                href={datasetUrl(source.datasetId)}
-              >
-                Consulter le jeu de données <ArrowUpRight className="size-3" />
-              </a>
-            </div>
-          ),
-        },
-      ]}
-    />
-  );
-}
+
 export function FormationCard({
   formation,
   source,

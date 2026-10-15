@@ -10,6 +10,9 @@ No active implementation plan.
 
 ## Completed
 
+- [Data page simplification](completed/data-page-simplification.md): focused
+  results/actions, dedicated methodology, and native paginated formation links.
+
 - [Async tables](completed/async-tables.md): beUI incremental tables and cards,
   bounded network reads, retry and complete shared-list actions.
 

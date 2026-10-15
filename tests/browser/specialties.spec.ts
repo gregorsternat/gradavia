@@ -66,12 +66,9 @@ test("inverse specialty search preserves the national scope, suppression and rep
     page.getByRole("button", { name: "Indicateur des spécialités" }),
   ).toContainText("Vœux confirmés");
   await expect(page.locator(".recharts-wrapper svg").first()).toBeVisible();
-  await page
-    .getByRole("button", { name: "Source et périmètre · Spécialités 2025" })
-    .click();
-  await expect(page.getByRole("main")).toContainText(
-    "ne décrivent pas le recrutement d’un établissement ou d’un campus",
-  );
+  await expect(
+    page.getByRole("button", { name: /Source et périmètre/ }),
+  ).toHaveCount(0);
   const downloadEvent = page.waitForEvent("download");
   await page.getByRole("button", { name: "Exporter", exact: true }).click();
   expect((await downloadEvent).suggestedFilename()).toBe(
@@ -140,8 +137,7 @@ test("specialties keep national counts separate from overlapping groups and prov
   const overlapNotice = main.getByText(
     "Un candidat peut figurer dans plusieurs groupes. Ces effectifs ne s’additionnent pas.",
   );
-  await expect(overlapNotice).toHaveCount(1);
-  await expect(overlapNotice).toBeVisible();
+  await expect(overlapNotice).toHaveCount(0);
   await expect(main.locator(".recharts-surface")).toHaveCount(1);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   expect(
@@ -212,15 +208,9 @@ test("specialty drill-down preserves masked and observed zero and exports labell
   expect((await download).suggestedFilename()).toBe(
     "gradavia-specialites-2025.csv",
   );
-  await page
-    .getByRole("button", {
-      name: "Définitions et précautions de lecture",
-      exact: true,
-    })
-    .click();
   await expect(
-    page.getByRole("main").getByText(/Champ source : acceptations/),
-  ).toBeVisible();
+    page.getByRole("button", { name: /Définitions et précautions/ }),
+  ).toHaveCount(0);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.getByRole("link", { name: "Tous les groupes" }).click();
   await expect(

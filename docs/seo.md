@@ -61,17 +61,18 @@ boundary that requires JavaScript to reveal the completed page. Existing in-page
 transition feedback remains. Other data routes can still stream HTTP 200 before
 a missing record is known; noindex is checked independently of transport status.
 
-The default virtualized formation table is accompanied by an expandable, ordinary
-HTML directory containing every record on that page. It stays useful without
-JavaScript. Pagination anchors preserve filters and explicit display preferences,
-while ordinary clicks retain the existing client navigation behavior.
-The added directory, campaign and breadcrumb links disable speculative prefetch:
-they remain ordinary crawlable anchors without loading every linked campaign or
-detail merely because the directory enters the viewport.
+The primary formation table renders all 25 initial rows and native detail
+links without virtualization. It stays useful without JavaScript and needs no
+duplicate expandable directory. No-JavaScript pagination anchors preserve filters
+and explicit display preferences; hydrated results append batches on scroll.
+Formation table, campaign and breadcrumb links disable speculative prefetch:
+they remain ordinary crawlable anchors without loading every linked destination
+merely because the table enters the viewport.
 
 Run focused browser regressions with `just test-browser tests/browser/seo.spec.ts`
-after a build; `just verify` runs them with the entire development and production
-suite. `E2E_PRODUCTION=1` selects the production server.
+after a build; `just verify-full` includes the entire development and production
+suite. `just verify` runs checks and unit tests. `E2E_PRODUCTION=1` selects the
+production server.
 For manual inspection, `E2E_PORT=3199 just test-browser-server` starts the same
 disposable fixture environment; stopping it removes its test database.
 
@@ -106,7 +107,7 @@ ambiguity. Builds and the static index require no live credentials or dataset.
 Hydrated formation lists append batches without changing their entry URL or
 canonical. Legacy `page=N` requests still render their own batch and metadata;
 next/previous anchors are delivered inside `noscript`. The initial batch remains
-available through its native formation directory without JavaScript.
+available through the primary table's native formation links without JavaScript.
 
 ## Production rollout and measurement
 

@@ -111,14 +111,15 @@ test("all formation links and pagination work without JavaScript", async ({
   try {
     const staticPage = await context.newPage();
     await staticPage.goto("/formations");
-    const directory = staticPage
-      .locator("details")
-      .filter({ hasText: "Toutes les formations de cette page" });
-    await expect(directory.locator('a[href^="/formations/"]')).toHaveCount(25);
-    await directory.locator("summary").focus();
+    const results = staticPage.getByRole("table", {
+      name: "Résultats de la recherche",
+    });
+    await expect(results.locator('a[href^="/formations/"]')).toHaveCount(25);
+    await expect(
+      staticPage.getByText(/Toutes les formations de cette page/),
+    ).toHaveCount(0);
+    await results.locator('a[href^="/formations/"]').last().focus();
     await staticPage.keyboard.press("Enter");
-    await expect(directory).toHaveAttribute("open", "");
-    await directory.locator("a").first().click();
     await expect(staticPage.getByRole("heading", { level: 1 })).not.toBeEmpty();
     await expect(
       staticPage.getByRole("navigation", { name: "Fil d’Ariane" }),
@@ -130,8 +131,7 @@ test("all formation links and pagination work without JavaScript", async ({
     await expect(staticPage).toHaveURL(/page=2/);
     await expect(
       staticPage
-        .locator("details")
-        .filter({ hasText: "Toutes les formations de cette page" })
+        .getByRole("table", { name: "Résultats de la recherche" })
         .locator("a"),
     ).toHaveCount(6);
     await staticPage

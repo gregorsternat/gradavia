@@ -141,7 +141,10 @@ test("apprenticeship and APB stay separate and retain missing indicators", async
     page
       .getByRole("main")
       .getByText(/Le dénominateur diffère de celui de Parcoursup/),
-  ).toBeVisible();
+  ).toHaveCount(0);
+  await expect(
+    page.getByText("Définitions des profils et périmètres"),
+  ).toHaveCount(0);
 });
 
 test("formation profiles expose observed mentions, rank groups and explicit peers", async ({

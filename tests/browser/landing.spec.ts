@@ -79,7 +79,7 @@ test("landing anchor links glide to their section and retain keyboard navigation
   await expect(page.locator("#apercu")).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(
-    page.getByRole("button", { name: "Définition : Formations" }),
+    page.getByRole("radio", { name: "Places", exact: true }),
   ).toBeFocused();
 
   if (!isMobile) {
@@ -160,7 +160,7 @@ test("shared campaign links from the former home retain their campaign in the ob
     page.getByRole("button", { name: "Campagne d’admission" }),
   ).toContainText("2018");
   await expect(page.getByRole("main")).toContainText(
-    "Campagne 2018 · Hors apprentissage",
+    "Le taux d’accès n’est pas publié pour cette campagne.",
   );
 });
 
@@ -181,7 +181,7 @@ test("landing search carries accented words and spaces into a shareable explorer
   await expect(page.getByRole("status")).toContainText("2 résultats");
 });
 
-test("landing preview preserves source, campaign and partial coverage when switching metrics", async ({
+test("landing preview preserves campaign, values and partial status without optional metadata", async ({
   page,
 }) => {
   await page.goto("/");
@@ -189,41 +189,37 @@ test("landing preview preserves source, campaign and partial coverage when switc
     name: "Aperçu de l’observatoire",
   });
   await expect(preview).toContainText("Campagne 2025");
-  await expect(preview).toContainText("Hors apprentissage");
   await expect(
     preview.getByRole("definition").getByText("31", { exact: true }),
   ).toBeVisible();
   await expect(
     preview.getByRole("definition").getByText("6 537", { exact: true }),
   ).toBeVisible();
-  await expect(preview).toContainText("Renseigné pour 30 / 31 lignes");
+  await expect(preview).toContainText("Partiel");
   await expect(
-    preview.getByRole("link", {
-      name: "Source Parcoursup : Producteur de démonstration",
-    }),
-  ).toHaveAttribute(
-    "href",
-    "https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-parcoursup/",
+    preview.getByRole("link", { name: /Source Parcoursup/ }),
+  ).toHaveCount(0);
+  await expect(preview.getByRole("button", { name: /Définition/ })).toHaveCount(
+    0,
   );
-  await expect(preview).toContainText("Périmètre variable selon les campagnes");
-  await expect(preview).toContainText("Certaines sommes sont partielles");
+  await expect(preview).not.toContainText("Périmètre variable");
   // The server-rendered values can precede the accordion's client handlers.
   await expect(preview.locator(".recharts-surface")).toBeVisible();
   await preview.getByRole("button", { name: "Voir les valeurs" }).click();
   const places = preview.getByRole("table", {
-    name: "Places proposées par campagne et couverture",
+    name: "Places proposées par campagne",
   });
   await expect(places).toBeVisible();
   const latestPlaces = places.getByRole("row").filter({
     has: page.getByRole("cell", { name: "2025", exact: true }),
   });
   await expect(latestPlaces).toContainText("6 537");
-  await expect(latestPlaces).toContainText("30 / 31");
+  await expect(latestPlaces).toContainText("Partiel");
   const earliestPlaces = places.getByRole("row").filter({
     has: page.getByRole("cell", { name: "2018", exact: true }),
   });
   await expect(earliestPlaces).toContainText("100");
-  await expect(earliestPlaces).toContainText("1 / 1");
+  await expect(earliestPlaces).not.toContainText("Partiel");
 
   const metric = preview.getByRole("radiogroup", {
     name: "Indicateur de l’aperçu",
@@ -232,17 +228,17 @@ test("landing preview preserves source, campaign and partial coverage when switc
   await page.keyboard.press("ArrowRight");
   await expect(metric.getByRole("radio", { name: "Admis" })).toBeChecked();
   const admitted = preview.getByRole("table", {
-    name: "Admis par campagne et couverture",
+    name: "Admis par campagne",
   });
   await expect(admitted).toBeVisible();
   const latestAdmitted = admitted.getByRole("row").filter({
     has: page.getByRole("cell", { name: "2025", exact: true }),
   });
   await expect(latestAdmitted).toContainText("6 220");
-  await expect(latestAdmitted).toContainText("30 / 31");
+  await expect(latestAdmitted).toContainText("Partiel");
   await expect(
-    latestAdmitted.getByRole("link", { name: "Source Parcoursup 2025" }),
-  ).toHaveAttribute("href", /\/dataset\/fr-esr-parcoursup\/$/);
+    latestAdmitted.getByRole("link", { name: /Source/ }),
+  ).toHaveCount(0);
   await preview.getByRole("link", { name: "Ouvrir l’observatoire" }).click();
   await expect(page).toHaveURL(/\/observatoire\?campagne=2025$/);
   await expect(
@@ -450,7 +446,7 @@ test("landing search and preview remain usable at a 320 pixel width", async ({
   await preview.getByRole("button", { name: "Voir les valeurs" }).click();
   await expect(
     preview.getByRole("table", {
-      name: "Places proposées par campagne et couverture",
+      name: "Places proposées par campagne",
     }),
   ).toBeVisible();
   const search = page.getByRole("search", { name: "Trouver une formation" });

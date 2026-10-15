@@ -1,6 +1,5 @@
 "use client";
 import { PanelMain } from "@/features/workspace/ui/navigation";
-
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "@/features/workspace/ui/navigation";
 import Link from "@/features/workspace/ui/navigation";
@@ -33,7 +32,6 @@ import {
   type TableColumn,
 } from "@/components/motion/table/async";
 import { BarChart } from "@/components/charts/tremor/components/BarChart/BarChart";
-import { datasetUrl } from "@/features/formations/domain/explorer";
 import { ChartData, Reveal } from "@/features/observatory/ui/shared";
 import type {
   AtlasData,
@@ -258,14 +256,7 @@ function Workspace({ data }: { data: AtlasData }) {
     config.dimension,
   );
   const href = analysisHref(config, data);
-  const measureDefinition =
-    config.metric === "records"
-      ? "Nombre de lignes de formation dans la source. Les doublons source sont conservés."
-      : config.metric === "pressure"
-        ? "Somme des candidatures / somme des places, sur les mêmes lignes avec les deux valeurs publiées et une capacité strictement positive. Ce ratio décrit la demande ; ce n’est pas une probabilité d’admission."
-        : data.definitions.find(
-            (definition) => definition.key === config.metric,
-          )?.description;
+
   const summaryLabel =
     summary.method === "median"
       ? "Médiane des formations"
@@ -384,7 +375,6 @@ function Workspace({ data }: { data: AtlasData }) {
           ))}
         </div>
       </div>
-
       <section aria-label="Population de l’analyse" className="mt-7 space-y-4">
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[1fr_.7fr_1.2fr_1.2fr_1.4fr]">
           <Choice
@@ -571,8 +561,7 @@ function Workspace({ data }: { data: AtlasData }) {
           </div>
         )}
       </section>
-
-      <Reveal className="mt-7 grid gap-4 md:grid-cols-[1fr_1fr_1.5fr]">
+      <Reveal className="mt-7 grid gap-4 md:grid-cols-2">
         <div className="rounded-xl bg-subtle p-4">
           <p className="text-xs text-muted-foreground">
             {measureLabels[config.metric]} ·{" "}
@@ -581,10 +570,9 @@ function Workspace({ data }: { data: AtlasData }) {
           <p className="mt-2 text-3xl font-medium tracking-tight tabular-nums">
             {formatMeasure(summary.value, config.metric)}
           </p>
-          <p className="mt-2 text-xs text-muted-foreground">
-            {number(summary.observed)} / {number(summary.total)} valeurs
-            utilisables
-          </p>
+          {summary.value !== null && summary.observed < summary.total && (
+            <p className="mt-2 text-xs text-muted-foreground">Partiel</p>
+          )}
         </div>
         <div className="rounded-xl bg-subtle p-4">
           <p className="text-xs text-muted-foreground">
@@ -595,24 +583,8 @@ function Workspace({ data }: { data: AtlasData }) {
             <span className="text-muted-foreground">–</span>{" "}
             {formatMeasure(stats.q3, config.metric)}
           </p>
-          <p className="mt-2 text-xs text-muted-foreground">
-            Premier et troisième quartiles
-          </p>
-        </div>
-        <div className="px-1 py-3">
-          <p className="text-sm leading-6">
-            {measureDefinition ??
-              "Aucune définition de cet indicateur dans cette source."}
-          </p>
-          {!isAdditive(config.metric) && config.metric !== "pressure" && (
-            <p className="mt-2 text-xs text-muted-foreground">
-              Médianes entre formations, sans pondération. Elles ne décrivent
-              pas la part dans l’ensemble des personnes.
-            </p>
-          )}
         </div>
       </Reveal>
-
       <section
         className="panel mt-6 min-w-0 p-4 sm:p-5"
         aria-label="Visualisation de l’analyse"
@@ -774,11 +746,7 @@ function Workspace({ data }: { data: AtlasData }) {
                   config={config}
                   onFilter={filterGroup}
                 />
-                <p className="mt-4 text-xs leading-5 text-muted-foreground">
-                  {summaryLabel}.{" "}
-                  {config.mode === "share"
-                    ? "Parts du total observé de la sélection."
-                    : "Chaque cellule indique sa couverture."}{" "}
+                <p className="mt-4 text-xs text-muted-foreground">
                   Les cellules de région, filière ou statut filtrent les autres
                   vues.
                 </p>
@@ -817,7 +785,7 @@ function Workspace({ data }: { data: AtlasData }) {
                       12 premiers groupes sur {groups.length}.{" "}
                       {topFiveShare !== null
                         ? `Les ${Math.min(5, groups.length)} premiers représentent ${number(topFiveShare)} % du total observé.`
-                        : "Les statistiques de taux ne s’additionnent pas."}{" "}
+                        : ""}{" "}
                       {groupFilterable
                         ? "Sélectionnez une barre pour filtrer toutes les vues."
                         : "La liste complète est disponible ci-dessous."}
@@ -846,9 +814,12 @@ function Workspace({ data }: { data: AtlasData }) {
                         },
                         {
                           key: "observed",
-                          header: "Couverture",
+                          header: "État",
                           align: "right",
-                          cell: (row) => `${row.observed} / ${row.total}`,
+                          cell: (row) =>
+                            row.value !== null && row.observed < row.total
+                              ? "Partiel"
+                              : "",
                         },
                       ]}
                     />
@@ -905,7 +876,6 @@ function Workspace({ data }: { data: AtlasData }) {
           />
         </div>
       </section>
-
       {selected && (
         <section
           className="mt-5 rounded-xl bg-subtle p-5"
@@ -950,7 +920,6 @@ function Workspace({ data }: { data: AtlasData }) {
           </div>
         </section>
       )}
-
       <section className="mt-7" aria-label="Formations de la sélection">
         <div className="mb-4 flex items-center justify-between gap-3">
           <h2 className="text-base font-medium">Les formations</h2>
@@ -968,7 +937,6 @@ function Workspace({ data }: { data: AtlasData }) {
           className="text-xs"
         />
       </section>
-
       <BouncyAccordion
         className="mt-7"
         items={[
@@ -992,9 +960,7 @@ function Workspace({ data }: { data: AtlasData }) {
                 <p>
                   {stats.outliers.length} valeurs hors des bornes{" "}
                   {formatMeasure(stats.lowerFence, config.metric)} et{" "}
-                  {formatMeasure(stats.upperFence, config.metric)}. Ces bornes
-                  sont à 1,5 écart interquartile des quartiles ; elles signalent
-                  des valeurs éloignées, sans conclure à une erreur.
+                  {formatMeasure(stats.upperFence, config.metric)}.
                 </p>
                 {stats.outliers.length > 0 && (
                   <Table
@@ -1017,71 +983,6 @@ function Workspace({ data }: { data: AtlasData }) {
                 href={href}
                 defaultName={`${measureLabels[config.metric]} · ${data.source.campaign}`}
               />
-            ),
-          },
-          {
-            id: "source",
-            title: "Source, définitions et méthode",
-            description: (
-              <div className="space-y-4 text-xs leading-6 text-muted-foreground">
-                <p>
-                  <a
-                    href={datasetUrl(data.source.datasetId)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-foreground underline underline-offset-4"
-                  >
-                    {data.source.provider} · {data.source.datasetId}
-                  </a>
-                  <br />
-                  Campagne {data.source.campaign} ·{" "}
-                  {
-                    families.find((family) => family.value === data.family)
-                      ?.label
-                  }{" "}
-                  · {data.source.license}
-                  <br />
-                  Collecté le{" "}
-                  {new Intl.DateTimeFormat("fr-FR", {
-                    dateStyle: "medium",
-                    timeZone: "UTC",
-                  }).format(new Date(data.source.collectedAt))}
-                  <br />
-                  <span className="break-all">
-                    Version {data.source.releaseId}
-                  </span>
-                </p>
-                <p>
-                  Une seule campagne et une seule version de source. Les
-                  candidatures additionnées ne sont pas des personnes uniques.
-                  Les sommes portent uniquement sur les valeurs publiées ; les
-                  absences et valeurs masquées ne sont jamais remplacées par
-                  zéro. Les pourcentages sont résumés par leur médiane entre
-                  formations, jamais par une moyenne ni par un taux national.
-                  Les populations d’APB, de Parcoursup et de l’apprentissage
-                  restent séparées.
-                </p>
-                {data.notices.map((notice) => (
-                  <p key={notice}>{notice}</p>
-                ))}
-                <p>
-                  Le JSON et le SVG conservent la sélection complète, les
-                  définitions, les états et la provenance. Le CSV commence par
-                  une ligne « metadata » contenant ces paramètres ; les lignes «
-                  record » contiennent les formations. Les liens et vues
-                  enregistrées ciblent cette version tant qu’elle est conservée.
-                </p>
-                <dl className="grid gap-3 sm:grid-cols-2">
-                  {data.definitions.map((definition) => (
-                    <div key={definition.key}>
-                      <dt className="font-medium text-foreground">
-                        {definition.label} · <code>{definition.field}</code>
-                      </dt>
-                      <dd>{definition.description}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
             ),
           },
         ]}
