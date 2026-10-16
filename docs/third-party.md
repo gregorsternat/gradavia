@@ -25,6 +25,16 @@ keeps its result counts and accessible loading announcement while a decorative
 accent replaces visible loading copy. Retry semantics remain unchanged. No new
 upstream source or dependency was copied.
 
+### Bounded search table rendering (2026-10-16)
+
+The existing beUI table adds an optional `virtualized` prop, defaulting to true.
+Formation search sets it to false to render all 25 initial rows and native
+links during SSR, replacing the redundant crawlable disclosure. Its async
+composition appends subsequent batches in the same table. Sorting, row
+identity, accessible cells and the fixed scroll viewport use the existing render
+path. Large tables keep virtualization. No new dependency or upstream source
+was copied.
+
 ### Async table composition (2026-10-14)
 
 Verified [table-async](https://beui.dev/r/table-async.json) against the public

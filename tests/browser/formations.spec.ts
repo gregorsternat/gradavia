@@ -96,7 +96,7 @@ test("copy feedback handles navigation, keyboard activation and stale writes", a
   await page.screenshot({ path: testInfo.outputPath("copy-error.png") });
 });
 
-test("explorer is accessible with provenance and bounded list and card views", async ({
+test("explorer is accessible with focused results and bounded list and card views", async ({
   page,
   isMobile,
 }) => {
@@ -115,18 +115,13 @@ test("explorer is accessible with provenance and bounded list and card views", a
   await expect(
     page.getByRole("table", { name: "Résultats de la recherche" }),
   ).toHaveAttribute("aria-rowcount", "32");
-  await page
-    .getByRole("button", {
-      name: "Source et périmètre · Parcoursup 2025",
-      exact: true,
-    })
-    .click();
-  const provenance = page.getByRole("region", {
-    name: "Source et périmètre · Parcoursup 2025",
-    exact: true,
-  });
-  await expect(provenance.getByText(/Fixtures synthétiques/)).toBeVisible();
-  await expect(provenance.locator(":scope > div")).toHaveCSS("opacity", "1");
+  await expect(
+    page.getByRole("button", { name: /Source et périmètre/ }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByText(/Toutes les formations de cette page/),
+  ).toHaveCount(0);
+  await expect(page.getByText(/Les critères communs suivent/)).toHaveCount(0);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   expect(
     await page.evaluate(
@@ -240,10 +235,8 @@ test("filters combine, async cards accumulate and new searches reset the rows", 
   page,
 }) => {
   await page.goto("/formations?vue=cartes");
-  await expect(
-    page.getByRole("button", { name: "Rechercher", exact: true }),
-  ).toBeEnabled();
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(page.getByRole("searchbox")).toBeEditable();
+  await page.locator("[data-load-progress]:visible").scrollIntoViewIfNeeded();
   await expect(page.getByRole("article")).toHaveCount(31);
   await expect(page.locator("[data-load-progress]:visible")).toContainText(
     "31 résultats affichés sur 31",
@@ -306,9 +299,8 @@ test("keyboard and reduced motion preserve search and filter access", async ({
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/formations");
   await expect(page.getByRole("status")).toContainText("31 résultats");
-  await expect(
-    page.getByRole("button", { name: "Rechercher", exact: true }),
-  ).toBeEnabled();
+  // Exercise client keyboard navigation after hydration; SSR links have their own journey.
+  await expect(page.getByRole("button", { name: /^Filtres/ })).toBeEnabled();
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("link", { name: "Aller au contenu" }),
@@ -337,7 +329,7 @@ test("keyboard and reduced motion preserve search and filter access", async ({
   await expect(page.getByRole("status")).toContainText("1 résultat");
 });
 
-test("formation details preserve zero and masked values with history and definitions @smoke", async ({
+test("formation details preserve zero and masked values with history and focused tabs @smoke", async ({
   page,
 }) => {
   await page.goto("/formations?q=Droit+02&vue=cartes");
@@ -356,16 +348,10 @@ test("formation details preserve zero and masked values with history and definit
       name: "Historique des indicateurs et continuité",
     }),
   ).toBeVisible();
-  await page.getByRole("tab", { name: "Définitions et source" }).click();
   await expect(
-    page.getByRole("heading", { name: "Comprendre chaque indicateur" }),
-  ).toBeVisible();
-  const accessDefinition = page.getByRole("button", {
-    name: /Taux d’accès/,
-    exact: false,
-  });
-  await accessDefinition.click();
-  await expect(page.getByText(/taux_acces_ens/)).toBeVisible();
+    page.getByRole("tab", { name: "Définitions et source" }),
+  ).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /Définition/ })).toHaveCount(0);
   await page.goto("/formations?q=Droit+03&vue=cartes");
   await page.getByRole("link", { name: "Voir la formation" }).click();
   await expect(
@@ -690,6 +676,7 @@ test("async table keeps rows on failure, retries once and shares accumulated car
     return route.continue();
   });
   await page.goto("/formations?vue=liste");
+  await expect(page.getByRole("searchbox")).toBeEditable();
   const table = page.getByRole("table", { name: "Résultats de la recherche" });
   const region = page.getByRole("region", {
     name: "Résultats de la recherche",
@@ -737,6 +724,7 @@ test("async table discards a pending old search and refuses mixed releases", asy
   });
   try {
     await page.goto("/formations?vue=liste");
+    await expect(page.getByRole("searchbox")).toBeEditable();
     const region = page.getByRole("region", {
       name: "Résultats de la recherche",
     });
@@ -773,6 +761,7 @@ test("async table discards a pending old search and refuses mixed releases", asy
     await route.fulfill({ json: payload });
   });
   await page.goto("/formations?vue=liste");
+  await expect(page.getByRole("searchbox")).toBeEditable();
   await expect(
     page.getByRole("button", { name: "Charger la suite", exact: true }),
   ).toHaveCount(0);
@@ -819,6 +808,7 @@ test("hiding a table cancels its pending batch and returning restores its loaded
   });
   try {
     await page.goto("/formations?vue=liste");
+    await expect(page.getByRole("searchbox")).toBeEditable();
     await page
       .getByRole("region", { name: "Résultats de la recherche" })
       .focus();

@@ -12,6 +12,9 @@ No active implementation plan.
 
 - [Page-specific skeletons](completed/page-skeletons.md): tailored loading states for all workspace panels, deferred blocks and incremental cards.
 
+- [Data page simplification](completed/data-page-simplification.md): focused
+  results/actions, dedicated methodology, and native paginated formation links.
+
 - [Async tables](completed/async-tables.md): beUI incremental tables and cards,
   bounded network reads, retry and complete shared-list actions.
 

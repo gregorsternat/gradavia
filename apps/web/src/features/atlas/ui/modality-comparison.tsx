@@ -4,7 +4,6 @@ import { Input } from "@/components/motion/input";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import { BouncyAccordion } from "@/components/motion/bouncy-accordion";
 import { AsyncTable as Table } from "@/components/motion/table/async";
-import { SourceDisclosure } from "@/features/formations/ui/shared";
 import type { CampaignSource } from "@/features/formations/domain/api-contract";
 import type { AtlasItem, AtlasMetricKey } from "../domain/api-contract";
 
@@ -56,11 +55,6 @@ export function ModalityComparison({
       <h1 className="text-3xl font-semibold tracking-tight">
         Comparer les modalités
       </h1>
-      <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-        Formation hors apprentissage et apprentissage ont des procédures
-        distinctes. Choisissez les deux formations ; aucun lien d’équivalence
-        entre diplômes n’est présumé.
-      </p>
       <form action="/modalites" method="get" className="my-7">
         <input type="hidden" name="classique" value={params.classique ?? ""} />
         <input type="hidden" name="apprenti" value={params.apprenti ?? ""} />
@@ -202,18 +196,8 @@ export function ModalityComparison({
               },
             ]}
           />
-          <p className="mt-4 max-w-3xl text-xs leading-5 text-muted-foreground">
-            Le jeu apprentissage ne publie ni admis ni taux d’accès officiel
-            comparables ici. Une proposition peut dépendre de la recherche d’un
-            contrat. Les candidatures se comptent par formation et ne
-            correspondent pas à des personnes distinctes entre formations.
-          </p>
         </section>
       )}
-      <div className="mt-7 grid gap-5 lg:grid-cols-2">
-        <SourceDisclosure source={classic.source} />
-        <SourceDisclosure source={apprentice.source} />
-      </div>
     </PanelMain>
   );
 }

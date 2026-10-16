@@ -658,14 +658,6 @@ export function Workspace({
             </TabsTrigger>
           ))}
         </TabsList>
-        {space.path === "/formations" && (
-          <p className="mt-3 text-xs text-muted-foreground">
-            Les critères communs suivent le changement de vue. Les critères
-            propres à chaque vue sont conservés et restent inactifs dans l’autre
-            vue. La liste hors apprentissage utilise la dernière publication ;
-            une version archivée de la carte reste propre à la carte.
-          </p>
-        )}
         {retainedCriteria.length > 0 && (
           <p className="mt-2 text-xs text-muted-foreground">
             Conservés dans l’autre vue, inactifs ici :{" "}

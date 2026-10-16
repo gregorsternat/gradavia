@@ -7,6 +7,35 @@ in the [historical verification log](quality/history-through-2026-10-07.md).
 A checked-in implementation, a local pass, remote CI, publication and production
 health are separate observations; none establishes Google indexing or freshness.
 
+## Data page simplification (2026-10-16)
+
+The local diff against `b23f5a7` removes optional source/methodology UI while
+retaining the dedicated destination, statistical states and export provenance.
+`just verify` passed (130 TypeScript tests, 11 Node tests and Rust suites), as did
+the credential-free build. Nine focused browser specs passed 122 development and
+122 production executions on desktop/mobile with disposable PostgreSQL fixtures.
+Native formation links/pagination without JavaScript, exports, selections, charts
+and removed disclosures are covered. Real Chromium inspection covered both themes
+at 1440×960 and 390×844, keyboard history activation and no horizontal page overflow.
+
+Evidence, earlier failed runs and their corrections are recorded in the
+[completed plan](exec-plans/completed/data-page-simplification.md) and
+`.artifacts/data-pages/`. This is local validation; no remote CI or deployment
+is established. API contracts, calculations, dependencies and lockfiles are unchanged.
+
+### PR #47 merge repair (2026-10-16)
+
+Merged `main` at `9dbdc08` into the simplification branch, preserving async table
+loading, the initial 25 native formation links and the removal of optional details.
+`just verify` passed (133 TypeScript cases plus Node/Rust checks). All 56 targeted
+development Chromium executions passed across formations, SEO and async loading
+on desktop/mobile, including keyboard scrolling and no-JavaScript navigation.
+Two preliminary runs exposed scroll/hydration assumptions in inherited tests;
+they now wait for the editable search field and scroll to the card sentinel.
+Evidence: `.artifacts/pr47-merge/verify.log` and `browser-verified.log` in the same
+directory; earlier failure traces are retained there. This repair did not rerun
+the production build or establish remote CI, merge or deployment success.
+
 ## Current coverage
 
 The current validation commands separate daily checks (`just verify`) from

@@ -205,7 +205,11 @@ See [ingestion](docs/ingestion.md) for schema, identity and archive contracts.
 campaign, bounded to 30,000 source rows. Numeric values and explicit non-observed
 states travel together; definitions and provenance travel once per snapshot.
 Parcoursup, apprenticeship and APB have distinct adapters and definitions. The
-original paginated formation contract remains compatible. Geographic exploration
+original paginated formation contract remains compatible. Its bounded search
+results render all rows and native detail links in the primary table during SSR,
+without a duplicate directory. Other tables retain virtualization. Optional
+source/methodology presentation lives in the dedicated Sources destination; API
+responses and exports retain provenance and definitions. Geographic exploration
 and `features/analysis` derive their linked views from the same captured snapshot;
 no tile provider supplies admissions observations. Leaflet renders published
 coordinates and OpenStreetMap supplies only the basemap.

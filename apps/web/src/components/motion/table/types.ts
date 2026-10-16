@@ -70,6 +70,8 @@ export interface TableProps<T> {
   height?: number;
   /** Rows rendered above/below the viewport. */
   overscan?: number;
+  /** Render only viewport rows by default; disable for bounded, crawlable lists. */
+  virtualized?: boolean;
   /** Fires when the viewport scrolls near the bottom — load the next page. */
   onEndReached?: () => void;
   /** Currently fetching — shows skeleton rows and pauses `onEndReached`. */

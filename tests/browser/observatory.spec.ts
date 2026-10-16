@@ -12,9 +12,11 @@ test("overview renders published fixture totals with coverage and chart values",
   await expect(main).toContainText("70 967");
   await expect(main).toContainText("6 220");
   await expect(main).toContainText("2 établissements identifiés");
-  await expect(main).toContainText("Somme partielle · 30 / 31 lignes");
-  await expect(main).toContainText("Producteur de démonstration");
-  await expect(main).toContainText("Campagne 2025 · Hors apprentissage");
+  await expect(main).toContainText("Partiel");
+  await expect(main).not.toContainText("Producteur de démonstration");
+  await expect(
+    page.getByRole("button", { name: "Campagne d’admission" }),
+  ).toContainText("2025");
 
   const history = page.locator("section").filter({
     has: page.getByRole("heading", {
@@ -31,7 +33,7 @@ test("overview renders published fixture totals with coverage and chart values",
     .filter({ has: page.getByRole("cell", { name: "2025", exact: true }) });
   await expect(latest).toContainText("6 537");
   await expect(latest).toContainText("6 220");
-  await expect(latest).toContainText("30 / 31");
+  await expect(latest).toContainText("Partiel");
   const earliest = table
     .getByRole("row")
     .filter({ has: page.getByRole("cell", { name: "2018", exact: true }) });
@@ -61,10 +63,7 @@ test("campaign selection is keyboard accessible and changes the retained data", 
   await expect(page).toHaveURL(/\/observatoire\?campagne=2018$/);
   await expect(campaign).toContainText("2018");
   await expect(page.getByRole("main")).toContainText(
-    "Campagne 2018 · Hors apprentissage",
-  );
-  await expect(page.getByRole("main")).toContainText(
-    "0 taux publiés sur 1 formations",
+    "Le taux d’accès n’est pas publié pour cette campagne.",
   );
   await campaign.click();
   await page.keyboard.press("Escape");
@@ -81,7 +80,9 @@ test("access distribution preserves suppressed and invalid observations outside 
       name: "Distribution des taux d’accès",
     }),
   });
-  await expect(distribution).toContainText("29 taux publiés sur 31 formations");
+  await expect(distribution).not.toContainText(
+    "pas une probabilité individuelle",
+  );
   await distribution.getByRole("button", { name: "Voir les valeurs" }).click();
   const table = distribution.getByRole("table", {
     name: "Répartition des taux d’accès",
@@ -116,7 +117,7 @@ test("territory search scopes the table and downloadable source data", async ({
   await expect(
     table.getByRole("columnheader", { name: "Candidatures", exact: true }),
   ).toBeVisible();
-  await expect(table).toContainText("Couverture (candidatures)");
+  await expect(table).toContainText("État");
   await expect(table.getByRole("row").last()).toContainText("2 440");
   const downloadEvent = page.waitForEvent("download");
   await page.getByRole("button", { name: "Exporter", exact: true }).click();
@@ -136,8 +137,8 @@ test("territory search scopes the table and downloadable source data", async ({
   );
   await search.clear();
   await page.getByRole("radio", { name: "Places", exact: true }).click();
-  await expect(table).toContainText("Couverture (places)");
-  await expect(table).toContainText("28 / 29 lignes");
+  await expect(table).toContainText("État");
+  await expect(table).toContainText("Partiel");
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   expect(
     await page.evaluate(
@@ -181,3 +182,32 @@ test("source inventory distinguishes imported data and explains indicator bounda
   );
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
+
+for (const path of ["/analyses", "/evolutions", "/territoires", "/decouvrir"]) {
+  test(`data screens omit optional methodology: ${path}`, async ({ page }) => {
+    await page.goto(path);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    const main = page.getByRole("main");
+    await expect(main).not.toContainText("Producteur de démonstration");
+    await expect(
+      main.getByRole("button", {
+        name: /Source et périmètre|Source, définitions|Sources et continuité|Décomposition du périmètre|^Définition :/,
+      }),
+    ).toHaveCount(0);
+    await expect(
+      main.getByRole("tab", { name: "Définitions et source" }),
+    ).toHaveCount(0);
+    await expect(
+      main.getByText(/Champ source :|Collecté le|Collecte du/),
+    ).toHaveCount(0);
+    await expect(
+      page
+        .getByRole("link", {
+          name: "Données & méthode",
+          exact: true,
+          includeHidden: true,
+        })
+        .first(),
+    ).toBeAttached();
+  });
+}

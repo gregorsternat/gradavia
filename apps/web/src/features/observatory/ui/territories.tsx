@@ -17,12 +17,7 @@ import {
   type OverviewResult,
   type OverviewData,
 } from "../domain/overview";
-import {
-  CampaignSelect,
-  DataUnavailable,
-  DownloadButton,
-  SourceLine,
-} from "./shared";
+import { CampaignSelect, DataUnavailable, DownloadButton } from "./shared";
 
 const metrics = {
   formations: "Formations",
@@ -121,13 +116,6 @@ function ReadyTerritories({ data }: { data: OverviewData }) {
             Aucune région ne correspond à cette recherche.
           </p>
         )}
-        <p className="mt-4 text-xs leading-6 text-muted-foreground">
-          {metric === "applications"
-            ? "Les candidatures sont cumulées par formation et ne comptent pas des personnes uniques."
-            : metric === "formations"
-              ? "Nombre de lignes formation/établissement publiées, hors apprentissage."
-              : "Somme des valeurs publiées. Les absences sont conservées et la couverture est détaillée ci-dessous."}
-        </p>
       </section>
       <section className="mt-8">
         <h2 className="panel-heading mb-4">Les chiffres par région</h2>
@@ -199,20 +187,19 @@ function ReadyTerritories({ data }: { data: OverviewData }) {
             },
             {
               key: "coverage",
-              header: `Couverture (${metrics[metric].toLowerCase()})`,
+              header: "État",
               width: "185px",
               align: "right",
               cell: (r) =>
-                metric === "formations"
-                  ? `${number(r.formations)} lignes`
-                  : `${number(r[metric].observed)} / ${number(r.formations)} lignes`,
+                metric !== "formations" &&
+                r[metric].value !== null &&
+                r[metric].observed < r.formations
+                  ? "Partiel"
+                  : "",
             },
           ]}
         />
       </section>
-      <div className="mt-8">
-        <SourceLine source={data.source} />
-      </div>
     </PanelMain>
   );
 }
