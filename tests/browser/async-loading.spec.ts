@@ -347,7 +347,11 @@ test("refresh keeps formation results mounted and replaces loading copy with a s
   await page.goto("/formations?vue=cartes");
   const search = page.getByRole("searchbox");
   await expect(search).toBeEditable();
-  const firstLink = page.locator('main a[href^="/formations/"]').first();
+  const firstLink = page
+    .getByRole("article")
+    .first()
+    .locator('a[href^="/formations/"]')
+    .first();
   await expect(firstLink).toBeVisible();
   const original = await firstLink.elementHandle();
   let release!: () => void;
