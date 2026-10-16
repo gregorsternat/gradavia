@@ -7,6 +7,21 @@ in the [historical verification log](quality/history-through-2026-10-07.md).
 A checked-in implementation, a local pass, remote CI, publication and production
 health are separate observations; none establishes Google indexing or freshness.
 
+## Analysis annotation input removal (2026-10-17)
+
+The local diff against `b5606bd` removes the annotation input below the analysis
+chart and its mention in saved-view copy. Existing annotated URLs and exports
+remain compatible. `just verify` passed (133 TypeScript cases plus Node/Rust
+suites), along with the credential-free `just build`. All 12 focused production
+analysis browser executions passed on desktop/mobile, covering filters, saved
+views, sharing, exports and keyboard navigation. Chromium visual inspection at
+1440×960 and 390×844 confirmed the field is absent and the page does not overflow.
+
+Evidence is under `.artifacts/remove-analysis-annotation/`. The initial browser
+attempt preceded compilation of this fresh checkout's API binary; it failed
+during harness startup before any browser test ran. The production run passed
+after the build. These are local results; no remote CI or deployment was performed.
+
 ## Data page simplification (2026-10-16)
 
 The local diff against `b23f5a7` removes optional source/methodology UI while
