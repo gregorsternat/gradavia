@@ -70,6 +70,19 @@ See [repository workflow](harness.md) for commands and maintenance rules,
 [development](development.md) for isolation, and [technical debt](exec-plans/tech-debt.md)
 for follow-up triggers.
 
+## Page-specific skeleton validation (2026-10-16)
+
+The local diff against `9dbdc08` passed `just verify`, the production build and
+all 16 smoke journeys. All 54 focused production cases passed across desktop and
+mobile, including every panel, retained refresh content, delayed code, incremental
+cards, error recovery, no-JavaScript navigation and detail 404s. Six additional
+visual cases cover both themes and reduced-motion behavior. The corrected
+apprenticeship scenarios and delayed server deep links passed 16 development
+cases; the earlier broad run passed 100 cases with four test-scenario failures
+and 12 opt-in latency skips. See the [completed plan](exec-plans/completed/page-skeletons.md)
+for commands, failure history and screenshot evidence under `.artifacts/skeletons/`.
+No remote CI, merge, deployment or physical-device result is established.
+
 ## Async table validation (2026-10-14)
 
 The [completed async-table plan](exec-plans/completed/async-tables.md) records

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Loader } from "@/components/motion/loader";
+import { LoadingStatus } from "@/components/skeleton";
+import { InsightsSkeleton } from "./loading";
 import { Button } from "@/components/motion/button/base";
 import type { FormationInsightsResult } from "../domain/insights";
 import type { DetailInsights } from "../../atlas/ui/detail-insights";
@@ -72,12 +73,11 @@ export function FormationInsights({
       </div>
     );
   return (
-    <div
-      className="flex items-center gap-3 py-8 text-sm text-muted-foreground"
-      aria-busy="true"
-    >
-      <Loader size={16} label="Chargement des profils et alternatives…" />
-      <span aria-hidden="true">Chargement des profils et alternatives…</span>
+    <div className="py-8" aria-busy="true" data-skeleton="insights">
+      <LoadingStatus label="Chargement des profils et alternatives…" />
+      <div aria-hidden="true">
+        <InsightsSkeleton />
+      </div>
     </div>
   );
 }

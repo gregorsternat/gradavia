@@ -14,7 +14,7 @@ import {
 import { AreaChart } from "@/components/charts/tremor/components/AreaChart/AreaChart";
 import { Button } from "@/components/motion/button/base";
 import { Input } from "@/components/motion/input";
-import { Loader } from "@/components/motion/loader";
+import { LoadingStatus } from "@/components/skeleton";
 import { RadioGroup, RadioGroupItem } from "@/components/motion/radio";
 import {
   compact,
@@ -66,51 +66,46 @@ export function PreviewLoading() {
   return (
     <section
       aria-label="Aperçu de l’observatoire"
+      aria-busy="true"
+      data-skeleton="preview"
       className={`${previewClassName} flex min-h-[780px] flex-col px-5 py-6 sm:min-h-[600px] sm:px-7 lg:min-h-[480px]`}
     >
-      <div aria-hidden="true" inert className="min-w-0 flex-1">
+      <div aria-hidden="true" className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-4">
-          <div className="h-4 w-32 rounded bg-subtle" />
-          <div className="h-7 w-24 rounded-md bg-sidebar" />
+          <div className="h-4 w-32 skeleton rounded" />
+          <div className="h-7 w-24 skeleton rounded-md" />
         </div>
         <div className="mt-7 grid grid-cols-2 gap-x-5 gap-y-6 min-[480px]:grid-cols-3 sm:gap-x-8">
           {[0, 1, 2].map((index) => (
             <div key={index} className="min-w-0">
-              <div className="h-3 w-20 max-w-full rounded bg-subtle" />
-              <div className="mt-3 h-8 w-28 max-w-full rounded-md bg-sidebar" />
+              <div className="h-3 w-20 max-w-full skeleton rounded" />
+              <div className="mt-3 h-8 w-28 max-w-full skeleton rounded-md" />
             </div>
           ))}
         </div>
         <div className="mt-8 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_210px] lg:gap-8">
           <div className="min-w-0">
             <div className="flex items-center justify-between gap-4">
-              <div className="h-3 w-28 rounded bg-subtle" />
-              <div className="h-8 w-32 rounded-lg bg-sidebar" />
+              <div className="h-3 w-28 skeleton rounded" />
+              <div className="h-8 w-32 skeleton rounded-lg" />
             </div>
-            <div className="mt-3 h-44 rounded-xl bg-sidebar" />
-            <div className="mt-4 h-2.5 w-64 max-w-full rounded bg-subtle" />
+            <div className="mt-3 h-44 skeleton rounded-xl" />
+            <div className="mt-4 h-2.5 w-64 max-w-full skeleton rounded" />
           </div>
           <div className="rounded-xl bg-sidebar p-4">
-            <div className="h-3 w-16 rounded bg-subtle" />
+            <div className="h-3 w-16 skeleton rounded" />
             <div className="mt-5 grid gap-6 sm:grid-cols-3 lg:grid-cols-1">
               {[0, 1, 2].map((index) => (
                 <div key={index} className="min-w-0">
-                  <div className="h-3 w-24 max-w-full rounded bg-subtle" />
-                  <div className="mt-2 h-2.5 w-16 rounded bg-subtle" />
+                  <div className="h-3 w-24 max-w-full skeleton rounded" />
+                  <div className="mt-2 h-2.5 w-16 skeleton rounded" />
                 </div>
               ))}
             </div>
           </div>
         </div>
       </div>
-      <div className="mt-6 flex items-center gap-2.5 text-xs text-muted-foreground">
-        <Loader
-          size={14}
-          label="Chargement de l’aperçu…"
-          className="text-muted-foreground"
-        />
-        <span aria-hidden="true">Chargement de l’aperçu…</span>
-      </div>
+      <LoadingStatus label="Chargement de l’aperçu…" />
     </section>
   );
 }

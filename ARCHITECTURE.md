@@ -72,6 +72,10 @@ The server renders only the requested feature into the workspace. Subsequent
 panels start their view import and data read together on activation; maps also
 preload Leaflet. The six root pages stream their loading placeholders through
 page-local Suspense, so nested detail routes retain their pre-stream 404 decision.
+The route and normalized panel parameters select lightweight feature-owned
+skeleton compositions, reused for first client data reads and lazy view imports.
+Refreshing an existing payload keeps its view mounted and adds a layout-neutral
+progress accent. Shared skeleton primitives contain no feature imports or I/O.
 A scoped `noscript` style exposes the delivered workspace and lazy view in source
 order and preserves the page frame without revealing inactive tabs. It matches
 our workspace/view markers rather than React's internal stream segment IDs.

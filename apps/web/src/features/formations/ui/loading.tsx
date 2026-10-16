@@ -1,33 +1,70 @@
-import { PanelMain } from "@/features/workspace/ui/navigation";
-import { Loader } from "@/components/motion/loader";
+import {
+  Skeleton,
+  SkeletonCards,
+  SkeletonChart,
+  SkeletonFilters,
+  SkeletonMetrics,
+  SkeletonTable,
+} from "@/components/skeleton";
 
-export default function LoadingFormations() {
+export default function LoadingFormations({ view }: { view?: string }) {
   return (
-    <PanelMain
-      id="chargement"
-      tabIndex={-1}
-      className="flex-1 py-14"
-      aria-busy="true"
-    >
-      <h1 className="text-4xl font-medium tracking-tight">
-        Explorer les formations
-      </h1>
-      <div className="mt-6 flex items-center gap-2.5 text-xs text-muted-foreground">
-        <Loader
-          size={14}
-          label="Chargement des formations…"
-          className="text-muted-foreground"
-        />
-        <span aria-hidden="true">Chargement des formations…</span>
+    <>
+      <SkeletonFilters count={5} />
+      <div className="flex items-center justify-between">
+        <Skeleton className="w-40" />
+        <Skeleton className="h-9 w-28" />
       </div>
-      <div aria-hidden="true" className="mt-10 space-y-5">
-        {[0, 1, 2].map((n) => (
-          <div
-            key={n}
-            className="h-36 rounded-xl border border-border bg-subtle"
-          />
-        ))}
+      <div
+        className={
+          view === "cartes"
+            ? "hidden"
+            : view === "liste"
+              ? ""
+              : "hidden md:block"
+        }
+      >
+        <SkeletonTable />
       </div>
-    </PanelMain>
+      <div
+        className={
+          view === "liste"
+            ? "hidden"
+            : `grid gap-4 md:grid-cols-2 2xl:grid-cols-3 ${view !== "cartes" ? "md:hidden" : ""}`
+        }
+      >
+        <SkeletonCards count={6} />
+      </div>
+    </>
+  );
+}
+export function FavoritesSkeleton() {
+  return (
+    <>
+      <SkeletonFilters count={2} />
+      <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
+        <SkeletonCards count={6} />
+      </div>
+    </>
+  );
+}
+export function ComparisonSkeleton() {
+  return (
+    <>
+      <SkeletonFilters count={2} />
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <SkeletonCards />
+      </div>
+      <SkeletonTable columns={4} />
+    </>
+  );
+}
+export function InsightsSkeleton() {
+  return (
+    <div className="space-y-6">
+      <SkeletonChart bars />
+      <SkeletonMetrics />
+      <SkeletonTable columns={3} rows={4} />
+    </div>
   );
 }

@@ -198,3 +198,220 @@ test("shared favorite cards automatically fetch all three batches once", async (
   expect(requested).toHaveLength(2);
   expect(new Set(requested.flatMap((value) => value.split(","))).size).toBe(19);
 });
+
+const skeletonPanels = [
+  { entry: "/formations", panel: "carte", tab: "Carte" },
+  { entry: "/formations?onglet=carte", panel: "formations", tab: "Liste" },
+  {
+    entry: "/formations?onglet=carte",
+    panel: "apprentissage-carte",
+    tab: "Carte",
+  },
+  {
+    entry: "/formations",
+    panel: "apprentissage",
+    tab: "Liste",
+  },
+  {
+    entry: "/specialites?onglet=formation",
+    panel: "specialites",
+    tab: "Depuis mes spécialités",
+  },
+  { entry: "/specialites", panel: "inverse", tab: "Depuis une formation" },
+  {
+    entry: "/comparer?onglet=modalites",
+    panel: "selection",
+    tab: "Ma sélection",
+  },
+  { entry: "/comparer", panel: "modalites", tab: "Modalités" },
+  { entry: "/favoris?onglet=budget", panel: "favoris", tab: "Favoris" },
+  { entry: "/favoris", panel: "budget", tab: "Budget" },
+  {
+    entry: "/observatoire?onglet=decouvrir",
+    panel: "overview",
+    tab: "Vue d’ensemble",
+  },
+  {
+    entry: "/observatoire?onglet=decouvrir",
+    panel: "territoires",
+    tab: "Territoires",
+  },
+  { entry: "/observatoire", panel: "evolutions", tab: "Évolutions" },
+  { entry: "/observatoire", panel: "analyses", tab: "Atelier d’analyse" },
+  { entry: "/observatoire", panel: "decouvrir", tab: "À vous d’estimer" },
+  {
+    entry: "/sources?onglet=archives",
+    panel: "sources",
+    tab: "Sources et définitions",
+  },
+  {
+    entry: "/sources?onglet=archives",
+    panel: "donnees",
+    tab: "API et notebooks",
+  },
+  { entry: "/sources", panel: "archives", tab: "Archives APB" },
+];
+for (const scenario of skeletonPanels) {
+  test(`tailored skeleton for ${scenario.panel} preserves navigation while data waits`, async ({
+    page,
+    isMobile,
+  }, testInfo) => {
+    await page.emulateMedia({
+      colorScheme: isMobile ? "dark" : "light",
+      reducedMotion: "reduce",
+    });
+    await page.route("https://*.basemaps.cartocdn.com/**", (route) =>
+      route.fulfill({ status: 204 }),
+    );
+    await page.goto(scenario.entry);
+    const tab = page
+      .getByRole("tablist")
+      .first()
+      .getByRole("tab", { name: scenario.tab, exact: true });
+    const switchingFamily = scenario.panel.startsWith("apprentissage");
+    if (switchingFamily)
+      await expect(
+        page.getByRole("button", { name: "Périmètre des formations" }),
+      ).toBeEnabled();
+    else await expect(tab).toHaveAttribute("tabindex", "-1");
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route(`**/api/workspace/${scenario.panel}?*`, async (route) => {
+      const response = await route.fetch();
+      await gate;
+      await route.fulfill({ response });
+    });
+    try {
+      if (switchingFamily) {
+        await page
+          .getByRole("button", { name: "Périmètre des formations" })
+          .click();
+        await page
+          .getByRole("option", { name: "Apprentissage", exact: true })
+          .click();
+      } else {
+        await tab.focus();
+        await page.keyboard.press("Enter");
+      }
+      const skeleton = page.locator(`[data-skeleton="${scenario.panel}"]`);
+      await expect(skeleton).toBeVisible();
+      if (!switchingFamily) await expect(tab).toBeFocused();
+      await expect(skeleton.getByRole("status")).toHaveCount(1);
+      await expect(
+        skeleton.locator("input, button, a, [tabindex]"),
+      ).toHaveCount(0);
+      expect(
+        await skeleton
+          .locator(".skeleton")
+          .first()
+          .evaluate((el) => getComputedStyle(el, "::after").animationName),
+      ).toBe("none");
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+      ).toBe(true);
+      if (["carte", "budget", "territoires"].includes(scenario.panel)) {
+        await page.screenshot({
+          path: testInfo.outputPath(`${scenario.panel}-skeleton.png`),
+        });
+        await page.emulateMedia({
+          colorScheme: isMobile ? "light" : "dark",
+          reducedMotion: "no-preference",
+        });
+        expect(
+          await skeleton
+            .locator(".skeleton")
+            .first()
+            .evaluate((el) => getComputedStyle(el, "::after").animationName),
+        ).toBe("skeleton-reflection");
+        await page.screenshot({
+          path: testInfo.outputPath(`${scenario.panel}-alternate-theme.png`),
+        });
+      }
+    } finally {
+      release();
+    }
+    await expect(
+      page.locator(`[data-skeleton="${scenario.panel}"]`),
+    ).toHaveCount(0);
+    await expect(tab).toHaveAttribute("aria-selected", "true");
+  });
+}
+
+test("refresh keeps formation results mounted and replaces loading copy with a stable indicator", async ({
+  page,
+}) => {
+  await page.goto("/formations?vue=cartes");
+  const search = page.getByRole("searchbox");
+  await expect(search).toBeEditable();
+  const firstLink = page
+    .getByRole("article")
+    .first()
+    .locator('a[href^="/formations/"]')
+    .first();
+  await expect(firstLink).toBeVisible();
+  const original = await firstLink.elementHandle();
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route("**/api/workspace/formations?*", async (route) => {
+    const response = await route.fetch();
+    await gate;
+    await route.fulfill({ response });
+  });
+  try {
+    await search.fill("Licence");
+    await search.press("Enter");
+    await expect(page.locator("[data-refresh-indicator]")).toBeVisible();
+    expect(await original!.evaluate((el) => el.isConnected)).toBe(true);
+    await expect(firstLink).toBeVisible();
+    await expect(search).toHaveValue("Licence");
+    await expect(page.locator('[data-skeleton="formations"]')).toHaveCount(0);
+  } finally {
+    release();
+  }
+  await expect(page.locator("[data-refresh-indicator]")).toHaveCount(0);
+  await expect(search).toBeEditable();
+  await expect(search).toHaveValue("Licence");
+});
+
+test("tailored skeleton also covers a delayed tool module after its data arrives", async ({
+  page,
+}) => {
+  await page.goto("/favoris");
+  const budget = page.getByRole("tab", { name: "Budget", exact: true });
+  await expect(budget).toHaveAttribute("tabindex", "-1");
+  await page.waitForLoadState("networkidle");
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let held = false;
+  await page.route("**/*.js*", async (route) => {
+    const response = await route.fetch();
+    const body = await response.text();
+    if (body.includes("Nom du scénario")) {
+      held = true;
+      await gate;
+    }
+    await route.fulfill({ response });
+  });
+  try {
+    const data = page.waitForResponse((response) =>
+      response.url().includes("/api/workspace/budget?"),
+    );
+    await budget.click();
+    await data;
+    await expect.poll(() => held).toBe(true);
+    await expect(page.locator('[data-skeleton="budget"]')).toBeVisible();
+    await expect(page.locator('[data-skeleton="budget"]')).toHaveCount(1);
+  } finally {
+    release();
+  }
+  await expect(page.getByLabel("Nom du scénario").first()).toBeEditable();
+  await expect(page.locator('[data-skeleton="budget"]')).toHaveCount(0);
+});

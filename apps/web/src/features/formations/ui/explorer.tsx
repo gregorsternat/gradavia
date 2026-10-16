@@ -1,4 +1,5 @@
 "use client";
+import { SkeletonCards } from "@/components/skeleton";
 import { z } from "zod";
 import { usePanelPending, PanelMain } from "@/features/workspace/ui/navigation";
 import { useState, useSyncExternalStore, useTransition } from "react";
@@ -536,6 +537,7 @@ function ReadyExplorer({
                     source={data.source}
                   />
                 ))}
+                {stream.loading && <SkeletonCards count={3} />}
               </Reveal>
               <LoadProgress
                 count={stream.rows.length}

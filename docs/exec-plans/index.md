@@ -10,6 +10,8 @@ No active implementation plan.
 
 ## Completed
 
+- [Page-specific skeletons](completed/page-skeletons.md): tailored loading states for all workspace panels, deferred blocks and incremental cards.
+
 - [Data page simplification](completed/data-page-simplification.md): focused
   results/actions, dedicated methodology, and native paginated formation links.
 

@@ -27,9 +27,7 @@ test("map code and Leaflet load while the first data response is pending", async
   });
   try {
     await mapTab.click();
-    await expect(
-      page.getByText("Chargement de carte…", { exact: true }),
-    ).toBeVisible();
+    await expect(page.locator('[data-skeleton="carte"]')).toBeVisible();
     await expect.poll(() => leafletLoaded).toBe(true);
     await expect(page.locator(".leaflet-container")).toHaveCount(0);
   } finally {
@@ -138,7 +136,14 @@ test("formation insights start code and data on activation, retry and survive ta
   ).toBe(true);
 });
 
-for (const route of ["/formations", "/observatoire"]) {
+for (const [route, skeleton] of [
+  ["/formations", "formations"],
+  ["/observatoire", "overview"],
+  ["/formations?onglet=carte&famille=apprentissage", "apprentissage-carte"],
+  ["/specialites?onglet=formation", "inverse"],
+  ["/observatoire?onglet=analyses", "analyses"],
+  ["/sources?onglet=donnees", "donnees"],
+]) {
   test(`streams the ${route} shell before slow server data`, async ({
     baseURL,
   }) => {
@@ -162,7 +167,7 @@ for (const route of ["/formations", "/observatoire"]) {
     }
     expect(shellAt).toBeGreaterThan(0);
     expect(Date.now() - shellAt).toBeGreaterThan(500);
-    expect(html).toContain("2025");
+    expect(html).toContain(`data-skeleton="${skeleton}"`);
   });
 }
 
