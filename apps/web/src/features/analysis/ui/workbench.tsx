@@ -862,19 +862,6 @@ function Workspace({ data }: { data: AtlasData }) {
             </>
           )}
         </Tabs>
-        <div className="mt-5">
-          <Input
-            label="Annotation de la vue"
-            placeholder="Ajouter une observation à conserver et partager…"
-            value={config.annotation}
-            onChange={(annotation) => change({ annotation })}
-            maxLength={500}
-            classNames={{
-              label: "text-xs text-muted-foreground",
-              input: "text-xs",
-            }}
-          />
-        </div>
       </section>
       {selected && (
         <section

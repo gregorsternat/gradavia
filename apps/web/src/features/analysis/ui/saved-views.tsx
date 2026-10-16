@@ -122,8 +122,8 @@ export function SavedViews({
         </ul>
       )}
       <p className="text-xs text-muted-foreground">
-        20 vues au maximum, avec leurs filtres, leur annotation et leur version
-        de source. Elles restent dans ce navigateur.
+        20 vues au maximum, avec leurs filtres et leur version de source. Elles
+        restent dans ce navigateur.
       </p>
     </div>
   );

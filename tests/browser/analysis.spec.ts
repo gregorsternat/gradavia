@@ -75,9 +75,9 @@ test("analysis filters, local views and exported provenance share one cohort", a
   await expect(table).toContainText("BTS - Systèmes numériques");
   await expect(table.getByRole("row")).toHaveCount(2);
   await expect(page).toHaveURL(/version=/);
-  await page
-    .getByRole("textbox", { name: "Annotation de la vue" })
-    .fill("BTS publié — une observation");
+  await expect(
+    page.getByRole("textbox", { name: "Annotation de la vue" }),
+  ).toHaveCount(0);
   const downloadEvent = page.waitForEvent("download");
   await page
     .getByRole("button", { name: "Exporter l’analyse en JSON", exact: true })
@@ -87,7 +87,7 @@ test("analysis filters, local views and exported provenance share one cohort", a
   expect(exported.selectedRowCount).toBe(1);
   expect(exported.records[0].title).toBe("BTS - Systèmes numériques");
   expect(exported.records[0].metrics.capacity).toBe(32);
-  expect(exported.filtersAndChart.annotation).toContain("BTS publié");
+  expect(exported.filtersAndChart.annotation).toBe("");
   expect(exported.source.releaseId).toMatch(/^[a-f0-9-]{36}$/);
   const copy = page.getByRole("button", { name: /^(Partager|Lien copié)$/ });
   await copy.click();
@@ -112,7 +112,10 @@ test("analysis filters, local views and exported provenance share one cohort", a
   await page.reload();
   await expect(
     page.getByRole("textbox", { name: "Annotation de la vue" }),
-  ).toHaveValue("BTS publié — une observation");
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("textbox", { name: "Formation ou établissement" }),
+  ).toHaveValue("Systèmes numériques");
   await expect(table.getByRole("row")).toHaveCount(2);
   expect(
     await page.evaluate(
