@@ -25,13 +25,6 @@ const localTables = [
     name: "Indicateurs par région",
   },
   {
-    panel: "analyses",
-    entry: "/observatoire",
-    tab: "Atelier d’analyse",
-    back: "Vue d’ensemble",
-    name: "Formations de l’analyse",
-  },
-  {
     panel: "evolutions",
     entry: "/observatoire",
     tab: "Évolutions",
@@ -71,7 +64,6 @@ for (const scenario of localTables) {
         specialites: "groups",
         inverse: "rows",
         territoires: "byRegion",
-        analyses: "items",
         evolutions: "matched",
       }[scenario.panel]!;
       const first = data[field][0];
@@ -95,9 +87,6 @@ for (const scenario of localTables) {
             : {}),
           ...(scenario.panel === "territoires"
             ? { label: `Région ${suffix}` }
-            : {}),
-          ...(scenario.panel === "analyses"
-            ? { title: `Formation ${suffix}` }
             : {}),
           ...(scenario.panel === "evolutions"
             ? {

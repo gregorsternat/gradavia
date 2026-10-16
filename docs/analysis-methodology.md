@@ -7,7 +7,7 @@ See the [data contract](data-contract.md) and [read API](api.md).
 
 ## Population and controls
 
-Each point and table row is a source formation record. Source duplicates remain
+Each point and exported record is a source formation record. Source duplicates remain
 distinct. Region, formation type and establishment status use exact published
 labels. The region filter accepts multiple regions. Search folds accents and
 ligatures and matches all words against formation, establishment and geography.
@@ -42,9 +42,6 @@ status next to numeric results.
   Histograms use up to 12 equally wide bins. Their upper bound is excluded except
   in the last bin, which includes the maximum. A constant distribution has one
   bin. Every observed value appears exactly once.
-- Descriptive outliers fall below `Q1 - 1.5 * IQR` or above `Q3 + 1.5 * IQR`.
-  The workbench reports the fences and source records. These flags are not data
-  errors, causal findings, formation quality or changes over time.
 - Concentration reports the sum of the five largest observed additive groups as
   a share of the observed selected total. The chart shows the first 12 groups;
   its table and exports retain every group/record. Percentage summaries have no
@@ -62,8 +59,11 @@ full-snapshot scatter uses a canvas to keep up to 30,000 points interactive; it
 uses zero-based linear axes with per-axis source maxima. Bubble radius is a fixed
 minimum plus the square root of the normalized size indicator. Missing sizes use
 the minimum radius and never remove otherwise valid points. No points are
-sampled. The virtualized beUI table exposes every point, value state and record
-link through keyboard controls. The heatmap is a beUI table with numeric values,
+sampled. Arrow keys, Home and End select points directly on the focusable canvas;
+the selected formation's values and detail link appear below the chart and are
+announced through a live region. The separate formation table and findings/outlier
+disclosure are omitted. Complete records and value states remain in CSV/JSON
+exports. The heatmap is a beUI table with numeric values,
 partial status and up to six columns per page; no categories are discarded.
 
 This is a product-owned scatter/heatmap composition, not a copied Tremor scatter
@@ -143,7 +143,9 @@ sum difference can include changes in metric availability; the main charts
 remove those by requiring paired observations. Source entries and exits are not
 assertions that a formation opened or closed.
 
-Tukey fences also flag unusual **paired count differences** descriptively.
+Tukey fences flag unusual **paired count differences** below `Q1 - 1.5 * IQR`
+or above `Q3 + 1.5 * IQR` descriptively. These flags are not diagnosed source
+errors, causal findings or formation-quality judgments.
 Definitions, campaign IDs, both immutable release IDs, compact paired values,
 source-wide contributions and all analysis controls are exported together.
 There is no automatic curriculum continuity claim or cross-system harmonization.
