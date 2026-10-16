@@ -18,7 +18,9 @@ export default async function Page({ searchParams }: Props) {
   return (
     <>
       <WorkspaceNoScript />
-      <Suspense fallback={<WorkspaceLoading path="/comparer" />}>
+      <Suspense
+        fallback={<WorkspaceLoading path="/comparer" params={params} />}
+      >
         <WorkspacePage path="/comparer" params={params} />
       </Suspense>
     </>

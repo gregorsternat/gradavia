@@ -143,7 +143,17 @@ arrow/Home/End navigation for composite controls, Escape dismissal and keyboard
 activation. Respect reduced motion. Check narrow screens for page overflow,
 truncated action names and unusable tables, including after real data loads.
 
-Loading skeletons preserve the page structure. No configuration, no published
+Loading skeletons preserve each panel's actual structure, including its requested
+family and list/map/card representation. Shared source-owned CSS primitives use a
+quiet monochrome reflection in both themes; reduced motion renders static shapes.
+Initial server streaming and lazy tool/data reads share the same feature layouts.
+Deferred maps, profiles, homepage previews and favorite hydration use local
+placeholders. Background refreshes keep mounted content and drafts, with an
+absolute progress accent that does not move controls. Network card batches append
+placeholders while retaining loaded cards; local synchronous reveals add no delay.
+Each loading region has a French accessible status; shapes are decorative and
+never focusable. Hidden panels pause the reflection. No minimum loading duration
+or global route boundary is introduced. No configuration, no published
 data, unavailable service, no search matches, invalid selection and missing
 formation are distinct states. Recovery actions preserve useful URL context.
 No production route substitutes synthetic data when the service is unavailable.

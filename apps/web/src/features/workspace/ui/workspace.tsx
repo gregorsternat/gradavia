@@ -15,6 +15,8 @@ import {
 import type { PanelPayload } from "../server/load";
 import { PanelNavigationProvider } from "./navigation";
 import { Panel } from "./panel";
+import { PanelSkeleton } from "./panel-skeleton";
+import { RefreshIndicator } from "@/components/skeleton";
 import { preloadPanel, type ViewId } from "./views";
 import { workspaceMetadata } from "../domain/metadata";
 import {
@@ -79,15 +81,18 @@ function PanelBoundary({
   return (
     <PanelNavigationProvider value={context}>
       <MotionActivityProvider value={active}>
-        <div inert={!active} aria-busy={waiting && !entry.failed}>
-          {waiting && !entry.failed && (
-            <p
-              aria-live="polite"
-              className="py-4 text-sm text-muted-foreground"
-            >
-              Chargement de {panels[id].label.toLocaleLowerCase("fr")}…
-            </p>
-          )}
+        <div
+          className="relative"
+          inert={!active}
+          aria-busy={waiting && !entry.failed}
+        >
+          {waiting &&
+            !entry.failed &&
+            (entry.payload ? (
+              <RefreshIndicator />
+            ) : (
+              <PanelSkeleton panel={id} params={params} />
+            ))}
           {entry.failed && (
             <div role="alert" className="panel my-4 p-4">
               <p>Les données sont temporairement indisponibles.</p>

@@ -27,6 +27,35 @@ the successful run used a single server. The production build/browser suite,
 remote CI, merge, deployment, physical devices and screen readers were not tested
 for this change. API contracts, calculations, dependencies and lockfiles are unchanged.
 
+### PR #50 merge repair (2026-10-17)
+
+Integrated `main` at `830f086`, retaining the page skeletons and annotation-field
+removal alongside the removed formation table and findings disclosure. The
+analysis browser test now checks the retained cohort count after reload without
+expecting either removed control. Both verification histories are preserved.
+The analysis skeleton no longer reserves space for the removed formation table.
+
+`just verify` passed (133 TypeScript cases plus Node/Rust suites). All 12 focused
+development Chromium executions passed across the analysis journeys and delayed
+analysis-panel skeleton on desktop/mobile. Evidence is retained under
+`.artifacts/pr50-merge/`. The production build/browser suite and deployment were
+not rerun for this repair; local success does not establish remote CI or merge.
+
+## Analysis annotation input removal (2026-10-17)
+
+The local diff against `b5606bd` removes the annotation input below the analysis
+chart and its mention in saved-view copy. Existing annotated URLs and exports
+remain compatible. `just verify` passed (133 TypeScript cases plus Node/Rust
+suites), along with the credential-free `just build`. All 12 focused production
+analysis browser executions passed on desktop/mobile, covering filters, saved
+views, sharing, exports and keyboard navigation. Chromium visual inspection at
+1440×960 and 390×844 confirmed the field is absent and the page does not overflow.
+
+Evidence is under `.artifacts/remove-analysis-annotation/`. The initial browser
+attempt preceded compilation of this fresh checkout's API binary; it failed
+during harness startup before any browser test ran. The production run passed
+after the build. These are local results; no remote CI or deployment was performed.
+
 ## Data page simplification (2026-10-16)
 
 The local diff against `b23f5a7` removes optional source/methodology UI while
@@ -89,6 +118,19 @@ limits are recorded in the completed plan.
 See [repository workflow](harness.md) for commands and maintenance rules,
 [development](development.md) for isolation, and [technical debt](exec-plans/tech-debt.md)
 for follow-up triggers.
+
+## Page-specific skeleton validation (2026-10-16)
+
+The local diff against `9dbdc08` passed `just verify`, the production build and
+all 16 smoke journeys. All 54 focused production cases passed across desktop and
+mobile, including every panel, retained refresh content, delayed code, incremental
+cards, error recovery, no-JavaScript navigation and detail 404s. Six additional
+visual cases cover both themes and reduced-motion behavior. The corrected
+apprenticeship scenarios and delayed server deep links passed 16 development
+cases; the earlier broad run passed 100 cases with four test-scenario failures
+and 12 opt-in latency skips. See the [completed plan](exec-plans/completed/page-skeletons.md)
+for commands, failure history and screenshot evidence under `.artifacts/skeletons/`.
+No remote CI, merge, deployment or physical-device result is established.
 
 ## Async table validation (2026-10-14)
 

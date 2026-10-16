@@ -18,7 +18,9 @@ export default async function Page({ searchParams }: Props) {
   return (
     <>
       <WorkspaceNoScript />
-      <Suspense fallback={<WorkspaceLoading path="/formations" />}>
+      <Suspense
+        fallback={<WorkspaceLoading path="/formations" params={params} />}
+      >
         <WorkspacePage path="/formations" params={params} />
       </Suspense>
     </>

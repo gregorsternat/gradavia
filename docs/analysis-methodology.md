@@ -73,8 +73,10 @@ No new runtime dependency is required.
 ## Persistence, sharing and exports
 
 URLs capture the immutable release ID, family, campaign, filters, axes, measure,
-dimensions, annotation and display settings. Source or campaign changes start a
-fresh analysis; they do not silently transfer version or population assumptions.
+dimensions and display settings. The workbench has no annotation input. Legacy
+annotations in existing URLs and saved views remain readable and exportable.
+Source or campaign changes start a fresh analysis; they do not silently transfer
+version or population assumptions.
 Links remain reproducible while the underlying immutable release is retained.
 
 Up to 20 named views are saved under the versioned browser key
