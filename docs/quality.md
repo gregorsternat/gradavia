@@ -7,6 +7,40 @@ in the [historical verification log](quality/history-through-2026-10-07.md).
 A checked-in implementation, a local pass, remote CI, publication and production
 health are separate observations; none establishes Google indexing or freshness.
 
+## Observatory analysis simplification (2026-10-17)
+
+The local diff against `b5606bd` removes the formation table and the findings/outlier
+disclosure from Observatoire's analysis panel. Filters, chart value equivalents,
+exports and saved views remain available. The scatter supports arrow/Home/End
+selection with labelled values and a detail link below the chart.
+
+`just verify` passed (133 TypeScript cases, 11 Node tests and Rust suites).
+The analysis, observatory and workspace browser specs passed all 62 development
+Chromium executions across desktop/mobile using disposable PostgreSQL fixtures.
+Real browser inspection covered 1440×960 light and 390×844 dark, point selection
+with the keyboard, removed sections and no horizontal page overflow.
+Evidence is retained under `.artifacts/observatory-trim/`.
+
+An initial type check caught unchecked point-array access, corrected before the
+successful run. An initial browser run hit a concurrent development-server lock;
+the successful run used a single server. The production build/browser suite,
+remote CI, merge, deployment, physical devices and screen readers were not tested
+for this change. API contracts, calculations, dependencies and lockfiles are unchanged.
+
+### PR #50 merge repair (2026-10-17)
+
+Integrated `main` at `830f086`, retaining the page skeletons and annotation-field
+removal alongside the removed formation table and findings disclosure. The
+analysis browser test now checks the retained cohort count after reload without
+expecting either removed control. Both verification histories are preserved.
+The analysis skeleton no longer reserves space for the removed formation table.
+
+`just verify` passed (133 TypeScript cases plus Node/Rust suites). All 12 focused
+development Chromium executions passed across the analysis journeys and delayed
+analysis-panel skeleton on desktop/mobile. Evidence is retained under
+`.artifacts/pr50-merge/`. The production build/browser suite and deployment were
+not rerun for this repair; local success does not establish remote CI or merge.
+
 ## Analysis annotation input removal (2026-10-17)
 
 The local diff against `b5606bd` removes the annotation input below the analysis

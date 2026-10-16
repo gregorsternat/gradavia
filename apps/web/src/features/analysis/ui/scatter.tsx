@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import type { AtlasItem } from "@/features/atlas/domain/api-contract";
 import {
@@ -27,6 +27,7 @@ export function Scatter({
     { row: AtlasItem; x: number; y: number; radius: number }[]
   >([]);
   const [hovered, setHovered] = useState<AtlasItem | null>(null);
+  const keyboardHelpId = useId();
   const { resolvedTheme } = useTheme();
   const points = useMemo(
     () =>
@@ -163,9 +164,44 @@ export function Scatter({
     <div ref={container} className="relative min-w-0">
       <canvas
         ref={canvas}
-        className="h-[420px] w-full cursor-crosshair"
+        className="h-[420px] w-full cursor-crosshair rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
         role="img"
-        aria-label={`Nuage de ${points.length} formations : ${measureLabels[config.x]} et ${measureLabels[config.y]}. Les valeurs et les liens sont accessibles dans le tableau des formations.`}
+        aria-label={`Nuage de ${points.length} formations : ${measureLabels[config.x]} et ${measureLabels[config.y]}.`}
+        aria-describedby={keyboardHelpId}
+        tabIndex={points.length > 0 ? 0 : -1}
+        onFocus={() => {
+          const first = points[0];
+          if (first && !points.some((point) => point.row.id === selectedId))
+            onSelect(first.row);
+        }}
+        onKeyDown={(event) => {
+          if (points.length === 0) return;
+          const current = points.findIndex(
+            (point) => point.row.id === selectedId,
+          );
+          let next: number;
+          switch (event.key) {
+            case "Home":
+              next = 0;
+              break;
+            case "End":
+              next = points.length - 1;
+              break;
+            case "ArrowRight":
+            case "ArrowDown":
+              next = Math.min(points.length - 1, current + 1);
+              break;
+            case "ArrowLeft":
+            case "ArrowUp":
+              next = Math.max(0, current - 1);
+              break;
+            default:
+              return;
+          }
+          event.preventDefault();
+          const point = points[next];
+          if (point) onSelect(point.row);
+        }}
         onPointerMove={(event) => {
           const rect = event.currentTarget.getBoundingClientRect();
           const row = nearest(
@@ -202,6 +238,11 @@ export function Scatter({
       <p className="mt-3 text-xs leading-5 text-muted-foreground">
         {points.length.toLocaleString("fr")} points
         {points.length < rows.length ? " · Partiel" : ""}
+      </p>
+      <p id={keyboardHelpId} className="sr-only">
+        Utilisez les flèches pour sélectionner une formation, Début et Fin pour
+        atteindre la première et la dernière. Les valeurs et le lien vers la
+        fiche s’affichent sous le graphique.
       </p>
     </div>
   );

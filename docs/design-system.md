@@ -126,8 +126,10 @@ national total.
 The atlas uses one quiet map surface next to a matching result list; exact numeric
 inputs supplement proximity and priority sliders. The map retains the count of located and unlocated results so the visible
 points are not mistaken for all results. Browser map controls and list links offer equivalent navigation without
-requiring pointer selection. Analysis places one selected visualization above its
-record table, with cohort controls shared across views. A Canvas scatter retains
+requiring pointer selection. Analysis shows one selected visualization with cohort
+controls shared across views, without a separate formation table or findings
+disclosure. A Canvas scatter supports arrow/Home/End selection and exposes the
+selected formation's values and detail link below the chart. It retains
 all source observations without creating thousands of DOM nodes; Tremor remains
 the default for supported chart types. Exports retain source and campaign context.
 Selection notes and optional sharing live behind explicit actions. No decoration

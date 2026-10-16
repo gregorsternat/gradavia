@@ -2,7 +2,6 @@
 import { PanelMain } from "@/features/workspace/ui/navigation";
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "@/features/workspace/ui/navigation";
-import Link from "@/features/workspace/ui/navigation";
 import {
   ArrowDownToLine,
   ArrowUpRight,
@@ -54,7 +53,6 @@ import {
   measureKeys,
   measureLabels,
   measureValue,
-  metricState,
   quality,
   readConfig,
   type AnalysisConfig,
@@ -81,12 +79,6 @@ const measures = measureKeys.map((value) => ({
   value,
   label: measureLabels[value],
 }));
-const stateLabels: Record<string, string> = {
-  missing: "Absent",
-  suppressed: "Masqué",
-  invalid: "Invalide",
-  "undefined-ratio": "Ratio non calculable",
-};
 function Choice({
   label,
   value,
@@ -271,68 +263,6 @@ function Workspace({ data }: { data: AtlasData }) {
           summary.value) *
         100
       : null;
-  const rowColumns: TableColumn<AtlasItem>[] = [
-    {
-      key: "title",
-      header: "Formation",
-      width: "330px",
-      sortable: true,
-      cell: (row) => (
-        <button
-          type="button"
-          onClick={() => setSelectedId(row.id)}
-          className="block w-full truncate text-left font-medium hover:underline"
-          title={row.title}
-        >
-          {row.title}
-        </button>
-      ),
-    },
-    {
-      key: "region",
-      header: "Région",
-      width: "190px",
-      sortable: true,
-      cell: (row) => row.region ?? "Non renseigné",
-    },
-    {
-      key: "type",
-      header: "Filière",
-      width: "160px",
-      sortable: true,
-      cell: (row) => row.type ?? "Non renseigné",
-    },
-    ...[...new Set([config.metric, config.x, config.y])].map((key) => ({
-      key,
-      header: measureLabels[key],
-      width: "150px",
-      align: "right" as const,
-      sortable: true,
-      sortValue: (row: AtlasItem) => measureValue(row, key) ?? -1,
-      cell: (row: AtlasItem) =>
-        measureValue(row, key) === null ? (
-          <span className="text-muted-foreground">
-            {stateLabels[metricState(row, key)] ?? "Absent"}
-          </span>
-        ) : (
-          formatMeasure(measureValue(row, key), key)
-        ),
-    })),
-    {
-      key: "detail",
-      header: "Fiche",
-      width: "70px",
-      cell: (row) => (
-        <Link
-          href={recordHref(data, row)}
-          aria-label={`Ouvrir ${row.title}`}
-          className="inline-flex p-2 hover:bg-subtle"
-        >
-          <ArrowUpRight className="size-4" />
-        </Link>
-      ),
-    },
-  ];
   const saveExport = (format: "csv" | "json" | "svg") =>
     download(
       format === "csv"
@@ -867,6 +797,8 @@ function Workspace({ data }: { data: AtlasData }) {
         <section
           className="mt-5 rounded-xl bg-subtle p-5"
           aria-label="Formation sélectionnée"
+          aria-live="polite"
+          aria-atomic="true"
         >
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -907,61 +839,9 @@ function Workspace({ data }: { data: AtlasData }) {
           </div>
         </section>
       )}
-      <section className="mt-7" aria-label="Formations de la sélection">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 className="text-base font-medium">Les formations</h2>
-          <span className="text-xs text-muted-foreground">
-            {number(rows.length)} lignes
-          </span>
-        </div>
-        <Table
-          aria-label="Formations de l’analyse"
-          data={rows}
-          columns={rowColumns}
-          getRowId={(row) => row.id}
-          rowHeight={44}
-          height={Math.min(450, rows.length * 44 + 50)}
-          className="text-xs"
-        />
-      </section>
       <BouncyAccordion
         className="mt-7"
         items={[
-          {
-            id: "findings",
-            title: "Constats et valeurs atypiques",
-            description: (
-              <div className="space-y-4 text-sm">
-                <p>
-                  {summary.observed > 0
-                    ? `${summary.observed} lignes sur ${summary.total} contribuent à ${measureLabels[config.metric].toLocaleLowerCase("fr")}. ${summary.method === "median" ? "La médiane entre formations" : summary.method === "paired-ratio" ? "Le ratio sur lignes appariées" : "La somme des valeurs publiées"} est de ${formatMeasure(summary.value, config.metric)}.`
-                    : "Aucune valeur exploitable pour cet indicateur dans ce périmètre."}
-                </p>
-                {topFiveShare !== null && (
-                  <p>
-                    Les {Math.min(5, groups.length)} premiers groupes de{" "}
-                    {dimensionLabels[config.dimension].toLocaleLowerCase("fr")}{" "}
-                    concentrent {number(topFiveShare)} % du total observé.
-                  </p>
-                )}
-                <p>
-                  {stats.outliers.length} valeurs hors des bornes{" "}
-                  {formatMeasure(stats.lowerFence, config.metric)} et{" "}
-                  {formatMeasure(stats.upperFence, config.metric)}.
-                </p>
-                {stats.outliers.length > 0 && (
-                  <Table
-                    aria-label="Valeurs atypiques"
-                    data={stats.outliers}
-                    columns={rowColumns}
-                    height={Math.min(300, stats.outliers.length * 44 + 50)}
-                    rowHeight={44}
-                    getRowId={(row) => row.id}
-                  />
-                )}
-              </div>
-            ),
-          },
           {
             id: "saved",
             title: "Vues et cohortes enregistrées",

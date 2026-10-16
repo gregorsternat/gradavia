@@ -319,5 +319,6 @@ Selections saved before the rename remain readable through the legacy
 precedence even when empty. This compatibility applies within the same browser
 origin; it does not transfer local storage between domains.
 CSV generation preserves missingness and provenance and neutralizes spreadsheet
-formula prefixes. Chart values have table equivalents and filters have
+formula prefixes. Chart values have table equivalents or a keyboard-accessible
+formation selection with labelled values; filters have
 keyboard-accessible controls; Motion respects reduced motion.

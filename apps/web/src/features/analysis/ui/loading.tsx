@@ -2,7 +2,6 @@ import {
   SkeletonChart,
   SkeletonFilters,
   SkeletonMetrics,
-  SkeletonTable,
 } from "@/components/skeleton";
 export function AnalysisSkeleton() {
   return (
@@ -10,7 +9,6 @@ export function AnalysisSkeleton() {
       <SkeletonFilters count={5} />
       <SkeletonMetrics />
       <SkeletonChart bars />
-      <SkeletonTable columns={5} />
     </>
   );
 }
