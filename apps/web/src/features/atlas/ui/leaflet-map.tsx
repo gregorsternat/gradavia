@@ -1,4 +1,5 @@
 "use client";
+import { MapSkeleton } from "./loading";
 
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
@@ -196,16 +197,19 @@ export function FormationMap({
           Cadrer les résultats
         </Button>
       )}
-      {!ready && (
-        <p
-          role="status"
-          className="absolute inset-x-0 top-1/2 text-center text-sm text-muted-foreground"
-        >
-          {failed
-            ? "La carte n’a pas pu être chargée. La liste reste disponible."
-            : "Chargement de la carte…"}
-        </p>
-      )}
+      {!ready &&
+        (failed ? (
+          <p
+            role="status"
+            className="absolute inset-x-0 top-1/2 text-center text-sm text-muted-foreground"
+          >
+            La carte n’a pas pu être chargée. La liste reste disponible.
+          </p>
+        ) : (
+          <div className="pointer-events-none absolute inset-0">
+            <MapSkeleton />
+          </div>
+        ))}
     </div>
   );
 }

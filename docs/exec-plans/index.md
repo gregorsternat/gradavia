@@ -10,6 +10,8 @@ No active implementation plan.
 
 ## Completed
 
+- [Page-specific skeletons](completed/page-skeletons.md): tailored loading states for all workspace panels, deferred blocks and incremental cards.
+
 - [Async tables](completed/async-tables.md): beUI incremental tables and cards,
   bounded network reads, retry and complete shared-list actions.
 

@@ -6,6 +6,7 @@ import {
   useState,
   type ComponentType,
 } from "react";
+import { PanelSkeleton } from "./panel-skeleton";
 import type { PanelPayload } from "../server/load";
 import type { PanelId } from "../domain/registry";
 import { presentation } from "../domain/presentation";
@@ -82,8 +83,6 @@ export function Panel({
       </button>
     </div>
   ) : (
-    <p aria-live="polite" className="py-8">
-      Chargement de l’outil…
-    </p>
+    <PanelSkeleton panel={panel} params={params} />
   );
 }

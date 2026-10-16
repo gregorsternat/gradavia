@@ -17,6 +17,14 @@ Source: [beUI](https://beui.dev/) and
 [starc007/ui-components](https://github.com/starc007/ui-components).
 License: [MIT](licenses/beui.txt).
 
+### Loading skeleton integration (2026-10-16)
+
+Existing beUI table skeleton rows now reuse the original local CSS skeleton
+primitive, including the shared reflection and reduced-motion behavior. Progress
+keeps its result counts and accessible loading announcement while a decorative
+accent replaces visible loading copy. Retry semantics remain unchanged. No new
+upstream source or dependency was copied.
+
 ### Async table composition (2026-10-14)
 
 Verified [table-async](https://beui.dev/r/table-async.json) against the public

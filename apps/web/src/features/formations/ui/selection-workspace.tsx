@@ -1,4 +1,5 @@
 "use client";
+import { LoadingStatus, SkeletonCards } from "@/components/skeleton";
 import { z } from "zod";
 import {
   usePanelHash,
@@ -806,12 +807,14 @@ export function FavoritesWorkspace({
           </div>
         )}
         {!hydrated ? (
-          <p
-            role="status"
-            className="py-16 text-center text-sm text-muted-foreground"
+          <div
+            aria-busy="true"
+            data-skeleton="favorites-local"
+            className="grid gap-4 py-6 md:grid-cols-2 2xl:grid-cols-3"
           >
-            Chargement de vos favoris…
-          </p>
+            <LoadingStatus label="Chargement de vos favoris…" />
+            <SkeletonCards count={6} />
+          </div>
         ) : requestedIds.length === 0 ||
           (shared && !hasMore && details.length === 0) ? (
           <section className="rounded-xl border border-dashed border-border px-6 py-16 text-center">
@@ -992,6 +995,7 @@ export function FavoritesWorkspace({
                   </div>
                 );
               })}
+              {stream.loading && <SkeletonCards count={3} />}
             </Reveal>
             {shared && !hasMore && details.length < ids.length && (
               <p role="status" className="mt-4 text-sm text-muted-foreground">

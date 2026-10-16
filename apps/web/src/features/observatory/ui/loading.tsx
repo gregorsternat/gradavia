@@ -1,47 +1,50 @@
-import { PanelMain } from "@/features/workspace/ui/navigation";
-import { Loader } from "@/components/motion/loader";
+import {
+  Skeleton,
+  SkeletonCards,
+  SkeletonChart,
+  SkeletonFilters,
+  SkeletonMetrics,
+  SkeletonTable,
+} from "@/components/skeleton";
 
-export default function ObservatoryLoading({
-  label = "Chargement de l’observatoire",
-}: {
-  label?: string;
-}) {
+export default function ObservatoryLoading() {
   return (
-    <PanelMain
-      id="chargement"
-      tabIndex={-1}
-      className="py-8"
-      aria-busy="true"
-      aria-label={label}
-    >
-      <div aria-hidden="true" className="h-8 w-56 rounded-lg bg-subtle" />
-      <div
-        aria-hidden="true"
-        className="mt-4 h-4 w-72 max-w-full rounded bg-subtle"
-      />
-      <div
-        aria-hidden="true"
-        className="mt-9 grid grid-cols-2 gap-4 lg:grid-cols-4"
-      >
-        {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="h-28 rounded-xl bg-sidebar" />
-        ))}
+    <>
+      <SkeletonMetrics count={4} />
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.85fr)_minmax(280px,1fr)]">
+        <SkeletonChart />
+        <div className="panel flex min-h-72 flex-col items-center justify-center gap-5 p-5">
+          <Skeleton className="size-40 rounded-full" />
+          <Skeleton className="w-32" />
+        </div>
       </div>
-      <div
-        aria-hidden="true"
-        className="mt-6 grid gap-5 lg:grid-cols-[2fr_1fr]"
-      >
-        <div className="panel h-80 bg-sidebar" />
-        <div className="panel h-80 bg-sidebar" />
+      <div className="grid gap-5 xl:grid-cols-2">
+        <SkeletonChart bars />
+        <SkeletonChart bars />
       </div>
-      <div className="mt-6 flex items-center gap-2.5 text-xs text-muted-foreground">
-        <Loader
-          size={14}
-          label="Chargement des données…"
-          className="text-muted-foreground"
-        />
-        <span aria-hidden="true">Chargement des données…</span>
+    </>
+  );
+}
+export function TerritoriesSkeleton() {
+  return (
+    <>
+      <SkeletonFilters count={2} />
+      <SkeletonChart bars />
+      <SkeletonTable />
+    </>
+  );
+}
+export function SourcesSkeleton() {
+  return (
+    <>
+      <div className="grid gap-4 md:grid-cols-3">
+        <SkeletonCards />
       </div>
-    </PanelMain>
+      <SkeletonTable columns={3} />
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Skeleton className="h-40" />
+        <Skeleton className="h-40" />
+      </div>
+    </>
   );
 }

@@ -854,3 +854,40 @@ test("hiding a table cancels its pending batch and returning restores its loaded
     release();
   }
 });
+
+test("incremental cards show decorative skeletons without replacing loaded formations", async ({
+  page,
+}) => {
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route("**/api/workspace/formations?**", async (route) => {
+    if (new URL(route.request().url()).searchParams.get("page") !== "2")
+      return route.continue();
+    const response = await route.fetch();
+    await gate;
+    await route.fulfill({ response });
+  });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/formations?vue=cartes");
+  await expect(page.getByRole("searchbox")).toBeEditable();
+  await expect(page.getByRole("article")).toHaveCount(25);
+  const firstCard = await page.getByRole("article").first().elementHandle();
+  try {
+    await page.locator("[data-load-progress]:visible").scrollIntoViewIfNeeded();
+    await expect(page.locator("[data-skeleton-card]")).toHaveCount(3);
+    expect(await firstCard!.evaluate((el) => el.isConnected)).toBe(true);
+    await expect(page.getByRole("article")).toHaveCount(25);
+    expect(
+      await page
+        .locator("[data-skeleton-card] .skeleton")
+        .first()
+        .evaluate((el) => getComputedStyle(el, "::after").animationName),
+    ).toBe("skeleton-reflection");
+  } finally {
+    release();
+  }
+  await expect(page.getByRole("article")).toHaveCount(31);
+  await expect(page.locator("[data-skeleton-card]")).toHaveCount(0);
+});

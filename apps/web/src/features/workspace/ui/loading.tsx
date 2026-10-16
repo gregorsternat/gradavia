@@ -1,17 +1,38 @@
-import LoadingFormations from "@/features/formations/ui/loading";
-import ObservatoryLoading from "@/features/observatory/ui/loading";
-import { spaces } from "../domain/registry";
+import type { SearchParams } from "@/features/formations/domain/explorer";
+import {
+  panelParams,
+  resolvePanel,
+  searchString,
+  spaces,
+  panels,
+} from "../domain/registry";
+import { Skeleton } from "@/components/skeleton";
+import { PanelSkeleton } from "./panel-skeleton";
 
-export function WorkspaceLoading({ path }: { path: string }) {
-  const space = spaces.find((space) => space.path === path)!;
+export function WorkspaceLoading({
+  path,
+  params,
+}: {
+  path: string;
+  params: SearchParams;
+}) {
+  const query = new URLSearchParams(searchString(params));
+  const panel = resolvePanel(path, query)!;
+  const space = spaces[panels[panel].space];
   return (
-    <div data-workspace-loading>
-      {path === "/formations" ? (
-        <LoadingFormations />
-      ) : (
-        <ObservatoryLoading label={`Chargement · ${space.label}`} />
+    <main id="contenu" data-workspace-loading className="min-w-0 flex-1">
+      {path === "/formations" && (
+        <div aria-hidden="true" className="pt-5">
+          <Skeleton className="h-10 w-full sm:w-56" />
+        </div>
       )}
-    </div>
+      <div aria-hidden="true" className="flex gap-5 overflow-hidden pt-5 pb-3">
+        {space.panels.map((id) => (
+          <Skeleton key={id} className="h-8 w-28 shrink-0" />
+        ))}
+      </div>
+      <PanelSkeleton panel={panel} params={panelParams(panel, query)} />
+    </main>
   );
 }
 

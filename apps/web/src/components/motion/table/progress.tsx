@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useMotionActive } from "@/lib/hooks/use-reduced-motion";
+import { Skeleton } from "@/components/skeleton";
 import { Button } from "@/components/motion/button/base";
 
 export type ProgressProps = {
@@ -54,12 +55,15 @@ export function LoadProgress({
         {count.toLocaleString("fr-FR")}{" "}
         {count === 1 ? "résultat affiché" : "résultats affichés"} sur{" "}
         {total.toLocaleString("fr-FR")}
-        {loading
-          ? " · Chargement…"
-          : !hasMore && !error
-            ? " · Fin des résultats"
-            : ""}
+        {loading ? (
+          <span className="sr-only"> · Chargement…</span>
+        ) : !hasMore && !error ? (
+          " · Fin des résultats"
+        ) : (
+          ""
+        )}
       </p>
+      {loading && <Skeleton className="h-1 w-16" />}
       {error && (
         <p role="alert" className="w-full text-sm text-muted-foreground">
           {error}
@@ -73,7 +77,7 @@ export function LoadProgress({
           disabled={!enabled || loading}
           onClick={onLoadMore}
         >
-          {loading ? "Chargement…" : retryLabel}
+          {retryLabel}
         </Button>
       )}
     </div>
