@@ -23,6 +23,20 @@ commands and initial check corrections. Dependencies, lockfiles and data
 contracts are unchanged. This establishes local validation only: no remote CI,
 merge, deployment, physical-device or manual screen-reader validation.
 
+### PR #55 sitemap smoke repair (2026-10-18)
+
+[CI run 39138008057](https://github.com/gregorsternat/gradavia/actions/runs/39138008057)
+failed because the sitemap smoke test still expected 13 public pages after the
+budget page was retired. The sitemap correctly contains 12 pages. The test now
+expects 12 and explicitly rejects retired budget and quiz URLs; product code is
+unchanged.
+
+The production sitemap regression reproduced both CI failures locally, then
+passed on desktop and mobile after the correction. `just verify` also passed.
+Evidence is retained under `.artifacts/pr55-ci/` (`before.log`, `after.log` and
+`verify.log`). These are local results;
+remote CI, merge and deployment are separate states.
+
 Verification workflow reviewed on 2026-10-11 (Asia/Shanghai), with local
 validation against `bc4da92`. Earlier evidence below retains its own tested revisions.
 This page summarizes coverage and outstanding limits. Detailed past results live

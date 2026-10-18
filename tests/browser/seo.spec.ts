@@ -29,7 +29,7 @@ test("robots and all advertised sitemaps expose the complete published fixture c
         ? 1
         : url.includes("apb")
           ? 1
-          : 13;
+          : 12;
     expect(urls).toHaveLength(expected);
     for (const entry of urls) {
       expect(entry.startsWith("https://gradavia.com/")).toBe(true);
@@ -39,7 +39,7 @@ test("robots and all advertised sitemaps expose the complete published fixture c
     expect(
       urls.some(
         (entry) =>
-          /comparer|localhost/.test(entry) ||
+          /comparer|localhost|budget|decouvrir/.test(entry) ||
           entry === "https://gradavia.com/favoris",
       ),
     ).toBe(false);
