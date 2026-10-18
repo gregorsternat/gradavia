@@ -34,6 +34,12 @@ test("map filters keep the complete snapshot, radius and share URL synchronized"
   ).toBeVisible();
   await expect(page).toHaveURL(/q=Syst/);
   await page.getByRole("button", { name: "Proximité et critères" }).click();
+  await expect(
+    page.getByRole("slider", { name: "Importance de la proximité" }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("slider", { name: "Importance des petites promotions" }),
+  ).toHaveCount(0);
   await page.getByRole("spinbutton", { name: "Places maximum" }).fill("0");
   await expect(
     page

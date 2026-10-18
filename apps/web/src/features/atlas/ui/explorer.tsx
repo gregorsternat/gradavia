@@ -394,25 +394,6 @@ function ReadyExplorer({
                     })),
                   ]}
                 />
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <InlineSlider
-                    label="Proximité"
-                    value={query.nearbyWeight}
-                    onValueChange={(nearbyWeight) =>
-                      change({ nearbyWeight, sort: "priorities" })
-                    }
-                    aria-label="Importance de la proximité"
-                    disabled={!center}
-                  />
-                  <InlineSlider
-                    label="Petites promotions"
-                    value={query.sizeWeight}
-                    onValueChange={(sizeWeight) =>
-                      change({ sizeWeight, sort: "priorities" })
-                    }
-                    aria-label="Importance des petites promotions"
-                  />
-                </div>
                 <Button
                   size="sm"
                   variant="secondary"
@@ -539,7 +520,6 @@ function ReadyExplorer({
                 ...(center
                   ? [{ value: "distance", label: "Les plus proches" }]
                   : []),
-                { value: "priorities", label: "Mes priorités" },
               ]}
               className="w-44"
             />

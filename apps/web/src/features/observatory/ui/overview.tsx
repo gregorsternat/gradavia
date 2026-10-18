@@ -5,7 +5,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/motion/radio";
 import Link from "@/features/workspace/ui/navigation";
 import { useRouter } from "@/features/workspace/ui/navigation";
 import { ArrowRight, ArrowUpRight, Layers3, Map, Search } from "lucide-react";
-import { ButtonLink } from "@/components/motion/button/base";
 import {
   Tabs,
   TabsList,
@@ -391,11 +390,6 @@ function ReadyOverview({ data }: { data: OverviewData }) {
           </div>
         </TabsContent>
       </Tabs>
-      <div className="mt-9 flex flex-wrap items-center justify-between gap-4">
-        <ButtonLink href="/decouvrir" variant="ghost" size="sm">
-          À vous d’estimer <ArrowRight className="size-3.5" />
-        </ButtonLink>
-      </div>
     </PanelMain>
   );
 }

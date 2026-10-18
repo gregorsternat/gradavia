@@ -183,7 +183,7 @@ test("source inventory distinguishes imported data and explains indicator bounda
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
 
-for (const path of ["/analyses", "/evolutions", "/territoires", "/decouvrir"]) {
+for (const path of ["/analyses", "/evolutions", "/territoires"]) {
   test(`data screens omit optional methodology: ${path}`, async ({ page }) => {
     await page.goto(path);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();

@@ -287,3 +287,16 @@ change does not promise an identical population or retained release across reade
 The implementation reuses source-owned tabs with a stable host element and
 manual activation for asynchronously loaded views. Client/server metadata uses
 the same per-tool indexation policy; tools do not inherit the root's robots policy.
+
+## 2026-10-18: Retire peripheral tools, retain research workflows
+
+Remove the discovery quiz, manual budget calculator, weighted proximity/cohort-size
+ranking, favorites concentration notices and two-frame campaign playback. These
+retirements supersede the corresponding portions of the expanded exploration and
+workspace decisions above. Keep favorites, notes, checklists, selection distributions,
+explicit geographic sorting, before/after and per-field historical views, research
+concentration analysis, APB archives, exports, notebooks and source provenance.
+
+Legacy budget paths and workspace tabs redirect to favorites; quiz paths and tabs
+redirect to the observatory. Retired API panel IDs return 404. Existing budget
+browser storage is left untouched, with no new access, migration or deletion.

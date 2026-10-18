@@ -33,8 +33,6 @@ export const viewLoaders = {
     import("@/features/formations/ui/selection-pages").then(
       (m) => m.FavoritesPageView,
     ),
-  BudgetCalculator: () =>
-    import("@/features/budget/ui/calculator").then((m) => m.BudgetCalculator),
   AnalysisWorkbench: () =>
     import("@/features/analysis/ui/workbench").then((m) => m.AnalysisWorkbench),
   ModalityComparison: () =>
@@ -43,7 +41,6 @@ export const viewLoaders = {
     ),
   Evolution: () =>
     import("@/features/evolution/ui/evolution").then((m) => m.Evolution),
-  Quiz: () => import("@/features/discovery/ui/quiz").then((m) => m.Quiz),
 };
 export type ViewId = keyof typeof viewLoaders;
 
@@ -57,12 +54,10 @@ const panelViews = {
   selection: "ComparisonPageView",
   modalites: "ModalityComparison",
   favoris: "FavoritesPageView",
-  budget: "BudgetCalculator",
   overview: "Overview",
   territoires: "Territories",
   evolutions: "Evolution",
   analyses: "AnalysisWorkbench",
-  decouvrir: "Quiz",
   sources: "Sources",
   donnees: "DataAccess",
   archives: "AtlasExplorer",

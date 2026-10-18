@@ -7,10 +7,20 @@ export function proxy(request: NextRequest) {
   const target = canonicalHref(
     request.nextUrl.pathname + request.nextUrl.search,
   );
+  if (target === request.nextUrl.pathname + request.nextUrl.search)
+    return NextResponse.next();
   return NextResponse.redirect(new URL(target, request.url), 308);
 }
 export const config = {
   matcher: [
+    {
+      source: "/favoris",
+      has: [{ type: "query", key: "onglet", value: "budget" }],
+    },
+    {
+      source: "/observatoire",
+      has: [{ type: "query", key: "onglet", value: "decouvrir" }],
+    },
     "/modalites",
     "/budget",
     "/territoires",

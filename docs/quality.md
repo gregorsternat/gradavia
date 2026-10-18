@@ -1,5 +1,28 @@
 # Verification status
 
+## Product scope simplification (2026-10-18)
+
+The local diff against `e32d976` retires the quiz, manual budget calculator,
+personal-priority ranking, selection concentration notices and campaign playback.
+Research analyses, static historical comparisons, provenance and exports remain.
+Legacy budget/quiz paths and tab URLs redirect to favorites/the observatory;
+retired API panels return 404. Existing browser-local budget data is untouched.
+
+`just verify` passed (129 TypeScript cases and Node/Rust suites), as did the
+credential-free `just build`. Focused production Chromium tests passed all 157
+executions on desktop/mobile, with five intended exclusions (three mobile-only
+cases on desktop and two development-only gallery cases).
+Visual inspection covered 1280px/390px Favorites and Analysis, plus live historical
+views; keyboard journeys, delayed modules, history, retries, exports and printing
+are covered. Documentation checks passed after final formatting corrections.
+
+Evidence: `.artifacts/simplification-{verify,build,browser,docs}.log` and
+`.artifacts/simplification/browser-production/`. The
+[completed plan](exec-plans/completed/product-scope-simplification.md) records
+commands and initial check corrections. Dependencies, lockfiles and data
+contracts are unchanged. This establishes local validation only: no remote CI,
+merge, deployment, physical-device or manual screen-reader validation.
+
 Verification workflow reviewed on 2026-10-11 (Asia/Shanghai), with local
 validation against `bc4da92`. Earlier evidence below retains its own tested revisions.
 This page summarizes coverage and outstanding limits. Detailed past results live

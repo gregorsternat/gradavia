@@ -24,32 +24,32 @@ admission predictions or Course rich-result promises.
 ## Workspace addresses
 
 Tool identity now uses a workspace root and `onglet`, for example
-`/observatoire?onglet=territoires` and `/favoris?onglet=budget`. Historical tool
+`/observatoire?onglet=territoires` and `/sources?onglet=donnees`. Historical tool
 paths permanently redirect before rendering a loading boundary. Tool metadata,
 canonical links and the public-page sitemap use the registry's destination.
 The selected tool is rendered on the server and its tabs have native anchors.
 
-Indexation still belongs to the tool: Budget remains public even though Favoris
-is private, and the analysis/quiz panels remain noindex under the public
-observatory. Semantic panel selectors are retained in canonical addresses;
+Indexation still belongs to the tool: analysis remains noindex under the public
+observatory. Retired budget and quiz routes redirect to favorites and the
+observatory and are absent from metadata and sitemaps. Semantic panel selectors are retained in canonical addresses;
 filters retain their previous noindex rules. The browser updates metadata when
 switching panels without a server navigation. Formation detail identities and
 ordinary indexable pagination are unchanged.
 
 ## Indexation policy
 
-| Content                                                                 | Policy                                                                   |
-| ----------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Homepage and public tool introductions                                  | Indexable, canonical production URL                                      |
-| Formation details, including retained historical records                | Indexable, immutable campaign-specific canonical                         |
-| Ordinary formation pagination                                           | Indexable, each page has its own canonical and native next/previous link |
-| Explicit latest formation campaign                                      | Consolidated with the default campaign URL                               |
-| Historical formation campaign                                           | Distinct canonical campaign URL                                          |
-| Search, sorting and filtered formation results                          | `noindex, follow`, normalized query identity                             |
-| Query-specific states of other exploration tools                        | `noindex, follow`; tracking/view-only parameters are removed             |
-| Favorites, comparisons, analysis workspace, modality selection and quiz | `noindex, follow`, absent from sitemaps                                  |
-| Missing formations                                                      | Next.js not-found handling and `noindex`                                 |
-| Unavailable/empty formation explorer and unavailable details            | `noindex, follow`, no fabricated descriptive content                     |
+| Content                                                           | Policy                                                                   |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Homepage and public tool introductions                            | Indexable, canonical production URL                                      |
+| Formation details, including retained historical records          | Indexable, immutable campaign-specific canonical                         |
+| Ordinary formation pagination                                     | Indexable, each page has its own canonical and native next/previous link |
+| Explicit latest formation campaign                                | Consolidated with the default campaign URL                               |
+| Historical formation campaign                                     | Distinct canonical campaign URL                                          |
+| Search, sorting and filtered formation results                    | `noindex, follow`, normalized query identity                             |
+| Query-specific states of other exploration tools                  | `noindex, follow`; tracking/view-only parameters are removed             |
+| Favorites, comparisons, analysis workspace and modality selection | `noindex, follow`, absent from sitemaps                                  |
+| Missing formations                                                | Next.js not-found handling and `noindex`                                 |
+| Unavailable/empty formation explorer and unavailable details      | `noindex, follow`, no fabricated descriptive content                     |
 
 The root layout deliberately does not set a homepage canonical that unrelated
 routes could inherit. `/atlas/[id]` for regular Parcoursup advertises the existing

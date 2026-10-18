@@ -86,7 +86,7 @@ state until leaving the workspace. Scoped navigation prevents hidden panels from
 reading another panel's URL or changing browser history. Native links still work
 without JavaScript. Same-space activation uses History; the active URL and
 back/forward traversal select the displayed panel and its query. Only existing
-favorites and budget stores persist beyond this visit. Panel `refresh()` invalidates
+favorites stores persist beyond this visit. Panel `refresh()` invalidates
 and reloads only that entry through the read facade, preserving other drafts.
 Global print styles are installed only by the active panel. A pending result
 cannot supply campaign/version defaults for a newer requested context. Comparison
@@ -151,13 +151,12 @@ output and accessible chart alternatives remain separate from infinite scrolling
 - `/formations?onglet=carte`, `famille=apprentissage` and
   `/sources?onglet=archives` load separate family snapshots from `/v1/atlas`;
   `/atlas/[id]` reads their immutable record details.
-- Observatoire panels `analyses` and `decouvrir` use a retained atlas;
+- Observatoire panel `analyses` uses a retained atlas;
   `evolutions` captures two campaigns with qualified matching. Comparer’s
   `modalites` panel compares independently chosen regular/apprenticeship records
   without asserting course equivalence.
 - `/specialites?onglet=formation` consumes `/v1/specialties/inverse` within the
-  reviewed 2025 population. `/favoris?onglet=budget` stores user-entered scenarios
-  in the browser.
+  reviewed 2025 population.
 - `/sources?onglet=donnees` exposes download/notebook entry points; `/api/v1/datasets` is the
   bounded public HTTP export facade over the private Rust atlas service.
 - `/robots.txt` and `/sitemap.xml` expose the search-discovery policy and root
@@ -222,8 +221,8 @@ Peer similarity is descriptive and is not an admissions or curriculum model.
 Local preparation extends the existing bounded selection store with named lists,
 notes, status and source-aware snapshots. Shared links omit notes by default;
 explicitly shared annotations use the URL fragment. The printable dossier makes
-snapshot coverage visible. `features/budget` stores optional user-entered cost
-scenarios separately and never introduces inferred city prices.
+snapshot coverage visible. Retired budget and quiz paths redirect to favorites
+and the observatory; their panel loaders and feature modules are removed.
 
 The public dataset/export route calls the Rust service through the existing
 server-only transport. It accepts bounded dataset selectors and fixed export

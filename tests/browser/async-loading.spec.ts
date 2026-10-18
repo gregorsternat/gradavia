@@ -19,7 +19,7 @@ const localTables = [
   },
   {
     panel: "territoires",
-    entry: "/observatoire?onglet=decouvrir",
+    entry: "/observatoire?onglet=analyses",
     tab: "Territoires",
     back: "Vue d’ensemble",
     name: "Indicateurs par région",
@@ -213,21 +213,18 @@ const skeletonPanels = [
     tab: "Ma sélection",
   },
   { entry: "/comparer", panel: "modalites", tab: "Modalités" },
-  { entry: "/favoris?onglet=budget", panel: "favoris", tab: "Favoris" },
-  { entry: "/favoris", panel: "budget", tab: "Budget" },
   {
-    entry: "/observatoire?onglet=decouvrir",
+    entry: "/observatoire?onglet=analyses",
     panel: "overview",
     tab: "Vue d’ensemble",
   },
   {
-    entry: "/observatoire?onglet=decouvrir",
+    entry: "/observatoire?onglet=analyses",
     panel: "territoires",
     tab: "Territoires",
   },
   { entry: "/observatoire", panel: "evolutions", tab: "Évolutions" },
   { entry: "/observatoire", panel: "analyses", tab: "Atelier d’analyse" },
-  { entry: "/observatoire", panel: "decouvrir", tab: "À vous d’estimer" },
   {
     entry: "/sources?onglet=archives",
     panel: "sources",
@@ -302,7 +299,7 @@ for (const scenario of skeletonPanels) {
           () => document.documentElement.scrollWidth <= innerWidth,
         ),
       ).toBe(true);
-      if (["carte", "budget", "territoires"].includes(scenario.panel)) {
+      if (["carte", "territoires"].includes(scenario.panel)) {
         await page.screenshot({
           path: testInfo.outputPath(`${scenario.panel}-skeleton.png`),
         });
@@ -371,9 +368,9 @@ test("refresh keeps formation results mounted and replaces loading copy with a s
 test("tailored skeleton also covers a delayed tool module after its data arrives", async ({
   page,
 }) => {
-  await page.goto("/favoris");
-  const budget = page.getByRole("tab", { name: "Budget", exact: true });
-  await expect(budget).toHaveAttribute("tabindex", "-1");
+  await page.goto("/comparer");
+  const modalities = page.getByRole("tab", { name: "Modalités", exact: true });
+  await expect(modalities).toHaveAttribute("tabindex", "-1");
   await page.waitForLoadState("networkidle");
   let release!: () => void;
   const gate = new Promise<void>((resolve) => {
@@ -383,7 +380,7 @@ test("tailored skeleton also covers a delayed tool module after its data arrives
   await page.route("**/*.js*", async (route) => {
     const response = await route.fetch();
     const body = await response.text();
-    if (body.includes("Nom du scénario")) {
+    if (body.includes("Rechercher les formations")) {
       held = true;
       await gate;
     }
@@ -391,16 +388,18 @@ test("tailored skeleton also covers a delayed tool module after its data arrives
   });
   try {
     const data = page.waitForResponse((response) =>
-      response.url().includes("/api/workspace/budget?"),
+      response.url().includes("/api/workspace/modalites?"),
     );
-    await budget.click();
+    await modalities.click();
     await data;
     await expect.poll(() => held).toBe(true);
-    await expect(page.locator('[data-skeleton="budget"]')).toBeVisible();
-    await expect(page.locator('[data-skeleton="budget"]')).toHaveCount(1);
+    await expect(page.locator('[data-skeleton="modalites"]')).toBeVisible();
+    await expect(page.locator('[data-skeleton="modalites"]')).toHaveCount(1);
   } finally {
     release();
   }
-  await expect(page.getByLabel("Nom du scénario").first()).toBeEditable();
-  await expect(page.locator('[data-skeleton="budget"]')).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Rechercher les formations" }),
+  ).toBeEnabled();
+  await expect(page.locator('[data-skeleton="modalites"]')).toHaveCount(0);
 });

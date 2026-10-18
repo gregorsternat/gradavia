@@ -128,9 +128,7 @@ export type ExplorationQuery = {
   maxAccess: string;
   minApplications: string;
   maxApplications: string;
-  sort: "name" | "distance" | "capacity" | "applications" | "priorities";
-  nearbyWeight: number;
-  sizeWeight: number;
+  sort: "name" | "distance" | "capacity" | "applications";
   reference: string;
 };
 
@@ -169,11 +167,9 @@ export function parseExploration(params: SearchParams): ExplorationQuery {
     maxAccess: numeric("acces_max", 100),
     minApplications: numeric("voeux_min"),
     maxApplications: numeric("voeux_max"),
-    sort: ["distance", "capacity", "applications", "priorities"].includes(sort)
+    sort: ["distance", "capacity", "applications"].includes(sort)
       ? (sort as ExplorationQuery["sort"])
       : "name",
-    nearbyWeight: Math.min(100, Number(numeric("proximite")) || 0),
-    sizeWeight: Math.min(100, Number(numeric("taille")) || 0),
     reference: string("similaire"),
   };
 }
@@ -203,8 +199,6 @@ export function explorationUrl(
     voeux_min: query.minApplications,
     voeux_max: query.maxApplications,
     tri: query.sort === "name" ? "" : query.sort,
-    proximite: query.nearbyWeight || "",
-    taille: query.sizeWeight || "",
     similaire: query.reference,
   }))
     if (value !== "") params.set(key, String(value));
@@ -345,19 +339,9 @@ export function sortItems(
     a.id.localeCompare(b.id);
   const distance = (row: AtlasItem) =>
     center && hasCoordinates(row) ? distanceKm(center, row) : Infinity;
-  const score = (row: AtlasItem) =>
-    (query.nearbyWeight
-      ? query.nearbyWeight *
-        (Number.isFinite(distance(row)) ? 1 / (1 + distance(row) / 50) : 0)
-      : 0) +
-    query.sizeWeight *
-      (row.metrics.capacity !== null
-        ? 1 / (1 + row.metrics.capacity / 100)
-        : 0);
   return [...items].sort((a, b) => {
     if (query.sort === "distance")
       return distance(a) - distance(b) || name(a, b);
-    if (query.sort === "priorities") return score(b) - score(a) || name(a, b);
     if (query.sort === "capacity" || query.sort === "applications")
       return (
         (b.metrics[query.sort] ?? -1) - (a.metrics[query.sort] ?? -1) ||

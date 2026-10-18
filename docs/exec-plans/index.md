@@ -10,6 +10,9 @@ No active implementation plan.
 
 ## Completed
 
+- [Product scope simplification](completed/product-scope-simplification.md): retire
+  five peripheral tools while preserving research workflows.
+
 - [Page-specific skeletons](completed/page-skeletons.md): tailored loading states for all workspace panels, deferred blocks and incremental cards.
 
 - [Data page simplification](completed/data-page-simplification.md): focused

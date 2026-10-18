@@ -17,7 +17,6 @@ import { loadOverview, loadSources } from "@/features/observatory/server/load";
 import { loadSpecialties } from "@/features/specialties/server/load";
 import { loadInverseSpecialties } from "@/features/specialties/server/inverse";
 import { prepareEvolution } from "@/features/evolution/domain/evolution";
-import { sourceQuiz } from "@/features/discovery/domain/quiz";
 import { panelParams, paramRecord, type PanelId } from "../domain/registry";
 
 async function modalities(raw: Record<string, string>) {
@@ -159,30 +158,10 @@ export const loadPanel = cache(
         );
         return { kind: "favoris", results } as const;
       }
-      case "budget":
-        return { kind: "budget" } as const;
       case "modalites":
         return { kind: "modalites", result: await modalities(params) } as const;
       case "evolutions":
         return { kind: "evolutions", result: await evolution(params) } as const;
-      case "decouvrir": {
-        const result = await loadAtlas({
-          campagne: params.campagne,
-          version: params.version,
-          famille: "parcoursup",
-        });
-        return {
-          kind: "decouvrir",
-          result:
-            result.status === "ready"
-              ? {
-                  status: "ready",
-                  questions: sourceQuiz(result.data),
-                  source: result.data.source,
-                }
-              : result,
-        } as const;
-      }
     }
   },
 );

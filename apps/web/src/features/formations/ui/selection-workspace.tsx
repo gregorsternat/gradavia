@@ -46,7 +46,6 @@ import {
   type SelectionNote,
 } from "../domain/selection";
 import {
-  concentrationFacts,
   demandDistribution,
   readSharedList,
   selectionDistribution,
@@ -84,7 +83,6 @@ function SelectionOverview({ rows }: { rows: SavedFormation[] }) {
     dimension === "demand"
       ? demandDistribution(rows)
       : selectionDistribution(rows, dimension as "region" | "type");
-  const facts = concentrationFacts(rows);
   const known = rows.filter((row) => row.summary).length;
   const campaigns = [...new Set(rows.map((row) => row.campaign))].sort();
   if (!rows.length) return null;
@@ -141,19 +139,6 @@ function SelectionOverview({ rows }: { rows: SavedFormation[] }) {
               </li>
             ))}
           </ul>
-          {facts.length > 0 && (
-            <div className="rounded-lg bg-subtle p-3">
-              <p className="mb-1 text-xs font-medium">Sélection concentrée</p>
-              {facts.map((fact) => (
-                <p
-                  key={fact}
-                  className="text-xs leading-5 text-muted-foreground"
-                >
-                  {fact}
-                </p>
-              ))}
-            </div>
-          )}
         </div>
       </div>
       {groups.length > 8 && (

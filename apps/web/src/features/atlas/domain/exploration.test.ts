@@ -196,7 +196,7 @@ describe("geographic exploration", () => {
     });
     expect(result.alternatives.map((item) => item.id)).not.toContain("ref");
   });
-  it("scores missing values as unavailable and sorts observed zero capacity as smallest", () => {
+  it("ignores retired priority weights and retains explicit capacity sorting", () => {
     const first = row("first");
     const items = [
       first,
@@ -211,7 +211,7 @@ describe("geographic exploration", () => {
         items,
         parseExploration({ tri: "priorities", taille: "100" }),
       ).map((item) => item.id),
-    ).toEqual(["zero", "first", "missing"]);
+    ).toEqual(sortItems(items, parseExploration({})).map((item) => item.id));
     expect(
       sortItems(items, parseExploration({ tri: "capacity" })).map(
         (item) => item.id,

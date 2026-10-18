@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   canonicalHref,
+  isPanel,
   panelHref,
   resolvePanel,
   resourceKey,
@@ -16,10 +17,22 @@ describe("workspace navigation", () => {
     expect(canonicalHref("/favoris?partage=1&ids=one#notes")).toBe(
       "/favoris?partage=1&ids=one#notes",
     );
-    expect(canonicalHref("/budget")).toBe("/favoris?onglet=budget");
+    expect(canonicalHref("/budget")).toBe("/favoris");
     expect(canonicalHref("/formations/immutable")).toBe(
       "/formations/immutable",
     );
+  });
+  it("retires budget and quiz tools while preserving useful legacy destinations", () => {
+    expect(canonicalHref("/budget#scenario")).toBe("/favoris#scenario");
+    expect(canonicalHref("/favoris?onglet=budget")).toBe("/favoris");
+    expect(canonicalHref("/decouvrir?campagne=2024")).toBe(
+      "/observatoire?campagne=2024",
+    );
+    expect(canonicalHref("/observatoire?campagne=2024&onglet=decouvrir")).toBe(
+      "/observatoire?campagne=2024",
+    );
+    expect(isPanel("budget")).toBe(false);
+    expect(isPanel("decouvrir")).toBe(false);
   });
   it("keeps apprenticeship and APB in their proper spaces", () => {
     expect(canonicalHref("/apprentissage?vue=liste&version=retained")).toBe(
