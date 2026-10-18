@@ -132,8 +132,9 @@ the number of strictly greater observations. Ranks do not imply quality.
 The base-100 index is `after / before * 100`; a zero baseline is undefined even
 when both values are zero. Group indices use paired group sums, not averaged
 formation indices. All small multiples share a zero origin and a common maximum.
-They connect two observations only and never fill intermediate campaigns. The
-two-frame playback is paused by default, opt-in, and disabled for reduced motion.
+They connect two observations only and never fill intermediate campaigns.
+Before/after bars and small multiples remain static comparisons; there is no
+campaign playback.
 
 Source-wide diagnostics remain in the API and exports, without a supplemental
 UI disclosure. They separate matched, description-changed, ambiguous,
@@ -151,20 +152,3 @@ errors, causal findings or formation-quality judgments.
 Definitions, campaign IDs, both immutable release IDs, compact paired values,
 source-wide contributions and all analysis controls are exported together.
 There is no automatic curriculum continuity claim or cross-system harmonization.
-
-## Source-backed discovery quiz
-
-`/decouvrir` computes up to three deterministic questions from one Parcoursup
-release: the largest published formation-type share of source records, the
-largest region's share of observed capacity, and the share of records with an
-observed capacity. Questions require valid nonzero denominators; missing capacity
-is not imputed. Questions whose leading group has an unknown label are omitted.
-Observed capacity zeros count as published values for coverage.
-
-Only the compact question values and source metadata are sent to the client.
-The user estimates a percentage using a keyboard-accessible beUI slider; reveal
-shows the calculated percentage, absolute estimation error in percentage points,
-the denominator explanation, a Tremor chart and an accessible table. Each answer
-links to its exact immutable analysis. No individual prediction, ranking or
-invented trivia is generated. The quiz does not store responses or send them to
-a backend.

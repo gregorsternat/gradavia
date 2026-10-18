@@ -10,8 +10,8 @@ source-owned beUI controls, Tremor charts and Motion with monochrome light/dark
 themes. All product data comes through a standalone Rust read API.
 
 The expanded workspace adds a synchronized formation map, apprenticeship and APB
-explorers, source-defined profile comparisons, named preparation lists, a personal
-budget calculator, and an analysis workshop with reproducible exports. Two-campaign
+explorers, source-defined profile comparisons, named preparation lists,
+and an analysis workshop with reproducible exports. Two-campaign
 comparisons use conservative matched records; public datasets and runnable notebooks
 retain source versions and missing-value states. See the
 [feature coverage](docs/feature-coverage.md) for exact scope and deferred requests.

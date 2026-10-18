@@ -36,6 +36,9 @@ test("named lists retain notes and progress across reloads and synchronize tabs"
     page.getByRole("heading", { name: "Répartition de la sélection" }),
   ).toBeVisible();
   await expect(page.locator(".recharts-wrapper svg").first()).toBeVisible();
+  await expect(
+    page.getByText("Sélection concentrée", { exact: true }),
+  ).toHaveCount(0);
   const editor = page.locator("details").filter({
     has: page.getByLabel("Notes pour Licence - Droit 01"),
   });
@@ -43,8 +46,6 @@ test("named lists retain notes and progress across reloads and synchronize tabs"
   await page
     .getByRole("textbox", { name: "Notes pour Licence - Droit 01" })
     .fill("Vérifier le contenu des cours");
-  await page.getByRole("tab", { name: "Budget", exact: true }).click();
-  await page.getByRole("tab", { name: "Favoris", exact: true }).click();
   await expect(editor).toHaveAttribute("open", "");
   await expect(
     page.getByRole("textbox", { name: "Notes pour Licence - Droit 01" }),

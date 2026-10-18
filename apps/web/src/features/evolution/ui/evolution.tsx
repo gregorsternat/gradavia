@@ -1,10 +1,9 @@
 "use client";
-import { usePanelActive, PanelMain } from "@/features/workspace/ui/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { PanelMain } from "@/features/workspace/ui/navigation";
+import { useMemo } from "react";
 import { useRouter, useSearchParams } from "@/features/workspace/ui/navigation";
 import Link from "@/features/workspace/ui/navigation";
-import { ArrowDownToLine, Pause, Play } from "lucide-react";
-import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { ArrowDownToLine } from "lucide-react";
 import { Button, ButtonLink } from "@/components/motion/button/base";
 import {
   Select,
@@ -75,8 +74,6 @@ function Choice({
 export function Evolution({ data }: { data: EvolutionData }) {
   const { before, after } = data;
   const router = useRouter();
-  const active = usePanelActive();
-  const reduce = useReducedMotion();
   const searchParams = useSearchParams();
   const requestedMeasure = searchParams.get("indicateur");
   const measure: EvolutionMeasure = evolutionMeasures.includes(
@@ -87,8 +84,6 @@ export function Evolution({ data }: { data: EvolutionData }) {
   const type = (searchParams.get("type") ?? "").slice(0, 200);
   const region = (searchParams.get("region") ?? "").slice(0, 200);
   const mode = searchParams.get("mode") === "index" ? "index" : "count";
-  const [frame, setFrame] = useState<"before" | "after">("before"),
-    [playing, setPlaying] = useState(false);
   const matches = data;
   const cohort = useMemo(
     () =>
@@ -160,14 +155,6 @@ export function Evolution({ data }: { data: EvolutionData }) {
     sourceParams.delete(key === "debut" ? "version_debut" : "version_fin");
     router.push(`/evolutions?${sourceParams}`);
   };
-  useEffect(() => {
-    if (!playing || reduce || !active) return;
-    const timer = window.setInterval(
-      () => setFrame((value) => (value === "before" ? "after" : "before")),
-      1800,
-    );
-    return () => window.clearInterval(timer);
-  }, [playing, reduce, active]);
   const columns: TableColumn<(typeof pairs)[number]>[] = [
     {
       key: "name",
@@ -380,15 +367,10 @@ export function Evolution({ data }: { data: EvolutionData }) {
         </div>
       </section>
       <section className="panel mt-6 p-4 sm:p-5">
-        <Tabs
-          defaultValue="groups"
-          variant="underline"
-          onValueChange={() => setPlaying(false)}
-        >
+        <Tabs defaultValue="groups" variant="underline">
           <TabsList aria-label="Lecture des évolutions">
             <TabsTrigger value="groups">Avant / après</TabsTrigger>
             <TabsTrigger value="small">Par filière</TabsTrigger>
-            <TabsTrigger value="playback">Deux campagnes</TabsTrigger>
           </TabsList>
           <TabsContent value="groups" keepMounted={false}>
             {pairs.length ? (
@@ -464,69 +446,6 @@ export function Evolution({ data }: { data: EvolutionData }) {
               Même échelle de 0 à {number(max)} pour tous les panneaux. Chaque
               ligne relie deux observations ; elle ne décrit pas les campagnes
               intermédiaires.
-            </p>
-          </TabsContent>
-          <TabsContent value="playback" keepMounted={false}>
-            <div className="mb-4 flex flex-wrap items-center gap-2">
-              <Button
-                variant={frame === "before" ? "secondary" : "ghost"}
-                size="sm"
-                onClick={() => {
-                  setPlaying(false);
-                  setFrame("before");
-                }}
-              >
-                {before.source.campaign}
-              </Button>
-              <Button
-                variant={frame === "after" ? "secondary" : "ghost"}
-                size="sm"
-                onClick={() => {
-                  setPlaying(false);
-                  setFrame("after");
-                }}
-              >
-                {after.source.campaign}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                disabled={!!reduce}
-                onClick={() => setPlaying((value) => !value)}
-              >
-                {playing && !reduce ? (
-                  <Pause className="size-3.5" />
-                ) : (
-                  <Play className="size-3.5" />
-                )}
-                {playing && !reduce ? "Pause" : "Lecture"}
-              </Button>
-              <span className="ml-auto text-sm font-medium" aria-live="off">
-                Campagne{" "}
-                {frame === "before"
-                  ? before.source.campaign
-                  : after.source.campaign}
-              </span>
-            </div>
-            <BarChart
-              className="gradavia-chart h-80"
-              data={groups.slice(0, 12).map((group) => ({
-                label: group.label,
-                Valeur: frame === "before" ? group.baseline : group.current,
-              }))}
-              index="label"
-              categories={["Valeur"]}
-              colors={["charcoal"]}
-              showLegend={false}
-              valueFormatter={number}
-              minValue={0}
-              maxValue={max}
-            />
-            <p className="mt-4 text-xs text-muted-foreground">
-              Alternance des deux campagnes chargées, à échelle fixe.{" "}
-              {reduce
-                ? "La lecture automatique est désactivée avec la réduction des animations."
-                : "La lecture démarre uniquement sur demande."}
             </p>
           </TabsContent>
         </Tabs>

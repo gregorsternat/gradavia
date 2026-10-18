@@ -98,8 +98,6 @@ export function presentation(
             : 1,
         },
       };
-    case "budget":
-      return { view: "BudgetCalculator", props: {} };
     case "modalites":
       return payload.result.status === "ready"
         ? {
@@ -130,23 +128,6 @@ export function presentation(
                 ? "Les données sont temporairement indisponibles"
                 : "Deux campagnes distinctes sont nécessaires") +
               ". Une version demandée indisponible n’est jamais remplacée automatiquement.",
-          };
-    case "decouvrir":
-      return payload.result.status === "ready"
-        ? {
-            view: "Quiz",
-            key: payload.result.source.releaseId,
-            props: {
-              questions: payload.result.questions,
-              source: payload.result.source,
-            },
-          }
-        : {
-            view: "message",
-            message:
-              payload.result.status === "empty"
-                ? "Aucune campagne disponible."
-                : "Les données sont temporairement indisponibles.",
           };
   }
 }

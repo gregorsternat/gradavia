@@ -64,17 +64,17 @@ test("evolution compares exactly matched fixture observations and preserves indi
   await expect(table).toContainText("150");
   await expect(table).toContainText("160");
   await expect(table).toContainText("+10");
-  await page.getByRole("tab", { name: "Deux campagnes", exact: true }).click();
+  await expect(
+    page.getByRole("tab", { name: "Deux campagnes", exact: true }),
+  ).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "Lecture", exact: true }),
-  ).toBeDisabled();
-  await page
-    .getByRole("tabpanel", { name: "Deux campagnes" })
-    .getByRole("button", { name: "2024", exact: true })
-    .click();
+  ).toHaveCount(0);
+  await page.getByRole("tab", { name: "Par filière", exact: true }).click();
   await expect(
-    page.getByRole("main").getByText("Campagne 2024", { exact: true }),
-  ).toBeVisible();
+    page.getByRole("tabpanel", { name: "Par filière", exact: true }),
+  ).toContainText("deux observations");
+  await page.getByRole("tab", { name: "Avant / après", exact: true }).click();
   await page
     .getByRole("button", { name: "Affichage des graphiques", exact: true })
     .click();

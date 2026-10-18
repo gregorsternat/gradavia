@@ -55,10 +55,6 @@ const commands: Partial<
       "sauvegarder",
     ],
   },
-  budget: {
-    label: "Budget étudiant",
-    keywords: ["coût", "logement", "scénarios"],
-  },
   overview: { keywords: ["accueil", "statistiques"] },
   territoires: { keywords: ["région", "géographie", "villes"] },
   evolutions: {
@@ -66,13 +62,6 @@ const commands: Partial<
   },
   analyses: {
     keywords: ["graphiques", "distribution", "export", "statistiques"],
-  },
-  decouvrir: {
-    keywords: [
-      "découvrir",
-      "données",
-      "À vous d’estimer · découvrir les données",
-    ],
   },
   sources: { keywords: ["indicateurs", "méthodologie"] },
   donnees: {

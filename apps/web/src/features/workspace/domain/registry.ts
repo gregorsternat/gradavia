@@ -8,11 +8,11 @@ export const spaces = [
     panels: ["specialites", "inverse"],
   },
   { path: "/comparer", label: "Comparer", panels: ["selection", "modalites"] },
-  { path: "/favoris", label: "Mon projet", panels: ["favoris", "budget"] },
+  { path: "/favoris", label: "Mon projet", panels: ["favoris"] },
   {
     path: "/observatoire",
     label: "Observatoire",
-    panels: ["overview", "territoires", "evolutions", "analyses", "decouvrir"],
+    panels: ["overview", "territoires", "evolutions", "analyses"],
   },
   {
     path: "/sources",
@@ -60,7 +60,6 @@ export const panels = {
     space: 2,
   },
   favoris: { path: "/favoris", tab: "favoris", label: "Favoris", space: 3 },
-  budget: { path: "/budget", tab: "budget", label: "Budget", space: 3 },
   overview: {
     path: "/observatoire",
     tab: "ensemble",
@@ -83,12 +82,6 @@ export const panels = {
     path: "/analyses",
     tab: "analyses",
     label: "Atelier d’analyse",
-    space: 4,
-  },
-  decouvrir: {
-    path: "/decouvrir",
-    tab: "decouvrir",
-    label: "À vous d’estimer",
     space: 4,
   },
   sources: {
@@ -147,6 +140,8 @@ export function resolvePanel(
     return query.get("vue") === "liste"
       ? "apprentissage"
       : "apprentissage-carte";
+  if (path === "/budget") return "favoris";
+  if (path === "/decouvrir") return "overview";
   const space = spaces.find((space) => space.path === path);
   if (space) {
     const panel =
@@ -249,17 +244,11 @@ export function resourceKey(panel: PanelId, query: URLSearchParams): string {
     case "favoris":
       keys = ["ids", "partage"];
       break;
-    case "budget":
-      keys = [];
-      break;
     case "modalites":
       keys = ["classique", "apprenti", "q_classique", "q_apprenti", "campagne"];
       break;
     case "evolutions":
       keys = ["famille", "debut", "fin", "version_debut", "version_fin"];
-      break;
-    case "decouvrir":
-      keys = ["campagne", "version"];
       break;
   }
   const normalized = panelParams(panel, query);

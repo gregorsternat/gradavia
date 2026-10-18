@@ -10,7 +10,7 @@ export default defineConfig({
   testDir: "./tests/browser",
   testMatch: process.env.E2E_STATE
     ? "**/explorer-state.spec.ts"
-    : "**/{async-loading,performance,workspace,shell,landing,formations,observatory,specialties,selections,atlas,analysis,budget,evolutions,seo}.spec.ts",
+    : "**/{async-loading,performance,workspace,shell,landing,formations,observatory,specialties,selections,atlas,analysis,evolutions,seo}.spec.ts",
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: 0,

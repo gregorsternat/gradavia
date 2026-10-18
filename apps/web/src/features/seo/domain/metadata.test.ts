@@ -105,7 +105,6 @@ describe("search page identity", () => {
       "/comparer",
       "/analyses",
       "/modalites",
-      "/decouvrir",
     ] as const) {
       const metadata = pageMetadata(path, {
         ids: "private-selection",

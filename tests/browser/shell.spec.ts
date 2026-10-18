@@ -413,7 +413,7 @@ test("five destinations retain tool access, active groups and keyboard navigatio
   page,
   isMobile,
 }) => {
-  await page.goto("/budget");
+  await page.goto("/favoris");
   await openNavigation(page, isMobile);
   const primary = page.getByRole("navigation", { name: "Explorer Gradavia" });
   await expect(primary.getByRole("link")).toHaveCount(5);
@@ -421,12 +421,6 @@ test("five destinations retain tool access, active groups and keyboard navigatio
     primary.getByRole("link", { name: "Mon projet" }),
   ).toHaveAttribute("aria-current", "page");
   if (isMobile) await page.keyboard.press("Escape");
-  await expect(
-    page.getByRole("textbox", { name: "Ville", exact: true }).first(),
-  ).toBeEnabled();
-  const project = page.getByRole("tablist", { name: "Dans Mon projet" });
-  await project.getByRole("tab", { name: "Favoris", exact: true }).focus();
-  await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/favoris$/);
   await expect(
     page.getByRole("button", { name: "Nouvelle liste" }),
@@ -442,10 +436,8 @@ test("five destinations retain tool access, active groups and keyboard navigatio
       .getByRole("tab", { name: "Archives APB" }),
   ).toHaveAttribute("aria-selected", "true");
   await page.goto("/analyses");
-  await page
-    .getByRole("tab", { name: "À vous d’estimer", exact: true })
-    .click();
-  await expect(page).toHaveURL(/\/observatoire\?onglet=decouvrir$/);
+  await page.getByRole("tab", { name: "Évolutions", exact: true }).click();
+  await expect(page).toHaveURL(/\/observatoire\?onglet=evolutions$/);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

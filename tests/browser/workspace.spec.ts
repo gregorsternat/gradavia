@@ -3,6 +3,12 @@ import { expect, test } from "./fixtures";
 
 async function openWorkspace(page: Page, path: string) {
   await page.goto(path);
+  if (new URL(page.url()).pathname === "/favoris") {
+    await expect(
+      page.getByRole("button", { name: "Liste de formations" }),
+    ).toBeEnabled();
+    return;
+  }
   // Wait for roving keyboard focus before exercising client-side navigation.
   await expect(
     page
@@ -13,97 +19,173 @@ async function openWorkspace(page: Page, path: string) {
   ).toHaveAttribute("tabindex", "-1");
 }
 
-test("project tabs preserve drafts, use native history and avoid repeated reads @smoke", async ({
+test("retired tools redirect to useful destinations and cannot load as panels", async ({
+  page,
+  request,
+}, testInfo) => {
+  for (const [legacy, destination] of [
+    ["/budget", "/favoris"],
+    ["/favoris?onglet=budget", "/favoris"],
+    ["/decouvrir?campagne=2024", "/observatoire?campagne=2024"],
+    [
+      "/observatoire?campagne=2024&onglet=decouvrir",
+      "/observatoire?campagne=2024",
+    ],
+  ]) {
+    const response = await request.get(legacy!, { maxRedirects: 0 });
+    expect(response.status()).toBe(308);
+    const target = new URL(
+      response.headers().location!,
+      "https://example.test",
+    );
+    expect(target.pathname + target.search).toBe(destination);
+  }
+  for (const panel of ["budget", "decouvrir"])
+    expect((await request.get(`/api/workspace/${panel}`)).status()).toBe(404);
+  await openWorkspace(page, "/favoris?onglet=budget");
+  await expect(page).toHaveURL(/\/favoris$/);
+  await expect(
+    page.getByRole("tab", { name: "Budget", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("heading", { name: "Mes favoris", exact: true }),
+  ).toBeVisible();
+  await page.screenshot({
+    path: testInfo.outputPath("favorites-simplified.png"),
+    fullPage: true,
+  });
+  await openWorkspace(page, "/observatoire?onglet=decouvrir");
+  const tabs = page.getByRole("tablist", {
+    name: "Dans Observatoire",
+    exact: true,
+  });
+  await expect(tabs.getByRole("tab")).toHaveText([
+    "Vue d’ensemble",
+    "Territoires",
+    "Évolutions",
+    "Atelier d’analyse",
+  ]);
+  await tabs.getByRole("tab", { name: "Vue d’ensemble", exact: true }).focus();
+  await page.keyboard.press("End");
+  await expect(
+    tabs.getByRole("tab", { name: "Atelier d’analyse", exact: true }),
+  ).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(
+    page.getByRole("heading", { name: "Atelier d’analyse", exact: true }),
+  ).toBeVisible();
+  await page.keyboard.press("Control+k");
+  const search = page
+    .getByRole("dialog", { name: "Recherche rapide" })
+    .getByRole("combobox");
+  for (const term of ["Budget", "À vous d’estimer"]) {
+    await search.fill(term);
+    await expect(
+      page
+        .getByRole("dialog", { name: "Recherche rapide" })
+        .getByRole("option"),
+    ).toHaveCount(0);
+  }
+  await page.keyboard.press("Escape");
+  await page.screenshot({
+    path: testInfo.outputPath("research-tools-retained.png"),
+    fullPage: true,
+  });
+});
+
+test("comparison tabs preserve drafts, use native history and avoid repeated reads @smoke", async ({
   page,
 }) => {
-  await openWorkspace(page, "/favoris");
+  await openWorkspace(page, "/comparer");
   const requests: string[] = [];
   page.on("request", (request) => {
     if (request.url().includes("/api/workspace/")) requests.push(request.url());
   });
-  await page.getByRole("tab", { name: "Budget", exact: true }).click();
-  await expect(page).toHaveURL(/\/favoris\?onglet=budget$/);
+  await page.getByRole("tab", { name: "Modalités", exact: true }).click();
+  await expect(page).toHaveURL(/\/comparer\?onglet=modalites$/);
   await expect(
-    page.getByRole("heading", { name: /budget/i }).first(),
+    page.getByRole("heading", { name: "Comparer les modalités" }).first(),
   ).toBeVisible();
-  const fields = page.locator('[role="tabpanel"]:visible input');
-  const field = fields.first();
-  await field.fill("Mon scénario conservé");
+  const field = page.getByRole("textbox", {
+    name: "Rechercher une formation hors apprentissage",
+    exact: true,
+  });
+  await field.fill("Recherche conservée");
   const count = requests.length;
-  await page.getByRole("tab", { name: "Favoris", exact: true }).click();
-  await page.getByRole("tab", { name: "Budget", exact: true }).click();
-  await expect(field).toHaveValue("Mon scénario conservé");
+  await page.getByRole("tab", { name: "Ma sélection", exact: true }).click();
+  await page.getByRole("tab", { name: "Modalités", exact: true }).click();
+  await expect(field).toHaveValue("Recherche conservée");
   expect(requests.length).toBe(count);
   await page.goBack();
   await expect(
-    page.getByRole("tab", { name: "Favoris", exact: true }),
+    page.getByRole("tab", { name: "Ma sélection", exact: true }),
   ).toHaveAttribute("aria-selected", "true");
   await page.goForward();
-  await expect(field).toHaveValue("Mon scénario conservé");
+  await expect(field).toHaveValue("Recherche conservée");
   expect(await page.locator("main#contenu").count()).toBe(1);
 });
 
 test("keyboard focus does not load an unactivated tab", async ({ page }) => {
-  await openWorkspace(page, "/favoris");
+  await openWorkspace(page, "/comparer");
   await expect(
-    page.getByRole("button", { name: "Liste de formations" }),
-  ).toBeEnabled();
-  const tab = page.getByRole("tab", { name: "Favoris", exact: true });
+    page.getByRole("tab", { name: "Ma sélection", exact: true }),
+  ).toHaveAttribute("aria-selected", "true");
+  const tab = page.getByRole("tab", { name: "Ma sélection", exact: true });
   await expect(tab).not.toHaveAttribute("aria-disabled", "true");
   await tab.focus();
   await page.keyboard.press("ArrowRight");
   await expect(
-    page.getByRole("tab", { name: "Budget", exact: true }),
+    page.getByRole("tab", { name: "Modalités", exact: true }),
   ).toBeFocused();
   await expect(tab).toHaveAttribute("aria-selected", "true");
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/onglet=budget/);
+  await expect(page).toHaveURL(/onglet=modalites/);
 });
 
 test("legacy tools redirect to their rendered, shareable panel", async ({
   page,
   request,
 }) => {
-  const response = await request.get("/budget", { maxRedirects: 0 });
+  const response = await request.get("/modalites", { maxRedirects: 0 });
   expect(response.status()).toBe(308);
-  expect(response.headers().location).toBe("/favoris?onglet=budget");
-  await openWorkspace(page, "/budget");
+  expect(response.headers().location).toBe("/comparer?onglet=modalites");
+  await openWorkspace(page, "/modalites");
   await expect(
-    page.getByRole("tab", { name: "Budget", exact: true }),
+    page.getByRole("tab", { name: "Modalités", exact: true }),
   ).toHaveAttribute("aria-selected", "true");
   await page.reload();
   await expect(
-    page.getByRole("tab", { name: "Budget", exact: true }),
+    page.getByRole("tab", { name: "Modalités", exact: true }),
   ).toHaveAttribute("aria-selected", "true");
 });
 
 test("a failed first panel load leaves other tabs usable and can be retried @smoke", async ({
   page,
 }) => {
-  await openWorkspace(page, "/favoris");
+  await openWorkspace(page, "/comparer");
   await expect(
-    page.getByRole("button", { name: "Liste de formations" }),
-  ).toBeEnabled();
-  await page.route("**/api/workspace/budget*", (route) =>
+    page.getByRole("tab", { name: "Ma sélection", exact: true }),
+  ).toHaveAttribute("aria-selected", "true");
+  await page.route("**/api/workspace/modalites*", (route) =>
     route.fulfill({
       status: 200,
       contentType: "application/json",
       body: "invalid json",
     }),
   );
-  await page.getByRole("tab", { name: "Budget", exact: true }).click();
+  await page.getByRole("tab", { name: "Modalités", exact: true }).click();
   await expect(page.locator("main").getByRole("alert")).toContainText(
     "temporairement indisponibles",
   );
-  await page.getByRole("tab", { name: "Favoris", exact: true }).click();
+  await page.getByRole("tab", { name: "Ma sélection", exact: true }).click();
   await expect(
-    page.getByRole("tab", { name: "Favoris", exact: true }),
+    page.getByRole("tab", { name: "Ma sélection", exact: true }),
   ).toHaveAttribute("aria-selected", "true");
-  await page.unroute("**/api/workspace/budget*");
-  await page.getByRole("tab", { name: "Budget", exact: true }).click();
+  await page.unroute("**/api/workspace/modalites*");
+  await page.getByRole("tab", { name: "Modalités", exact: true }).click();
   await page.getByRole("button", { name: "Réessayer", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: /budget/i }).first(),
+    page.getByRole("heading", { name: "Comparer les modalités" }).first(),
   ).toBeVisible();
 });
 
@@ -112,13 +194,7 @@ for (const [path, tabs] of [
   ["/comparer?ids=", ["Ma sélection", "Modalités"]],
   [
     "/observatoire",
-    [
-      "Vue d’ensemble",
-      "Territoires",
-      "Évolutions",
-      "Atelier d’analyse",
-      "À vous d’estimer",
-    ],
+    ["Vue d’ensemble", "Territoires", "Évolutions", "Atelier d’analyse"],
   ],
   ["/sources", ["Sources et définitions", "API et notebooks", "Archives APB"]],
 ] as const) {
@@ -186,11 +262,9 @@ test("historical routes retain their complete queries and fragments", async ({
 }) => {
   for (const [legacy, path, tab] of [
     ["/modalites", "/comparer", "modalites"],
-    ["/budget", "/favoris", "budget"],
     ["/territoires", "/observatoire", "territoires"],
     ["/analyses", "/observatoire", "analyses"],
     ["/evolutions", "/observatoire", "evolutions"],
-    ["/decouvrir", "/observatoire", "decouvrir"],
     ["/donnees", "/sources", "donnees"],
     ["/archives", "/sources", "archives"],
     ["/specialites/inverse", "/specialites", "formation"],
@@ -218,8 +292,8 @@ test("historical routes retain their complete queries and fragments", async ({
     ])
       expect(target.searchParams.get(key!)).toBe(value);
   }
-  await openWorkspace(page, "/budget#scenario");
-  await expect(page).toHaveURL(/\/favoris\?onglet=budget#scenario$/);
+  await openWorkspace(page, "/modalites#selection");
+  await expect(page).toHaveURL(/\/comparer\?onglet=modalites#selection$/);
   await openWorkspace(page, "/comparer?onglet=inconnu&ids=");
   await expect(
     page.getByRole("tab", { name: "Ma sélection", exact: true }),
@@ -240,20 +314,6 @@ test("server-rendered tabs retain native destinations and tool-specific metadata
   });
   try {
     const staticPage = await context.newPage();
-    await staticPage.goto("/favoris");
-    await staticPage.getByRole("tab", { name: "Budget", exact: true }).click();
-    await expect(staticPage).toHaveURL(/onglet=budget/);
-    await expect(staticPage.getByRole("heading", { level: 1 })).toContainText(
-      "budget",
-    );
-    await expect(staticPage.locator('meta[name="robots"]')).toHaveAttribute(
-      "content",
-      "index, follow",
-    );
-    await expect(staticPage.locator('link[rel="canonical"]')).toHaveAttribute(
-      "href",
-      "https://gradavia.com/favoris?onglet=budget",
-    );
     await staticPage.goto("/observatoire");
     await staticPage
       .getByRole("tab", { name: "Territoires", exact: true })
@@ -312,7 +372,7 @@ test("slow obsolete responses cannot overwrite a newer panel context", async ({
     page.locator('[role="tabpanel"]:visible > div[aria-busy]'),
   ).toHaveAttribute("aria-busy", "true");
   await page
-    .getByRole("tab", { name: "À vous d’estimer", exact: true })
+    .getByRole("tab", { name: "Atelier d’analyse", exact: true })
     .click();
   await expect(page.locator("main h1:visible")).toBeVisible();
   await page.goBack();
@@ -398,7 +458,7 @@ test("a selected formation does not reset the map camera on return", async ({
   await expect(pane).toHaveAttribute("style", panned!);
 });
 
-test("budget code is downloaded only when that tool is first activated", async ({
+test("modality comparison code is downloaded only when that tool is first activated", async ({
   page,
 }) => {
   const scripts: Promise<string>[] = [];
@@ -409,52 +469,34 @@ test("budget code is downloaded only when that tool is first activated", async (
     )
       scripts.push(response.text().catch(() => ""));
   });
-  await openWorkspace(page, "/favoris");
+  await openWorkspace(page, "/comparer");
   await expect(
-    page.getByRole("button", { name: "Liste de formations" }),
-  ).toBeEnabled();
+    page.getByRole("tab", { name: "Modalités", exact: true }),
+  ).toHaveAttribute("tabindex", "-1");
   expect((await Promise.all(scripts)).join("\n")).not.toContain(
-    "Nom du scénario",
+    "Rechercher les formations",
   );
-  await page.getByRole("tab", { name: "Budget", exact: true }).click();
+  await page.getByRole("tab", { name: "Modalités", exact: true }).click();
   await expect(
-    page.getByRole("textbox", { name: "Nom du scénario" }).first(),
+    page.getByRole("button", { name: "Rechercher les formations" }),
   ).toBeVisible();
-  expect((await Promise.all(scripts)).join("\n")).toContain("Nom du scénario");
+  expect((await Promise.all(scripts)).join("\n")).toContain(
+    "Rechercher les formations",
+  );
 });
 
-test("printing uses only the active project panel after visiting both tools", async ({
-  page,
-}, testInfo) => {
+test("favorites dossier remains printable", async ({ page }, testInfo) => {
   await openWorkspace(page, "/favoris");
-  await expect(
-    page.getByRole("button", { name: "Liste de formations" }),
-  ).toBeEnabled();
-  await page.getByRole("tab", { name: "Budget", exact: true }).click();
-  const budget = page.locator(".budget-print");
-  await budget
-    .getByRole("textbox", { name: "Ville", exact: true })
-    .first()
-    .fill("Lyon");
-  await page.emulateMedia({ media: "print" });
-  await expect(budget.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(
-    budget.getByRole("region", { name: "Scénario 1", exact: true }),
-  ).toBeVisible();
-  await expect(page.locator("#selection-dossier")).toBeHidden();
-  await page.screenshot({
-    path: testInfo.outputPath("budget-after-favorites-print.png"),
-    fullPage: true,
-  });
-  await page.emulateMedia({ media: "screen" });
-  await page.getByRole("tab", { name: "Favoris", exact: true }).click();
   await page.emulateMedia({ media: "print" });
   await expect(page.locator("#selection-dossier")).toBeVisible();
   await expect(page.locator("#selection-dossier h1")).toBeVisible();
-  await expect(budget).toBeHidden();
+  await page.screenshot({
+    path: testInfo.outputPath("favorites-print.png"),
+    fullPage: true,
+  });
 });
 
-test("shared-list retry refreshes the active entry without losing another panel draft", async ({
+test("shared-list retry refreshes the active entry without remounting its content", async ({
   page,
 }) => {
   await openWorkspace(page, "/formations?q=Droit+01&vue=cartes");
@@ -462,11 +504,7 @@ test("shared-list retry refreshes the active entry without losing another panel 
     .getByRole("link", { name: "Licence - Droit 01", exact: true })
     .getAttribute("href");
   const id = decodeURIComponent(href!.split("/").at(-1)!);
-  await openWorkspace(page, "/favoris?onglet=budget");
-  const draft = page
-    .getByRole("textbox", { name: "Ville", exact: true })
-    .first();
-  await draft.fill("Brouillon conservé");
+  await openWorkspace(page, "/favoris");
   let reads = 0;
   await page.route("**/api/workspace/favoris?*", async (route) => {
     reads++;
@@ -498,13 +536,6 @@ test("shared-list retry refreshes the active entry without losing another panel 
   expect(
     await originalHeading!.evaluate((element) => element.isConnected),
   ).toBe(true);
-  await page.getByRole("tab", { name: "Budget", exact: true }).click();
-  await expect(draft).toHaveValue("Brouillon conservé");
-  await page.getByRole("tab", { name: "Favoris", exact: true }).click();
-  await expect(
-    favorites.getByRole("link", { name: "Licence - Droit 01", exact: true }),
-  ).toBeVisible();
-  expect(reads).toBe(2);
 });
 
 test("switching representations during a campaign read preserves the requested year", async ({

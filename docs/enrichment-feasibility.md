@@ -33,8 +33,8 @@ Small-sample communes can inherit estimates from a wider group of communes.
 These values are not actual student lease prices, furnished rents or housing
 availability. A city-label join is insufficient: use a verified commune code.
 The [ministry's usage guide](https://www.ecologie.gouv.fr/sites/default/files/documents/guide-dutilisation-des-donnees-carte-loyers.pdf)
-also warns against treating these maps as a general rent time series. Manual
-budget inputs are usable now; automatic city estimates require this separate
+also warns against treating these maps as a general rent time series. The manual
+budget calculator has been retired; automatic city estimates require this separate
 source contract.
 
 ## Calendar evidence at the 2026-10-05 review

@@ -98,20 +98,6 @@ export function selectionDistribution(
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, "fr"));
 }
 
-export function concentrationFacts(rows: SavedFormation[]): string[] {
-  if (rows.length < 3) return [];
-  return (["city", "type"] as const).flatMap((dimension) => {
-    const top = selectionDistribution(rows, dimension)[0];
-    return top &&
-      top.label !== "Non renseigné" &&
-      top.count / rows.length >= 0.75
-      ? [
-          `${top.count} formations sur ${rows.length} ${dimension === "city" ? "à" : "dans la catégorie"} ${top.label}.`,
-        ]
-      : [];
-  });
-}
-
 export function demandDistribution(rows: SavedFormation[]) {
   const groups = [
     { label: "Moins de 5 candidatures/place", count: 0 },

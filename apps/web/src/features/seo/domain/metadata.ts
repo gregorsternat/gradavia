@@ -68,11 +68,6 @@ export const pages = {
     description:
       "Réutilisez les données publiques de Parcoursup, de l’apprentissage et d’APB : exports CSV et JSON, API, notebooks, versions et définitions des indicateurs.",
   },
-  "/budget": {
-    title: "Calculateur de budget étudiant : vos scénarios",
-    description:
-      "Préparez votre budget étudiant avec vos propres montants de logement, transport et dépenses. Comparez des scénarios enregistrés dans votre navigateur.",
-  },
   "/comparer": {
     title: "Comparer les formations Parcoursup",
     description:
@@ -95,12 +90,6 @@ export const pages = {
     title: "Comparer formation classique et apprentissage",
     description:
       "Consultez côte à côte les observations de deux formations, en conservant les définitions propres à Parcoursup et à l’apprentissage.",
-    noIndex: true,
-  },
-  "/decouvrir": {
-    title: "Découvrir les données Parcoursup en questions",
-    description:
-      "Testez vos intuitions sur les formations et les admissions avec des questions tirées des données publiques de Parcoursup.",
     noIndex: true,
   },
 } satisfies Record<

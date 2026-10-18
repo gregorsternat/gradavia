@@ -40,7 +40,7 @@ name and native tooltip identify the source code and announce a new tab.
 Primary navigation exposes Formations, Spécialités du bac, Comparer, Mon projet
 and Observatoire; Données & méthode remains in the footer. The palette indexes
 every existing tool under these same groups. Each group uses persistent tabs;
-Mon projet starts with Favoris alongside Budget. Observatoire exposes its five
+Mon projet contains Favoris. Observatoire exposes its four
 tools as a scrollable tab row. Tabs have native shareable destinations, manual
 keyboard activation (arrows/Home/End focus, Enter/Space activate), and stable
 panel containers. Only the visible panel participates in keyboard navigation.
@@ -124,7 +124,7 @@ aggregates show a compact partial status. Specialty groups overlap and cannot be
 national total.
 
 The atlas uses one quiet map surface next to a matching result list; exact numeric
-inputs supplement proximity and priority sliders. The map retains the count of located and unlocated results so the visible
+inputs supplement the proximity radius slider. The map retains the count of located and unlocated results so the visible
 points are not mistaken for all results. Browser map controls and list links offer equivalent navigation without
 requiring pointer selection. Analysis shows one selected visualization with cohort
 controls shared across views, without a separate formation table or findings

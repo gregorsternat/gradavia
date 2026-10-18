@@ -10,7 +10,6 @@ import {
 } from "./selection";
 import {
   comparisonComments,
-  concentrationFacts,
   demandDistribution,
   readSharedList,
   selectionDistribution,
@@ -166,7 +165,7 @@ describe("selection workspace", () => {
     ).toBeNull();
   });
 
-  test("keeps missing and zero capacities out of ratios and qualifies concentration", () => {
+  test("keeps missing and zero capacities out of ratios", () => {
     const missing = { ...row(4), summary: undefined };
     const zero = {
       ...row(5),
@@ -177,8 +176,6 @@ describe("selection workspace", () => {
       { label: "Paris", count: 4 },
       { label: "Non renseigné", count: 1 },
     ]);
-    expect(concentrationFacts(rows)).toContain("4 formations sur 5 à Paris.");
-    expect(concentrationFacts([row(1), row(2)])).toEqual([]);
     expect(demandDistribution(rows)).toEqual([
       { label: "De 5 à moins de 20", count: 3 },
       { label: "Non calculable", count: 2 },

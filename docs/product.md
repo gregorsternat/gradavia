@@ -39,10 +39,8 @@ missing-value states and compact partial-total status. Exports retain provenance
 | Apprenticeship / APB | Explore independently defined populations                                 | Distinct adapters and explicit unavailable indicators              |
 | Modalities           | Choose and compare two records from the same campaign                     | No inferred equivalence between curricula or procedures            |
 | Preparation          | Organize named lists, notes, statuses and personal checklists             | Browser-local, deliberate annotation sharing, printable dossier    |
-| Budget               | Compare user-entered cost scenarios over a study duration                 | No inferred rent, salary, scholarship or city-cost estimate        |
 | Analysis workshop    | Build linked charts, cohorts, cross-tabs and exports                      | One retained snapshot with per-indicator missingness               |
 | Evolutions           | Compare counts in two captured campaigns                                  | Unique unchanged source identities, paired coverage and exclusions |
-| Discovery            | Estimate and reveal documented source proportions                         | Three deterministic questions, without response tracking           |
 | Public datasets      | Download versioned CSV/JSON and reproduce calculations                    | Fixed public read contract and Python/R notebook downloads         |
 
 The landing uses a compact header, direct search, feature entry points and
@@ -61,7 +59,11 @@ Six workspaces retain their visited tools in memory: `/formations`, `/specialite
 Changing tools preserves drafts, filters and reading position without a server
 navigation. The active URL remains shareable, including native links without
 JavaScript. Legacy routes permanently redirect to the corresponding tab.
-Personal notes and budget assumptions retain their existing sharing rules.
+Personal notes retain their existing sharing rules. Legacy budget and quiz URLs
+redirect to Favorites and Overview respectively; their tools and API panels have
+been removed. Explicit distance/capacity sorting, selection distributions and
+static two-campaign comparisons remain, without personal-priority scoring,
+selection concentration notices or campaign playback.
 
 ## Formation search
 

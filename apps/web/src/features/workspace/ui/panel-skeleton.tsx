@@ -13,10 +13,8 @@ import ObservatoryLoading, {
   TerritoriesSkeleton,
 } from "@/features/observatory/ui/loading";
 import { SpecialtiesSkeleton } from "@/features/specialties/ui/loading";
-import { BudgetSkeleton } from "@/features/budget/ui/loading";
 import { AnalysisSkeleton } from "@/features/analysis/ui/loading";
 import { EvolutionSkeleton } from "@/features/evolution/ui/loading";
-import { QuizSkeleton } from "@/features/discovery/ui/loading";
 import type { PanelId } from "../domain/registry";
 
 const titles = {
@@ -30,12 +28,10 @@ const titles = {
   selection: "Comparer les formations",
   modalites: "Comparer les modalités",
   favoris: "Mes favoris",
-  budget: "Mon budget étudiant",
   overview: "Vue d’ensemble",
   territoires: "Territoires",
   evolutions: "Évolutions",
   analyses: "Atelier d’analyse",
-  decouvrir: "À votre avis ?",
   sources: "Données & méthode",
   donnees: "Réutiliser les données",
 } satisfies Record<PanelId, string>;
@@ -77,9 +73,6 @@ export function PanelSkeleton({
     case "favoris":
       content = <FavoritesSkeleton />;
       break;
-    case "budget":
-      content = <BudgetSkeleton />;
-      break;
     case "overview":
       content = <ObservatoryLoading />;
       break;
@@ -91,9 +84,6 @@ export function PanelSkeleton({
       break;
     case "analyses":
       content = <AnalysisSkeleton />;
-      break;
-    case "decouvrir":
-      content = <QuizSkeleton />;
       break;
     case "sources":
       content = <SourcesSkeleton />;

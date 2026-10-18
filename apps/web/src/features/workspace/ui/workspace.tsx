@@ -549,7 +549,7 @@ export function Workspace({
               ? "Seuils d’indicateurs"
               : "",
             otherSearch.get("similaire") ? "Formation de référence" : "",
-            ["distance", "priorities"].includes(otherSearch.get("tri") ?? "")
+            otherSearch.get("tri") === "distance"
               ? "Tri propre à la carte"
               : "",
           ].filter(Boolean)
